@@ -1,0 +1,37 @@
+import { useCallback, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { Loading } from 'renderer/components/Loading';
+import { Auth } from 'renderer/pages/Auth';
+import { Home } from 'renderer/pages/Home/index';
+import { LayoutsWithSidebar } from './LayoutsWithSidebar';
+import { ProtectedRoutes } from './ProtectedRoutes';
+
+export function AppRoutes() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const changeLoadingState = useCallback((state: boolean) => {
+    setIsLoading(state);
+  }, []);
+  return (
+    <>
+      <Loading isLoading={isLoading} changeLoadingState={changeLoadingState} />
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Auth
+              isLoading={isLoading}
+              changeLoadingState={changeLoadingState}
+            />
+          }
+        />
+        <Route element={<ProtectedRoutes />}>
+          <Route element={<LayoutsWithSidebar />}>
+            <Route path="/home" element={<Home />} />
+          </Route>
+        </Route>
+      </Routes>
+    </>
+  );
+}

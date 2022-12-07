@@ -1,0 +1,115 @@
+@use '../../styles/_util' as *
+.container
+  @include flex(center, center, column)
+  height: 100vh
+  width: 100%
+
+  .background
+    @include flex(center, center, column)
+    position: absolute
+    background-color: $blue-100
+    height: 140vw
+    width: 140vw
+    border-radius: 9999999rem
+    transform: translateY(-20%)
+    right: 50%
+    z-index: 1000
+    transition: right 2s ease-in-out
+
+    img
+      position: relative
+      max-width: 400px
+      transition: all 2s ease-in-out, opacity 1.5s ease
+      &:first-child
+        right: 550px
+        top: 680px
+        opacity: 1
+      &:last-child
+        left: 600px
+        top: 350px
+        opacity: 1
+
+
+  .form
+    @include flex(center, center, row)
+    width: 50vw
+
+    .register
+      @include flex(center, center, row)
+      position: relative
+      height: 100vh
+      width: 100%
+      left: -150%
+      transition: left 2s ease
+      z-index: 200
+
+    .login
+      @include flex(center, center, row)
+      position: relative
+      width: 100%
+      transition: left 2s ease
+      z-index: 200
+      left: 20%
+
+  .text
+    height: 100vh
+
+    .registerText, .loginText
+      @include flex(center, center, column)
+      position: absolute
+      top: 100px
+      color: $white
+      z-index: 2000
+      gap: 2rem
+      transition: opacity 1.5s ease, right 1.5s ease, left 1.5s ease
+
+      p
+        max-width: 600px
+
+      button
+        max-width: 200px
+
+    .registerText
+      right: -200px
+      opacity: 0
+    .loginText
+      left: 20px
+      opacity: 1
+
+
+.button
+  position: absolute
+  z-index: 2000
+
+  top: 0
+
+.signUpMode
+  .background
+    right: -90%
+    img
+      &:first-child
+        right: 550px
+        top: 680px
+        opacity: 1
+      &:last-child
+        left: 600px
+        top: 350px
+        opacity: 0
+
+
+  .form
+    .register
+      left: -20%
+
+    .login
+      left: 150%
+
+  .text
+    .registerText
+      opacity: 1
+      right: 0
+    .loginText
+      opacity: 0
+      left: -200px
+
+

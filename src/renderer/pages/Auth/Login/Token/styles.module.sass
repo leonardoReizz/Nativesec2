@@ -1,0 +1,11 @@
+@use '../../../../styles/_util' as *
+
+.token
+  @include flex(center, center, column)
+  width: 100%
+  gap: 2rem
+
+  .resendToken
+    &:hover
+      color: $blue-100
+      text-decoration: underline

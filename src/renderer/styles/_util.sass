@@ -1,0 +1,67 @@
+
+$blue-100: #2196F3
+$blue-100-hover: #197AC7
+
+
+$white: #FFFFFF
+$black: #000000
+$gray-100: #ECECEC
+$gray-200: #E1E1E1
+$gray-300: #CDCDCD
+$gray-500: #767676
+$gray-900: #131313
+
+
+
+$default-radius: .5rem
+@mixin flex($align, $justify, $direction)
+  display: flex
+  align-items: $align
+  justify-content: $justify
+  flex-direction: $direction
+
+@mixin form_error()
+  top: 3px
+  left: .5rem
+  width: 100%
+  font-size: .9rem
+  position: relative
+  color: $red-100
+
+@mixin default_page()
+  width: 100%
+  height: 100%
+  padding: 1rem
+
+@mixin data_tooltip()
+  content: attr(data-tooltip)
+  position: absolute
+  width: max-content
+  padding: .5rem 1rem
+  z-index: 1000
+
+  border-radius: $default-radius
+  font-size: .8rem
+
+  background: $gray-600
+  color: $white
+  visibility: hidden
+  opacity: 0
+
+  transition: visibility 0.2s, opacity 0.2s
+
+@mixin limit()
+  max-width: 1333px
+  width: 100%
+
+
+@mixin buttonGradient()
+  color: $white
+  border-radius: $default-radius
+  width: 100%
+  backdrop-filter: blur(15px)
+  background-color: rgba(255, 255, 255, 0.028)
+  box-shadow: 0 15px 35px #00000049
+  border-top: 1px solid  rgba(255, 255, 255, 0.1)
+  border-bottom: 1px solid  rgba(255, 255, 255, 0.1)
+  transition: background-color ease-in-out 0.2s, box-shadow 0.2s
