@@ -6,10 +6,12 @@ import { Home } from 'renderer/pages/Home/index';
 import { LayoutsWithSidebar } from './LayoutsWithSidebar';
 import { ProtectedRoutes } from './ProtectedRoutes';
 
-export function AppRoutes() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+export type LoadingType = 'false' | 'true' | 'finalized';
 
-  const changeLoadingState = useCallback((state: boolean) => {
+export function AppRoutes() {
+  const [isLoading, setIsLoading] = useState<LoadingType>('false');
+
+  const changeLoadingState = useCallback((state: LoadingType) => {
     setIsLoading(state);
   }, []);
   return (
@@ -19,12 +21,7 @@ export function AppRoutes() {
       <Routes>
         <Route
           path="/"
-          element={
-            <Auth
-              isLoading={isLoading}
-              changeLoadingState={changeLoadingState}
-            />
-          }
+          element={<Auth changeLoadingState={changeLoadingState} />}
         />
         <Route element={<ProtectedRoutes />}>
           <Route element={<LayoutsWithSidebar />}>

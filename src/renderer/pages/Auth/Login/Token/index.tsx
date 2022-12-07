@@ -1,29 +1,84 @@
+import { useFormik } from 'formik';
+import { IUser } from 'main/types';
 import { toast } from 'react-toastify';
 import { Button } from 'renderer/components/Buttons/Button';
+import { FormMessageError } from 'renderer/components/FormMessageError';
 import { Input } from 'renderer/components/Inputs/Input';
-import { toastOptions } from 'renderer/utils/options/Toastify';
+import { useAuth } from 'renderer/hooks/useAuth/useAuth';
+import { LoadingType } from 'renderer/routes';
+import {
+  TokenInitialValues,
+  TokenSchema,
+} from 'renderer/utils/Formik/Token/Token';
 
 import styles from './styles.module.sass';
 
-export function Token() {
-  function resendToken() {
-    toast.success('Um token foi enviado para seu email', {
-      ...toastOptions,
-      toastId: 'resendToken',
+interface TokenProps {
+  changeLoadingState: (state: LoadingType) => void;
+}
+
+type SubmitFormType = typeof TokenInitialValues;
+
+export function Token({ changeLoadingState }: TokenProps) {
+  const { AuthPassword, AuthLogin } = useAuth();
+
+  function handleSubmit(values: SubmitFormType) {
+    toast.dismiss('sendToken');
+    window.electron.store.set('user', {
+      ...(window.electron.store.get('user') as IUser),
+      safetyPhrase: values.safetyPhrase,
     });
+    AuthLogin({ token: values.token });
+    changeLoadingState('true');
   }
+
+  function handleResendToken() {
+    const { myEmail } = window.electron.store.get('user');
+    AuthPassword({ email: myEmail });
+  }
+
+  const formikProps = useFormik({
+    initialValues: TokenInitialValues,
+    onSubmit: (values) => handleSubmit(values),
+    validationSchema: TokenSchema,
+  });
+
   return (
     <div className={styles.token}>
-      <form action="">
-        <Input text="Token" type="password" />
-        <Input text="Frase Secreta" type="password" />
-        <Button text="Entrar" />
+      <form onSubmit={formikProps.handleSubmit}>
+        <div>
+          <Input
+            text="Token"
+            type="password"
+            name="token"
+            onChange={formikProps.handleChange}
+            onBlur={formikProps.handleBlur}
+          />
+          <FormMessageError
+            message={formikProps.errors.token}
+            touched={formikProps.touched.token}
+          />
+        </div>
+        <div>
+          <Input
+            text="Frase Secreta"
+            type="password"
+            name="safetyPhrase"
+            onChange={formikProps.handleChange}
+            onBlur={formikProps.handleBlur}
+          />
+          <FormMessageError
+            message={formikProps.errors.safetyPhrase}
+            touched={formikProps.touched.safetyPhrase}
+          />
+        </div>
+        <Button text="Entrar" type="submit" />
       </form>
 
       <button
         type="button"
         className={styles.resendToken}
-        onClick={resendToken}
+        onClick={handleResendToken}
       >
         Reenviar Token
       </button>

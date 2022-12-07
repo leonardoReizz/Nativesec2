@@ -10,7 +10,13 @@
     top: 100px
     max-width: 200px
 
+    @media (min-width: 1800px)
+      max-width: 300px
+
   form
     @include flex(center, center, column)
     gap: 2rem
     margin-top: 8rem
+
+    div
+      width: 100%

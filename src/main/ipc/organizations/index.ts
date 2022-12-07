@@ -1,4 +1,4 @@
-import { IOrganizationInvite } from 'renderer/hooks/useOrganization/types';
+import { IOrganizationInvite } from 'renderer/hooks/useIPCOrganizations/types';
 import DBOrganization from '../../database/organizations';
 import DBOrganizationIcon from '../../database/organizationIcons';
 import APIOrganization from '../../API/organizations';

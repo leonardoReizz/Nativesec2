@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import { Navbar } from 'renderer/components/Navbar';
 import { Sidebar } from 'renderer/components/Sidebar';
 
 import styles from './styles.module.sass';
@@ -9,9 +10,12 @@ interface LayoutsWithSidebarProps {
 export function LayoutsWithSidebar() {
   return (
     <>
-      <div className={styles.flex_app}>
-        <Sidebar />
-        <Outlet />
+      <div className={styles.flexApp}>
+        <Navbar />
+        <div className={styles.app}>
+          <Sidebar />
+          <Outlet />
+        </div>
       </div>
     </>
   );

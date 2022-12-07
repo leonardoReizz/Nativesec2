@@ -24,7 +24,7 @@ release/build.zip
 .erb/dll
 
 .idea
-npm-debug.log.*
+npm-debug.log.*r
 *.css.d.ts
 *.sass.d.ts
 *.scss.d.ts

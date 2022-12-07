@@ -1,0 +1,26 @@
+@use '../../styles/_util' as *
+
+.bar
+  @include flex(center, center, row)
+  position: absolute
+  width: 100%
+  margin-left: 0px
+  &::before
+    content: ''
+    position: absolute
+    background-color: green
+    width: 20%
+    height: 3px
+    border-radius: 5rem
+    top: 10px
+
+.correct
+  &::before
+    background-color: $green-100
+
+.error
+  &::before
+    background-color: $red-100
+
+
+

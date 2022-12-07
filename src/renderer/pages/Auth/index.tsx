@@ -1,7 +1,9 @@
 /* eslint-disable react/jsx-no-bind */
 import { useCallback, useState } from 'react';
-import { Loading } from 'renderer/components/Loading';
 import { ButtonOutlined } from 'renderer/components/Buttons/ButtonOutlined';
+import { useIPCAuth } from 'renderer/hooks/useIPCAuth/useIPCAuth';
+import { toast } from 'react-toastify';
+import { LoadingType } from 'renderer/routes';
 import { Login } from './Login';
 import { Register } from './Register';
 
@@ -10,19 +12,26 @@ import securityImage from '../../../../assets/svg/security2.svg';
 
 import styles from './styles.module.sass';
 
-export type AuthState = 'login' | 'register' | 'enter';
+export type AuthStateType =
+  | 'login'
+  | 'register'
+  | 'enter'
+  | 'token'
+  | 'searchKey';
 
 interface AuthProps {
-  changeLoadingState: (state: boolean) => void;
-  isLoading: boolean;
+  changeLoadingState: (state: LoadingType) => void;
 }
 
-export function Auth({ isLoading, changeLoadingState }: AuthProps) {
-  const [authState, setAuthState] = useState<AuthState>('login');
+export function Auth({ changeLoadingState }: AuthProps) {
+  const [authState, setAuthState] = useState<AuthStateType>('login');
 
-  const handleAuthState = useCallback((state: AuthState) => {
+  const handleAuthState = useCallback((state: AuthStateType) => {
+    toast.dismiss('resendToken');
     setAuthState(state);
   }, []);
+
+  useIPCAuth({ changeAuthState: handleAuthState, changeLoadingState });
 
   return (
     <div
@@ -38,6 +47,7 @@ export function Auth({ isLoading, changeLoadingState }: AuthProps) {
           <Login
             changeLoadingState={changeLoadingState}
             handleAuthState={handleAuthState}
+            authState={authState}
           />
         </div>
       </div>

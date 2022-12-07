@@ -1,0 +1,50 @@
+@use '../../styles/_util' as *
+
+.navbar.dark
+  background-color: $gray-900
+  color: $white
+  .icons
+    svg
+      background-color: $gray-800
+      color: $white
+
+.navbar.light
+  background-color: $white
+
+  .icons
+    svg
+      background-color: $gray-100
+      color: $black
+
+.navbar
+  @include flex(center, space-between, row)
+  height: 50px
+  width: 100%
+  background-color: blue
+
+  border-bottom: 1px solid $blue-100
+  .title
+    @include flex(center, space-between, row)
+    gap: 1rem
+    margin-left: 2rem
+  .icons
+    @include flex(center, center, row)
+    gap: 1rem
+    margin-right: 2rem
+
+    svg
+      background-color: red
+      border-radius: $default-radius
+      padding: .5rem
+      width: 36px
+      height: 36px
+
+    .iconsUser
+      @include flex(center, center, row)
+      gap: 1rem
+      border-left: 1px solid $gray-600
+
+      svg
+        &:first-child
+          margin-left: 1rem
+

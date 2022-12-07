@@ -1,0 +1,41 @@
+@use '../../../../styles/_util' as *
+.searchKey
+  @include flex(center, center, column)
+  width: 100%
+  z-index: 2004
+
+  >p
+    margin-bottom: 2rem
+    font-family: 'Anek Devanagari', sans-serif
+    font-weight: 600
+    text-transform: uppercase
+    color: $red-100
+    font-size: 1rem
+
+  .box
+    @include flex(center, center, column)
+    min-width: 400px
+    height: 130px
+    border: 1px dashed $blue-100
+    cursor: pointer
+
+    p
+      transition: all 0.1s ease
+
+    &:hover
+      svg
+        width: 100px
+        height: 100px
+
+      p
+        opacity: 0
+
+    svg
+      transition: all 0.5s ease
+      color: $blue-100
+
+    input
+      display: none
+      visibility: hidden
+
+

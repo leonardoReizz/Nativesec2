@@ -10,15 +10,16 @@ import { IPCTypes } from '../../../renderer/@types/IPCTypes';
 import { store } from '../../main';
 import { IInitialData, IToken, IUser, UseIPCData } from '../../types';
 import { api } from '../../util';
-import { ICreateUser, IUserConfig } from './types';
+import { ICreateUser } from './types';
 import DB from '../../database';
 import database from '../../database/database';
 import APIUser from '../../API/user';
 import APIKey from '../../API/keys';
 import DBUser from '../../database/user';
+import { getPublicKey } from '../keys';
 
 export async function authPassword(arg: UseIPCData) {
-  let response = 'authPassword-response';
+  let response = IPCTypes.AUTH_PASSWORD_RESPONSE;
   if (arg.data.type === 'register') {
     response = IPCTypes.AUTH_PASSWORD_RESPONSE_REGISTER;
   }
@@ -52,6 +53,7 @@ export async function authLogin(arg: UseIPCData) {
       accessToken: result.data.msg.access_token,
       tokenType: result.data.msg.token_type,
     });
+    return getPublicKey();
   }
 
   return {
