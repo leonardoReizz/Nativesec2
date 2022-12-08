@@ -11,9 +11,9 @@ export function LayoutsWithSidebar() {
   return (
     <>
       <div className={styles.flexApp}>
-        <Navbar />
+        <Sidebar />
         <div className={styles.app}>
-          <Sidebar />
+          <Navbar />
           <Outlet />
         </div>
       </div>

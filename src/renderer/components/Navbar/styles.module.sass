@@ -19,14 +19,19 @@
 .navbar
   @include flex(center, space-between, row)
   height: 50px
-  width: 100%
+  width: 101%
+  margin-left: -5px
   background-color: blue
-
+  z-index: 2000
   border-bottom: 1px solid $blue-100
+
   .title
     @include flex(center, space-between, row)
     gap: 1rem
     margin-left: 2rem
+    img
+      max-width: 30px
+
   .icons
     @include flex(center, center, row)
     gap: 1rem
@@ -42,9 +47,20 @@
     .iconsUser
       @include flex(center, center, row)
       gap: 1rem
-      border-left: 1px solid $gray-600
 
-      svg
+      button
+        svg
+          padding: .6rem
         &:first-child
           margin-left: 1rem
-
+          position: relative
+          &::before
+            content: ''
+            position: absolute
+            height: 25px
+            width: 1px
+            border-radius: 5rem
+            top: 5px
+            background-color: $gray-600
+            left: -1rem
+            cursor: default

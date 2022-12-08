@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { IIPCResponse } from 'renderer/@types/types';
+import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { AuthStateType } from 'renderer/pages/Auth';
 import { LoadingType } from 'renderer/routes';
@@ -21,6 +22,12 @@ export function useIPCAuth({
 }: UseIPCAuthProps): void {
   const navigate = useNavigate();
   const { changeTheme } = useContext(ThemeContext);
+  const {
+    updateOrganizationsIcons,
+    updateOrganizations,
+    changeCurrentOrganization,
+  } = useContext(OrganizationsContext);
+
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.AUTH_PASSWORD_RESPONSE,
@@ -201,8 +208,8 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
       () => {
-        //updateOrganizationsIcons(window.electron.store.get('iconeAll'));
-        //updateOrganizations(window.electron.store.get('organizations'));
+        updateOrganizationsIcons(window.electron.store.get('iconeAll'));
+        updateOrganizations(window.electron.store.get('organizations'));
         window.electron.ipcRenderer.sendMessage('useIPC', {
           event: IPCTypes.SET_USER_CONFIG,
         });
@@ -227,7 +234,7 @@ export function useIPCAuth({
         // });
         const filter = [];
         if (filter.length > 0) {
-          //changeCurrentOrganization(userConfig.lastOrganizationId);
+          changeCurrentOrganization(userConfig.lastOrganizationId);
           navigate(`/workspace/${userConfig.lastOrganizationId}`);
         } else {
           navigate('/home');

@@ -1,10 +1,16 @@
 import { useContext } from 'react';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
-import { User, Gear, Bell } from 'phosphor-react';
+import { MdSettings } from 'react-icons/md';
+import { SiKubernetes } from 'react-icons/si';
+
+import { FaBell, FaUser } from 'react-icons/fa';
+import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import styles from './styles.module.sass';
 
 export function Navbar() {
   const { theme } = useContext(ThemeContext);
+  const { currentOrganization, currentOrganizationIcon } = useContext(OrganizationsContext);
+
   return (
     <div
       className={`${styles.navbar} ${
@@ -12,16 +18,27 @@ export function Navbar() {
       }`}
     >
       <div className={styles.title}>
-        <img src="" alt="ICONE DO WORKSPACE" />
-        <h3>Nome do Workspace</h3>
+        {currentOrganizationIcon?.icone !== (null || 'null') ? (
+          <img src={currentOrganizationIcon?.icone} alt="ICONE DO WORKSPACE" />
+        ) : (
+          ''
+        )}
+        {/* <img src="" alt="ICONE DO WORKSPACE" /> */}
+        <h3>{currentOrganization?.nome}</h3>
       </div>
       <div className={styles.icons}>
-        <Gear weight="fill" />
+        <button>
+          <MdSettings />
+        </button>
         <div className={styles.iconsUser}>
-          <Bell weight="fill" />
-          <User weight="fill" />
+          <button>
+            <FaBell />
+          </button>
+          <button>
+            <FaUser />
+          </button>
         </div>
       </div>
     </div>
-  )
+  );
 }

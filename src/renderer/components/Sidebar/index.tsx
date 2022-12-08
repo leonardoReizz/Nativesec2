@@ -1,10 +1,20 @@
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { Icon } from './Icon';
 import styles from './styles.module.sass';
 
 export function Sidebar() {
+  const navigate = useNavigate();
   const { theme } = useContext(ThemeContext);
+  const { organizations, organizationsIcons, changeCurrentOrganization } =
+    useContext(OrganizationsContext);
+
+  const changeOrganization = useCallback((id: string) => {
+    changeCurrentOrganization(id);
+    navigate(`/workspace/${id}`);
+  }, []);
 
   return (
     <div
@@ -13,11 +23,19 @@ export function Sidebar() {
       }`}
     >
       <div className={styles.icons}>
-        <Icon />
-        <Icon />
-        <Icon />
-        <Icon />
-        <Icon />
+        {organizations.map((organization) => (
+          <>
+            <Icon
+              organization={organization}
+              icon={
+                organizationsIcons?.filter(
+                  (icon) => icon._id === organization?._id
+                )[0]?.icone
+              }
+              changeOrganization={changeOrganization}
+            />
+          </>
+        ))}
       </div>
     </div>
   );

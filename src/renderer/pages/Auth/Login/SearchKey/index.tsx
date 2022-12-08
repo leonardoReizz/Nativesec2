@@ -5,10 +5,11 @@ import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
 import { useAuth } from 'renderer/hooks/useAuth/useAuth';
 import { toastOptions } from 'renderer/utils/options/Toastify';
+import { LoadingType } from 'renderer/routes';
 import styles from './styles.module.sass';
 
 interface SearchKeyProps {
-  changeLoadingState: (state: boolean) => void;
+  changeLoadingState: (state: LoadingType) => void;
 }
 
 export function SearchKey({ changeLoadingState }: SearchKeyProps) {
@@ -30,7 +31,7 @@ export function SearchKey({ changeLoadingState }: SearchKeyProps) {
       buff.startsWith('-----BEGIN PGP PRIVATE KEY BLOCK-----') &&
       buff.includes('-----END PGP PRIVATE KEY BLOCK-----')
     ) {
-      changeLoadingState(true);
+      changeLoadingState('true');
       ValidatePrivateKey(buff);
     } else {
       toast.error('Chave Privada Invalida.', {
