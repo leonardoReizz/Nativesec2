@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Loading } from 'renderer/components/Loading';
 import { Auth } from 'renderer/pages/Auth';
 import { Home } from 'renderer/pages/Home/index';
+import { UserSettings } from 'renderer/pages/UserSettings';
 import { Workspace } from 'renderer/pages/Workspace';
 import { LayoutsWithSidebar } from './LayoutsWithSidebar';
 import { ProtectedRoutes } from './ProtectedRoutes';
@@ -28,6 +29,7 @@ export function AppRoutes() {
           <Route element={<LayoutsWithSidebar />}>
             <Route path="/home" element={<Home />} />
             <Route path="/workspace/:id" element={<Workspace />} />
+            <Route path="/userSettings" element={<UserSettings />} />
           </Route>
         </Route>
       </Routes>

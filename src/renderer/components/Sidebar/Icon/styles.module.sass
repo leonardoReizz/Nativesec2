@@ -6,16 +6,15 @@
     visibility: visible
     opacity: 1
     height: 25px
-    left: -14px
+    left: -22px
 
 .icon
+  @include flex(center, center, row)
   height: 55px
   width: 55px
   cursor: pointer
   border-radius: 5rem
-  z-index: 1
-
-
+  position: relative
 
   &::before
     content: ''
@@ -30,14 +29,13 @@
     visibility: none
     opacity: 1
     transition: all 0.2s ease
-    margin-top: 5px
+    margin-top: 0px
 
   &:hover::before
     visibility: visible
     opacity: 1
     height: 25px
-    left: -14px
-
+    left: -22px
 
   button
     p
@@ -50,6 +48,7 @@
       color: $white
 
     img
-      max-width: 57px
+      width: 55px
+      height: 55px
       border-radius: 5rem
 

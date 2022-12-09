@@ -1,12 +1,19 @@
 @use '../../styles/_util' as *
 
+// --------------------------------------------------------------
+// ---------------------------- THEME ---------------------------
+// --------------------------------------------------------------
+
 .navbar.dark
   background-color: $gray-900
   color: $white
+
   .icons
     svg
       background-color: $gray-800
       color: $white
+      &:hover
+         background-color: $gray-600
 
 .navbar.light
   background-color: $white
@@ -15,6 +22,13 @@
     svg
       background-color: $gray-100
       color: $black
+      &:hover
+        background-color: $gray-300
+
+
+// --------------------------------------------------------------
+// --------------------------- SETTINGS -------------------------
+// --------------------------------------------------------------
 
 .navbar
   @include flex(center, space-between, row)
@@ -43,6 +57,7 @@
       padding: .5rem
       width: 36px
       height: 36px
+      transition: background-color 0.2s ease
 
     .iconsUser
       @include flex(center, center, row)

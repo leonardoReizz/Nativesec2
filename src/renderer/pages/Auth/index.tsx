@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react/jsx-no-bind */
 import { useCallback, useState } from 'react';
 import { ButtonOutlined } from 'renderer/components/Buttons/ButtonOutlined';
@@ -13,8 +14,10 @@ import securityImage from '../../../../assets/svg/security2.svg';
 import styles from './styles.module.sass';
 
 export type AuthStateType =
-  | 'login'
-  | 'register'
+  | 'login-step-one'
+  | 'login-step-two'
+  | 'register-step-one'
+  | 'register-step-two'
   | 'enter'
   | 'token'
   | 'searchKey';
@@ -24,7 +27,7 @@ interface AuthProps {
 }
 
 export function Auth({ changeLoadingState }: AuthProps) {
-  const [authState, setAuthState] = useState<AuthStateType>('login');
+  const [authState, setAuthState] = useState<AuthStateType>('login-step-one');
 
   const handleAuthState = useCallback((state: AuthStateType) => {
     toast.dismiss('resendToken');
@@ -36,17 +39,19 @@ export function Auth({ changeLoadingState }: AuthProps) {
   return (
     <div
       className={`${styles.container} ${
-        authState === 'register' ? styles.signUpMode : ''
+        authState === 'register-step-one' || authState === 'register-step-two'
+          ? styles.signUpMode
+          : ''
       }`}
     >
       <div className={styles.form}>
         <div className={styles.register}>
-          <Register />
+          <Register changeAuthState={handleAuthState} authState={authState} />
         </div>
         <div className={styles.login}>
           <Login
             changeLoadingState={changeLoadingState}
-            handleAuthState={handleAuthState}
+            changeAuthState={handleAuthState}
             authState={authState}
           />
         </div>
@@ -54,7 +59,7 @@ export function Auth({ changeLoadingState }: AuthProps) {
 
       <div className={styles.text}>
         <div className={styles.registerText}>
-          <h1>Crie uma Conta</h1>
+          <h1>Entre</h1>
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat,
             porro nam, magnam facilis sint ad doloremque nulla expedita minus
@@ -68,11 +73,11 @@ export function Auth({ changeLoadingState }: AuthProps) {
           <ButtonOutlined
             type="button"
             text="Entrar"
-            onClick={() => handleAuthState('login')}
+            onClick={() => handleAuthState('login-step-one')}
           />
         </div>
         <div className={styles.loginText}>
-          <h1>Entre Agora Mesmo</h1>
+          <h1>Registre-se Agora Mesmo</h1>
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat,
             porro nam, magnam facilis sint ad doloremque nulla expedita minus
@@ -86,7 +91,7 @@ export function Auth({ changeLoadingState }: AuthProps) {
           <ButtonOutlined
             type="button"
             text="Registrar"
-            onClick={() => handleAuthState('register')}
+            onClick={() => handleAuthState('register-step-one')}
           />
         </div>
       </div>
@@ -96,6 +101,5 @@ export function Auth({ changeLoadingState }: AuthProps) {
         <img src={securityImage} />
       </div>
     </div>
-
   );
 }

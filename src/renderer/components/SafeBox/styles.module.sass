@@ -1,7 +1,27 @@
 @use '../../styles/_util' as *
 
 
-.safebox
+// --------------------------------------------------------------
+// ---------------------------- THEME ---------------------------
+// --------------------------------------------------------------
+
+.safeBox.dark
+  .text
+    color: $white
+    p
+      color: $gray-600
+.safeBox.light
+  .text
+    color: $black
+    p
+      color: $gray-600
+
+
+// --------------------------------------------------------------
+// --------------------------- SETTINGS -------------------------
+// --------------------------------------------------------------
+
+.safeBox
   @include flex(center, center, row)
   width: 100%
   gap: 1rem
@@ -11,6 +31,7 @@
   &:hover
     background-color: $blue-100
     cursor: pointer
+
     svg
       color: $white
     .text
@@ -34,9 +55,12 @@
       overflow: hidden
       width: 320px
     p
-      color: $gray-600
       white-space: nowrap
       text-overflow: ellipsis
       overflow: hidden
       width: 320px
       font-size: .9rem
+
+
+.annotation
+  color: $blue-200

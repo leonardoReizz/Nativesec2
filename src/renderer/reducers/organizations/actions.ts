@@ -2,7 +2,7 @@ import {
   IOrganization,
   IOrganizationIcon,
   IOrganizationInvite,
-} from 'renderer/contexts/organizationsContext/types';
+} from 'renderer/contexts/OrganizationsContext/types';
 
 export enum ActionType {
   UPDATE_ORGANIZATIONS = 'UPDATE_ORGANIZATIONS',

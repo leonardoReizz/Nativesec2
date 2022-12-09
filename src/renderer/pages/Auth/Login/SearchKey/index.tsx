@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { useAuth } from 'renderer/hooks/useAuth/useAuth';
 import { toastOptions } from 'renderer/utils/options/Toastify';
 import { LoadingType } from 'renderer/routes';
+import { readFile } from 'renderer/utils/others/ReadFile';
 import styles from './styles.module.sass';
 
 interface SearchKeyProps {
@@ -14,14 +15,6 @@ interface SearchKeyProps {
 
 export function SearchKey({ changeLoadingState }: SearchKeyProps) {
   const { ValidatePrivateKey } = useAuth();
-
-  const readFile = (file: File) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsBinaryString(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
 
   async function onDrop(acceptedFiles: File[]) {
     const result = await readFile(acceptedFiles[0]);

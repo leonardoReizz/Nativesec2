@@ -5,6 +5,7 @@ import { HashRouter } from 'react-router-dom';
 import '!style-loader!css-loader!sass-loader!react-toastify/dist/ReactToastify.css';
 import { OrganizationsContextProvider } from './contexts/OrganizationsContext/OrganizationsContext';
 import { ThemeContextProvider } from './contexts/ThemeContext/ThemeContext';
+import { SafeBoxesContextProvider } from './contexts/SafeBoxesContext/safeBoxesContext';
 
 export default function App() {
   return (
@@ -13,7 +14,9 @@ export default function App() {
       <HashRouter>
         <ThemeContextProvider>
           <OrganizationsContextProvider>
-            <AppRoutes />
+            <SafeBoxesContextProvider>
+              <AppRoutes />
+            </SafeBoxesContextProvider>
           </OrganizationsContextProvider>
         </ThemeContextProvider>
       </HashRouter>

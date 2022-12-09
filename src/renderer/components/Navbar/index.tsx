@@ -5,11 +5,18 @@ import { SiKubernetes } from 'react-icons/si';
 
 import { FaBell, FaUser } from 'react-icons/fa';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
+import { useNavigate } from 'react-router-dom';
 import styles from './styles.module.sass';
 
 export function Navbar() {
   const { theme } = useContext(ThemeContext);
-  const { currentOrganization, currentOrganizationIcon } = useContext(OrganizationsContext);
+  const { currentOrganization, currentOrganizationIcon } =
+    useContext(OrganizationsContext);
+  const navigate = useNavigate();
+
+  function handleOpenUserSettings() {
+    navigate('/userSettings');
+  }
 
   return (
     <div
@@ -34,7 +41,7 @@ export function Navbar() {
           <button>
             <FaBell />
           </button>
-          <button>
+          <button onClick={handleOpenUserSettings}>
             <FaUser />
           </button>
         </div>

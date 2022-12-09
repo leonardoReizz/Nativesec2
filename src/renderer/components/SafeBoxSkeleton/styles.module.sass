@@ -1,0 +1,52 @@
+@use '../../styles/_util' as *
+
+.safeBoxSkeleton
+  @include flex(center, center, column)
+  width: 100%
+  gap: 1rem
+  padding: 1rem
+  border-radius: $default-radius
+  margin-top: -1rem
+
+  svg
+    width: 55px
+    height: 55px
+    margin-right: 1rem
+  .container
+    @include flex(center, center, row)
+    margin-top: 1rem
+
+  .text
+    @include flex(flex-start, center, column)
+    width: 100%
+
+    h3, p
+      height: 15px
+      width: 120px
+      animation: skeleton-loading 1s linear infinite alternate
+      border-radius: 2rem
+    p
+      margin-top: .5rem
+      width: 320px
+      animation: skeleton-loading 1s linear infinite alternate
+      border-radius: 2rem
+
+.annotation
+  animation: skeleton-loading-color 1s linear infinite alternate
+
+@keyframes skeleton-loading
+  0%
+    background-color: hsl(200, 20%, 80%)
+
+  100%
+    background-color: hsl(200, 20%, 95%)
+
+
+@keyframes skeleton-loading-color
+  0%
+    color: hsl(200, 20%, 80%)
+
+  100%
+    color: hsl(200, 20%, 95%)
+
+

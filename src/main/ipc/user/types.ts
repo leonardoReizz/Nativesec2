@@ -6,7 +6,7 @@ export interface ICreateUser {
 
 export interface IUserConfig {
   email: string;
-  refreshTime: string;
+  refreshTime: number;
   savePrivateKey: boolean;
   theme: 'light' | 'dark';
   lastOrganizationId: string;

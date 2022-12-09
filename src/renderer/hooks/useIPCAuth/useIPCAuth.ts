@@ -30,37 +30,6 @@ export function useIPCAuth({
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
-      IPCTypes.AUTH_PASSWORD_RESPONSE,
-      (arg: IIPCResponse) => {
-        switch (arg.status) {
-          case 200:
-            if (arg.data?.status === 'ok') {
-              toast.info('Um Token de acesso foi enviado para seu email', {
-                ...toastOptions,
-                toastId: 'sendToken',
-              });
-              console.log('entrei');
-              changeAuthState('token');
-            } else {
-              toast.error('Email Invalido, tente novamente.', {
-                ...toastOptions,
-                toastId: 'invalid-email',
-              });
-            }
-            break;
-          default:
-            toast.error('Error, tente novamente.', {
-              ...toastOptions,
-              toastId: 'error-token',
-            });
-            break;
-        }
-      }
-    );
-  }, []);
-
-  useEffect(() => {
-    window.electron.ipcRenderer.on(
       IPCTypes.GET_PUBLIC_KEY_RESPONSE,
       (result: IIPCResponse) => {
         switch (result.status) {
@@ -221,8 +190,8 @@ export function useIPCAuth({
     window.electron.ipcRenderer.once(IPCTypes.SET_USER_CONFIG_RESPONSE, () => {
       const userConfig = window.electron.store.get('userConfig') as IUserConfig;
       changeTheme(userConfig.theme);
-      //handleRefreshTime(Number(userConfig.refreshTime));
       changeLoadingState('finalized');
+      //handleRefreshTime(Number(userConfig.refreshTime));
       if (userConfig.lastOrganizationId === null) {
         navigate('/home');
       } else {
