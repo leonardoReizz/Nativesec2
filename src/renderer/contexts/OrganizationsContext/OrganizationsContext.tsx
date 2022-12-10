@@ -20,7 +20,9 @@ interface OrganizationsContextType {
   updateOrganizationsIcons: (
     newOrganizationsIcons: IOrganizationIcon[]
   ) => void;
-  changeCurrentOrganization: (newCurrentOrganizationId: string) => void;
+  changeCurrentOrganization: (
+    newCurrentOrganizationId: string | undefined
+  ) => void;
   refreshOrganizations: () => void;
   updateOrganizationsInvites: (
     newOrganizationsInvites: IOrganizationInvite[]
@@ -87,7 +89,9 @@ export function OrganizationsContextProvider({
     );
   }
 
-  function changeCurrentOrganization(newCurrentOrganizationId: string) {
+  function changeCurrentOrganization(
+    newCurrentOrganizationId: string | undefined
+  ) {
     dispatch(changeCurrentOrganizationAction(newCurrentOrganizationId));
   }
 

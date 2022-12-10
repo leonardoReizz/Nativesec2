@@ -1,4 +1,6 @@
-import { useContext } from 'react';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import { useContext, useState } from 'react';
 import { SiKubernetes } from 'react-icons/si';
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
 import { CgWebsite } from 'react-icons/cg';
@@ -10,18 +12,21 @@ import { IoDocumentText } from 'react-icons/io5';
 import { TbLicense, TbCloudDataConnection } from 'react-icons/tb';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import styles from './styles.module.sass';
+import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 
 interface SafeBoxProps {
   safeBox: ISafeBox;
 }
 
-export function SafeBox({ safeBox }: SafeBoxProps) {
+export function SafeBoxIcon({ safeBox }: SafeBoxProps) {
+  const { changeCurrentSafeBox } = useContext(SafeBoxesContext);
   const { theme } = useContext(ThemeContext);
   return (
     <div
       className={`${styles.safeBox} ${
         theme === 'dark' ? styles.dark : styles.light
       }`}
+      onClick={() => changeCurrentSafeBox(safeBox) }
     >
       {safeBox.tipo === 'bankAccount' ? (
         <span className={styles.bankAccount}>

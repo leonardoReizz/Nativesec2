@@ -3,7 +3,7 @@ import { IoReloadOutline } from 'react-icons/io5';
 import { IoMdAdd } from 'react-icons/io';
 import { CiSearch } from 'react-icons/ci';
 
-import { SafeBox } from 'renderer/components/SafeBox';
+import { SafeBoxIcon } from 'renderer/components/SafeBox';
 import { useContext, useEffect, useState } from 'react';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
@@ -13,6 +13,7 @@ import { useIPCSafeBox } from 'renderer/hooks/useIPCSafeBox/useIPCSafeBox';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { SafeBoxSkeleton } from 'renderer/components/SafeBoxSkeleton';
 import styles from './styles.module.sass';
+import { SafeBox } from './SafeBox';
 
 export function Workspace() {
   const { theme } = useContext(ThemeContext);
@@ -20,7 +21,7 @@ export function Workspace() {
     'userConfig'
   ) as IUserConfig;
   const { currentOrganization } = useContext(OrganizationsContext);
-  const { safeBoxes, safeBoxesIsLoading } = useContext(SafeBoxesContext);
+  const { safeBoxes, safeBoxesIsLoading, currentSafeBox } = useContext(SafeBoxesContext);
   const [update, setUpdate] = useState<boolean>(true);
   useIPCSafeBox();
 
@@ -38,6 +39,11 @@ export function Workspace() {
   }, [update, refreshTime]);
 
   console.log(safeBoxes);
+
+  function handleSelectedSafeBox(safeBoxId: string) {
+    // changeCurrentSafeBox(safeBoxId);
+  }
+
   return (
     <div
       className={`${styles.workspace} ${
@@ -72,12 +78,14 @@ export function Workspace() {
                 <SafeBoxSkeleton />
               </>
             ) : (
-              safeBoxes.map((safeBox) => <SafeBox safeBox={safeBox} />)
+              safeBoxes.map((safeBox) => <SafeBoxIcon safeBox={safeBox} />)
             )}
           </div>
         </div>
       </div>
-      <div className={styles.safebox}></div>
+      <div className={styles.currentSafeBox}>
+        {currentSafeBox ? <SafeBox safeBox={currentSafeBox} /> : ''}
+      </div>
     </div>
   );
 }

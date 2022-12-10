@@ -10,11 +10,15 @@ import styles from './styles.module.sass';
 
 export function Navbar() {
   const { theme } = useContext(ThemeContext);
-  const { currentOrganization, currentOrganizationIcon } =
-    useContext(OrganizationsContext);
+  const {
+    currentOrganization,
+    currentOrganizationIcon,
+    changeCurrentOrganization,
+  } = useContext(OrganizationsContext);
   const navigate = useNavigate();
 
   function handleOpenUserSettings() {
+    changeCurrentOrganization(undefined);
     navigate('/userSettings');
   }
 
@@ -25,23 +29,30 @@ export function Navbar() {
       }`}
     >
       <div className={styles.title}>
-        {currentOrganizationIcon?.icone !== (null || 'null') ? (
-          <img src={currentOrganizationIcon?.icone} alt="ICONE DO WORKSPACE" />
+        {currentOrganization ? (
+          <>
+            {currentOrganizationIcon?.icone !== (null || 'null') ? (
+              <img
+                src={currentOrganizationIcon?.icone}
+                alt="ICONE DO WORKSPACE"
+              />
+            ) : (
+              ''
+            )}
+          </>
         ) : (
           ''
         )}
-        {/* <img src="" alt="ICONE DO WORKSPACE" /> */}
-        <h3>{currentOrganization?.nome}</h3>
       </div>
       <div className={styles.icons}>
-        <button>
+        <button type="button">
           <MdSettings />
         </button>
         <div className={styles.iconsUser}>
-          <button>
+          <button type="button">
             <FaBell />
           </button>
-          <button onClick={handleOpenUserSettings}>
+          <button type="button" onClick={handleOpenUserSettings}>
             <FaUser />
           </button>
         </div>

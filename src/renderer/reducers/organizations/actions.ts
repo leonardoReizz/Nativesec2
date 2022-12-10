@@ -32,7 +32,7 @@ export function updateOrganizationsIconsAction(
 }
 
 export function changeCurrentOrganizationAction(
-  newCurrentOrganizationId: string
+  newCurrentOrganizationId: string | undefined
 ) {
   return {
     type: ActionType.CHANGE_CURRENT_ORGANIZATION,
