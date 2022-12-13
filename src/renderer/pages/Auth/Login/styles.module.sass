@@ -7,7 +7,7 @@
 
   img
     position: absolute
-    top: 100px
+    top: 50px
     max-width: 200px
 
     @media (min-width: 1800px)
@@ -21,7 +21,6 @@
     form
       @include flex(center, center, column)
       gap: 2rem
-      margin-top: 8rem
       visibility: hidden
       opacity: 0
       transition: opacity 0.5s ease
@@ -33,6 +32,7 @@
       @include flex(center, center, column)
       position: absolute
       width: 100%
+
       button
         position: relative
 
@@ -42,7 +42,7 @@
       opacity: 1
 
     .buttonStart
-      button
-        display: none
-        pointer-events: none
+      display: none
+      pointer-events: none
+
 

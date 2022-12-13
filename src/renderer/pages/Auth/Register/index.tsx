@@ -6,7 +6,7 @@ import {
   RegisterSchema,
 } from 'renderer/utils/Formik/Register/Register';
 import { useFormik } from 'formik';
-import { FormMessageError } from 'renderer/components/FormMessageError';
+import { FormMessageError } from 'renderer/components/Forms/FormMessageError';
 import { AuthStateType } from '..';
 import styles from './styles.module.sass';
 import nativeSecLogo from '../../../../../assets/logoNativesec/brand-nativesec.svg'

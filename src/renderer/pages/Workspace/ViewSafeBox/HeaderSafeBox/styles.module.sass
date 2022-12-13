@@ -1,0 +1,92 @@
+@use '../../../../styles/_util' as *
+
+.dark
+  .actions
+    button
+      color: $white
+      background-color: $gray-700
+      &:hover
+        background-color: $gray-500
+  .title
+    color: $white
+
+.light
+  .actions
+    button
+      color: $black
+      background-color: $gray-100
+      &:hover
+        background-color: $gray-300
+
+
+header
+  @include flex(center, center, column)
+  width: 100%
+  gap: 4rem
+
+  .actions
+    @include flex(center, flex-end, row)
+    width: 100%
+    gap: 1rem
+    margin-right: 50px
+
+    button
+      @include flex(center, center, row)
+      gap: .5rem
+      padding: .5rem 1rem
+      border-radius: 5rem
+      transition: background-color 0.2s ease
+
+  .title
+    @include flex(flex-start, flex-start, row)
+    width: 100%
+    height: 100%
+    gap: 1rem
+    position: relative
+    margin-bottom: 1rem
+    &::before
+      content: ''
+      position: absolute
+      width: 100%
+      height: 1px
+      background-color: $gray-400
+      bottom: -1rem
+
+    .description
+      padding: .5rem 0
+
+    .annotation
+      svg
+        color: $blue-100
+        font-size: 80px
+    .bankAccount
+      svg
+        color: $yellow-100
+        height: 60px
+        font-size: 70px
+    .email
+      svg
+        color: $red-100
+        font-size: 85px
+    .kubeconfig
+      svg
+        color: $blue-100
+        font-size: 80px
+    .softwareLicense
+      svg
+        color: $green-100
+        font-size: 85px
+    .login
+      svg
+        color: $red-100
+        font-size: 80px
+    .ssh
+      svg
+        color: $gray-300
+    .server
+      svg
+        font-size: 75px
+        color: $gray-300
+    .site
+      svg
+        color: $green-100

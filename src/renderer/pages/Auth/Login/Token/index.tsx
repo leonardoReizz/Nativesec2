@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import { IUser } from 'main/types';
 import { toast } from 'react-toastify';
 import { Button } from 'renderer/components/Buttons/Button';
-import { FormMessageError } from 'renderer/components/FormMessageError';
+import { FormMessageError } from 'renderer/components/Forms/FormMessageError';
 import { Input } from 'renderer/components/Inputs/Input';
 import { useAuth } from 'renderer/hooks/useAuth/useAuth';
 import { LoadingType } from 'renderer/routes';

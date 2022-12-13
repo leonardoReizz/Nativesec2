@@ -4,16 +4,19 @@
 // ---------------------------- THEME ---------------------------
 // --------------------------------------------------------------
 
-.input.dark
+.textArea.dark
   background-color: $gray-700
-  input
+  span
+    background-color: $gray-700
+  textarea
     background-color: $gray-700
     color: $white
 
-
-.input.light
+.textArea.light
   background-color: $gray-100
-  input
+  span
+    background-color: $gray-100
+  textarea
     background-color: $gray-100
     color: $black
 
@@ -21,11 +24,11 @@
 // -------------------------- SETTINGS --------------------------
 // --------------------------------------------------------------
 
-.input
+.textArea
   @include flex(flex-start, center, column)
   width: 100%
   border-radius: $default-radius
-  max-height: 57px
+  max-height: 117px
 
   span
     position: relative
@@ -37,15 +40,22 @@
     text-transform: uppercase
     font-family: 'Anek Devanagari'
 
-  input
+  textarea
     width: 100%
     padding: .6rem .7rem
+    color: $black
     border-radius: $default-radius
     font-size: .9rem
     margin-top: -5px
+    min-height: 100px
+    max-height: 100px
+    border: 0
+    outline: none
+    resize: none
 
 .notValid
   span
     color: $red-100 !important
+
 .notValid.input
   border: 1px solid $red-100

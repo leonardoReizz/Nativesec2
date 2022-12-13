@@ -11,9 +11,8 @@ import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { IUserConfig } from 'main/ipc/user/types';
 import { useIPCSafeBox } from 'renderer/hooks/useIPCSafeBox/useIPCSafeBox';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
-import { SafeBoxSkeleton } from 'renderer/components/SafeBoxSkeleton';
 import styles from './styles.module.sass';
-import { SafeBox } from './SafeBox';
+import { ViewSafeBox } from './ViewSafeBox';
 
 export function Workspace() {
   const { theme } = useContext(ThemeContext);
@@ -21,7 +20,8 @@ export function Workspace() {
     'userConfig'
   ) as IUserConfig;
   const { currentOrganization } = useContext(OrganizationsContext);
-  const { safeBoxes, safeBoxesIsLoading, currentSafeBox } = useContext(SafeBoxesContext);
+  const { safeBoxes, safeBoxesIsLoading, currentSafeBox } =
+    useContext(SafeBoxesContext);
   const [update, setUpdate] = useState<boolean>(true);
   useIPCSafeBox();
 
@@ -73,18 +73,41 @@ export function Workspace() {
             <div className={styles.title}>
               <span>Cofres</span>
             </div>
-            {safeBoxesIsLoading ? (
-              <>
-                <SafeBoxSkeleton />
-              </>
-            ) : (
-              safeBoxes.map((safeBox) => <SafeBoxIcon safeBox={safeBox} />)
-            )}
+            {safeBoxes.map((safeBox) => (
+              <SafeBoxIcon safeBox={safeBox} />
+            ))}
+            {safeBoxes.map((safeBox) => (
+              <SafeBoxIcon safeBox={safeBox} />
+            ))}
+            {safeBoxes.map((safeBox) => (
+              <SafeBoxIcon safeBox={safeBox} />
+            ))}
+            {safeBoxes.map((safeBox) => (
+              <SafeBoxIcon safeBox={safeBox} />
+            ))}
+            {safeBoxes.map((safeBox) => (
+              <SafeBoxIcon safeBox={safeBox} />
+            ))}
+            {safeBoxes.map((safeBox) => (
+              <SafeBoxIcon safeBox={safeBox} />
+            ))}
+            {safeBoxes.map((safeBox) => (
+              <SafeBoxIcon safeBox={safeBox} />
+            ))}
+            {safeBoxes.map((safeBox) => (
+              <SafeBoxIcon safeBox={safeBox} />
+            ))}
+            {safeBoxes.map((safeBox) => (
+              <SafeBoxIcon safeBox={safeBox} />
+            ))}
+            {safeBoxes.map((safeBox) => (
+              <SafeBoxIcon safeBox={safeBox} />
+            ))}
           </div>
         </div>
       </div>
       <div className={styles.currentSafeBox}>
-        {currentSafeBox ? <SafeBox safeBox={currentSafeBox} /> : ''}
+        <ViewSafeBox />
       </div>
     </div>
   );

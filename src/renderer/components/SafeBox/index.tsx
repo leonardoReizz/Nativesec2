@@ -11,8 +11,8 @@ import { FaServer, FaMoneyCheckAlt } from 'react-icons/fa';
 import { IoDocumentText } from 'react-icons/io5';
 import { TbLicense, TbCloudDataConnection } from 'react-icons/tb';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
-import styles from './styles.module.sass';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
+import styles from './styles.module.sass';
 
 interface SafeBoxProps {
   safeBox: ISafeBox;
@@ -26,7 +26,7 @@ export function SafeBoxIcon({ safeBox }: SafeBoxProps) {
       className={`${styles.safeBox} ${
         theme === 'dark' ? styles.dark : styles.light
       }`}
-      onClick={() => changeCurrentSafeBox(safeBox) }
+      onClick={() => changeCurrentSafeBox(safeBox)}
     >
       {safeBox.tipo === 'bankAccount' ? (
         <span className={styles.bankAccount}>

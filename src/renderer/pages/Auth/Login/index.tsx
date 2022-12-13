@@ -3,19 +3,19 @@ import { Input } from 'renderer/components/Inputs/Input';
 import { Button } from 'renderer/components/Buttons/Button';
 import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
-import { FormMessageError } from 'renderer/components/FormMessageError';
+import { FormMessageError } from 'renderer/components/Forms/FormMessageError';
 import {
   LoginInitialValues,
   LoginSchema,
 } from 'renderer/utils/Formik/Login/Login';
 import { useAuth } from 'renderer/hooks/useAuth/useAuth';
 import { LoadingType } from 'renderer/routes';
+import { useIPCLogin } from 'renderer/hooks/useIPCLogin/useLogin';
 import styles from './styles.module.sass';
 import nativeSecLogo from '../../../../../assets/logoNativesec/brand-nativesec.svg';
 import { AuthStateType } from '..';
 import { Token } from './Token';
 import { SearchKey } from './SearchKey';
-import { useIPCLogin } from 'renderer/hooks/useIPCLogin/useLogin';
 
 interface LoginProps {
   changeAuthState: (state: AuthStateType) => void;

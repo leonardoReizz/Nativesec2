@@ -13,13 +13,13 @@ interface InputProps {
   autoComplete?: string;
   isValid?: boolean;
   style?: React.CSSProperties | undefined;
-  onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
+  onChange?: React.ChangeEventHandler<HTMLTextAreaElement> | undefined;
   name?: string;
   value?: string;
   className?: string;
   readOnly?: boolean | undefined;
-  onClick?: React.MouseEventHandler<HTMLInputElement> | undefined;
-  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement> | undefined;
+  onClick?: React.MouseEventHandler<HTMLTextAreaElement> | undefined;
+  onKeyDown?: React.KeyboardEventHandler<HTMLTextAreaElement> | undefined;
   disabled?: boolean;
   onBlur?: {
     (e: React.FocusEvent): void;
@@ -27,18 +27,17 @@ interface InputProps {
   };
 }
 
-export function Input({ type, text, isValid = true, ...props }: InputProps) {
+export function TextArea({ type, text, isValid = true, ...props }: InputProps) {
   const { theme } = useContext(ThemeContext);
-
   return (
     <div
-      className={`${styles.input}
+      className={`${styles.textArea}
       ${theme === 'dark' ? styles.dark : styles.light} ${
         !isValid ? styles.notValid : ''
       }`}
     >
       <span>{text}</span>
-      <input type={type || 'text'} {...props} placeholder=" " />
+      <textarea {...props} placeholder=" " />
     </div>
   );
 }

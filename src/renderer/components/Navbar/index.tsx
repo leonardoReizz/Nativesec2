@@ -43,6 +43,7 @@ export function Navbar() {
         ) : (
           ''
         )}
+        <h3>{currentOrganization?.nome}</h3>
       </div>
       <div className={styles.icons}>
         <button type="button">

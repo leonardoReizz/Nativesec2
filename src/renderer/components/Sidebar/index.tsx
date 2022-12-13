@@ -7,12 +7,15 @@ import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { Icon } from './Icon';
 import styles from './styles.module.sass';
 
 export function Sidebar() {
   const navigate = useNavigate();
   const { theme } = useContext(ThemeContext);
+  const { updateSafeBoxes, changeCurrentSafeBox } =
+    useContext(SafeBoxesContext);
   const { getSafeBoxes } = useSafeBox();
   const {
     organizations,
@@ -40,6 +43,8 @@ export function Sidebar() {
           theme: userConfig.theme,
         },
       });
+      updateSafeBoxes([]);
+      changeCurrentSafeBox(undefined);
       getSafeBoxes(organizationId);
       changeCurrentOrganization(organizationId);
       return navigate(`/workspace/${organizationId}`);
