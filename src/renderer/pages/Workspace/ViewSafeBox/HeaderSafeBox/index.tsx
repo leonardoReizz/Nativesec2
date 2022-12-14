@@ -1,68 +1,103 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/jsx-no-bind */
 import { useContext, useState, useCallback } from 'react';
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
 import { GiPadlockOpen } from 'react-icons/gi';
 
-import { SiKubernetes } from 'react-icons/si';
-import { CgWebsite } from 'react-icons/cg';
-import { MdOutlineAlternateEmail, MdOutlinePassword } from 'react-icons/md';
-import { FcSafe, FcSimCardChip } from 'react-icons/fc';
-import { HiTerminal } from 'react-icons/hi';
-import { FaServer, FaMoneyCheckAlt } from 'react-icons/fa';
-import { IoDocumentText } from 'react-icons/io5';
-import { TbLicense, TbCloudDataConnection } from 'react-icons/tb';
 import { RiEditFill } from 'react-icons/ri';
 import { AiFillDelete } from 'react-icons/ai';
 import { Input } from 'renderer/components/Inputs/Input';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
-import styles from './styles.module.sass';
-import { FormModeType } from '..';
 import { VerifySafetyPhraseModal } from 'renderer/components/Modals/VerifySafetyPhraseModal';
+import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
+import { toast } from 'react-toastify';
+import { toastOptions } from 'renderer/utils/options/Toastify';
+import {
+  ModeType,
+  SafeBoxModeContext,
+} from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
+import { SafeBoxIcon, SafeBoxIconType } from 'renderer/components/SafeBoxIcon';
+import formik from '../formik';
+import styles from './styles.module.sass';
 
 interface SafeBoxProps {
   currentSafeBox: ISafeBox | undefined;
   formikIndex: number;
-  changeFormMode: (mode: FormModeType) => void;
-  formMode: FormModeType;
+  changeFormikIndex: (index: number) => void;
 }
 
 export function HeaderSafeBox({
   currentSafeBox,
   formikIndex,
-  changeFormMode,
-  formMode,
+  changeFormikIndex,
 }: SafeBoxProps) {
   const { theme } = useContext(ThemeContext);
-  const [verifySafetyPhraseIsOpen, setVerifySafetyPhraseIsOpen] = useState<boolean>(false);
-  function handleFormMode(mode: FormModeType) {
-    changeFormMode(mode);
+  const { safeBoxMode, changeSafeBoxMode } = useContext(SafeBoxModeContext);
+  const [verifySafetyPhraseIsOpen, setVerifySafetyPhraseIsOpen] =
+    useState<boolean>(false);
+  const [verifyNameModalIsOpen, setVerifyNameModalIsOpen] =
+    useState<boolean>(false);
+
+  function handleFormMode(mode: ModeType) {
+    changeSafeBoxMode(mode);
   }
 
   const handleCloseVerifySafetyPhraseModal = useCallback(() => {
-    setVerifySafetyPhraseIsOpen(true);
+    setVerifySafetyPhraseIsOpen(false);
   }, []);
 
-  const handleOpenVerifySafetyPhraseModal = useCallback(() => {
-    setVerifySafetyPhraseIsOpen(false);
+  function handleOpenVerifySafetyPhraseModal() {
+    setVerifySafetyPhraseIsOpen(true);
+  }
+
+  function handleOpenVerifyNameModal() {
+    setVerifyNameModalIsOpen(true);
+  }
+
+  const handleCLoseVerifyNameModal = useCallback(() => {
+    setVerifyNameModalIsOpen(false);
   }, []);
 
   function handleEdit(isVerified: boolean) {
     if (isVerified) {
-      changeFormMode('edit');
-      handleOpenVerifySafetyPhraseModal();
+      changeSafeBoxMode('edit');
+      handleCloseVerifySafetyPhraseModal();
     }
+  }
+
+  function deleteSafeBox(isVerified: boolean) {
+    if (isVerified) {
+      toast.success('Cofre deletado', {
+        ...toastOptions,
+        toastId: 'deletedSafeBox',
+      });
+    }
+  }
+
+  function handleSelectOptionToCreateSafeBox(index: number) {
+    changeFormikIndex(index);
   }
 
   return (
     <>
       <VerifySafetyPhraseModal
         isOpen={verifySafetyPhraseIsOpen}
-        onRequestClose={handleOpenVerifySafetyPhraseModal}
+        onRequestClose={handleCloseVerifySafetyPhraseModal}
         title="Confirme sua frase secreta"
         verifySafetyPhrase={handleEdit}
       />
+
+      <VerifyNameModal
+        isOpen={verifyNameModalIsOpen}
+        onRequestClose={handleCLoseVerifyNameModal}
+        title="Tem certeza que deseja excluir este cofre"
+        inputText="Nome do cofre"
+        nameToVerify={currentSafeBox?.nome}
+        verifyName={deleteSafeBox}
+      />
       <header className={`${theme === 'dark' ? styles.dark : styles.light}`}>
-        {formMode === 'view' || formMode === 'edit' ? (
+        {safeBoxMode === 'view' || safeBoxMode === 'edit' ? (
           <>
             <div className={styles.actions}>
               <button type="button">
@@ -76,61 +111,14 @@ export function HeaderSafeBox({
                 <AiFillDelete />
                 <span>Excluir</span>
               </button>
-              <button
-                type="button"
-                onClick={handleCloseVerifySafetyPhraseModal}
-              >
+              <button type="button" onClick={handleOpenVerifySafetyPhraseModal}>
                 <RiEditFill />
                 <span>Editar</span>
               </button>
             </div>
-            {formMode === 'view' ? (
+            {safeBoxMode === 'view' ? (
               <div className={styles.title}>
-                {currentSafeBox?.tipo === 'bankAccount' ? (
-                  <span className={styles.bankAccount}>
-                    <FaMoneyCheckAlt />
-                  </span>
-                ) : currentSafeBox?.tipo === 'annotation' ? (
-                  <span className={styles.annotation}>
-                    <IoDocumentText />
-                  </span>
-                ) : currentSafeBox?.tipo === 'creditCard' ? (
-                  <FcSimCardChip />
-                ) : currentSafeBox?.tipo === 'email' ? (
-                  <span className={styles.email}>
-                    <MdOutlineAlternateEmail />
-                  </span>
-                ) : currentSafeBox?.tipo === 'kubeconfig' ? (
-                  <span className={styles.kubeconfig}>
-                    <SiKubernetes />
-                  </span>
-                ) : currentSafeBox?.tipo === 'softwareLicense' ? (
-                  <span className={styles.softwareLicense}>
-                    <TbLicense />
-                  </span>
-                ) : currentSafeBox?.tipo === 'login' ? (
-                  <span className={styles.login}>
-                    <MdOutlinePassword />
-                  </span>
-                ) : currentSafeBox?.tipo === 'ssh' ? (
-                  <span className={styles.ssh}>
-                    <HiTerminal />
-                  </span>
-                ) : currentSafeBox?.tipo === 'server' ? (
-                  <span className={styles.server}>
-                    <FaServer />
-                  </span>
-                ) : currentSafeBox?.tipo === 'site' ? (
-                  <span className={styles.site}>
-                    <CgWebsite />
-                  </span>
-                ) : currentSafeBox?.tipo === 'ftp' ? (
-                  <span className={styles.site}>
-                    <TbCloudDataConnection />
-                  </span>
-                ) : (
-                  <FcSafe />
-                )}
+                <SafeBoxIcon type={currentSafeBox?.tipo as SafeBoxIconType} />
                 <div className={styles.description}>
                   <h3>{currentSafeBox?.nome}</h3>
                   <p>{currentSafeBox?.descricao}</p>
@@ -141,7 +129,32 @@ export function HeaderSafeBox({
             )}
           </>
         ) : (
-          <Input />
+          <>
+            <h2>Novo Cofre</h2>
+            <div className={styles.dropdown}>
+              <SafeBoxIcon type={formik[formikIndex].type as SafeBoxIconType} />
+              <div className={styles.input}>
+                <Input
+                  type="text"
+                  className={styles.textBox}
+                  readOnly
+                  text="Tipo"
+                  value={formik[formikIndex].name}
+                  disabled={currentSafeBox !== undefined}
+                />
+              </div>
+              <div className={styles.option}>
+                {formik.map((item: any, index) => (
+                  <div
+                    onClick={() => handleSelectOptionToCreateSafeBox(index)}
+                    key={item.value}
+                  >
+                    {item.name}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
         )}
       </header>
     </>

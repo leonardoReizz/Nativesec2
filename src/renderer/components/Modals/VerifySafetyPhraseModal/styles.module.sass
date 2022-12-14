@@ -1,9 +1,40 @@
 @use '../../../styles/_util' as *
 
+
+.reactModalContent.dark
+  background-color: $gray-900
+  h2
+    color: $white
+  .buttons
+    button
+      background-color: $gray-700
+      color: $white
+      &:hover
+        background-color: $gray-600
+      &:last-child
+        &:hover
+            background-color: $red-100-hover
+
+.reactModalContent.light
+  background-color: $white
+  h2
+    color: $black
+  .buttons
+    button
+      background-color: $gray-100
+      color: $black
+
+      &:last-child
+        color: $white
+        &:hover
+          background-color: $red-100-dark-hover
+      &:hover
+        background-color: $gray-400
+
 .reactModalOverlay
   @include flex(center, center ,column)
   z-index: 4000
-  background: #00000087
+  background: #41414187
   position: fixed
   top: 0
   bottom: 0
@@ -32,6 +63,9 @@
   form
     @include flex(center, center ,column)
     gap: 3rem
+    >div
+      width: 100%
+
 
     .buttons
       @include flex(center, center ,column)
@@ -39,26 +73,16 @@
       gap: 1rem
 
       button
+        text-transform: uppercase
+        font-weight: 500
         width: 300px
         height: 45px
         border-radius: $default-radius
         transition: background-color 0.2s ease
 
-.reactModalContent.dark
-  background-color: $gray-900
-  .buttons
-    button
-      background-color: $gray-100
-      &:hover
-        background-color: $gray-300
 
-.reactModalContent.light
-  background-color: $white
+        &:last-child
+          background-color: $red-100
 
-  .buttons
-    button
-      background-color: $gray-100
-      &:hover
-        background-color: $gray-300
 
 

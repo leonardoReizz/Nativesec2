@@ -1,24 +1,46 @@
 /* eslint-disable @typescript-eslint/dot-notation */
-import { Input } from 'renderer/components/Inputs/Input';
-import { TextArea } from 'renderer/components/TextAreas/TextArea';
+import { useCallback, useContext, useState } from 'react';
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
 import { useFormik } from 'formik';
+import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
+import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import styles from './styles.module.sass';
 import formik from '../formik';
-import { FormModeType } from '..';
 import { IFormikItem } from '../types';
+import { Form } from './Form';
+import Users from './Users';
 
 interface FormProps {
   currentSafeBox: ISafeBox | undefined;
   formikIndex: number;
-  formMode: FormModeType;
 }
 
-export function MainSafeBox({
-  currentSafeBox,
-  formikIndex,
-  formMode,
-}: FormProps) {
+export interface IParticipant {
+  email: string;
+  type: 'participant' | 'admin';
+  label: string;
+  value: string;
+}
+
+export function MainSafeBox({ currentSafeBox, formikIndex }: FormProps) {
+  const { currentOrganization } = useContext(OrganizationsContext);
+  const [tab, setTab] = useState<'form' | 'users'>('form');
+  const [usersParticipant, setUsersParticipant] = useState<IParticipant[]>([]);
+  const [usersAdmin, setUsersAdmin] = useState<IParticipant[]>([]);
+  const [selectOptions, setSelectOptions] = useState<IParticipant[]>([
+    ...JSON.parse(currentOrganization?.administradores as string).map(
+      (adm: string) => {
+        return { value: adm, label: adm };
+      }
+    ),
+    ...JSON.parse(currentOrganization?.participantes as string).map(
+      (adm: string) => {
+        return { value: adm, label: adm };
+      }
+    ),
+    { value: currentOrganization?.dono, label: currentOrganization?.dono },
+  ]);
+
   const initialValues = formik[formikIndex].item.map((item: IFormikItem) => {
     if (currentSafeBox !== undefined) {
       if (item.name === 'description') {
@@ -47,6 +69,18 @@ export function MainSafeBox({
     return item;
   });
 
+  const changeUsersParticipant = useCallback((users: IParticipant[]) => {
+    setUsersParticipant(users);
+  }, []);
+
+  const changeUsersAdmin = useCallback((users: IParticipant[]) => {
+    setUsersAdmin(users);
+  }, []);
+
+  const changeSelectOptions = useCallback((users: IParticipant[]) => {
+    setSelectOptions(users);
+  }, []);
+
   function handleSubmit(values: typeof initialValues) {
     console.log(values);
   }
@@ -57,42 +91,45 @@ export function MainSafeBox({
     enableReinitialize: true,
   });
 
-  return (
-    <div className={styles.form}>
-      <form action="">
-        {formMode === 'edit' ? (
-          <Input text="Nome" name="formName" value={currentSafeBox?.nome} />
-        ) : (
-          ''
-        )}
-        {formikProps.initialValues.map((item) =>
-          item.element === 'input' && item.name !== 'formName' ? (
-            <Input
-              name={item.name}
-              text={item.text}
-              value={item[`${item.name}`]}
-            />
-          ) : item.element === 'textArea' && item.name !== 'description' ? (
-            <TextArea
-              name={item.name}
-              text={item.text}
-              value={item[`${item.name}`]}
-            />
-          ) : (
-            ''
-          )
-        )}
+  function handleTabForm() {
+    setTab('form');
+  }
+  function handleTabUsers() {
+    setTab('users');
+  }
 
-        {formMode === 'edit' ? (
-          <TextArea
-            text="Descrição"
-            name="descrption"
-            value={currentSafeBox?.descricao}
-          />
-        ) : (
-          ''
-        )}
-      </form>
+  return (
+    <div className={styles.mainSafeBox}>
+      <div className={styles.menu}>
+        <button
+          type="button"
+          onClick={handleTabForm}
+          className={`${tab === 'form' ? styles.selected : ''}`}
+        >
+          Cofre
+        </button>
+        <button
+          type="button"
+          onClick={handleTabUsers}
+          className={`${tab === 'users' ? styles.selected : ''}`}
+        >
+          Usuarios
+        </button>
+      </div>
+      {tab === 'form' ? (
+        <Form formikProps={formikProps} />
+      ) : (
+        <Users
+          formikIndex={formikIndex}
+          currentOrganization={currentOrganization}
+          usersAdmin={usersAdmin}
+          usersParticipant={usersParticipant}
+          selectOptions={selectOptions}
+          changeUsersParticipant={changeUsersParticipant}
+          changeUsersAdmin={changeUsersAdmin}
+          changeSelectOptions={changeSelectOptions}
+        />
+      )}
     </div>
   );
 }

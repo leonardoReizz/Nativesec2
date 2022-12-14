@@ -1,17 +1,17 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { IUser } from 'main/types';
+import * as Yup from 'yup';
 import ReactModal from 'react-modal';
-import {
-  verirySafetyPhraseSchema,
-  verirySafetyPhraseValues,
-} from 'renderer/utils/Formik/VerifySafetyPhrase/verifySafetyPhrase';
+import { verirySafetyPhraseValues } from 'renderer/utils/Formik/VerifySafetyPhrase/verifySafetyPhrase';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
+import { toastOptions } from 'renderer/utils/options/Toastify';
+import { toast } from 'react-toastify';
 import { Input } from '../../Inputs/Input';
 
 import styles from './styles.module.sass';
-import { FormMessageError } from 'renderer/components/Forms/FormMessageError';
 
 interface VerifySafetyPhraseModalProps {
   title: string;
@@ -28,24 +28,32 @@ export function VerifySafetyPhraseModal({
 }: VerifySafetyPhraseModalProps) {
   const { theme } = useContext(ThemeContext);
 
+  const user = window.electron.store.get('user') as IUser;
+
+  const verirySafetyPhraseSchema = Yup.object().shape({
+    safetyPhrase: Yup.string()
+      .required('Frase de segurança não pode ficar em branco.')
+      .min(12, 'Frase de segurança Inválida.')
+      .max(32)
+      .oneOf([user ? user.safetyPhrase : '', null], 'Senha Invalida'),
+  });
+
   function handleSubmit(values: typeof verirySafetyPhraseValues) {
-    console.log(values);
-    const { safetyPhrase } = window.electron.store.get('user') as IUser;
-    if (values.safetyPhrase === safetyPhrase) {
+    if (values.safetyPhrase === user.safetyPhrase) {
       return verifySafetyPhrase(true);
     }
-    return verifySafetyPhrase(false);
-  }
-
-  function handleCloseModal() {
-    onRequestClose();
+    return null;
   }
 
   const formikProps = useFormik({
     initialValues: verirySafetyPhraseValues,
-    onSubmit: (values) => handleSubmit(values),
+    onSubmit: async (values) => handleSubmit(values),
     validationSchema: verirySafetyPhraseSchema,
   });
+
+  function handleCloseModal() {
+    onRequestClose();
+  }
 
   useEffect(() => {
     formikProps.resetForm();
@@ -70,10 +78,9 @@ export function VerifySafetyPhraseModal({
             value={formikProps.values.safetyPhrase}
             onChange={formikProps.handleChange}
             onBlur={formikProps.handleBlur}
-          />
-          <FormMessageError
-            touched={formikProps.touched.safetyPhrase}
-            message={formikProps.errors.safetyPhrase}
+            viewBarError
+            touched
+            messageError={formikProps.errors.safetyPhrase}
           />
           <div className={styles.buttons}>
             <button type="submit">Confirmar</button>

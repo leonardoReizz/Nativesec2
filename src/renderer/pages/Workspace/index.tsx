@@ -3,26 +3,35 @@ import { IoReloadOutline } from 'react-icons/io5';
 import { IoMdAdd } from 'react-icons/io';
 import { CiSearch } from 'react-icons/ci';
 
-import { SafeBoxIcon } from 'renderer/components/SafeBox';
-import { useContext, useEffect, useState } from 'react';
+import { SafeBoxInfo } from 'renderer/components/SafeBox';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { IUserConfig } from 'main/ipc/user/types';
 import { useIPCSafeBox } from 'renderer/hooks/useIPCSafeBox/useIPCSafeBox';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
+import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
 import styles from './styles.module.sass';
 import { ViewSafeBox } from './ViewSafeBox';
 
 export function Workspace() {
   const { theme } = useContext(ThemeContext);
+  const { changeSafeBoxMode } = useContext(SafeBoxModeContext);
   const { refreshTime } = window.electron.store.get(
     'userConfig'
   ) as IUserConfig;
   const { currentOrganization } = useContext(OrganizationsContext);
-  const { safeBoxes, safeBoxesIsLoading, currentSafeBox } =
-    useContext(SafeBoxesContext);
+  const {
+    safeBoxes,
+    safeBoxesIsLoading,
+    currentSafeBox,
+    changeCurrentSafeBox,
+  } = useContext(SafeBoxesContext);
   const [update, setUpdate] = useState<boolean>(true);
+  const [menuCreateIsOpen, setMenuCreateIsOpen] = useState<boolean>(false);
+  const menuRef = useRef<HTMLButtonElement>(null);
+
   useIPCSafeBox();
 
   useEffect(() => {
@@ -38,11 +47,22 @@ export function Workspace() {
     return () => clearTimeout(timer);
   }, [update, refreshTime]);
 
-  console.log(safeBoxes);
-
-  function handleSelectedSafeBox(safeBoxId: string) {
-    // changeCurrentSafeBox(safeBoxId);
+  function handleCreateSafeBox() {
+    changeCurrentSafeBox(undefined);
+    changeSafeBoxMode('create');
   }
+
+  function handleOpenMenuIsCreate() {
+    setMenuCreateIsOpen(true);
+  }
+
+  function handleClickOutside(e: MouseEvent) {
+    if (menuCreateIsOpen && !menuRef.current?.contains(e.target as Node)) {
+      setMenuCreateIsOpen(false);
+    }
+  }
+
+  window.addEventListener('click', handleClickOutside);
 
   return (
     <div
@@ -56,9 +76,26 @@ export function Workspace() {
             <CiSearch />
             <input type="text" placeholder="Buscar cofre..." />
           </div>
-          <button type="button">
+          <button type="button" ref={menuRef} onClick={handleOpenMenuIsCreate}>
             <IoMdAdd />
           </button>
+          <div
+            className={`${styles.menuCreate} ${
+              menuCreateIsOpen ? styles.open : styles.close
+            }`}
+          >
+            <h4>Cofres</h4>
+            <button type="button" onClick={handleCreateSafeBox}>
+              <IoMdAdd />
+              Novo Cofre
+            </button>
+            <span />
+            <h4>Grupos</h4>
+            <button type="button">
+              <IoMdAdd />
+              Novo Grupo de Cofres
+            </button>
+          </div>
           <button type="button">
             <IoReloadOutline />
           </button>
@@ -74,34 +111,34 @@ export function Workspace() {
               <span>Cofres</span>
             </div>
             {safeBoxes.map((safeBox) => (
-              <SafeBoxIcon safeBox={safeBox} />
+              <SafeBoxInfo safeBox={safeBox} />
             ))}
             {safeBoxes.map((safeBox) => (
-              <SafeBoxIcon safeBox={safeBox} />
+              <SafeBoxInfo safeBox={safeBox} />
             ))}
             {safeBoxes.map((safeBox) => (
-              <SafeBoxIcon safeBox={safeBox} />
+              <SafeBoxInfo safeBox={safeBox} />
             ))}
             {safeBoxes.map((safeBox) => (
-              <SafeBoxIcon safeBox={safeBox} />
+              <SafeBoxInfo safeBox={safeBox} />
             ))}
             {safeBoxes.map((safeBox) => (
-              <SafeBoxIcon safeBox={safeBox} />
+              <SafeBoxInfo safeBox={safeBox} />
             ))}
             {safeBoxes.map((safeBox) => (
-              <SafeBoxIcon safeBox={safeBox} />
+              <SafeBoxInfo safeBox={safeBox} />
             ))}
             {safeBoxes.map((safeBox) => (
-              <SafeBoxIcon safeBox={safeBox} />
+              <SafeBoxInfo safeBox={safeBox} />
             ))}
             {safeBoxes.map((safeBox) => (
-              <SafeBoxIcon safeBox={safeBox} />
+              <SafeBoxInfo safeBox={safeBox} />
             ))}
             {safeBoxes.map((safeBox) => (
-              <SafeBoxIcon safeBox={safeBox} />
+              <SafeBoxInfo safeBox={safeBox} />
             ))}
             {safeBoxes.map((safeBox) => (
-              <SafeBoxIcon safeBox={safeBox} />
+              <SafeBoxInfo safeBox={safeBox} />
             ))}
           </div>
         </div>

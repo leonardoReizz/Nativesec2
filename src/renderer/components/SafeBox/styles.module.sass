@@ -6,15 +6,28 @@
 // --------------------------------------------------------------
 
 .safeBox.dark
+  &:hover
+    background-color: $gray-700
+  &::before
+    background-color: $gray-700
   .text
     color: $white
     p
-      color: $gray-600
+      color: $gray-250
+      &:last-child
+        color: $gray-500
+
 .safeBox.light
+  &:hover
+    background-color: $gray-250
+  &::before
+    background-color: $gray-250
   .text
     color: $black
     p
-      color: $gray-600
+      color: $gray-700
+      &:last-child
+        color: $gray-500
 
 
 // --------------------------------------------------------------
@@ -26,24 +39,23 @@
   width: 100%
   gap: 1rem
   padding: .8rem
-  border-radius: $default-radius
   transition: background-color 0.2s ease, color 0.2s ease
-  &:hover
-    background-color: $blue-100
-    cursor: pointer
+  height: 120px
+  position: relative
+  margin-top: -1px
+  border-radius: $default-radius
+  cursor: pointer
 
-    svg
-      color: $white
-    .text
-      h3
-        color: $white
-      p
-        color: $gray-200
 
-  svg
-    color: $blue-100
-    width: 55px
-    height: 55px
+  &::before
+    content: ''
+    position: absolute
+    right: 10px
+    width: 80%
+    height: 1px
+    bottom: 0px
+    z-index: 2002
+
   .text
     @include flex(flex-start, center, column)
     width: 100%
@@ -54,13 +66,15 @@
       text-overflow: ellipsis
       overflow: hidden
       width: 320px
+      font-weight: 400
+      font-size: 1.05rem
+
     p
       white-space: nowrap
       text-overflow: ellipsis
       overflow: hidden
       width: 320px
       font-size: .9rem
-
-
-.annotation
-  color: $blue-200
+      &:last-child
+        font-weight: 500
+        margin-top: .5rem

@@ -1,21 +1,18 @@
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState, useCallback, useContext } from 'react';
 
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
+import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
 import formik from './formik';
 import styles from './styles.module.sass';
 import { MainSafeBox } from './MainSafeBox';
 import { HeaderSafeBox } from './HeaderSafeBox';
 
-export type FormModeType = 'view' | 'create' | 'edit';
-
 export function ViewSafeBox() {
+  const { safeBoxMode, changeSafeBoxMode } = useContext(SafeBoxModeContext);
   const { currentSafeBox } = useContext(SafeBoxesContext);
   const [formikIndex, setFormikIndex] = useState<number>(0);
-  const [formMode, setFormMode] = useState<FormModeType>('create');
-
-  const changeFormMode = useCallback((mode: FormModeType) => {
-    setFormMode(mode);
-  }, []);
 
   useEffect(() => {
     if (currentSafeBox) {
@@ -23,22 +20,24 @@ export function ViewSafeBox() {
         return item.type === currentSafeBox.tipo;
       });
       setFormikIndex(index);
-      setFormMode('view');
+      changeSafeBoxMode('view');
     }
   }, [currentSafeBox]);
+
+  function changeFormikIndex(index: number) {
+    setFormikIndex(index);
+  }
 
   return (
     <div className={styles.currentSafeBox}>
       <HeaderSafeBox
         currentSafeBox={currentSafeBox}
         formikIndex={formikIndex}
-        changeFormMode={changeFormMode}
-        formMode={formMode}
+        changeFormikIndex={changeFormikIndex}
       />
       <main>
         <MainSafeBox
           currentSafeBox={currentSafeBox}
-          formMode={formMode}
           formikIndex={formikIndex}
         />
       </main>

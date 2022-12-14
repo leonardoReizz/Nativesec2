@@ -6,6 +6,10 @@ import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import styles from './styles.module.sass';
 
 interface InputProps {
+  messageError?: string;
+  viewBarError?: boolean;
+  viewMessageError?: string;
+  touched?: boolean;
   type?: React.HTMLInputTypeAttribute;
   text?: string;
   theme?: ThemeType;
@@ -27,18 +31,38 @@ interface InputProps {
   };
 }
 
-export function Input({ type, text, isValid = true, ...props }: InputProps) {
+export function Input({
+  type,
+  text,
+  isValid = true,
+  messageError,
+  touched,
+  viewMessageError,
+  viewBarError = false,
+  ...props
+}: InputProps) {
   const { theme } = useContext(ThemeContext);
 
   return (
-    <div
-      className={`${styles.input}
-      ${theme === 'dark' ? styles.dark : styles.light} ${
-        !isValid ? styles.notValid : ''
-      }`}
-    >
-      <span>{text}</span>
-      <input type={type || 'text'} {...props} placeholder=" " />
+    <div className={styles.inputContainer}>
+      <div
+        className={`${styles.input}
+        ${theme === 'dark' ? styles.dark : styles.light} ${
+          !isValid ? styles.notValid : ''
+        }`}
+      >
+        <span>{text}</span>
+        <input type={type || 'text'} {...props} placeholder=" " />
+      </div>
+      {viewBarError ? (
+        <p
+          className={` ${styles.bar} ${
+            messageError && touched ? styles.error : styles.correct
+          }`}
+        />
+      ) : (
+        ''
+      )}
     </div>
   );
 }

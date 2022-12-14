@@ -1,4 +1,24 @@
-@use '../../styles/_util' as *
+@use '../../../styles/_util' as *
+
+
+.reactModalContent.dark
+  background-color: $gray-900
+  h2
+    color: $white
+  .buttons
+    button
+      background-color: $gray-100
+      &:hover
+        background-color: $gray-400
+
+.reactModalContent.light
+  background-color: $white
+  h2
+  .buttons
+    button
+      background-color: $gray-100
+      &:hover
+        background-color: $gray-400
 
 .reactModalOverlay
   @include flex(center, center ,column)
@@ -43,22 +63,5 @@
         height: 45px
         border-radius: $default-radius
         transition: background-color 0.2s ease
-
-.reactModalContent.dark
-  background-color: $gray-900
-  .buttons
-    button
-      background-color: $gray-100
-      &:hover
-        background-color: $gray-300
-
-.reactModalContent.light
-  background-color: $white
-
-  .buttons
-    button
-      background-color: $gray-100
-      &:hover
-        background-color: $gray-300
 
 

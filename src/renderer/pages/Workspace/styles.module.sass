@@ -5,32 +5,75 @@
 // --------------------------------------------------------------
 
 .workspace.dark
+  background-color: $gray-900
+  .safeBoxesContainer
+    border-right: 1px solid $gray-700
   .search
     .input
       input
-        background-color: $gray-800
+        background-color: $gray-700
         color: $white
       svg
         color: $white
+    >button
+      background-color: $gray-700
+      &:hover
+        background-color: $gray-600
+    .menuCreate
+      background-color: $gray-700
+      color: $gray-100
+      border-color: $gray-500 !important
+      span
+        background-color: $gray-500
+
+      button
+        color: $gray-100
+        &:hover
+          background-color: $gray-600
   .safeBoxes
+    &::-webkit-scrollbar-track
+      background-color: $gray-800
+    &::-webkit-scrollbar-thumb
+      background-color: $gray-600
     .safeBox
       .title
         span
           &::before
             background-color: $gray-700
 
+
 .workspace.light
+  bakground-color: $white
+  .safeBoxesContainer
+    border-right: 1px solid $gray-500
   .search
     .input
       input
         background-color: $gray-100
+    >button
+      background-color: $gray-100
+      svg
+        color: $black
+      &:hover
+        background-color: $gray-400
+    .menuCreate
+      background-color: $white
+      border-color: $white
+      span
+        background-color: $gray-400
+      button
+        &:hover
+          background-color: $gray-100
   .safeBoxes
+    &::-webkit-scrollbar-track
+      background-color: $gray-100
+    &::-webkit-scrollbar-thumb
+      background-color: $gray-500
     .safeBox
       .title
         span
           &::before
-            background-color: $gray-400
-
+            background-color: $gray-300
 
 
 .workspace
@@ -42,16 +85,15 @@
     @include flex(flex-start, flex-start, column)
     width: 100%
     height: 100%
-    flex: 1
     min-width: 450px
     max-width: 450px
-    border-right: 1px solid $gray-700
 
     .search
       @include flex(center, center, row)
       gap: 1rem
       width: 100%
       padding: 1rem
+      position: relative
 
       .input
         width: 100%
@@ -59,71 +101,94 @@
 
         input
           border-radius: $default-radius
-          height: 35px
+          height: 38px
           width: 100%
           padding: 0 2.4rem
 
         svg
           position: absolute
-          top: 7px
+          top: 9px
           left: 10px
           height: 22px
           width: 22px
 
-      button
+      >button
         @include flex(center, center, row)
-        background-color: $blue-100
-        height: 35px
+        height: 38px
         padding: 0 1rem
         font-size: 1.2rem
         color: $white
         border-radius: $default-radius
         cursor: pointer
+        transition: background-color 0.2s ease
 
-        &:hover
-          background-color: $blue-100-hover
+      .menuCreate
+        @include flex(flex-start, center, column)
+        position: absolute
+        width: 200px
+        z-index: 2003
+        top: 60px
+        left: 315px
+        border-radius: .3rem
+        transition: opacity 0.1s ease, visibility 0.1s ease
+        border: 1px solid $white
+
+        span
+          width: 100%
+          height: 1px
+        h4
+          font-family: 'Anek Devanagari', sans-serif
+          padding: 0 .5rem
+          margin-top: .5rem
+
+        button
+          @include flex(center, flex-start, row)
+          width: 100%
+          transition: background-color 0.1s
+          height: 2.5rem
+          padding: 0 1rem
+          gap: .5rem
+
+      .menuCreate.close
+        visibility: hidden
+        opacity: 0
+      .menuCreate.open
+        visibility: visible
+        opacity: 1
 
     .safeBoxes
+      padding: .5rem
       @include flex(center, flex-start, column)
       width: 100%
       height: calc( 100vh - 115px )
       overflow-y: scroll
       overflow-x: hidden
-      padding: 1rem
+
       scroll-behavior: smooth
 
       &::-webkit-scrollbar
-        width: .5rem
-
+        width: .4em
 
       &::-webkit-scrollbar-track
-        background-color: $gray-700
         border-radius: 5rem
-
 
       &::-webkit-scrollbar-thumb
-        background-color: $blue-100
         border-radius: 5rem
-
-
 
       .safeBox
         width: 100%
+
         .title
           display: flex
           width: 100%
           margin-bottom: .5rem
           margin-top: 1rem
 
-
           span
             @include flex(flex-start, center, column)
             color: $gray-500
             width: 100%
-
             position: relative
-
-
             &::before
               @include flex(flex-start, center, column)
               content: ''
@@ -138,3 +203,5 @@
     height: 100%
     width: 100%
     flex: 2
+
+

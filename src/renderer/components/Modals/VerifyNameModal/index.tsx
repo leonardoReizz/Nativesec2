@@ -12,7 +12,7 @@ import { FormMessageError } from 'renderer/components/Forms/FormMessageError';
 
 interface VerifySafetyPhraseModalProps {
   title: string;
-  nameToVerify: string;
+  nameToVerify: string | undefined;
   isOpen: boolean;
   inputText: string;
   onRequestClose: () => void;

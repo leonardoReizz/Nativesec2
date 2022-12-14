@@ -148,13 +148,13 @@ ipcMain.on('closeModal', async (event, arg) => {
 let newQueue = <types.QueueType[]>[];
 let startedQueue = false;
 async function startQueue(event: any) {
-  //console.log(newQueue, ' ANTES');
+  // console.log(newQueue, ' ANTES');
   const result = await useIpcActions(newQueue[0]);
   newQueue[0].ipcEvent.reply(result?.response, result.data);
   const filterQueue = newQueue.filter((queue) => queue.id !== newQueue[0].id);
   newQueue = filterQueue;
-  //console.log(newQueue, ' DEPOIS');
-  //console.log(' -----------------------------------------------');
+  // console.log(newQueue, ' DEPOIS');
+  // console.log(' -----------------------------------------------');
   if (newQueue.length > 0) {
     startQueue(event);
   } else {
@@ -174,7 +174,7 @@ ipcMain.on(
         ipcEvent: event,
       });
     }
-    //console.log(arg, ' DEU ENTRADA')
+    // console.log(arg, ' DEU ENTRADA')
     // console.log(' -----------------------------------------------');
     // console.log(newQueue, ' FILA ATUAL', startedQueue)
     // console.log(' -----------------------------------------------');
