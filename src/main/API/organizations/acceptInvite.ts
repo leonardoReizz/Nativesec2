@@ -7,7 +7,7 @@ export interface AcceptInviteProps {
   organizationId: string;
 }
 
-const acceptInvite = ({
+const acceptInvite = async ({
   authorization,
   organizationId,
 }: AcceptInviteProps): Promise<IDefaultApiResult> => {

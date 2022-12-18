@@ -113,33 +113,6 @@ export function Workspace() {
             {safeBoxes.map((safeBox) => (
               <SafeBoxInfo safeBox={safeBox} />
             ))}
-            {safeBoxes.map((safeBox) => (
-              <SafeBoxInfo safeBox={safeBox} />
-            ))}
-            {safeBoxes.map((safeBox) => (
-              <SafeBoxInfo safeBox={safeBox} />
-            ))}
-            {safeBoxes.map((safeBox) => (
-              <SafeBoxInfo safeBox={safeBox} />
-            ))}
-            {safeBoxes.map((safeBox) => (
-              <SafeBoxInfo safeBox={safeBox} />
-            ))}
-            {safeBoxes.map((safeBox) => (
-              <SafeBoxInfo safeBox={safeBox} />
-            ))}
-            {safeBoxes.map((safeBox) => (
-              <SafeBoxInfo safeBox={safeBox} />
-            ))}
-            {safeBoxes.map((safeBox) => (
-              <SafeBoxInfo safeBox={safeBox} />
-            ))}
-            {safeBoxes.map((safeBox) => (
-              <SafeBoxInfo safeBox={safeBox} />
-            ))}
-            {safeBoxes.map((safeBox) => (
-              <SafeBoxInfo safeBox={safeBox} />
-            ))}
           </div>
         </div>
       </div>

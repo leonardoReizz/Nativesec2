@@ -3,39 +3,46 @@ import { useContext } from 'react';
 import { Input } from 'renderer/components/Inputs/Input';
 import { TextArea } from 'renderer/components/TextAreas/TextArea';
 import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
-import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
+import { FormikContextType } from 'formik';
 import styles from './styles.module.sass';
 import { IFormikItem } from '../../types';
-import { IParticipant } from '..';
 
 interface FormProps {
-  formikProps: any;
+  formikProps: FormikContextType<IFormikItem[]>;
 }
 
 export function Form({ formikProps }: FormProps) {
   const { safeBoxMode } = useContext(SafeBoxModeContext);
-  const { currentSafeBox } = useContext(SafeBoxesContext);
 
   return (
     <div className={styles.form}>
-      <form action="">
+      <form>
         {safeBoxMode === 'edit' || safeBoxMode === 'create' ? (
-          <Input text="Nome" name="formName" value={currentSafeBox?.nome} />
+          <Input
+            onChange={formikProps.handleChange}
+            text="Nome"
+            name="0.formName"
+            value={formikProps.values[0].formName}
+          />
         ) : (
           ''
         )}
-        {formikProps.initialValues.map((item: IFormikItem) =>
+        {formikProps.initialValues.map((item: IFormikItem, index: number) =>
           item.element === 'input' && item.name !== 'formName' ? (
             <Input
-              name={item.name}
+              onChange={formikProps.handleChange}
+              onBlur={formikProps.handleBlur}
+              name={`${index}.${item.name}`}
               text={item.text}
-              value={item[`${item.name}`]}
+              value={formikProps.values[index][`${item.name}`]}
             />
           ) : item.element === 'textArea' && item.name !== 'description' ? (
             <TextArea
-              name={item.name}
+              onChange={formikProps.handleChange}
+              onBlur={formikProps.handleBlur}
+              name={`${index}.${item.name}`}
               text={item.text}
-              value={item[`${item.name}`]}
+              value={formikProps.values[index][`${item.name}`]}
             />
           ) : (
             ''
@@ -45,8 +52,11 @@ export function Form({ formikProps }: FormProps) {
         {safeBoxMode === 'edit' || safeBoxMode === 'create' ? (
           <TextArea
             text="Descrição"
-            name="descrption"
-            value={currentSafeBox?.descricao}
+            onChange={formikProps.handleChange}
+            name={`${formikProps.values.length - 1}.description`}
+            value={
+              formikProps.values[formikProps.values.length - 1].description
+            }
           />
         ) : (
           ''

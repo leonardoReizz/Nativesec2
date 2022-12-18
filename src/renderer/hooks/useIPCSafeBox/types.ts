@@ -1,4 +1,4 @@
-import { ISafeBox } from 'renderer/contexts/safeBoxesContext/types';
+import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
 
 export interface IChangeSafeBoxResponse {
   status: number;
@@ -24,4 +24,8 @@ export interface IGetAllSafeBoxResponse {
 }
 export interface IGetSafeBoxResponse {
   safeBox: ISafeBox;
+}
+
+export interface IPCResponse {
+  message: 'ok' | 'nok';
 }

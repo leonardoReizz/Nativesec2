@@ -1,8 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useContext } from 'react';
+import { toast } from 'react-toastify';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
+import { toastOptions } from 'renderer/utils/options/Toastify';
 import * as types from './types';
 
 export function useIPCSafeBox() {
@@ -29,7 +31,46 @@ export function useIPCSafeBox() {
             changeCurrentSafeBox(filter[0]);
           }
         }
-        //changeSafeBoxesIsLoading(false);
+        // changeSafeBoxesIsLoading(false);
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.CREATE_SAFE_BOX_RESPONSE,
+      (response: types.IPCResponse) => {
+        console.log(response);
+        if (response.message === 'ok') {
+          updateSafeBoxes(window.electron.store.get('safebox'));
+          return toast.success('Cofre criado com sucesso', {
+            ...toastOptions,
+            toastId: 'createdSucess',
+          });
+        }
+        return toast.error('Erro ao criar cofre', {
+          ...toastOptions,
+          toastId: 'createdError',
+        });
+      }
+    );
+  });
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.DELETE_SAFE_BOX_RESPONSE,
+      (response: types.IPCResponse) => {
+        if (response.message === 'ok') {
+          updateSafeBoxes(window.electron.store.get('safebox'));
+          return toast.success('Cofre deletado com sucesso', {
+            ...toastOptions,
+            toastId: 'deletedSafeBox',
+          });
+        }
+        return toast.error('Erro ao deletar cofre', {
+          ...toastOptions,
+          toastId: 'deletedSafeBoxError',
+        });
       }
     );
   }, []);

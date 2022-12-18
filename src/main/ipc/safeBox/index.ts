@@ -27,6 +27,10 @@ export async function refreshSafeBoxes(arg: UseIPCData) {
     });
 
     lastDateUpdatedSafeBox = Math.max(...updateDate);
+
+    if (!lastDateUpdatedSafeBox) {
+      lastDateUpdatedSafeBox = 1638290571;
+    }
   }
   // lastDate com error
   const listAPISafeBox = await apiSafeBox.listSafeBox({
@@ -41,7 +45,7 @@ export async function refreshSafeBoxes(arg: UseIPCData) {
     date: lastDateUpdatedSafeBox - 604800,
   });
 
-  const filterListAPISafeBox = listAPISafeBox?.data?.msg.filter(
+  const filterListAPISafeBox = listAPISafeBox?.data?.msg?.filter(
     (dbSafeBox: ISafeBox) => {
       return !listAPISafeBoxesDeleted?.data?.msg.some(
         (deletedSafeBox: ISafeBox) => {

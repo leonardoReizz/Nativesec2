@@ -1,3 +1,5 @@
+import { deleteSafeBoxController } from '../components/safe-box/usecases/delete-safe-box';
+import { createSafeBoxController } from '../components/safe-box/usecases/create-safe-box';
 import { IPCTypes } from '../../renderer/@types/IPCTypes';
 import { initializeDB, updateDatabase } from './database';
 import {
@@ -69,8 +71,34 @@ export async function useIpcActions(
       return getMyInvites();
     case IPCTypes.GENERATE_PAR_KEYS:
       return generateParKeys(arg);
-    case IPCTypes.CREATE_ORGANIZATION:
+    case IPCTypes.CREATE_SAFE_BOX: {
+      const { message } = await createSafeBoxController.handle(arg.data);
+      return {
+        response: IPCTypes.CREATE_SAFE_BOX_RESPONSE,
+        data: {
+          message,
+        },
+      };
+    }
+    case IPCTypes.DELETE_SAFE_BOX: {
+      console.log(arg.data);
+      const { message } = await deleteSafeBoxController.handle(arg.data);
+      return {
+        response: IPCTypes.DELETE_SAFE_BOX_RESPONSE,
+        data: {
+          message,
+        },
+      };
+    }
+    case IPCTypes.CREATE_ORGANIZATION: {
+      // const create = await createOrganizationController.execute(arg.data);
+
+      // return {
+      //   response: IPCTypes.CREATE_ORGANIZATION_RESPONSE,
+      //   data: create.data,
+      // };
       return createOrganization(arg);
+    }
     default:
       return {
         response: 'none',

@@ -4,6 +4,7 @@
 import { useContext, useState, useCallback } from 'react';
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
 import { GiPadlockOpen } from 'react-icons/gi';
+import { BsCheck2 } from 'react-icons/bs';
 
 import { RiEditFill } from 'react-icons/ri';
 import { AiFillDelete } from 'react-icons/ai';
@@ -11,13 +12,10 @@ import { Input } from 'renderer/components/Inputs/Input';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { VerifySafetyPhraseModal } from 'renderer/components/Modals/VerifySafetyPhraseModal';
 import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
-import { toast } from 'react-toastify';
-import { toastOptions } from 'renderer/utils/options/Toastify';
-import {
-  ModeType,
-  SafeBoxModeContext,
-} from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
+import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
 import { SafeBoxIcon, SafeBoxIconType } from 'renderer/components/SafeBoxIcon';
+import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
+import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import formik from '../formik';
 import styles from './styles.module.sass';
 
@@ -25,23 +23,23 @@ interface SafeBoxProps {
   currentSafeBox: ISafeBox | undefined;
   formikIndex: number;
   changeFormikIndex: (index: number) => void;
+  createSafeBox: () => void;
 }
 
 export function HeaderSafeBox({
   currentSafeBox,
   formikIndex,
   changeFormikIndex,
+  createSafeBox,
 }: SafeBoxProps) {
   const { theme } = useContext(ThemeContext);
+  const { currentOrganization } = useContext(OrganizationsContext);
   const { safeBoxMode, changeSafeBoxMode } = useContext(SafeBoxModeContext);
   const [verifySafetyPhraseIsOpen, setVerifySafetyPhraseIsOpen] =
     useState<boolean>(false);
   const [verifyNameModalIsOpen, setVerifyNameModalIsOpen] =
     useState<boolean>(false);
-
-  function handleFormMode(mode: ModeType) {
-    changeSafeBoxMode(mode);
-  }
+  const { deleteSafeBox } = useSafeBox();
 
   const handleCloseVerifySafetyPhraseModal = useCallback(() => {
     setVerifySafetyPhraseIsOpen(false);
@@ -66,17 +64,24 @@ export function HeaderSafeBox({
     }
   }
 
-  function deleteSafeBox(isVerified: boolean) {
-    if (isVerified) {
-      toast.success('Cofre deletado', {
-        ...toastOptions,
-        toastId: 'deletedSafeBox',
-      });
-    }
-  }
+  const handleDeleteSafeBox = useCallback(
+    (isVerified: boolean) => {
+      if (isVerified && currentOrganization && currentSafeBox) {
+        deleteSafeBox({
+          organizationId: currentOrganization?._id,
+          safeBoxId: currentSafeBox?._id,
+        });
+      }
+    },
+    [currentOrganization, currentSafeBox, deleteSafeBox]
+  );
 
   function handleSelectOptionToCreateSafeBox(index: number) {
     changeFormikIndex(index);
+  }
+
+  function handleCreateSafeBox() {
+    createSafeBox();
   }
 
   return (
@@ -91,11 +96,12 @@ export function HeaderSafeBox({
       <VerifyNameModal
         isOpen={verifyNameModalIsOpen}
         onRequestClose={handleCLoseVerifyNameModal}
-        title="Tem certeza que deseja excluir este cofre"
+        title="Tem certeza que deseja excluir"
         inputText="Nome do cofre"
         nameToVerify={currentSafeBox?.nome}
-        verifyName={deleteSafeBox}
+        verifyName={handleDeleteSafeBox}
       />
+
       <header className={`${theme === 'dark' ? styles.dark : styles.light}`}>
         {safeBoxMode === 'view' || safeBoxMode === 'edit' ? (
           <>
@@ -107,7 +113,7 @@ export function HeaderSafeBox({
               {/* <button>
                 <GiPadlock />
               </button> */}
-              <button type="button">
+              <button type="button" onClick={handleOpenVerifyNameModal}>
                 <AiFillDelete />
                 <span>Excluir</span>
               </button>
@@ -130,7 +136,16 @@ export function HeaderSafeBox({
           </>
         ) : (
           <>
-            <h2>Novo Cofre</h2>
+            <div className={styles.actions}>
+              <button type="button" onClick={handleCreateSafeBox}>
+                <BsCheck2 />
+                Salvar
+              </button>
+              <button type="button">
+                <AiFillDelete />
+                Descartar
+              </button>
+            </div>
             <div className={styles.dropdown}>
               <SafeBoxIcon type={formik[formikIndex].type as SafeBoxIconType} />
               <div className={styles.input}>

@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { IUser } from 'main/types';
 import ReactModal from 'react-modal';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
-import { verifyNameSchema, verifyNameValues } from 'renderer/utils/Formik/VerifyName/verifySafetyPhrase';
-import { Input } from '../../Inputs/Input';
-
+import * as Yup from 'yup';
+import { Input } from 'renderer/components/Inputs/Input';
+import { verifyNameValues } from 'renderer/utils/Formik/VerifyName/verifyName';
 import styles from './styles.module.sass';
-import { FormMessageError } from 'renderer/components/Forms/FormMessageError';
 
 interface VerifySafetyPhraseModalProps {
   title: string;
@@ -28,27 +27,28 @@ export function VerifyNameModal({
   onRequestClose,
 }: VerifySafetyPhraseModalProps) {
   const { theme } = useContext(ThemeContext);
-  const [messageError, setMessageError] = useState<string | undefined>(
-    undefined
-  );
+  const user = window.electron.store.get('user') as IUser;
 
   function handleSubmit(values: typeof verifyNameValues) {
-    console.log(values);
-    const { safetyPhrase } = window.electron.store.get('user') as IUser;
-
-    if (values.name !== nameToVerify) {
-      setMessageError('Frase Secreta Invalida')
-    } else if (values.safetyPhrase !== safetyPhrase) {
-      setMessageError('Frase Secreta Invalida');
-    } else {
-      setMessageError(undefined);
-      verifyName(false);
-    }
+    verifyName(true);
+    onRequestClose();
   }
 
   function handleCloseModal() {
     onRequestClose();
   }
+
+  const verifyNameSchema = Yup.object().shape({
+    name: Yup.string()
+      .required('Nome não pode ficar em branco.')
+      .max(252)
+      .oneOf([nameToVerify, null], 'Senha Invalida'),
+    safetyPhrase: Yup.string()
+      .required('Frase de segurança não pode ficar em branco.')
+      .min(12, 'Frase de segurança Inválida.')
+      .max(32)
+      .oneOf([user ? user.safetyPhrase : '', null], 'Senha Invalida'),
+  });
 
   const formikProps = useFormik({
     initialValues: verifyNameValues,
@@ -71,14 +71,17 @@ export function VerifyNameModal({
         }`}
       >
         <h2>{title}</h2>
+        <h2>{nameToVerify}</h2>
         <form onSubmit={formikProps.handleSubmit}>
           <Input
             text={inputText}
-            name="safetyPhrase"
-            type="password"
-            value={formikProps.values.safetyPhrase}
+            name="name"
+            value={formikProps.values.name}
             onChange={formikProps.handleChange}
             onBlur={formikProps.handleBlur}
+            viewBarError
+            touched
+            messageError={formikProps.errors.name}
           />
           <Input
             text="Frase Secreta"
@@ -87,6 +90,9 @@ export function VerifyNameModal({
             value={formikProps.values.safetyPhrase}
             onChange={formikProps.handleChange}
             onBlur={formikProps.handleBlur}
+            viewBarError
+            touched
+            messageError={formikProps.errors.safetyPhrase}
           />
           <div className={styles.buttons}>
             <button type="submit">Confirmar</button>

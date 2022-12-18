@@ -1,18 +1,23 @@
 /* eslint-disable @typescript-eslint/dot-notation */
-import { useCallback, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
-import { useFormik } from 'formik';
+import { FormikContextType, useFormik } from 'formik';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
-import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
-import styles from './styles.module.sass';
-import formik from '../formik';
 import { IFormikItem } from '../types';
 import { Form } from './Form';
 import Users from './Users';
+import styles from './styles.module.sass';
 
 interface FormProps {
   currentSafeBox: ISafeBox | undefined;
   formikIndex: number;
+  formikProps: FormikContextType<IFormikItem[]>;
+  changeUsersParticipant: (users: IParticipant[]) => void;
+  changeUsersAdmin: (users: IParticipant[]) => void;
+  changeSelectOptions: (users: IParticipant[]) => void;
+  usersParticipant: IParticipant[];
+  usersAdmin: IParticipant[];
+  selectOptions: IParticipant[];
 }
 
 export interface IParticipant {
@@ -22,74 +27,19 @@ export interface IParticipant {
   value: string;
 }
 
-export function MainSafeBox({ currentSafeBox, formikIndex }: FormProps) {
+export function MainSafeBox({
+  currentSafeBox,
+  formikIndex,
+  formikProps,
+  changeSelectOptions,
+  changeUsersAdmin,
+  changeUsersParticipant,
+  usersAdmin,
+  usersParticipant,
+  selectOptions,
+}: FormProps) {
   const { currentOrganization } = useContext(OrganizationsContext);
   const [tab, setTab] = useState<'form' | 'users'>('form');
-  const [usersParticipant, setUsersParticipant] = useState<IParticipant[]>([]);
-  const [usersAdmin, setUsersAdmin] = useState<IParticipant[]>([]);
-  const [selectOptions, setSelectOptions] = useState<IParticipant[]>([
-    ...JSON.parse(currentOrganization?.administradores as string).map(
-      (adm: string) => {
-        return { value: adm, label: adm };
-      }
-    ),
-    ...JSON.parse(currentOrganization?.participantes as string).map(
-      (adm: string) => {
-        return { value: adm, label: adm };
-      }
-    ),
-    { value: currentOrganization?.dono, label: currentOrganization?.dono },
-  ]);
-
-  const initialValues = formik[formikIndex].item.map((item: IFormikItem) => {
-    if (currentSafeBox !== undefined) {
-      if (item.name === 'description') {
-        item['description'] = currentSafeBox?.descricao;
-      } else if (item.name === 'formName') {
-        item['formName'] = currentSafeBox?.nome;
-      } else {
-        const safeBoxContent = JSON.parse(currentSafeBox?.conteudo as string);
-        item[`${item.name}`] = safeBoxContent[`${item.name}`];
-        if (item[`crypto`] !== undefined) {
-          if (item[`${item.name}`]?.startsWith('-----BEGIN PGP MESSAGE-----')) {
-            item[`crypto`] = true;
-            item[`${item.name}`] = '******************';
-          } else {
-            item[`crypto`] = false;
-          }
-        }
-        if (item[`${item.name}`] === undefined) {
-          item[`${item.name}`] = '';
-        }
-      }
-    } else {
-      item[`${item.name}`] = '';
-    }
-
-    return item;
-  });
-
-  const changeUsersParticipant = useCallback((users: IParticipant[]) => {
-    setUsersParticipant(users);
-  }, []);
-
-  const changeUsersAdmin = useCallback((users: IParticipant[]) => {
-    setUsersAdmin(users);
-  }, []);
-
-  const changeSelectOptions = useCallback((users: IParticipant[]) => {
-    setSelectOptions(users);
-  }, []);
-
-  function handleSubmit(values: typeof initialValues) {
-    console.log(values);
-  }
-
-  const formikProps = useFormik({
-    initialValues,
-    onSubmit: (values) => handleSubmit(values),
-    enableReinitialize: true,
-  });
 
   function handleTabForm() {
     setTab('form');
@@ -117,7 +67,11 @@ export function MainSafeBox({ currentSafeBox, formikIndex }: FormProps) {
         </button>
       </div>
       {tab === 'form' ? (
-        <Form formikProps={formikProps} />
+        <Form
+          formikProps={
+            formikProps as unknown as FormikContextType<IFormikItem[]>
+          }
+        />
       ) : (
         <Users
           formikIndex={formikIndex}

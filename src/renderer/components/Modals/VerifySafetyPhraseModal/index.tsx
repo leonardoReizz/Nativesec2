@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { IUser } from 'main/types';
 import * as Yup from 'yup';
 import ReactModal from 'react-modal';
 import { verirySafetyPhraseValues } from 'renderer/utils/Formik/VerifySafetyPhrase/verifySafetyPhrase';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
-import { toastOptions } from 'renderer/utils/options/Toastify';
-import { toast } from 'react-toastify';
 import { Input } from '../../Inputs/Input';
 
 import styles from './styles.module.sass';
