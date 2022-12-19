@@ -13,7 +13,8 @@ module.exports = {
     // Since React 17 and typescript 4.1 you can safely disable the rule
     'react/react-in-jsx-scope': 'off',
     'import/prefer-default-export': 'off',
-    'class-methods-use-this': 'off'
+    'class-methods-use-this': 'off',
+    '@typescript-eslint/dot-notation': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

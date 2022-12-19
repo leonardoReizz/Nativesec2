@@ -22,10 +22,12 @@ export interface IDeleteSafeBoxResponse {
 export interface IGetAllSafeBoxResponse {
   safeBoxResponse: boolean;
 }
+
 export interface IGetSafeBoxResponse {
   safeBox: ISafeBox;
 }
 
 export interface IPCResponse {
   message: 'ok' | 'nok';
+  data: any;
 }

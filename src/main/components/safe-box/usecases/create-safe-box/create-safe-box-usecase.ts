@@ -76,7 +76,7 @@ export class CreateSafeBoxUseCase {
         id: apiCreate.data?.detail[0]._id.$oid,
         conteudo: JSON.stringify(content),
         data_hora_create: apiCreate.data.detail[0].data_hora_create.$date,
-        data_atualizacao: apiCreate.data.detail[0].data_atualizacao,
+        data_atualizacao: apiCreate.data.detail[0].data_atualizacao.$date,
         usuarios_escrita: JSON.stringify(data.usuarios_escrita),
         usuarios_leitura: JSON.stringify(data.usuarios_leitura),
         usuarios_escrita_deletado: JSON.stringify(

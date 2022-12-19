@@ -1,3 +1,4 @@
+import { DecryptController } from '../components/crypto/use-cases/decrypt/decrypt-controller';
 import { deleteSafeBoxController } from '../components/safe-box/usecases/delete-safe-box';
 import { createSafeBoxController } from '../components/safe-box/usecases/create-safe-box';
 import { IPCTypes } from '../../renderer/@types/IPCTypes';
@@ -71,40 +72,19 @@ export async function useIpcActions(
       return getMyInvites();
     case IPCTypes.GENERATE_PAR_KEYS:
       return generateParKeys(arg);
-    case IPCTypes.CREATE_SAFE_BOX: {
-      const { message } = await createSafeBoxController.handle(arg.data);
-      return {
-        response: IPCTypes.CREATE_SAFE_BOX_RESPONSE,
-        data: {
-          message,
-        },
-      };
-    }
-    case IPCTypes.DELETE_SAFE_BOX: {
-      console.log(arg.data);
-      const { message } = await deleteSafeBoxController.handle(arg.data);
-      return {
-        response: IPCTypes.DELETE_SAFE_BOX_RESPONSE,
-        data: {
-          message,
-        },
-      };
-    }
-    case IPCTypes.CREATE_ORGANIZATION: {
-      // const create = await createOrganizationController.execute(arg.data);
-
-      // return {
-      //   response: IPCTypes.CREATE_ORGANIZATION_RESPONSE,
-      //   data: create.data,
-      // };
+    case IPCTypes.CREATE_SAFE_BOX:
+      return createSafeBoxController.handle(arg.data);
+    case IPCTypes.DELETE_SAFE_BOX:
+      return deleteSafeBoxController.handle(arg.data);
+    case IPCTypes.CREATE_ORGANIZATION:
       return createOrganization(arg);
-    }
+    case IPCTypes.DECRYPT_TEXT:
+      return DecryptController.decrypt(arg.data);
     default:
       return {
         response: 'none',
         data: {
-          status: 0,
-          data: '',
+          message: 'nok',
         },
       };
   }

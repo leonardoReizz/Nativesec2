@@ -12,6 +12,7 @@ import { IUserConfig } from 'main/ipc/user/types';
 import { useIPCSafeBox } from 'renderer/hooks/useIPCSafeBox/useIPCSafeBox';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
+import { CreateSafeBoxContextProvider } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import styles from './styles.module.sass';
 import { ViewSafeBox } from './ViewSafeBox';
 
@@ -22,12 +23,7 @@ export function Workspace() {
     'userConfig'
   ) as IUserConfig;
   const { currentOrganization } = useContext(OrganizationsContext);
-  const {
-    safeBoxes,
-    safeBoxesIsLoading,
-    currentSafeBox,
-    changeCurrentSafeBox,
-  } = useContext(SafeBoxesContext);
+  const { safeBoxes, changeCurrentSafeBox } = useContext(SafeBoxesContext);
   const [update, setUpdate] = useState<boolean>(true);
   const [menuCreateIsOpen, setMenuCreateIsOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLButtonElement>(null);
@@ -117,7 +113,9 @@ export function Workspace() {
         </div>
       </div>
       <div className={styles.currentSafeBox}>
-        <ViewSafeBox />
+        <CreateSafeBoxContextProvider>
+          <ViewSafeBox />
+        </CreateSafeBoxContextProvider>
       </div>
     </div>
   );

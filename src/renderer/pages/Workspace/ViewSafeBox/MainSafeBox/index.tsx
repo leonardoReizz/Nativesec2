@@ -1,44 +1,10 @@
-/* eslint-disable @typescript-eslint/dot-notation */
 import { useContext, useState } from 'react';
-import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
-import { FormikContextType, useFormik } from 'formik';
-import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
-import { IFormikItem } from '../types';
+import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { Form } from './Form';
 import Users from './Users';
 import styles from './styles.module.sass';
 
-interface FormProps {
-  currentSafeBox: ISafeBox | undefined;
-  formikIndex: number;
-  formikProps: FormikContextType<IFormikItem[]>;
-  changeUsersParticipant: (users: IParticipant[]) => void;
-  changeUsersAdmin: (users: IParticipant[]) => void;
-  changeSelectOptions: (users: IParticipant[]) => void;
-  usersParticipant: IParticipant[];
-  usersAdmin: IParticipant[];
-  selectOptions: IParticipant[];
-}
-
-export interface IParticipant {
-  email: string;
-  type: 'participant' | 'admin';
-  label: string;
-  value: string;
-}
-
-export function MainSafeBox({
-  currentSafeBox,
-  formikIndex,
-  formikProps,
-  changeSelectOptions,
-  changeUsersAdmin,
-  changeUsersParticipant,
-  usersAdmin,
-  usersParticipant,
-  selectOptions,
-}: FormProps) {
-  const { currentOrganization } = useContext(OrganizationsContext);
+export function MainSafeBox() {
   const [tab, setTab] = useState<'form' | 'users'>('form');
 
   function handleTabForm() {
@@ -66,24 +32,7 @@ export function MainSafeBox({
           Usuarios
         </button>
       </div>
-      {tab === 'form' ? (
-        <Form
-          formikProps={
-            formikProps as unknown as FormikContextType<IFormikItem[]>
-          }
-        />
-      ) : (
-        <Users
-          formikIndex={formikIndex}
-          currentOrganization={currentOrganization}
-          usersAdmin={usersAdmin}
-          usersParticipant={usersParticipant}
-          selectOptions={selectOptions}
-          changeUsersParticipant={changeUsersParticipant}
-          changeUsersAdmin={changeUsersAdmin}
-          changeSelectOptions={changeSelectOptions}
-        />
-      )}
+      {tab === 'form' ? <Form /> : <Users />}
     </div>
   );
 }

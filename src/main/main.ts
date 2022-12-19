@@ -12,7 +12,7 @@ import os from 'os';
 import Store from 'electron-store';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import crypto from './crypto';
+import crypto from './ipc/crypto';
 import organizations from './ipc/organizations';
 import database from './database/database';
 import user from './ipc/user';
@@ -174,16 +174,21 @@ ipcMain.on(
         ipcEvent: event,
       });
     }
+
+    const result = await useIpcActions(newQueue[0]);
+    newQueue[0].ipcEvent.reply(result?.response, result.data);
+    const filterQueue = newQueue.filter((queue) => queue.id !== newQueue[0].id);
+    newQueue = filterQueue;
     // console.log(arg, ' DEU ENTRADA')
     // console.log(' -----------------------------------------------');
     // console.log(newQueue, ' FILA ATUAL', startedQueue)
     // console.log(' -----------------------------------------------');
-    if (newQueue.length > 0 && !startedQueue) {
-      startedQueue = true;
-      startQueue(event);
-    }
+    // if (newQueue.length > 0 && !startedQueue) {
+    //   startedQueue = true;
+    //   startQueue(event);
+    // }
 
-    return null;
+    // return null;
   }
 );
 

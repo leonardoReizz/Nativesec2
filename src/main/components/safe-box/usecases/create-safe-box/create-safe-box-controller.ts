@@ -1,3 +1,4 @@
+import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
 import { CreateSafeBoxRequestDTO } from './create-safe-box-request-dto';
 import { CreateSafeBoxUseCase } from './create-safe-box-usecase';
 
@@ -6,11 +7,20 @@ export class CreateSafeBoxController {
 
   async handle(data: CreateSafeBoxRequestDTO) {
     try {
-      console.log(data);
       await this.createSafeBoxUseCase.execute(data);
-      return { message: 'ok' };
+      return {
+        response: IPCTypes.CREATE_SAFE_BOX_RESPONSE,
+        data: {
+          message: 'ok',
+        },
+      };
     } catch (error: any) {
-      return { message: error.message };
+      return {
+        response: IPCTypes.CREATE_SAFE_BOX_RESPONSE,
+        data: {
+          message: 'nok',
+        },
+      };
     }
   }
 }

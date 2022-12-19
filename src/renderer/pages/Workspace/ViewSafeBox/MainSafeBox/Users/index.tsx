@@ -1,42 +1,25 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext } from 'react';
 import { MultiValue } from 'react-select';
 import { MultiSelect } from 'renderer/components/Inputs/MultiSelect';
+import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
+import { IParticipant } from 'renderer/contexts/CreateSafeBox/types';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
-import { IOrganization } from 'renderer/contexts/OrganizationsContext/types';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
 import styles from './styles.module.sass';
 
-interface IParticipant {
-  email: string;
-  type: 'participant' | 'admin';
-  label: string;
-  value: string;
-}
-
-interface UsersProps {
-  formikIndex: number;
-  usersAdmin: IParticipant[];
-  usersParticipant: IParticipant[];
-  selectOptions: IParticipant[];
-  currentOrganization: IOrganization | undefined;
-  changeUsersParticipant: (users: IParticipant[]) => void;
-  changeUsersAdmin: (users: IParticipant[]) => void;
-  changeSelectOptions: (users: IParticipant[]) => void;
-}
-
-export default function Users({
-  formikIndex,
-  usersAdmin,
-  usersParticipant,
-  selectOptions,
-  currentOrganization,
-  changeUsersAdmin,
-  changeUsersParticipant,
-  changeSelectOptions,
-}: UsersProps) {
+export default function Users() {
   const { safeBoxMode } = useContext(SafeBoxModeContext);
+  const { currentOrganization } = useContext(OrganizationsContext);
+  const {
+    usersAdmin,
+    selectOptions,
+    usersParticipant,
+    changeUsersAdmin,
+    changeUsersParticipant,
+    changeSelectOptions,
+  } = useContext(CreateSafeBoxContext);
   const { theme } = useContext(ThemeContext);
   const { currentSafeBox } = useContext(SafeBoxesContext);
   const handleAddParticipant = useCallback(

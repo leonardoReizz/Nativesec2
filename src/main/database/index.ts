@@ -19,6 +19,7 @@ const Init = async ({ db, secret, event }: IInit) => {
     db.serialize(() => {
       db.run('PRAGMA cipher_compatibility = 4');
       db.run(`PRAGMA key = '${secret}'`);
+      db.run(`PRAGMA SQLITE_THREADSAFE=2`);
       db.run('SELECT count(*) FROM sqlite_master;', async (err) => {
         if (err) {
           console.log(err, ' Init error');

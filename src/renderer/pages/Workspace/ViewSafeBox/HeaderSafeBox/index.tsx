@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/jsx-no-bind */
 import { useContext, useState, useCallback } from 'react';
-import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
 import { GiPadlockOpen } from 'react-icons/gi';
 import { BsCheck2 } from 'react-icons/bs';
 
@@ -16,23 +15,16 @@ import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeC
 import { SafeBoxIcon, SafeBoxIconType } from 'renderer/components/SafeBoxIcon';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
-import formik from '../formik';
+import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
+import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
+import formik from '../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 
-interface SafeBoxProps {
-  currentSafeBox: ISafeBox | undefined;
-  formikIndex: number;
-  changeFormikIndex: (index: number) => void;
-  createSafeBox: () => void;
-}
-
-export function HeaderSafeBox({
-  currentSafeBox,
-  formikIndex,
-  changeFormikIndex,
-  createSafeBox,
-}: SafeBoxProps) {
+export function HeaderSafeBox() {
   const { theme } = useContext(ThemeContext);
+  const { currentSafeBox } = useContext(SafeBoxesContext);
+  const { formikIndex, changeFormikIndex, handleSubmit } =
+    useContext(CreateSafeBoxContext);
   const { currentOrganization } = useContext(OrganizationsContext);
   const { safeBoxMode, changeSafeBoxMode } = useContext(SafeBoxModeContext);
   const [verifySafetyPhraseIsOpen, setVerifySafetyPhraseIsOpen] =
@@ -78,10 +70,6 @@ export function HeaderSafeBox({
 
   function handleSelectOptionToCreateSafeBox(index: number) {
     changeFormikIndex(index);
-  }
-
-  function handleCreateSafeBox() {
-    createSafeBox();
   }
 
   return (
@@ -137,7 +125,7 @@ export function HeaderSafeBox({
         ) : (
           <>
             <div className={styles.actions}>
-              <button type="button" onClick={handleCreateSafeBox}>
+              <button type="button" onClick={handleSubmit}>
                 <BsCheck2 />
                 Salvar
               </button>

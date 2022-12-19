@@ -1,3 +1,4 @@
+import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
 import { IDeleteSafeBoxRequestDTO } from './delete-safe-box-request-dto';
 import { DeleteSafeBoxUseCase } from './delete-safe-box-usecase';
 
@@ -7,9 +8,19 @@ export default class DeleteSafeBoxController {
   async handle(data: IDeleteSafeBoxRequestDTO) {
     try {
       const { message } = await this.deleteSafeBoxUseCase.execute(data);
-      return { message };
+      return {
+        response: IPCTypes.DELETE_SAFE_BOX_RESPONSE,
+        data: {
+          message,
+        },
+      };
     } catch (error) {
-      return { message: 'nok' };
+      return {
+        response: IPCTypes.DELETE_SAFE_BOX_RESPONSE,
+        data: {
+          message: 'nok',
+        },
+      };
     }
   }
 }

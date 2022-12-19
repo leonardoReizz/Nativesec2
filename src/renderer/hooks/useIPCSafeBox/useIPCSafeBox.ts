@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useContext } from 'react';
 import { toast } from 'react-toastify';

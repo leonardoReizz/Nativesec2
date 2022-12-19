@@ -11,7 +11,6 @@ export class SafeBoxRepositoryAPI implements SafeBoxRepositoryAPIInterface {
     data: SafeBoxAPIModel,
     authorization: string
   ): Promise<APIResponse> {
-    console.log(data);
     const create = await axios
       .post(
         `${api}/cofre/`,
@@ -33,7 +32,6 @@ export class SafeBoxRepositoryAPI implements SafeBoxRepositoryAPIInterface {
         }
       )
       .then((result) => {
-        console.log(result);
         return {
           status: result.status,
           data: result.data,
