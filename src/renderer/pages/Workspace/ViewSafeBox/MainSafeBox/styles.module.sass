@@ -1,5 +1,18 @@
 @use '../../../../styles/_util' as *
 
+.mainSafeBox.dark
+  .menu
+    button
+      color: $white
+      &::before
+        background-color: $white
+.mainSafeBox.light
+  .menu
+    button
+      color: $black
+      &::before
+        background-color: $black
+
 .mainSafeBox
   @include flex(center, center, column)
   width: 100%
@@ -10,24 +23,23 @@
     gap: 1rem
     margin-bottom: 1rem
 
-
     button
+      @include flex(center, center, row)
       position: relative
       font-weight: 500
       font-size: .9rem
-      @include flex(center, center, row)
       &::before
         content: ''
         position: absolute
         width: 0
         border-radius: 5rem
         height: 1px
-        background-color: $black
         bottom: 0
         transition: width 0.2s ease
       &:hover
         &::before
           width: 100%
+
     .selected
       position: relative
       &::before
@@ -35,5 +47,4 @@
         position: absolute
         width: 100%
         height: 1px
-        background-color: $black
         bottom: 0

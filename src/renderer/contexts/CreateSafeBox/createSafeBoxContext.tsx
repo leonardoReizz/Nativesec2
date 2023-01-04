@@ -5,19 +5,23 @@ import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import formik from '../../utils/Formik/formik';
 import { OrganizationsContext } from '../OrganizationsContext/OrganizationsContext';
 import { SafeBoxesContext } from '../SafeBoxesContext/safeBoxesContext';
+import {
+  SafeBoxModeContext,
+  SafeBoxModeType,
+} from '../WorkspaceMode/SafeBoxModeContext';
 import * as types from './types';
 
 interface CreateSafeBoxContextType {
   formikProps: FormikContextType<types.IFormikItem[]>;
   initialValues: types.IFormikItem;
-  usersAdmin: types.IParticipant[];
-  usersParticipant: types.IParticipant[];
-  selectOptions: types.IParticipant[];
+  usersAdmin: string[];
+  usersParticipant: string[];
+  selectOptions: string[];
   formikIndex: number;
   changeFormikIndex: (index: number) => void;
-  changeSelectOptions: (users: types.IParticipant[]) => void;
-  changeUsersAdmin: (users: types.IParticipant[]) => void;
-  changeUsersParticipant: (users: types.IParticipant[]) => void;
+  changeSelectOptions: (users: string[]) => void;
+  changeUsersAdmin: (users: string[]) => void;
+  changeUsersParticipant: (users: string[]) => void;
   handleSubmit: () => void;
 }
 
@@ -32,16 +36,16 @@ export const CreateSafeBoxContext = createContext(
 export function CreateSafeBoxContextProvider({
   children,
 }: CreateSafeBoxContextProviderProps) {
-  const { createSafeBox } = useSafeBox();
-  const [formikIndex, setFormikIndex] = useState<number>(0);
+  const { safeBoxMode } = useContext(SafeBoxModeContext);
   const { currentSafeBox } = useContext(SafeBoxesContext);
   const { currentOrganization } = useContext(OrganizationsContext);
+  const { submitSafeBox } = useSafeBox();
 
-  const [usersParticipant, setUsersParticipant] = useState<
-    types.IParticipant[]
-  >([]);
-  const [usersAdmin, setUsersAdmin] = useState<types.IParticipant[]>([]);
-  const [selectOptions, setSelectOptions] = useState<types.IParticipant[]>([
+  const [formikIndex, setFormikIndex] = useState<number>(0);
+
+  const [usersParticipant, setUsersParticipant] = useState<string[]>([]);
+  const [usersAdmin, setUsersAdmin] = useState<string[]>([]);
+  const [selectOptions, setSelectOptions] = useState<string[]>([
     ...JSON.parse(currentOrganization?.administradores as string).map(
       (adm: string) => {
         return { value: adm, label: adm };
@@ -89,7 +93,7 @@ export function CreateSafeBoxContextProvider({
 
   function handleSubmit() {
     if (currentOrganization) {
-      createSafeBox({
+      submitSafeBox({
         formikProps: formikProps as unknown as FormikContextType<
           types.IFormikItem[]
         >,
@@ -111,15 +115,15 @@ export function CreateSafeBoxContextProvider({
     setFormikIndex(index);
   }
 
-  function changeUsersAdmin(users: types.IParticipant[]) {
+  function changeUsersAdmin(users: string[]) {
+    setUsersAdmin(users);
+  }
+
+  function changeUsersParticipant(users: string[]) {
     setUsersParticipant(users);
   }
 
-  function changeUsersParticipant(users: types.IParticipant[]) {
-    setUsersParticipant(users);
-  }
-
-  function changeSelectOptions(users: types.IParticipant[]) {
+  function changeSelectOptions(users: string[]) {
     setSelectOptions(users);
   }
 

@@ -1,11 +1,12 @@
 import { useContext, useState } from 'react';
-import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
+import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { Form } from './Form';
 import Users from './Users';
 import styles from './styles.module.sass';
 
 export function MainSafeBox() {
   const [tab, setTab] = useState<'form' | 'users'>('form');
+  const { theme } = useContext(ThemeContext);
 
   function handleTabForm() {
     setTab('form');
@@ -15,7 +16,11 @@ export function MainSafeBox() {
   }
 
   return (
-    <div className={styles.mainSafeBox}>
+    <div
+      className={`${styles.mainSafeBox} ${
+        theme === 'dark' ? styles.dark : styles.light
+      }`}
+    >
       <div className={styles.menu}>
         <button
           type="button"

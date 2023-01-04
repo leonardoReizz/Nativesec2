@@ -1,8 +1,5 @@
 import { FormikContextType } from 'formik';
-import {
-  IFormikItem,
-  IParticipant,
-} from 'renderer/contexts/CreateSafeBox/types';
+import { IFormikItem } from 'renderer/contexts/CreateSafeBox/types';
 
 export interface IDeleteSafeBox {
   organizationId: string;
@@ -11,8 +8,8 @@ export interface IDeleteSafeBox {
 
 export interface ICreateSafeBox {
   formikProps: FormikContextType<IFormikItem[]>;
-  usersAdmin: IParticipant[];
-  usersParticipant: IParticipant[];
+  usersAdmin: string[];
+  usersParticipant: string[];
   formikIndex: number;
   currentOrganizationId: string;
 }

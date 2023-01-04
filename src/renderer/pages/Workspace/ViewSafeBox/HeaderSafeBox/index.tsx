@@ -91,7 +91,7 @@ export function HeaderSafeBox() {
       />
 
       <header className={`${theme === 'dark' ? styles.dark : styles.light}`}>
-        {safeBoxMode === 'view' || safeBoxMode === 'edit' ? (
+        {safeBoxMode === 'view' && (
           <>
             <div className={styles.actions}>
               <button type="button">
@@ -122,7 +122,8 @@ export function HeaderSafeBox() {
               ''
             )}
           </>
-        ) : (
+        )}
+        {(safeBoxMode === 'edit' || safeBoxMode === 'create') && (
           <>
             <div className={styles.actions}>
               <button type="button" onClick={handleSubmit}>

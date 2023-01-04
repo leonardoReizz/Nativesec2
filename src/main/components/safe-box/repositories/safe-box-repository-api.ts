@@ -8,7 +8,7 @@ import { DeleteSafeBoxAPI } from './types';
 
 export class SafeBoxRepositoryAPI implements SafeBoxRepositoryAPIInterface {
   async create(
-    data: SafeBoxAPIModel,
+    data: Omit<SafeBoxAPIModel, 'id'>,
     authorization: string
   ): Promise<APIResponse> {
     const create = await axios
@@ -69,6 +69,42 @@ export class SafeBoxRepositoryAPI implements SafeBoxRepositoryAPIInterface {
       })
       .catch((error) => {
         console.log(error, ' API DELETE SAFE BOX ERROR');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
+
+  async update(data: SafeBoxAPIModel, authorization: string) {
+    return axios
+      .post(
+        `${api}/cofre/`,
+        {
+          usuarios_leitura: data.usuarios_leitura,
+          usuarios_escrita: data.usuarios_escrita,
+          conteudo: data.conteudo,
+          tipo: data.tipo,
+          nome: data.nome,
+          descricao: data.descricao,
+          organizacao: data.organizacao,
+          criptografia: data.criptografia,
+          anexos: data.anexos,
+        },
+        {
+          headers: {
+            Authorization: authorization,
+          },
+        }
+      )
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, 'API ERROR CREATE SAFE BOX');
         return {
           status: error.response.status,
           data: error.response.statusText,

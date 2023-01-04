@@ -2,6 +2,7 @@ import { IUser } from 'main/types';
 import { useContext } from 'react';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
+import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
 import formik from 'renderer/utils/Formik/formik';
 import * as types from './types';
 
@@ -9,7 +10,9 @@ export function useSafeBox() {
   const { changeSafeBoxesIsLoading, currentSafeBox } =
     useContext(SafeBoxesContext);
 
-  function createSafeBox({
+  const { safeBoxMode } = useContext(SafeBoxModeContext);
+
+  function submitSafeBox({
     formikProps,
     usersAdmin,
     usersParticipant,
@@ -28,14 +31,12 @@ export function useSafeBox() {
       });
     }
 
-    let editUsersAdmin = usersAdmin.map((user) => user.label);
-    let editUsersParticipant = usersParticipant.map((user) => user.label);
+    let editUsersAdmin = usersAdmin;
+    let editUsersParticipant = usersParticipant;
 
-    const filterUsersAdmin = usersAdmin.filter(
-      (user) => user.label === myEmail
-    );
+    const filterUsersAdmin = usersAdmin.filter((user) => user === myEmail);
     const filterUsersParticipant = usersParticipant.filter(
-      (user) => user.label === myEmail
+      (user) => user === myEmail
     );
 
     let deletedUsersAdmin: string[] = JSON.parse(
@@ -86,22 +87,63 @@ export function useSafeBox() {
         (email) => email !== myEmail
       );
     }
-    window.electron.ipcRenderer.sendMessage('useIPC', {
-      event: IPCTypes.CREATE_SAFE_BOX,
-      data: {
+    if (safeBoxMode === 'create') {
+      window.electron.ipcRenderer.sendMessage('useIPC', {
+        event: IPCTypes.CREATE_SAFE_BOX,
+        data: {
+          usuarios_leitura: editUsersParticipant,
+          usuarios_escrita: editUsersAdmin,
+          tipo: formik[formikIndex].type,
+          usuarios_leitura_deletado: [],
+          usuarios_escrita_deletado: [],
+          criptografia: 'rsa',
+          nome: formikProps.values[0][`${formikProps.values[0].name}`],
+          descricao:
+            formikProps.values[size - 1][
+              `${formikProps.values[size - 1].name}`
+            ],
+          conteudo: content,
+          organizacao: currentOrganizationId,
+        },
+      });
+    } else {
+      console.log({
+        id: currentSafeBox?._id,
         usuarios_leitura: editUsersParticipant,
         usuarios_escrita: editUsersAdmin,
+        usuarios_leitura_deletado: deletedUsersParticipant,
+        usuarios_escrita_deletado: deletedUsersAdmin,
         tipo: formik[formikIndex].type,
-        usuarios_leitura_deletado: [],
-        usuarios_escrita_deletado: [],
         criptografia: 'rsa',
         nome: formikProps.values[0][`${formikProps.values[0].name}`],
         descricao:
           formikProps.values[size - 1][`${formikProps.values[size - 1].name}`],
         conteudo: content,
         organizacao: currentOrganizationId,
-      },
-    });
+        data_atualizacao: currentSafeBox?.data_atualizacao,
+        data_hora_create: currentSafeBox?.data_hora_create,
+      });
+      // window.electron.ipcRenderer.sendMessage('updateSafeBox', [
+      //   {
+      //     id: currentSafeBox?._id,
+      //     usuarios_leitura: editUsersParticipant,
+      //     usuarios_escrita: editUsersAdmin,
+      //     usuarios_leitura_deletado: deletedUsersParticipant,
+      //     usuarios_escrita_deletado: deletedUsersAdmin,
+      //     tipo: formik[formikIndex].type,
+      //     criptografia: 'rsa',
+      //     nome: formikProps.values[0][`${formikProps.values[0].name}`],
+      //     descricao:
+      //       formikProps.values[size - 1][
+      //         `${formikProps.values[size - 1].name}`
+      //       ],
+      //     conteudo: content,
+      //     organizacao: currentOrganizationId,
+      //     data_atualizacao: currentSafeBox?.data_atualizacao,
+      //     data_hora_create: currentSafeBox?.data_hora_create,
+      //   },
+      // ]);
+    }
   }
   function getSafeBoxes(organizationId: string) {
     changeSafeBoxesIsLoading(true);
@@ -138,5 +180,5 @@ export function useSafeBox() {
     }
   }
 
-  return { getSafeBoxes, deleteSafeBox, createSafeBox, decrypt };
+  return { getSafeBoxes, deleteSafeBox, submitSafeBox, decrypt };
 }

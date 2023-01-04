@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useContext } from 'react';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
@@ -11,6 +12,7 @@ export function ViewSafeBox() {
   const { changeSafeBoxMode } = useContext(SafeBoxModeContext);
   const { currentSafeBox } = useContext(SafeBoxesContext);
   const { changeFormikIndex } = useContext(CreateSafeBoxContext);
+
   useEffect(() => {
     if (currentSafeBox) {
       const index = formik.findIndex((item) => {
@@ -19,7 +21,7 @@ export function ViewSafeBox() {
       changeFormikIndex(index);
       changeSafeBoxMode('view');
     }
-  }, [changeFormikIndex, changeSafeBoxMode, currentSafeBox]);
+  }, [currentSafeBox]);
 
   return (
     <div className={styles.currentSafeBox}>
