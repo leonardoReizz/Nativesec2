@@ -123,26 +123,27 @@ export function useSafeBox() {
         data_atualizacao: currentSafeBox?.data_atualizacao,
         data_hora_create: currentSafeBox?.data_hora_create,
       });
-      // window.electron.ipcRenderer.sendMessage('updateSafeBox', [
-      //   {
-      //     id: currentSafeBox?._id,
-      //     usuarios_leitura: editUsersParticipant,
-      //     usuarios_escrita: editUsersAdmin,
-      //     usuarios_leitura_deletado: deletedUsersParticipant,
-      //     usuarios_escrita_deletado: deletedUsersAdmin,
-      //     tipo: formik[formikIndex].type,
-      //     criptografia: 'rsa',
-      //     nome: formikProps.values[0][`${formikProps.values[0].name}`],
-      //     descricao:
-      //       formikProps.values[size - 1][
-      //         `${formikProps.values[size - 1].name}`
-      //       ],
-      //     conteudo: content,
-      //     organizacao: currentOrganizationId,
-      //     data_atualizacao: currentSafeBox?.data_atualizacao,
-      //     data_hora_create: currentSafeBox?.data_hora_create,
-      //   },
-      // ]);
+      window.electron.ipcRenderer.sendMessage('useIPC', {
+        event: IPCTypes.UPDATE_SAFE_BOX,
+        data: {
+          id: currentSafeBox?._id,
+          usuarios_leitura: editUsersParticipant,
+          usuarios_escrita: editUsersAdmin,
+          usuarios_leitura_deletado: deletedUsersParticipant,
+          usuarios_escrita_deletado: deletedUsersAdmin,
+          tipo: formik[formikIndex].type,
+          criptografia: 'rsa',
+          nome: formikProps.values[0][`${formikProps.values[0].name}`],
+          descricao:
+            formikProps.values[size - 1][
+              `${formikProps.values[size - 1].name}`
+            ],
+          conteudo: content,
+          organizacao: currentOrganizationId,
+          data_atualizacao: currentSafeBox?.data_atualizacao,
+          data_hora_create: currentSafeBox?.data_hora_create,
+        },
+      });
     }
   }
   function getSafeBoxes(organizationId: string) {

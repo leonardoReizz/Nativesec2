@@ -8,7 +8,10 @@ import { InputEye } from 'renderer/components/Inputs/InputEye';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { VerifySafetyPhraseModal } from 'renderer/components/Modals/VerifySafetyPhraseModal';
-import { useCreateSafeBox } from 'renderer/hooks/useCreateSafeBox/useCreateSafeBox';
+import {
+  IDecryptResponse,
+  useCreateSafeBox,
+} from 'renderer/hooks/useCreateSafeBox/useCreateSafeBox';
 import formik from '../../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 import { IDecryptItem } from './types';
@@ -50,9 +53,9 @@ export function Form() {
     setIsOpenVerifySafetyPhraseModal(false);
   }, []);
 
-  const setDecryptedMessage = (message: string) => {
+  const setDecryptedMessage = (result: IDecryptResponse) => {
     handleCloseVerifySafePhraseModal();
-    formikProps.setFieldValue(`${decryptItem.position}`, message);
+    formikProps.setFieldValue(`${result.position}`, result.message);
   };
 
   useCreateSafeBox({ setDecryptedMessage });

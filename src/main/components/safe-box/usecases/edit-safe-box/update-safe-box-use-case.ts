@@ -1,20 +1,19 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import { store } from '../../../../main';
 import { IToken } from '../../../../types';
+import openpgp from '../../../../crypto/openpgp';
+import apiPubKey from '../../../../API/publicKey/index';
+import { refreshSafeBoxes } from '../../electron-store/store';
 import { SafeBoxRepositoryAPI } from '../../repositories/safe-box-repository-api';
 import { SafeBoxRepositoryDatabase } from '../../repositories/safe-box-repository-database';
-import { CreateSafeBoxRequestDTO } from './create-safe-box-request-dto';
-import apiPubKey from '../../../../API/publicKey/index';
-import openpgp from '../../../../crypto/openpgp';
-import { refreshSafeBoxes } from '../../electron-store/store';
+import { IUpdateSafeBoxRequestDTO } from './update-safe-box-request-dto';
 
-export class CreateSafeBoxUseCase {
+export class UpdateSafeBoxUseCase {
   constructor(
     private safeBoxRepositoryAPI: SafeBoxRepositoryAPI,
     private safeBoxRepositoryDatabase: SafeBoxRepositoryDatabase
   ) {}
 
-  async execute(data: CreateSafeBoxRequestDTO) {
+  async execute(data: IUpdateSafeBoxRequestDTO) {
     const { accessToken, tokenType } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
     const users = [...data.usuarios_escrita, ...data.usuarios_leitura];
@@ -65,18 +64,16 @@ export class CreateSafeBoxUseCase {
       return content;
     });
 
-    const apiCreate = await this.safeBoxRepositoryAPI.create(
-      { ...data, conteudo: JSON.stringify(content), anexos: [] },
+    const apiUpdate = await this.safeBoxRepositoryAPI.update(
+      { ...data, conteudo: JSON.stringify(content) },
       authorization
     );
 
-    if (apiCreate.status === 200 && apiCreate.data.status === 'ok') {
-      this.safeBoxRepositoryDatabase.create({
+    if (apiUpdate.status === 200 && apiUpdate.data.status === 'ok') {
+      this.safeBoxRepositoryDatabase.update({
         ...data,
-        _id: apiCreate.data?.detail[0]._id.$oid,
+        _id: data.id,
         conteudo: JSON.stringify(content),
-        data_hora_create: apiCreate.data.detail[0].data_hora_create.$date,
-        data_atualizacao: apiCreate.data.detail[0].data_atualizacao.$date,
         usuarios_escrita: JSON.stringify(data.usuarios_escrita),
         usuarios_leitura: JSON.stringify(data.usuarios_leitura),
         usuarios_escrita_deletado: JSON.stringify(

@@ -69,7 +69,6 @@ export default function Users() {
     }
   }
 
-  console.log(readUsers);
   return (
     <div
       className={`${styles.users} ${

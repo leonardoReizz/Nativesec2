@@ -15,6 +15,7 @@ interface SafeBoxesContextType {
   safeBoxesIsLoading: boolean;
   safeBoxIsOpen: boolean;
   createSafeBoxIsLoading: boolean;
+  refreshSafeBoxes: () => void;
   changeCreateSafeBoxIsLoading: (isLoading: boolean) => void;
   changeSafeBoxIsOpen: (isOpen: boolean) => void;
   changeSafeBoxesIsLoading: (isLoading: boolean) => void;
@@ -66,6 +67,10 @@ export function SafeBoxesContextProvider({
     dispatch(changeCurrentSafeBoxAction(newCurrentSafeBox));
   }
 
+  function refreshSafeBoxes() {
+    dispatch(updateSafeBoxesAction(window.electron.store.get('safebox')));
+  }
+
   return (
     <SafeBoxesContext.Provider
       value={{
@@ -74,6 +79,7 @@ export function SafeBoxesContextProvider({
         updateSafeBoxes,
         safeBoxesIsLoading,
         safeBoxIsOpen,
+        refreshSafeBoxes,
         createSafeBoxIsLoading,
         changeCurrentSafeBox,
         changeSafeBoxesIsLoading,

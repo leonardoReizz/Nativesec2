@@ -1,3 +1,4 @@
+import { updateSafeBoxController } from '../components/safe-box/usecases/edit-safe-box';
 import { DecryptController } from '../components/crypto/use-cases/decrypt/decrypt-controller';
 import { deleteSafeBoxController } from '../components/safe-box/usecases/delete-safe-box';
 import { createSafeBoxController } from '../components/safe-box/usecases/create-safe-box';
@@ -80,6 +81,8 @@ export async function useIpcActions(
       return createOrganization(arg);
     case IPCTypes.DECRYPT_TEXT:
       return DecryptController.decrypt(arg.data);
+    case IPCTypes.UPDATE_SAFE_BOX:
+      return updateSafeBoxController.handle(arg.data);
     default:
       return {
         response: 'none',

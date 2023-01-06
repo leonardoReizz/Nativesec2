@@ -1,11 +1,9 @@
 export interface SafeBoxDatabaseModel {
-  id: string;
+  _id: string;
   usuarios_leitura: string;
   usuarios_escrita: string;
   usuarios_leitura_deletado: string;
   usuarios_escrita_deletado: string;
-  data_hora_create: number;
-  data_atualizacao: number;
   tipo: string;
   criptografia: string;
   nome: string;
@@ -16,6 +14,7 @@ export interface SafeBoxDatabaseModel {
 }
 
 export interface SafeBoxAPIModel {
+  id: string;
   usuarios_leitura: string[];
   usuarios_escrita: string[];
   tipo: string;

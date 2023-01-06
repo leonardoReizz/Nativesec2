@@ -1,3 +1,4 @@
+import { ISafeBoxDatabase } from 'main/ipc/organizations/types';
 import { myDatabase } from '../../../ipc/database';
 import { SafeBoxDatabaseModel } from '../model/SafeBox';
 import { SafeBoxRepositoryDatabaseInterface } from './safe-box-repository-database-interface';
@@ -24,7 +25,7 @@ export class SafeBoxRepositoryDatabase
           usuarios_escrita ,
           usuarios_leitura
         ) VALUES (
-          '${data.id}',
+          '${data._id}',
           '${data.anexos}',
           '${data.conteudo}',
           '${data.criptografia}',
@@ -62,6 +63,33 @@ export class SafeBoxRepositoryDatabase
             console.log(error, 'ERROR DATABASE DELETE SAFE BOX');
             reject(error);
           }
+          resolve(true);
+        }
+      );
+    });
+  }
+
+  async update(data: SafeBoxDatabaseModel): Promise<boolean | Error> {
+    return new Promise((resolve, reject) => {
+      return myDatabase.run(
+        `
+          UPDATE safebox SET
+          anexos = '${data.anexos}',
+          conteudo = '${data.conteudo}',
+          criptografia = 'rsa',
+          usuarios_escrita_deletado = '${data.usuarios_escrita_deletado}',
+          usuarios_leitura_deletado = '${data.usuarios_leitura_deletado}',
+          descricao = '${data.descricao}',
+          nome = '${data.nome}',
+          tipo = '${data.tipo}',
+          usuarios_escrita = '${data.usuarios_escrita}',
+          usuarios_leitura = '${data.usuarios_leitura}'
+          WHERE _id = '${data._id}'
+          AND organizacao = '${data.organizacao}'
+        `,
+        (error) => {
+          if (error) reject(error);
+
           resolve(true);
         }
       );

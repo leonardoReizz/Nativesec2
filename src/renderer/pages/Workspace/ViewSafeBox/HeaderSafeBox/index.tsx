@@ -23,7 +23,7 @@ import styles from './styles.module.sass';
 export function HeaderSafeBox() {
   const { theme } = useContext(ThemeContext);
   const { currentSafeBox } = useContext(SafeBoxesContext);
-  const { formikIndex, changeFormikIndex, handleSubmit } =
+  const { formikIndex, changeFormikIndex, handleSubmit, decrypt } =
     useContext(CreateSafeBoxContext);
   const { currentOrganization } = useContext(OrganizationsContext);
   const { safeBoxMode, changeSafeBoxMode } = useContext(SafeBoxModeContext);
@@ -52,6 +52,9 @@ export function HeaderSafeBox() {
   function handleEdit(isVerified: boolean) {
     if (isVerified) {
       changeSafeBoxMode('edit');
+
+      decrypt();
+      // descriptografar
       handleCloseVerifySafetyPhraseModal();
     }
   }

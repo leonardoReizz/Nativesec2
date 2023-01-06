@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { FormikContextType, useFormik } from 'formik';
-import { createContext, ReactNode, useContext, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import formik from '../../utils/Formik/formik';
 import { OrganizationsContext } from '../OrganizationsContext/OrganizationsContext';
@@ -18,6 +25,7 @@ interface CreateSafeBoxContextType {
   usersParticipant: string[];
   selectOptions: string[];
   formikIndex: number;
+  decrypt: () => void;
   changeFormikIndex: (index: number) => void;
   changeSelectOptions: (users: string[]) => void;
   changeUsersAdmin: (users: string[]) => void;
@@ -42,7 +50,6 @@ export function CreateSafeBoxContextProvider({
   const { submitSafeBox } = useSafeBox();
 
   const [formikIndex, setFormikIndex] = useState<number>(0);
-
   const [usersParticipant, setUsersParticipant] = useState<string[]>([]);
   const [usersAdmin, setUsersAdmin] = useState<string[]>([]);
   const [selectOptions, setSelectOptions] = useState<string[]>([
@@ -59,8 +66,8 @@ export function CreateSafeBoxContextProvider({
     { value: currentOrganization?.dono, label: currentOrganization?.dono },
   ]);
 
-  const initialValues = formik[formikIndex].item.map(
-    (item: types.IFormikItem) => {
+  function getInitialValues() {
+    return formik[formikIndex].item.map((item: types.IFormikItem) => {
       if (currentSafeBox !== undefined) {
         if (item.name === 'description') {
           item['description'] = currentSafeBox?.descricao;
@@ -88,8 +95,10 @@ export function CreateSafeBoxContextProvider({
       }
 
       return item;
-    }
-  );
+    });
+  }
+
+  let initialValues = getInitialValues();
 
   function handleSubmit() {
     if (currentOrganization) {
@@ -105,11 +114,37 @@ export function CreateSafeBoxContextProvider({
     }
   }
 
+  function decrypt() {
+    formikProps.values.forEach((element: any, index: number) => {
+      const message = JSON.parse(currentSafeBox?.conteudo as string)[
+        `${formikProps.values[index].name}`
+      ];
+      if (message !== undefined) {
+        if (message.startsWith('-----BEGIN PGP MESSAGE-----')) {
+          window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.DECRYPT_TEXT,
+            data: {
+              message,
+              name: formikProps.values[index].name,
+              position: `${index}.${formikProps.values[index].name}`,
+            },
+          });
+        }
+      }
+    });
+  }
+
   const formikProps = useFormik({
     initialValues,
     onSubmit: () => handleSubmit(),
     enableReinitialize: true,
   });
+
+  useEffect(() => {
+    const values = getInitialValues();
+    formikProps.setValues(values);
+    initialValues = values;
+  }, [currentSafeBox]);
 
   function changeFormikIndex(index: number) {
     setFormikIndex(index);
@@ -143,6 +178,7 @@ export function CreateSafeBoxContextProvider({
         changeSelectOptions,
         selectOptions,
         handleSubmit,
+        decrypt,
       }}
     >
       {children}

@@ -1,10 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { toast } from 'react-toastify';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
+import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
+import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
 import { toastOptions } from 'renderer/utils/options/Toastify';
 import * as types from './types';
 
@@ -14,7 +16,11 @@ export function useIPCSafeBox() {
     currentSafeBox,
     updateSafeBoxes,
     changeSafeBoxesIsLoading,
+    refreshSafeBoxes,
   } = useContext(SafeBoxesContext);
+
+  const { changeSafeBoxMode } = useContext(SafeBoxModeContext);
+  const { changeFormikIndex, formikIndex } = useContext(CreateSafeBoxContext);
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
@@ -85,4 +91,36 @@ export function useIPCSafeBox() {
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (currentSafeBox?._id !== undefined) {
+      window.electron.ipcRenderer.on(
+        IPCTypes.UPDATE_SAFE_BOX_RESPONSE,
+        (response: types.IPCResponse) => {
+          console.log(response);
+          if (response.message === 'ok') {
+            toast.success('Cofre Editado', {
+              ...toastOptions,
+              toastId: 'updatedSafeBox',
+            });
+
+            refreshSafeBoxes();
+            changeSafeBoxMode('view');
+
+            const safeBoxes = window.electron.store.get(
+              'safebox'
+            ) as ISafeBox[];
+            console.log(safeBoxes);
+            console.log(currentSafeBox, ' current');
+            const filter = safeBoxes.filter(
+              (safebox) => safebox._id === currentSafeBox?._id
+            );
+
+            console.log(filter);
+            changeCurrentSafeBox(filter[0]);
+          }
+        }
+      );
+    }
+  }, [currentSafeBox]);
 }

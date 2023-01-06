@@ -2,7 +2,7 @@ import axios from 'axios';
 import { store } from '../../../main';
 import { APIResponse, IToken } from '../../../types';
 import { api } from '../../../util';
-import { SafeBoxAPIModel } from '../model/SafeBox';
+import { SafeBoxAPIModel, SafeBoxDatabaseModel } from '../model/SafeBox';
 import { SafeBoxRepositoryAPIInterface } from './safe-box-repository-api-interface';
 import { DeleteSafeBoxAPI } from './types';
 
@@ -78,18 +78,21 @@ export class SafeBoxRepositoryAPI implements SafeBoxRepositoryAPIInterface {
 
   async update(data: SafeBoxAPIModel, authorization: string) {
     return axios
-      .post(
+      .put(
         `${api}/cofre/`,
         {
+          id: data.id,
           usuarios_leitura: data.usuarios_leitura,
           usuarios_escrita: data.usuarios_escrita,
+          usuarios_escrita_deletado: data.usuarios_escrita_deletado,
+          usuarios_leitura_deletado: data.usuarios_leitura_deletado,
           conteudo: data.conteudo,
           tipo: data.tipo,
           nome: data.nome,
           descricao: data.descricao,
           organizacao: data.organizacao,
-          criptografia: data.criptografia,
-          anexos: data.anexos,
+          criptografia: 'rsa',
+          anexos: [],
         },
         {
           headers: {

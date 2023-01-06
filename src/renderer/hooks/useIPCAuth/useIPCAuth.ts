@@ -76,7 +76,6 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_PRIVATE_KEY_RESPONSE,
       (result: IIPCResponse) => {
-        console.log(result);
         switch (result.status) {
           case 200:
             // Chave privada encontrada

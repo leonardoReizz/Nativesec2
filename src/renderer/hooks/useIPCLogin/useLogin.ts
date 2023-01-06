@@ -26,7 +26,6 @@ export function useIPCLogin({
                 ...toastOptions,
                 toastId: 'sendToken',
               });
-              console.log('entrei');
               changeButtonIsLoading(false);
               changeAuthState('token');
             } else {

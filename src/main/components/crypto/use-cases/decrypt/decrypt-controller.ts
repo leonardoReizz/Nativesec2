@@ -5,10 +5,12 @@ import { store } from '../../../../main';
 
 interface decrypt {
   message: string;
+  position: string;
+  name: string;
 }
 
 export class DecryptController {
-  static async decrypt({ message }: decrypt) {
+  static async decrypt({ message, position, name }: decrypt) {
     console.log(message);
     const { safetyPhrase } = store.get('user') as IUser;
     const encryptedMessage = String(message);
@@ -21,6 +23,8 @@ export class DecryptController {
       response: IPCTypes.DECRYPT_TEXT_RESPONSE,
       data: {
         message: decrypted,
+        position,
+        name,
       },
     };
   }

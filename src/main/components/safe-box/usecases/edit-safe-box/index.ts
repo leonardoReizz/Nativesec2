@@ -1,14 +1,17 @@
 import { SafeBoxRepositoryAPI } from '../../repositories/safe-box-repository-api';
 import { SafeBoxRepositoryDatabase } from '../../repositories/safe-box-repository-database';
-import { EditSafeBoxController } from './edit-safe-box-controller';
-import { EditSafeBoxUseCase } from './edit-safe-box-use-case';
+
+import { UpdateSafeBoxController } from './update-safe-box-controller';
+import { UpdateSafeBoxUseCase } from './update-safe-box-use-case';
 
 const safeBoxRepositoryApi = new SafeBoxRepositoryAPI();
 const safeBoxRepositoryDatabase = new SafeBoxRepositoryDatabase();
-const editSafeBoxUseCase = new EditSafeBoxUseCase(
+const updateSafeBoxUseCase = new UpdateSafeBoxUseCase(
   safeBoxRepositoryApi,
   safeBoxRepositoryDatabase
 );
-const editSafeBoxController = new EditSafeBoxController(editSafeBoxUseCase);
+const updateSafeBoxController = new UpdateSafeBoxController(
+  updateSafeBoxUseCase
+);
 
-export { editSafeBoxController };
+export { updateSafeBoxController };
