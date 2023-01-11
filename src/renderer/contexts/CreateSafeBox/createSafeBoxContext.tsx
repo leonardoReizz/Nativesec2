@@ -7,15 +7,10 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import formik from '../../utils/Formik/formik';
 import { OrganizationsContext } from '../OrganizationsContext/OrganizationsContext';
 import { SafeBoxesContext } from '../SafeBoxesContext/safeBoxesContext';
-import {
-  SafeBoxModeContext,
-  SafeBoxModeType,
-} from '../WorkspaceMode/SafeBoxModeContext';
 import * as types from './types';
 
 interface CreateSafeBoxContextType {
@@ -25,7 +20,6 @@ interface CreateSafeBoxContextType {
   usersParticipant: string[];
   selectOptions: string[];
   formikIndex: number;
-  decrypt: () => void;
   changeFormikIndex: (index: number) => void;
   changeSelectOptions: (users: string[]) => void;
   changeUsersAdmin: (users: string[]) => void;
@@ -44,7 +38,6 @@ export const CreateSafeBoxContext = createContext(
 export function CreateSafeBoxContextProvider({
   children,
 }: CreateSafeBoxContextProviderProps) {
-  const { safeBoxMode } = useContext(SafeBoxModeContext);
   const { currentSafeBox } = useContext(SafeBoxesContext);
   const { currentOrganization } = useContext(OrganizationsContext);
   const { submitSafeBox } = useSafeBox();
@@ -114,26 +107,6 @@ export function CreateSafeBoxContextProvider({
     }
   }
 
-  function decrypt() {
-    formikProps.values.forEach((element: any, index: number) => {
-      const message = JSON.parse(currentSafeBox?.conteudo as string)[
-        `${formikProps.values[index].name}`
-      ];
-      if (message !== undefined) {
-        if (message.startsWith('-----BEGIN PGP MESSAGE-----')) {
-          window.electron.ipcRenderer.sendMessage('useIPC', {
-            event: IPCTypes.DECRYPT_TEXT,
-            data: {
-              message,
-              name: formikProps.values[index].name,
-              position: `${index}.${formikProps.values[index].name}`,
-            },
-          });
-        }
-      }
-    });
-  }
-
   const formikProps = useFormik({
     initialValues,
     onSubmit: () => handleSubmit(),
@@ -178,7 +151,6 @@ export function CreateSafeBoxContextProvider({
         changeSelectOptions,
         selectOptions,
         handleSubmit,
-        decrypt,
       }}
     >
       {children}

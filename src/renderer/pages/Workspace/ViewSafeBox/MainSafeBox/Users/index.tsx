@@ -5,8 +5,8 @@ import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafe
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
-import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
 import { Input } from 'renderer/components/Inputs/Input';
+import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import styles from './styles.module.sass';
 
 export default function Users() {
@@ -16,7 +16,7 @@ export default function Users() {
   const [email, setEmail] = useState<string>('');
   const [readUsers, setReadUsers] = useState<string[]>([]);
   const [writeUsers, setWriteUsers] = useState<string[]>([]);
-  const { safeBoxMode } = useContext(SafeBoxModeContext);
+  const { safeBoxMode } = useSafeBox();
 
   const { currentOrganization } = useContext(OrganizationsContext);
   const {

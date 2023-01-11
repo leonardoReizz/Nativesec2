@@ -5,7 +5,7 @@ import { ThemeType } from 'renderer/@types/types';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { GiPadlock, GiPadlockOpen } from 'react-icons/gi';
-import { SafeBoxModeType } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
+import { SafeBoxModeType } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import styles from './styles.module.sass';
 
 interface InputEyeProps {
@@ -13,6 +13,7 @@ interface InputEyeProps {
   text?: string;
   theme?: ThemeType;
   placeholder?: string;
+  changeFormikDecrypt?: () => void;
   autoComplete?: string;
   isValid?: boolean;
   style?: React.CSSProperties | undefined;
@@ -40,11 +41,14 @@ export function InputEye({
   isValid = true,
   viewEye = false,
   decrypt,
+  changeFormikDecrypt,
   mode,
+  value,
   encrypted = false,
   ...props
 }: InputEyeProps) {
   const { theme } = useContext(ThemeContext);
+  console.log(mode);
   return (
     <div className={styles.inputContainer}>
       <div
@@ -54,22 +58,30 @@ export function InputEye({
         }`}
       >
         <span>{text}</span>
-        <input type={type || 'text'} {...props} placeholder=" " />
+        <input type={type || 'text'} {...props} placeholder=" " value={value} />
         {viewEye ? (
           <div className={styles.eye}>
-            <button type="button" onClick={decrypt}>
-              {mode === 'view' ? (
-                encrypted ? (
-                  <AiFillEyeInvisible />
-                ) : (
-                  <AiFillEye />
-                )
-              ) : encrypted ? (
-                <GiPadlock />
-              ) : (
-                <GiPadlockOpen />
-              )}
-            </button>
+            {mode === 'view' ||
+              (mode === 'decrypted' && (
+                <button type="button" onClick={decrypt}>
+                  {encrypted &&
+                    (value?.startsWith('*****') ? (
+                      <AiFillEye />
+                    ) : (
+                      <AiFillEyeInvisible />
+                    ))}
+                </button>
+                // ) : encrypted ? (
+                //   <GiPadlock />
+                // ) : (
+                //   <GiPadlockOpen />
+              ))}
+
+            {mode === 'edit' && (
+              <button type="button" onClick={changeFormikDecrypt}>
+                {encrypted ? <GiPadlock /> : <GiPadlockOpen />}
+              </button>
+            )}
           </div>
         ) : (
           <></>

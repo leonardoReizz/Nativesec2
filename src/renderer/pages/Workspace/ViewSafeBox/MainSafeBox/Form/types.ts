@@ -3,3 +3,7 @@ export interface IDecryptItem {
   itemName: string;
   position: string;
 }
+
+export interface IChangeFormikDecrypt {
+  position: string;
+}

@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Loading } from 'renderer/components/Loading';
-import { SafeBoxModeProvider } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
 import { Auth } from 'renderer/pages/Auth';
 import { Home } from 'renderer/pages/Home/index';
 import { UserSettings } from 'renderer/pages/UserSettings';
@@ -29,14 +28,7 @@ export function AppRoutes() {
         <Route element={<ProtectedRoutes />}>
           <Route element={<LayoutsWithSidebar />}>
             <Route path="/home" element={<Home />} />
-            <Route
-              path="/workspace/:id"
-              element={
-                <SafeBoxModeProvider>
-                  <Workspace />
-                </SafeBoxModeProvider>
-              }
-            />
+            <Route path="/workspace/:id" element={<Workspace />} />
             <Route path="/userSettings" element={<UserSettings />} />
           </Route>
         </Route>

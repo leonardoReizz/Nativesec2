@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useContext } from 'react';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
-import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
 import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
+import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import formik from '../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 import { MainSafeBox } from './MainSafeBox';
 import { HeaderSafeBox } from './HeaderSafeBox';
 
 export function ViewSafeBox() {
-  const { changeSafeBoxMode } = useContext(SafeBoxModeContext);
+  const { changeSafeBoxMode } = useSafeBox();
   const { currentSafeBox } = useContext(SafeBoxesContext);
   const { changeFormikIndex } = useContext(CreateSafeBoxContext);
 

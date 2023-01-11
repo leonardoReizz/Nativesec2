@@ -11,14 +11,14 @@ import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { IUserConfig } from 'main/ipc/user/types';
 import { useIPCSafeBox } from 'renderer/hooks/useIPCSafeBox/useIPCSafeBox';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
-import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
 import { CreateSafeBoxContextProvider } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
+import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import styles from './styles.module.sass';
 import { ViewSafeBox } from './ViewSafeBox';
 
 export function Workspace() {
   const { theme } = useContext(ThemeContext);
-  const { changeSafeBoxMode } = useContext(SafeBoxModeContext);
+  const { changeSafeBoxMode } = useSafeBox();
   const { refreshTime } = window.electron.store.get(
     'userConfig'
   ) as IUserConfig;

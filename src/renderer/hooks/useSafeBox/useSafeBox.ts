@@ -1,16 +1,14 @@
 import { IUser } from 'main/types';
 import { useContext } from 'react';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
+import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
-import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
 import formik from 'renderer/utils/Formik/formik';
 import * as types from './types';
 
 export function useSafeBox() {
-  const { changeSafeBoxesIsLoading, currentSafeBox } =
-    useContext(SafeBoxesContext);
-
-  const { safeBoxMode } = useContext(SafeBoxModeContext);
+  const safeBoxContext = useContext(SafeBoxesContext);
+  const createSafeBox = useContext(CreateSafeBoxContext);
 
   function submitSafeBox({
     formikProps,
@@ -40,20 +38,20 @@ export function useSafeBox() {
     );
 
     let deletedUsersAdmin: string[] = JSON.parse(
-      currentSafeBox?.usuarios_escrita_deletado || '[]'
+      safeBoxContext.currentSafeBox?.usuarios_escrita_deletado || '[]'
     );
     let deletedUsersParticipant: string[] = JSON.parse(
-      currentSafeBox?.usuarios_leitura_deletado || '[]'
+      safeBoxContext.currentSafeBox?.usuarios_leitura_deletado || '[]'
     );
 
-    if (currentSafeBox) {
-      deletedUsersAdmin = JSON.parse(currentSafeBox.usuarios_escrita).filter(
-        (user: string) => {
-          return !editUsersAdmin.some((userAdmin) => {
-            return userAdmin === user;
-          });
-        }
-      );
+    if (safeBoxContext.currentSafeBox) {
+      deletedUsersAdmin = JSON.parse(
+        safeBoxContext.currentSafeBox.usuarios_escrita
+      ).filter((user: string) => {
+        return !editUsersAdmin.some((userAdmin) => {
+          return userAdmin === user;
+        });
+      });
       deletedUsersAdmin = deletedUsersAdmin.filter((deletedUser) => {
         return ![...editUsersParticipant, ...editUsersAdmin].some((users) => {
           return users === deletedUser;
@@ -61,7 +59,7 @@ export function useSafeBox() {
       });
 
       deletedUsersParticipant = JSON.parse(
-        currentSafeBox.usuarios_leitura
+        safeBoxContext.currentSafeBox.usuarios_leitura
       ).filter((user: string) => {
         return !editUsersParticipant.some((userParticipant) => {
           return userParticipant === user;
@@ -87,7 +85,7 @@ export function useSafeBox() {
         (email) => email !== myEmail
       );
     }
-    if (safeBoxMode === 'create') {
+    if (safeBoxContext.safeBoxMode === 'create') {
       window.electron.ipcRenderer.sendMessage('useIPC', {
         event: IPCTypes.CREATE_SAFE_BOX,
         data: {
@@ -108,7 +106,7 @@ export function useSafeBox() {
       });
     } else {
       console.log({
-        id: currentSafeBox?._id,
+        id: safeBoxContext.currentSafeBox?._id,
         usuarios_leitura: editUsersParticipant,
         usuarios_escrita: editUsersAdmin,
         usuarios_leitura_deletado: deletedUsersParticipant,
@@ -120,13 +118,13 @@ export function useSafeBox() {
           formikProps.values[size - 1][`${formikProps.values[size - 1].name}`],
         conteudo: content,
         organizacao: currentOrganizationId,
-        data_atualizacao: currentSafeBox?.data_atualizacao,
-        data_hora_create: currentSafeBox?.data_hora_create,
+        data_atualizacao: safeBoxContext.currentSafeBox?.data_atualizacao,
+        data_hora_create: safeBoxContext.currentSafeBox?.data_hora_create,
       });
       window.electron.ipcRenderer.sendMessage('useIPC', {
         event: IPCTypes.UPDATE_SAFE_BOX,
         data: {
-          id: currentSafeBox?._id,
+          id: safeBoxContext.currentSafeBox?._id,
           usuarios_leitura: editUsersParticipant,
           usuarios_escrita: editUsersAdmin,
           usuarios_leitura_deletado: deletedUsersParticipant,
@@ -140,21 +138,21 @@ export function useSafeBox() {
             ],
           conteudo: content,
           organizacao: currentOrganizationId,
-          data_atualizacao: currentSafeBox?.data_atualizacao,
-          data_hora_create: currentSafeBox?.data_hora_create,
+          data_atualizacao: safeBoxContext.currentSafeBox?.data_atualizacao,
+          data_hora_create: safeBoxContext.currentSafeBox?.data_hora_create,
         },
       });
     }
   }
   function getSafeBoxes(organizationId: string) {
-    changeSafeBoxesIsLoading(true);
+    safeBoxContext.changeSafeBoxesIsLoading(true);
     window.electron.ipcRenderer.sendMessage('getSafeBoxes', {
       organizationId,
     });
   }
 
   function deleteSafeBox({ organizationId, safeBoxId }: types.IDeleteSafeBox) {
-    changeSafeBoxesIsLoading(true);
+    safeBoxContext.changeSafeBoxesIsLoading(true);
     window.electron.ipcRenderer.sendMessage('useIPC', {
       event: IPCTypes.DELETE_SAFE_BOX,
       data: {
@@ -164,22 +162,54 @@ export function useSafeBox() {
     });
   }
 
-  function decrypt({ text, itemName, position }: types.IDecrypt) {
+  function decryptMessage({ text, itemName, position }: types.IDecrypt) {
     if (
-      currentSafeBox !== undefined &&
-      JSON.parse(currentSafeBox.conteudo)[`${itemName}`].startsWith(
-        '-----BEGIN PGP MESSAGE-----'
-      )
+      safeBoxContext.currentSafeBox !== undefined &&
+      JSON.parse(safeBoxContext.currentSafeBox.conteudo)[
+        `${itemName}`
+      ].startsWith('-----BEGIN PGP MESSAGE-----')
     ) {
       if (text.startsWith('*****')) {
-        window.electron.ipcRenderer.sendMessage(IPCTypes.DECRYPT_TEXT, {
-          message: JSON.parse(currentSafeBox.conteudo)[`${itemName}`],
-          // itemName,
-          // position,
+        window.electron.ipcRenderer.sendMessage('useIPC', {
+          event: IPCTypes.DECRYPT_TEXT,
+          data: {
+            message: JSON.parse(safeBoxContext.currentSafeBox.conteudo)[
+              `${itemName}`
+            ],
+            itemName,
+            position,
+          },
         });
       }
     }
   }
 
-  return { getSafeBoxes, deleteSafeBox, submitSafeBox, decrypt };
+  function decrypt() {
+    createSafeBox.formikProps.values.forEach((element: any, index: number) => {
+      const message = JSON.parse(
+        safeBoxContext.currentSafeBox?.conteudo as string
+      )[`${createSafeBox.formikProps.values[index].name}`];
+      if (message !== undefined) {
+        if (message.startsWith('-----BEGIN PGP MESSAGE-----')) {
+          window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.DECRYPT_TEXT,
+            data: {
+              message,
+              name: createSafeBox.formikProps.values[index].name,
+              position: `${index}.${createSafeBox.formikProps.values[index].name}`,
+            },
+          });
+        }
+      }
+    });
+  }
+  return {
+    getSafeBoxes,
+    deleteSafeBox,
+    submitSafeBox,
+    decrypt,
+    decryptMessage,
+    ...createSafeBox,
+    ...safeBoxContext,
+  };
 }

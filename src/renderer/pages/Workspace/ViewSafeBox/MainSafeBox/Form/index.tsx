@@ -2,7 +2,6 @@
 import { useCallback, useContext, useState } from 'react';
 import { Input } from 'renderer/components/Inputs/Input';
 import { TextArea } from 'renderer/components/TextAreas/TextArea';
-import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
 import { IFormikItem } from 'renderer/contexts/CreateSafeBox/types';
 import { InputEye } from 'renderer/components/Inputs/InputEye';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
@@ -14,21 +13,24 @@ import {
 } from 'renderer/hooks/useCreateSafeBox/useCreateSafeBox';
 import formik from '../../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
-import { IDecryptItem } from './types';
+import * as types from './types';
 
 export function Form() {
   const [isOpenVerifySafetyPhraseModal, setIsOpenVerifySafetyPhraseModal] =
     useState<boolean>(false);
-  const [decryptItem, setDecryptItem] = useState<IDecryptItem>({
+  const [decryptItem, setDecryptItem] = useState<types.IDecryptItem>({
     text: '',
     itemName: '',
     position: '',
   });
   const { formikIndex, formikProps } = useContext(CreateSafeBoxContext);
-  const { safeBoxMode } = useContext(SafeBoxModeContext);
-  const { decrypt } = useSafeBox();
+  const { decryptMessage, safeBoxMode } = useSafeBox();
 
-  function handleDecrypt({ text, itemName, position }: IDecryptItem) {
+  function handleDecryptMessage({
+    text,
+    itemName,
+    position,
+  }: types.IDecryptItem) {
     if (!text.startsWith('******')) {
       const myValues: IFormikItem = formik[formikIndex].item;
       myValues.map(() => {
@@ -40,13 +42,14 @@ export function Form() {
       setIsOpenVerifySafetyPhraseModal(true);
     }
   }
+
   const validateSafetyPhrase = useCallback(
     (isValid: boolean) => {
       if (isValid) {
-        decrypt(decryptItem);
+        decryptMessage(decryptItem);
       }
     },
-    [decrypt, decryptItem]
+    [decryptItem]
   );
 
   const handleCloseVerifySafePhraseModal = useCallback(() => {
@@ -58,12 +61,20 @@ export function Form() {
     formikProps.setFieldValue(`${result.position}`, result.message);
   };
 
+  const changeFormikDecrypt = useCallback(
+    ({ position }: types.IChangeFormikDecrypt) => {
+      console.log(position);
+    },
+    []
+  );
+
   useCreateSafeBox({ setDecryptedMessage });
+  console.log(safeBoxMode);
 
   return (
     <>
       <VerifySafetyPhraseModal
-        verifySafetyPhrase={validateSafetyPhrase}
+        callback={validateSafetyPhrase}
         title="Insira sua frase secreta"
         isOpen={isOpenVerifySafetyPhraseModal}
         onRequestClose={handleCloseVerifySafePhraseModal}
@@ -89,8 +100,11 @@ export function Form() {
                 text={item.text}
                 value={formikProps.values[index][`${item.name}`]}
                 encrypted={formikProps.values[index].crypto}
+                changeFormikDecrypt={() =>
+                  changeFormikDecrypt({ position: `${index}.${item.name}` })
+                }
                 decrypt={() =>
-                  handleDecrypt({
+                  handleDecryptMessage({
                     text: formikProps.values[index][`${item.name}`],
                     itemName: String(item.name),
                     position: `${index}.${item.name}`,
@@ -98,6 +112,7 @@ export function Form() {
                 }
                 mode={safeBoxMode}
                 viewEye
+                disabled={safeBoxMode === 'view' || safeBoxMode === 'decrypted'}
               />
             ) : item.element === 'textArea' && item.name !== 'description' ? (
               <TextArea

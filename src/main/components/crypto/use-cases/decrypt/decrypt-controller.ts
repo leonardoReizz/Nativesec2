@@ -10,8 +10,8 @@ interface decrypt {
 }
 
 export class DecryptController {
-  static async decrypt({ message, position, name }: decrypt) {
-    console.log(message);
+  async handle({ message, position, name }: decrypt) {
+    console.log(message, position, name);
     const { safetyPhrase } = store.get('user') as IUser;
     const encryptedMessage = String(message);
     const decrypted = await openpgp.decrypt({
@@ -22,9 +22,12 @@ export class DecryptController {
     return {
       response: IPCTypes.DECRYPT_TEXT_RESPONSE,
       data: {
-        message: decrypted,
-        position,
-        name,
+        status: 'ok',
+        data: {
+          message: decrypted,
+          position,
+          name,
+        },
       },
     };
   }

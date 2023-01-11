@@ -147,6 +147,7 @@ ipcMain.on('closeModal', async (event, arg) => {
 
 let newQueue = <types.QueueType[]>[];
 let startedQueue = false;
+
 async function startQueue(event: any) {
   // console.log(newQueue, ' ANTES');
   const result = await useIpcActions(newQueue[0]);

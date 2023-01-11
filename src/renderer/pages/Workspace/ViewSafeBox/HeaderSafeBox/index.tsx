@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/jsx-no-bind */
 import { useContext, useState, useCallback } from 'react';
-import { GiPadlockOpen } from 'react-icons/gi';
+import { GiPadlock, GiPadlockOpen } from 'react-icons/gi';
 import { BsCheck2 } from 'react-icons/bs';
 
 import { RiEditFill } from 'react-icons/ri';
@@ -11,27 +11,36 @@ import { Input } from 'renderer/components/Inputs/Input';
 import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { VerifySafetyPhraseModal } from 'renderer/components/Modals/VerifySafetyPhraseModal';
 import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
-import { SafeBoxModeContext } from 'renderer/contexts/WorkspaceMode/SafeBoxModeContext';
 import { SafeBoxIcon, SafeBoxIconType } from 'renderer/components/SafeBoxIcon';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
+import { FormikContextType } from 'formik';
+import { IFormikItem } from 'renderer/contexts/CreateSafeBox/types';
 import formik from '../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 
 export function HeaderSafeBox() {
   const { theme } = useContext(ThemeContext);
   const { currentSafeBox } = useContext(SafeBoxesContext);
-  const { formikIndex, changeFormikIndex, handleSubmit, decrypt } =
-    useContext(CreateSafeBoxContext);
+  const { formikIndex, changeFormikIndex } = useContext(CreateSafeBoxContext);
+  const [verifySafetyPhraseType, setVerifySafetyPhraseType] = useState('');
   const { currentOrganization } = useContext(OrganizationsContext);
-  const { safeBoxMode, changeSafeBoxMode } = useContext(SafeBoxModeContext);
   const [verifySafetyPhraseIsOpen, setVerifySafetyPhraseIsOpen] =
     useState<boolean>(false);
   const [verifyNameModalIsOpen, setVerifyNameModalIsOpen] =
     useState<boolean>(false);
-  const { deleteSafeBox } = useSafeBox();
+  const {
+    deleteSafeBox,
+    submitSafeBox,
+    formikProps,
+    decrypt,
+    usersAdmin,
+    usersParticipant,
+    changeSafeBoxMode,
+    safeBoxMode,
+  } = useSafeBox();
 
   const handleCloseVerifySafetyPhraseModal = useCallback(() => {
     setVerifySafetyPhraseIsOpen(false);
@@ -45,17 +54,34 @@ export function HeaderSafeBox() {
     setVerifyNameModalIsOpen(true);
   }
 
-  const handleCLoseVerifyNameModal = useCallback(() => {
+  const handleCloseVerifyNameModal = useCallback(() => {
     setVerifyNameModalIsOpen(false);
   }, []);
 
-  function handleEdit(isVerified: boolean) {
+  function verify(isVerified: boolean) {
     if (isVerified) {
-      changeSafeBoxMode('edit');
-
-      decrypt();
-      // descriptografar
+      if (verifySafetyPhraseType === 'decryptSafeBox') {
+        changeSafeBoxMode('decrypted');
+        decrypt();
+      } else {
+        changeSafeBoxMode('edit');
+        decrypt();
+      }
       handleCloseVerifySafetyPhraseModal();
+    }
+  }
+
+  function handleDiscart() {}
+
+  function handleSave() {
+    if (currentOrganization) {
+      submitSafeBox({
+        formikProps: formikProps as unknown as FormikContextType<IFormikItem[]>,
+        formikIndex,
+        currentOrganizationId: currentOrganization._id,
+        usersAdmin,
+        usersParticipant,
+      });
     }
   }
 
@@ -75,18 +101,39 @@ export function HeaderSafeBox() {
     changeFormikIndex(index);
   }
 
+  function handleDecrypt(type: string) {
+    setVerifySafetyPhraseType(type);
+    handleOpenVerifySafetyPhraseModal();
+  }
+
+  function handleCrypt() {
+    const myValues: IFormikItem[] = formik[formikIndex].item;
+    myValues.forEach((item, index) => {
+      if (item[`${item.name}`].startsWith('***')) {
+        formikProps.setFieldValue(
+          `${index}.${item.name}`,
+          '******************'
+        );
+      }
+    });
+
+    changeSafeBoxMode('view');
+  }
+
+  console.log(formik[formikIndex].item);
+
   return (
     <>
       <VerifySafetyPhraseModal
         isOpen={verifySafetyPhraseIsOpen}
         onRequestClose={handleCloseVerifySafetyPhraseModal}
         title="Confirme sua frase secreta"
-        verifySafetyPhrase={handleEdit}
+        callback={verify}
       />
 
       <VerifyNameModal
         isOpen={verifyNameModalIsOpen}
-        onRequestClose={handleCLoseVerifyNameModal}
+        onRequestClose={handleCloseVerifyNameModal}
         title="Tem certeza que deseja excluir"
         inputText="Nome do cofre"
         nameToVerify={currentSafeBox?.nome}
@@ -94,46 +141,52 @@ export function HeaderSafeBox() {
       />
 
       <header className={`${theme === 'dark' ? styles.dark : styles.light}`}>
-        {safeBoxMode === 'view' && (
-          <>
-            <div className={styles.actions}>
-              <button type="button">
+        <>
+          <div className={styles.actions}>
+            {safeBoxMode === 'view' && (
+              <button
+                type="button"
+                onClick={() => handleDecrypt('decryptSafeBox')}
+              >
                 <GiPadlockOpen />
                 <span>Descriptografar</span>
               </button>
-              {/* <button>
-                <GiPadlock />
-              </button> */}
-              <button type="button" onClick={handleOpenVerifyNameModal}>
-                <AiFillDelete />
-                <span>Excluir</span>
-              </button>
-              <button type="button" onClick={handleOpenVerifySafetyPhraseModal}>
-                <RiEditFill />
-                <span>Editar</span>
-              </button>
-            </div>
-            {safeBoxMode === 'view' ? (
-              <div className={styles.title}>
-                <SafeBoxIcon type={currentSafeBox?.tipo as SafeBoxIconType} />
-                <div className={styles.description}>
-                  <h3>{currentSafeBox?.nome}</h3>
-                  <p>{currentSafeBox?.descricao}</p>
-                </div>
-              </div>
-            ) : (
-              ''
             )}
-          </>
-        )}
+            {safeBoxMode === 'decrypted' && (
+              <button type="button" onClick={() => handleCrypt()}>
+                <GiPadlock />
+                <span>Criptografar</span>
+              </button>
+            )}
+            <button type="button" onClick={handleOpenVerifyNameModal}>
+              <AiFillDelete />
+              <span>Excluir</span>
+            </button>
+            <button type="button" onClick={handleOpenVerifySafetyPhraseModal}>
+              <RiEditFill />
+              <span>Editar</span>
+            </button>
+          </div>
+          {safeBoxMode === 'view' ? (
+            <div className={styles.title}>
+              <SafeBoxIcon type={currentSafeBox?.tipo as SafeBoxIconType} />
+              <div className={styles.description}>
+                <h3>{currentSafeBox?.nome}</h3>
+                <p>{currentSafeBox?.descricao}</p>
+              </div>
+            </div>
+          ) : (
+            ''
+          )}
+        </>
         {(safeBoxMode === 'edit' || safeBoxMode === 'create') && (
           <>
             <div className={styles.actions}>
-              <button type="button" onClick={handleSubmit}>
+              <button type="button" onClick={handleSave}>
                 <BsCheck2 />
                 Salvar
               </button>
-              <button type="button">
+              <button type="button" onClick={handleDiscart}>
                 <AiFillDelete />
                 Descartar
               </button>

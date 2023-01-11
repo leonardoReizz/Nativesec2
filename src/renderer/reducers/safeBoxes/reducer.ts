@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { SafeBoxModeType } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
 import { ActionType } from './actions';
 
@@ -6,6 +7,7 @@ interface SafeBoxesState {
   safeBoxes: ISafeBox[];
   currentSafeBox: ISafeBox | undefined;
   safeBoxesIsLoading: boolean;
+  safeBoxMode: SafeBoxModeType;
   safeBoxIsOpen: boolean;
   createSafeBoxIsLoading: boolean;
 }
@@ -31,6 +33,10 @@ export function safeBoxesReducer(state: SafeBoxesState, action: any) {
     case ActionType.CHANGE_SAFE_BOX_IS_OPEN:
       return produce(state, (draft) => {
         draft.safeBoxIsOpen = action.payload.isOpen;
+      });
+    case ActionType.CHANGE_SAFE_BOX_MODE:
+      return produce(state, (draft) => {
+        draft.safeBoxMode = action.payload.newSafeBoxMode;
       });
     default:
       return state;

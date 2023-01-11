@@ -15,13 +15,13 @@ interface VerifySafetyPhraseModalProps {
   title: string;
   isOpen: boolean;
   onRequestClose: () => void;
-  verifySafetyPhrase: (verified: boolean) => void;
+  callback: (verified: boolean) => void;
 }
 
 export function VerifySafetyPhraseModal({
   title,
   isOpen,
-  verifySafetyPhrase,
+  callback,
   onRequestClose,
 }: VerifySafetyPhraseModalProps) {
   const { theme } = useContext(ThemeContext);
@@ -38,9 +38,9 @@ export function VerifySafetyPhraseModal({
 
   function handleSubmit(values: typeof verirySafetyPhraseValues) {
     if (values.safetyPhrase === user.safetyPhrase) {
-      return verifySafetyPhrase(true);
+      return callback(true);
     }
-    return null;
+    return callback(false);
   }
 
   const formikProps = useFormik({
