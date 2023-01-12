@@ -1,8 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/require-default-props */
-import { useContext } from 'react';
-import { ThemeType } from 'renderer/@types/types';
-import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
+import { ThemeType } from 'renderer/contexts/UserConfigContext/types';
+import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import styles from './styles.module.sass';
 
 interface InputProps {
@@ -28,7 +27,7 @@ interface InputProps {
 }
 
 export function TextArea({ type, text, isValid = true, ...props }: InputProps) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useUserConfig();
   return (
     <div
       className={`${styles.textArea}

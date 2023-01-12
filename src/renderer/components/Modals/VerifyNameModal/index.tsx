@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useFormik } from 'formik';
 import { IUser } from 'main/types';
 import ReactModal from 'react-modal';
-import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import * as Yup from 'yup';
 import { Input } from 'renderer/components/Inputs/Input';
 import { verifyNameValues } from 'renderer/utils/Formik/VerifyName/verifyName';
+import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import styles from './styles.module.sass';
 
 interface VerifySafetyPhraseModalProps {
@@ -26,7 +26,7 @@ export function VerifyNameModal({
   verifyName,
   onRequestClose,
 }: VerifySafetyPhraseModalProps) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useUserConfig();
   const user = window.electron.store.get('user') as IUser;
 
   function handleSubmit(values: typeof verifyNameValues) {

@@ -8,7 +8,6 @@ import { BsCheck2 } from 'react-icons/bs';
 import { RiEditFill } from 'react-icons/ri';
 import { AiFillDelete } from 'react-icons/ai';
 import { Input } from 'renderer/components/Inputs/Input';
-import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { VerifySafetyPhraseModal } from 'renderer/components/Modals/VerifySafetyPhraseModal';
 import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
 import { SafeBoxIcon, SafeBoxIconType } from 'renderer/components/SafeBoxIcon';
@@ -18,11 +17,12 @@ import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafe
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { FormikContextType } from 'formik';
 import { IFormikItem } from 'renderer/contexts/CreateSafeBox/types';
+import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import formik from '../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 
 export function HeaderSafeBox() {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useUserConfig();
   const { currentSafeBox } = useContext(SafeBoxesContext);
   const { formikIndex, changeFormikIndex } = useContext(CreateSafeBoxContext);
   const [verifySafetyPhraseType, setVerifySafetyPhraseType] = useState('');
@@ -120,8 +120,6 @@ export function HeaderSafeBox() {
     changeSafeBoxMode('view');
   }
 
-  console.log(formik[formikIndex].item);
-
   return (
     <>
       <VerifySafetyPhraseModal
@@ -167,7 +165,7 @@ export function HeaderSafeBox() {
               <span>Editar</span>
             </button>
           </div>
-          {safeBoxMode === 'view' ? (
+          {(safeBoxMode === 'view' || safeBoxMode === 'decrypted') && (
             <div className={styles.title}>
               <SafeBoxIcon type={currentSafeBox?.tipo as SafeBoxIconType} />
               <div className={styles.description}>
@@ -175,8 +173,6 @@ export function HeaderSafeBox() {
                 <p>{currentSafeBox?.descricao}</p>
               </div>
             </div>
-          ) : (
-            ''
           )}
         </>
         {(safeBoxMode === 'edit' || safeBoxMode === 'create') && (

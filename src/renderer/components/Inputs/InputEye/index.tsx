@@ -1,11 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/require-default-props */
-import { useContext } from 'react';
-import { ThemeType } from 'renderer/@types/types';
-import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { GiPadlock, GiPadlockOpen } from 'react-icons/gi';
 import { SafeBoxModeType } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
+import { ThemeType } from 'renderer/contexts/UserConfigContext/types';
 import styles from './styles.module.sass';
 
 interface InputEyeProps {
@@ -44,10 +42,10 @@ export function InputEye({
   changeFormikDecrypt,
   mode,
   value,
+  theme = 'light',
   encrypted = false,
   ...props
 }: InputEyeProps) {
-  const { theme } = useContext(ThemeContext);
   console.log(mode);
   return (
     <div className={styles.inputContainer}>
@@ -61,22 +59,16 @@ export function InputEye({
         <input type={type || 'text'} {...props} placeholder=" " value={value} />
         {viewEye ? (
           <div className={styles.eye}>
-            {mode === 'view' ||
-              (mode === 'decrypted' && (
-                <button type="button" onClick={decrypt}>
-                  {encrypted &&
-                    (value?.startsWith('*****') ? (
-                      <AiFillEye />
-                    ) : (
-                      <AiFillEyeInvisible />
-                    ))}
-                </button>
-                // ) : encrypted ? (
-                //   <GiPadlock />
-                // ) : (
-                //   <GiPadlockOpen />
-              ))}
-
+            {(mode === 'view' || mode === 'decrypted') && (
+              <button type="button" onClick={decrypt}>
+                {encrypted &&
+                  (value?.startsWith('*****') ? (
+                    <AiFillEye />
+                  ) : (
+                    <AiFillEyeInvisible />
+                  ))}
+              </button>
+            )}
             {mode === 'edit' && (
               <button type="button" onClick={changeFormikDecrypt}>
                 {encrypted ? <GiPadlock /> : <GiPadlockOpen />}

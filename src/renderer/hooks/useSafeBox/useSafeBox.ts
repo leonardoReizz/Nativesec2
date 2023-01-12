@@ -1,5 +1,5 @@
 import { IUser } from 'main/types';
-import { useContext } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
@@ -7,8 +7,15 @@ import formik from 'renderer/utils/Formik/formik';
 import * as types from './types';
 
 export function useSafeBox() {
+  const [searchValue, setSearchValue] = useState<string>('');
   const safeBoxContext = useContext(SafeBoxesContext);
   const createSafeBox = useContext(CreateSafeBoxContext);
+
+  const filteredSafeBoxes = safeBoxContext.safeBoxes?.filter(
+    (safebox) =>
+      safebox.nome.toLowerCase().includes(searchValue.toLowerCase()) ||
+      safebox.descricao.toLowerCase().includes(searchValue.toLowerCase())
+  );
 
   function submitSafeBox({
     formikProps,
@@ -144,6 +151,10 @@ export function useSafeBox() {
       });
     }
   }
+
+  const changeSearchValue = useCallback((newValue: string) => {
+    setSearchValue(newValue);
+  }, []);
   function getSafeBoxes(organizationId: string) {
     safeBoxContext.changeSafeBoxesIsLoading(true);
     window.electron.ipcRenderer.sendMessage('getSafeBoxes', {
@@ -209,6 +220,9 @@ export function useSafeBox() {
     submitSafeBox,
     decrypt,
     decryptMessage,
+    changeSearchValue,
+    searchValue,
+    filteredSafeBoxes,
     ...createSafeBox,
     ...safeBoxContext,
   };

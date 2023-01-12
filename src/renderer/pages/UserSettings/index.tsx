@@ -1,15 +1,16 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { useContext } from 'react';
-import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
+import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
+import { BiExport } from 'react-icons/bi';
 import styles from './styles.module.sass';
 
 export function UserSettings() {
-  const { theme, changeTheme } = useContext(ThemeContext);
+  const { theme, updateTheme } = useUserConfig();
 
-  function handleTheme(theme: 'light' | 'dark') {
-    changeTheme(theme);
+  function handleTheme(newTheme: 'light' | 'dark') {
+    updateTheme(newTheme);
   }
+
   return (
     <div
       className={`${styles.userSettings} ${
@@ -20,10 +21,9 @@ export function UserSettings() {
         <h3>Segurança</h3>
         <div className={styles.box}>
           Exportar Chave de Segurança
+          <BiExport />
         </div>
-        <div className={styles.box}>
-          Exportar Chave de Segurança
-        </div>
+        <div className={styles.box}>Exportar Chave de Segurança</div>
         <h3>Aparencia</h3>
         <div className={styles.box} onClick={() => handleTheme('light')}>
           <div>
@@ -46,10 +46,8 @@ export function UserSettings() {
           </div>
         </div>
         <h3>Cofres</h3>
-        <div className={styles.box}>
-          Tempo de Atualização
-        </div>
+        <div className={styles.box}>Tempo de Atualização</div>
       </div>
     </div>
-  )
+  );
 }

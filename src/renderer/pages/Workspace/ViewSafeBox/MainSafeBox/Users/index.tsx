@@ -2,11 +2,10 @@
 import { useContext, useEffect, useState } from 'react';
 import { IoIosClose, IoMdAdd } from 'react-icons/io';
 import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
-import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
-import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { Input } from 'renderer/components/Inputs/Input';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import styles from './styles.module.sass';
 
 export default function Users() {
@@ -18,14 +17,13 @@ export default function Users() {
   const [writeUsers, setWriteUsers] = useState<string[]>([]);
   const { safeBoxMode } = useSafeBox();
 
-  const { currentOrganization } = useContext(OrganizationsContext);
   const {
     usersAdmin,
     usersParticipant,
     changeUsersAdmin,
     changeUsersParticipant,
   } = useContext(CreateSafeBoxContext);
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useUserConfig();
   const { currentSafeBox } = useContext(SafeBoxesContext);
 
   useEffect(() => {

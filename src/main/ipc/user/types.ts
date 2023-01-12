@@ -4,14 +4,6 @@ export interface ICreateUser {
   safetyPhrase: string;
 }
 
-export interface IUserConfig {
-  email: string;
-  refreshTime: number;
-  savePrivateKey: boolean;
-  theme: 'light' | 'dark';
-  lastOrganizationId: string;
-}
-
 export interface ISetTheme {
   theme: 'light' | 'dark';
 }

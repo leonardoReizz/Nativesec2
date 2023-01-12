@@ -1,12 +1,12 @@
-import { useContext, useState } from 'react';
-import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
+import { useState } from 'react';
+import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Form } from './Form';
 import Users from './Users';
 import styles from './styles.module.sass';
 
 export function MainSafeBox() {
   const [tab, setTab] = useState<'form' | 'users'>('form');
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useUserConfig();
 
   function handleTabForm() {
     setTab('form');

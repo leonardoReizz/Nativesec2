@@ -1,0 +1,81 @@
+import { useCallback, useContext } from 'react';
+import { IPCTypes } from 'renderer/@types/IPCTypes';
+import { UserConfigContext } from 'renderer/contexts/UserConfigContext/UserConfigContext';
+
+interface UpdateDatabaseUserConfigProps {
+  lastOrganizationId: string;
+  refreshTime: string;
+  theme: string;
+  savePrivateKey: string;
+}
+
+export function useUserConfig() {
+  const userConfig = useContext(UserConfigContext);
+
+  const updateDatabaseUserConfig = useCallback(
+    (data: UpdateDatabaseUserConfigProps) => {
+      window.electron.ipcRenderer.sendMessage('useIPC', {
+        event: IPCTypes.UPDATE_USER_CONFIG,
+        data,
+      });
+    },
+    [userConfig]
+  );
+
+  const updateLastOrganizationId = useCallback(
+    (newLastOrganizationId: string) => {
+      updateDatabaseUserConfig({
+        lastOrganizationId: newLastOrganizationId,
+        refreshTime: userConfig.refreshTime,
+        theme: userConfig.theme,
+        savePrivateKey: userConfig.savePrivateKey,
+      });
+      userConfig.updateLastOrganizationId(newLastOrganizationId);
+    },
+    [userConfig]
+  );
+
+  const updateRefreshTime = useCallback(
+    (newRefreshTime: string) => {
+      updateDatabaseUserConfig({
+        lastOrganizationId: userConfig.lastOrganizationId,
+        refreshTime: newRefreshTime,
+        theme: userConfig.theme,
+        savePrivateKey: userConfig.savePrivateKey,
+      });
+      userConfig.updateRefreshTime(newRefreshTime);
+    },
+    [userConfig]
+  );
+
+  const updateTheme = useCallback(
+    (newTheme: string) => {
+      updateDatabaseUserConfig({
+        lastOrganizationId: userConfig.lastOrganizationId,
+        refreshTime: userConfig.refreshTime,
+        theme: newTheme,
+        savePrivateKey: userConfig.savePrivateKey,
+      });
+      userConfig.updateTheme(newTheme);
+    },
+    [userConfig]
+  );
+
+  function updateSavePrivateKey(newSavePrivateKey: string) {
+    updateDatabaseUserConfig({
+      lastOrganizationId: userConfig.lastOrganizationId,
+      refreshTime: userConfig.refreshTime,
+      theme: userConfig.theme,
+      savePrivateKey: newSavePrivateKey,
+    });
+    userConfig.updateSavePrivateKey(newSavePrivateKey);
+  }
+
+  return {
+    ...userConfig,
+    updateLastOrganizationId,
+    updateRefreshTime,
+    updateTheme,
+    updateSavePrivateKey,
+  };
+}

@@ -1,8 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/require-default-props */
-import { useContext } from 'react';
-import { ThemeType } from 'renderer/@types/types';
-import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
+import { ThemeType } from 'renderer/contexts/UserConfigContext/types';
 import styles from './styles.module.sass';
 
 interface InputProps {
@@ -37,12 +35,11 @@ export function Input({
   isValid = true,
   messageError,
   touched,
+  theme = 'light',
   viewMessageError,
   viewBarError = false,
   ...props
 }: InputProps) {
-  const { theme } = useContext(ThemeContext);
-
   return (
     <div className={styles.inputContainer}>
       <div

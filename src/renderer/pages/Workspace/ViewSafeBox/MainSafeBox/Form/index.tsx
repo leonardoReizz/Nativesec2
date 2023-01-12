@@ -11,6 +11,7 @@ import {
   IDecryptResponse,
   useCreateSafeBox,
 } from 'renderer/hooks/useCreateSafeBox/useCreateSafeBox';
+import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import formik from '../../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 import * as types from './types';
@@ -25,7 +26,7 @@ export function Form() {
   });
   const { formikIndex, formikProps } = useContext(CreateSafeBoxContext);
   const { decryptMessage, safeBoxMode } = useSafeBox();
-
+  const { theme } = useUserConfig();
   function handleDecryptMessage({
     text,
     itemName,
@@ -94,6 +95,7 @@ export function Form() {
           {formikProps.initialValues.map((item: IFormikItem, index: number) =>
             item.element === 'input' && item.name !== 'formName' ? (
               <InputEye
+                key={item.name}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 name={`${index}.${item.name}`}
@@ -103,6 +105,7 @@ export function Form() {
                 changeFormikDecrypt={() =>
                   changeFormikDecrypt({ position: `${index}.${item.name}` })
                 }
+                theme={theme}
                 decrypt={() =>
                   handleDecryptMessage({
                     text: formikProps.values[index][`${item.name}`],
@@ -116,6 +119,7 @@ export function Form() {
               />
             ) : item.element === 'textArea' && item.name !== 'description' ? (
               <TextArea
+                key={item.name}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 name={`${index}.${item.name}`}

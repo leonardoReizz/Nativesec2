@@ -6,10 +6,10 @@ import { toast } from 'react-toastify';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { IIPCResponse } from 'renderer/@types/types';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
-import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { AuthStateType } from 'renderer/pages/Auth';
 import { LoadingType } from 'renderer/routes';
 import { toastOptions } from 'renderer/utils/options/Toastify';
+import { useUserConfig } from '../useUserConfig/useUserConfig';
 
 interface UseIPCAuthProps {
   changeAuthState: (state: AuthStateType) => void;
@@ -21,7 +21,7 @@ export function useIPCAuth({
   changeLoadingState,
 }: UseIPCAuthProps): void {
   const navigate = useNavigate();
-  const { changeTheme } = useContext(ThemeContext);
+  const { updateUserConfig } = useUserConfig();
   const {
     updateOrganizationsIcons,
     updateOrganizations,
@@ -188,9 +188,9 @@ export function useIPCAuth({
   useEffect(() => {
     window.electron.ipcRenderer.once(IPCTypes.SET_USER_CONFIG_RESPONSE, () => {
       const userConfig = window.electron.store.get('userConfig') as IUserConfig;
-      changeTheme(userConfig.theme);
+      updateUserConfig({ ...userConfig });
       changeLoadingState('finalized');
-      //handleRefreshTime(Number(userConfig.refreshTime));
+      // handleRefreshTime(Number(userConfig.refreshTime));
       if (userConfig.lastOrganizationId === null) {
         navigate('/home');
       } else {

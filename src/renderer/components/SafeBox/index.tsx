@@ -2,8 +2,8 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useContext } from 'react';
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
-import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
+import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import styles from './styles.module.sass';
 import { SafeBoxIcon, SafeBoxIconType } from '../SafeBoxIcon';
 
@@ -13,7 +13,7 @@ interface SafeBoxProps {
 
 export function SafeBoxInfo({ safeBox }: SafeBoxProps) {
   const { changeCurrentSafeBox } = useContext(SafeBoxesContext);
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useUserConfig();
 
   return (
     <div

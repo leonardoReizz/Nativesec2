@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import Select, { MultiValue } from 'react-select';
-import { ThemeType } from 'renderer/@types/types';
+import { ThemeType } from 'renderer/contexts/UserConfigContext/types';
 import styles from './styles.module.sass';
 
 interface MultiSelectProps {

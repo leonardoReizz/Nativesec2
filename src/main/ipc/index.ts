@@ -1,3 +1,4 @@
+import { updateUserConfigController } from '../components/user-config/use-cases/update-user';
 import { decryptController } from '../components/crypto/use-cases/decrypt';
 import { updateSafeBoxController } from '../components/safe-box/usecases/edit-safe-box';
 import { deleteSafeBoxController } from '../components/safe-box/usecases/delete-safe-box';
@@ -67,8 +68,6 @@ export async function useIpcActions(
       return getUser();
     case IPCTypes.REFRESH_SAFEBOXES:
       return refreshSafeBoxes(arg);
-    case IPCTypes.UPDATE_USER_CONFIG:
-      return updateUserConfig(arg);
     case IPCTypes.GET_MY_INVITES:
       return getMyInvites();
     case IPCTypes.GENERATE_PAR_KEYS:
@@ -80,10 +79,11 @@ export async function useIpcActions(
     case IPCTypes.CREATE_ORGANIZATION:
       return createOrganization(arg);
     case IPCTypes.DECRYPT_TEXT:
-      console.log(arg.data, ' descrypt');
       return decryptController.handle(arg.data);
     case IPCTypes.UPDATE_SAFE_BOX:
       return updateSafeBoxController.handle(arg.data);
+    case IPCTypes.UPDATE_USER_CONFIG:
+      return updateUserConfigController.handle(arg.data);
     default:
       return {
         response: 'none',

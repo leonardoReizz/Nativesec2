@@ -6,24 +6,28 @@ import { CiSearch } from 'react-icons/ci';
 import { SafeBoxInfo } from 'renderer/components/SafeBox';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
-import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { IUserConfig } from 'main/ipc/user/types';
 import { useIPCSafeBox } from 'renderer/hooks/useIPCSafeBox/useIPCSafeBox';
-import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { CreateSafeBoxContextProvider } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import styles from './styles.module.sass';
 import { ViewSafeBox } from './ViewSafeBox';
 
 export function Workspace() {
-  const { theme } = useContext(ThemeContext);
-  const { changeSafeBoxMode } = useSafeBox();
+  const { theme } = useUserConfig();
   const { refreshTime } = window.electron.store.get(
     'userConfig'
   ) as IUserConfig;
   const { currentOrganization } = useContext(OrganizationsContext);
-  const { safeBoxes, changeCurrentSafeBox } = useContext(SafeBoxesContext);
+  const {
+    filteredSafeBoxes,
+    changeCurrentSafeBox,
+    changeSafeBoxMode,
+    changeSearchValue,
+    searchValue,
+  } = useSafeBox();
   const [update, setUpdate] = useState<boolean>(true);
   const [menuCreateIsOpen, setMenuCreateIsOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLButtonElement>(null);
@@ -70,7 +74,12 @@ export function Workspace() {
         <div className={styles.search}>
           <div className={styles.input}>
             <CiSearch />
-            <input type="text" placeholder="Buscar cofre..." />
+            <input
+              type="text"
+              placeholder="Buscar cofre..."
+              onChange={(e) => changeSearchValue(e.target.value)}
+              value={searchValue}
+            />
           </div>
           <button type="button" ref={menuRef} onClick={handleOpenMenuIsCreate}>
             <IoMdAdd />
@@ -106,8 +115,8 @@ export function Workspace() {
             <div className={styles.title}>
               <span>Cofres</span>
             </div>
-            {safeBoxes.map((safeBox) => (
-              <SafeBoxInfo safeBox={safeBox} />
+            {filteredSafeBoxes?.map((safeBox) => (
+              <SafeBoxInfo key={safeBox._id} safeBox={safeBox} />
             ))}
           </div>
         </div>

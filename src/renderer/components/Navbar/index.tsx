@@ -1,15 +1,13 @@
 import { useContext } from 'react';
-import { ThemeContext } from 'renderer/contexts/ThemeContext/ThemeContext';
 import { MdSettings } from 'react-icons/md';
-import { SiKubernetes } from 'react-icons/si';
-
 import { FaBell, FaUser } from 'react-icons/fa';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { useNavigate } from 'react-router-dom';
+import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import styles from './styles.module.sass';
 
 export function Navbar() {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useUserConfig();
   const {
     currentOrganization,
     currentOrganizationIcon,
