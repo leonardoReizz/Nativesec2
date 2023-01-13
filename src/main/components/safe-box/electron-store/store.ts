@@ -1,4 +1,3 @@
-import { ISafeBoxDatabase } from 'main/ipc/organizations/types';
 import database from '../../../database/database';
 import { store } from '../../../main';
 
@@ -14,6 +13,4 @@ export async function refreshSafeBoxes(organizationId: string) {
   });
 
   store.set('safebox', sort);
-
-  return sort as ISafeBoxDatabase[];
 }

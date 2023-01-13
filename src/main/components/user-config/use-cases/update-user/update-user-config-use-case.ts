@@ -1,3 +1,4 @@
+import { store } from '../../../../main';
 import { UserConfigRepositoryDatabase } from '../../repositories/user-config-repository-database';
 import { UpdateUserConfigRequestDTO } from './update-user-config-request-dto';
 
@@ -7,7 +8,7 @@ export class UpdateUserConfigUseCase {
   ) {}
 
   async execute(data: UpdateUserConfigRequestDTO) {
-    window.electron.store.set('userConfig', { ...data });
+    store.set('userConfig', { ...data });
     return this.userConfigRepositoryDatabase.update(data);
   }
 }
