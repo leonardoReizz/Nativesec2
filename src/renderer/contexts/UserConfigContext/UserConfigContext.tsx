@@ -18,7 +18,7 @@ export function UserConfigContextProvider({
 }: types.UserConfigContextProviderProps) {
   const [userConfig, dispath] = useReducer(userConfigReducer, {
     lastOrganizationId: '',
-    refreshTime: '30',
+    refreshTime: 30,
     theme: 'light',
     savePrivateKey: 'false',
     email: '',

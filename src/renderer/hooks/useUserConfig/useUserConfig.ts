@@ -4,7 +4,7 @@ import { UserConfigContext } from 'renderer/contexts/UserConfigContext/UserConfi
 
 interface UpdateDatabaseUserConfigProps {
   lastOrganizationId: string;
-  refreshTime: string;
+  refreshTime: number;
   theme: string;
   savePrivateKey: string;
 }
@@ -36,7 +36,7 @@ export function useUserConfig() {
   );
 
   const updateRefreshTime = useCallback(
-    (newRefreshTime: string) => {
+    (newRefreshTime: number) => {
       updateDatabaseUserConfig({
         lastOrganizationId: userConfig.lastOrganizationId,
         refreshTime: newRefreshTime,
@@ -61,7 +61,7 @@ export function useUserConfig() {
     [userConfig]
   );
 
-  function updateSavePrivateKey(newSavePrivateKey: string) {
+  const updateSavePrivateKey = useCallback((newSavePrivateKey: string) => {
     updateDatabaseUserConfig({
       lastOrganizationId: userConfig.lastOrganizationId,
       refreshTime: userConfig.refreshTime,
@@ -69,7 +69,7 @@ export function useUserConfig() {
       savePrivateKey: newSavePrivateKey,
     });
     userConfig.updateSavePrivateKey(newSavePrivateKey);
-  }
+  }, []);
 
   return {
     ...userConfig,

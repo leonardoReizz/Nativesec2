@@ -5,8 +5,11 @@
 // --------------------------------------------------------------
 
 .userSettings.light
+  .box.noHover
+    background-color: $gray-100 !important
   .box
     background-color: $gray-100
+    
     &:hover
       background-color: $gray-400
       cursor: pointer
@@ -18,6 +21,8 @@
 .userSettings.dark
   color: $white
 
+  .box.noHover
+    background-color: $gray-800 !important
   .box
     background-color: $gray-800
     &:hover
@@ -27,7 +32,6 @@
     div
       .checkBox
         background-color: $white
-
 
 // --------------------------------------------------------------
 // -------------------------- Settings --------------------------
@@ -49,6 +53,11 @@
       font-family: 'Anek Devanagari', sans-serif
       font-weight: 500
 
+    .box.dropdown
+      span
+        flex: 2
+      >div
+        flex: 1
     .box
       @include flex(center, space-between, row)
       width: 100%
@@ -58,9 +67,19 @@
       transition: background-color 0.2s ease
       cursor: pointer
 
-      div
+      >div
         @include flex(center, center, row)
         gap: 1rem
+
+        svg
+          font-size: 1.2rem
+      // select
+      //   background: transparent
+      //   border: 1px solid $gray-700
+      //   outline: 0
+      //   color: $white
+      //   min-width: 100px
+      //   padding: .5rem
 
 
       .checkBox
@@ -69,6 +88,6 @@
         border-radius: 5rem
 
       .checkBox.checked
-        background-color: $blue-100
+        background-color: $blue-100 
 
 

@@ -1,3 +1,4 @@
+import { deletePrivateKeyController } from 'main/components/keys/use-cases/delete-private-key';
 import { updateUserConfigController } from '../components/user-config/use-cases/update-user';
 import { decryptController } from '../components/crypto/use-cases/decrypt';
 import { updateSafeBoxController } from '../components/safe-box/usecases/edit-safe-box';
@@ -23,7 +24,6 @@ import {
   authPassword,
   getUser,
   setUserConfig,
-  updateUserConfig,
   verifyDatabasePassword,
 } from './user';
 
@@ -84,6 +84,8 @@ export async function useIpcActions(
       return updateSafeBoxController.handle(arg.data);
     case IPCTypes.UPDATE_USER_CONFIG:
       return updateUserConfigController.handle(arg.data);
+    case IPCTypes.DELETE_PRIVATE_KEY:
+      return deletePrivateKeyController.handle(arg.data);
     default:
       return {
         response: 'none',

@@ -188,6 +188,7 @@ export function useIPCAuth({
   useEffect(() => {
     window.electron.ipcRenderer.once(IPCTypes.SET_USER_CONFIG_RESPONSE, () => {
       const userConfig = window.electron.store.get('userConfig') as IUserConfig;
+      console.log({ ...userConfig }, 'user config');
       updateUserConfig({ ...userConfig });
       changeLoadingState('finalized');
       // handleRefreshTime(Number(userConfig.refreshTime));

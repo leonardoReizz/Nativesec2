@@ -28,7 +28,7 @@ export function Sidebar() {
         return null;
       }
       updateSafeBoxes([]);
-      changeCurrentSafeBox(undefined);
+      // changeCurrentSafeBox(undefined);
       getSafeBoxes(organizationId);
       changeCurrentOrganization(organizationId);
       updateLastOrganizationId(organizationId);

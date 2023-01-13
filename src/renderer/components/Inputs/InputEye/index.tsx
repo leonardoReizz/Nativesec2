@@ -48,13 +48,12 @@ export function InputEye({
 }: InputEyeProps) {
   console.log(mode);
   return (
-    <div className={styles.inputContainer}>
-      <div
-        className={`${styles.input}
-        ${theme === 'dark' ? styles.dark : styles.light} ${
-          !isValid ? styles.notValid : ''
-        }`}
-      >
+    <div
+      className={`${styles.inputContainer} ${
+        theme === 'dark' ? styles.dark : styles.light
+      }`}
+    >
+      <div className={`${styles.input} ${!isValid ? styles.notValid : ''}`}>
         <span>{text}</span>
         <input type={type || 'text'} {...props} placeholder=" " value={value} />
         {viewEye ? (

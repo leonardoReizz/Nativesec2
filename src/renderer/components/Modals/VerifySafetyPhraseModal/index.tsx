@@ -79,6 +79,7 @@ export function VerifySafetyPhraseModal({
             viewBarError
             touched
             messageError={formikProps.errors.safetyPhrase}
+            theme={theme}
           />
           <div className={styles.buttons}>
             <button type="submit">Confirmar</button>

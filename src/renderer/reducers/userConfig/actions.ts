@@ -46,7 +46,7 @@ export function updateThemeAction(newTheme: string) {
 
 export function updateUserConfigAction(newUserConfig: IUserConfig) {
   return {
-    type: ActionType.UPDATE_THEME,
+    type: ActionType.UPDATE_USER_CONFIG,
     payload: {
       ...newUserConfig,
     },
