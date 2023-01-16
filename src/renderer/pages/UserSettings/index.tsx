@@ -34,6 +34,10 @@ export function UserSettings() {
     updateRefreshTime(Number(value));
   }
 
+  function handleSavePrivateKey() {
+    
+  }
+
   return (
     <div
       className={`${styles.userSettings} ${
@@ -48,7 +52,7 @@ export function UserSettings() {
             Exportar Chave de Segurança
           </div>
         </div>
-        <div className={styles.box}>
+        <div className={styles.box} onClick={() => handleSavePrivateKey()}>
           <div>
             <span
               className={`${styles.checkBox} ${
