@@ -56,7 +56,7 @@ export function InputEye({
       <div className={`${styles.input} ${!isValid ? styles.notValid : ''}`}>
         <span>{text}</span>
         <input type={type || 'text'} {...props} placeholder=" " value={value} />
-        {viewEye ? (
+        {viewEye && (
           <div className={styles.eye}>
             {(mode === 'view' || mode === 'decrypted') && (
               <button type="button" onClick={decrypt}>
@@ -74,8 +74,6 @@ export function InputEye({
               </button>
             )}
           </div>
-        ) : (
-          <></>
         )}
       </div>
     </div>

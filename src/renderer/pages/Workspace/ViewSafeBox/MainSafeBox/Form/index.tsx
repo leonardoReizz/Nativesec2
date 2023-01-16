@@ -12,6 +12,7 @@ import {
   useCreateSafeBox,
 } from 'renderer/hooks/useCreateSafeBox/useCreateSafeBox';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
+import { TextAreaEye } from 'renderer/components/TextAreas/TextAreaEye';
 import formik from '../../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 import * as types from './types';
@@ -118,13 +119,27 @@ export function Form() {
                 disabled={safeBoxMode === 'view' || safeBoxMode === 'decrypted'}
               />
             ) : item.element === 'textArea' && item.name !== 'description' ? (
-              <TextArea
+              <TextAreaEye
                 key={item.name}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 name={`${index}.${item.name}`}
                 text={item.text}
                 value={formikProps.values[index][`${item.name}`]}
+                viewEye
+                mode={safeBoxMode}
+                encrypted={formikProps.values[index].crypto}
+                changeFormikDecrypt={() =>
+                  changeFormikDecrypt({ position: `${index}.${item.name}` })
+                }
+                decrypt={() =>
+                  handleDecryptMessage({
+                    text: formikProps.values[index][`${item.name}`],
+                    itemName: String(item.name),
+                    position: `${index}.${item.name}`,
+                  })
+                }
+                disabled={safeBoxMode === 'view' || safeBoxMode === 'decrypted'}
               />
             ) : (
               ''

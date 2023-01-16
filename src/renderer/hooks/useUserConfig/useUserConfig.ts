@@ -13,10 +13,10 @@ export function useUserConfig() {
   const userConfig = useContext(UserConfigContext);
 
   const updateDatabaseUserConfig = useCallback(
-    (data: UpdateDatabaseUserConfigProps) => {
+    (data: UpdateDatabaseUserConfigProps, type?: string) => {
       window.electron.ipcRenderer.sendMessage('useIPC', {
         event: IPCTypes.UPDATE_USER_CONFIG,
-        data,
+        data: { ...data, type },
       });
     },
     [userConfig]
@@ -24,12 +24,15 @@ export function useUserConfig() {
 
   const updateLastOrganizationId = useCallback(
     (newLastOrganizationId: string) => {
-      updateDatabaseUserConfig({
-        lastOrganizationId: newLastOrganizationId,
-        refreshTime: userConfig.refreshTime,
-        theme: userConfig.theme,
-        savePrivateKey: userConfig.savePrivateKey,
-      });
+      updateDatabaseUserConfig(
+        {
+          lastOrganizationId: newLastOrganizationId,
+          refreshTime: userConfig.refreshTime,
+          theme: userConfig.theme,
+          savePrivateKey: userConfig.savePrivateKey,
+        },
+        'lastOrganizationId'
+      );
       userConfig.updateLastOrganizationId(newLastOrganizationId);
     },
     [userConfig]

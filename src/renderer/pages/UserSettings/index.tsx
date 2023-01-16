@@ -3,6 +3,9 @@
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { BiExport } from 'react-icons/bi';
 import { Dropdown } from 'renderer/components/Dropdown';
+import Buffer from 'buffer';
+import { useIPCUserConfig } from 'renderer/hooks/useIPCUserConfig.ts';
+import { IKeys, IUser } from 'main/types';
 import styles from './styles.module.sass';
 
 const refreshTimeOptions = [
@@ -21,21 +24,49 @@ const refreshTimeOptions = [
 ];
 
 export function UserSettings() {
-  const { theme, updateTheme, updateRefreshTime, refreshTime, savePrivateKey } =
-    useUserConfig();
+  const {
+    theme,
+    updateTheme,
+    updateRefreshTime,
+    refreshTime,
+    savePrivateKey,
+    updateSavePrivateKey,
+  } = useUserConfig();
 
-  console.log(refreshTime);
+  useIPCUserConfig();
 
   function handleTheme(newTheme: 'light' | 'dark') {
     updateTheme(newTheme);
   }
 
+  function saveFile(privateKey: string) {
+    const { myEmail } = window.electron.store.get('user') as IUser;
+    const byteCharacters = Buffer.Buffer.from(privateKey, 'utf-8').toString(
+      'base64'
+    );
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const element = document.createElement('a');
+    const temp = new Blob([byteArray]);
+    element.href = URL.createObjectURL(temp);
+    element.download = myEmail;
+    element.click();
+  }
+
+  function handleExportKey() {
+    const { privateKey } = window.electron.store.get('keys') as IKeys;
+    saveFile(privateKey);
+  }
   function changeValue(value: string) {
     updateRefreshTime(Number(value));
   }
 
   function handleSavePrivateKey() {
-    
+    const save = savePrivateKey === 'false' ? 'true' : 'false';
+    updateSavePrivateKey(save);
   }
 
   return (
@@ -46,7 +77,7 @@ export function UserSettings() {
     >
       <div className={styles.container}>
         <h3>Segurança</h3>
-        <div className={styles.box}>
+        <div className={styles.box} onClick={handleExportKey}>
           <div>
             <BiExport />
             Exportar Chave de Segurança
@@ -56,7 +87,7 @@ export function UserSettings() {
           <div>
             <span
               className={`${styles.checkBox} ${
-                savePrivateKey ? styles.checked : ''
+                savePrivateKey === 'true' ? styles.checked : ''
               }`}
             />
             Salvar chave de segurança nos servidores do NativeSec

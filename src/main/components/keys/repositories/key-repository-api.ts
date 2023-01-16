@@ -39,13 +39,13 @@ export class KeyRepositoryAPI implements KeyRepositoryAPIInterface {
       .delete(`${api}/privatekey/`, {
         data: {
           chave: data.privateKey,
-          tipo: 'rsa',
+          tipo: data.type,
         },
         headers: {
           Authorization: authorization,
         },
       })
-      .then(async (result) => {
+      .then((result) => {
         return {
           status: result.status,
           data: result.data,

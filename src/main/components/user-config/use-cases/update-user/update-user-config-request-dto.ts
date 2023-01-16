@@ -4,4 +4,5 @@ export interface UpdateUserConfigRequestDTO {
   theme: string;
   savePrivateKey: string;
   email: string;
+  type?: string;
 }

@@ -1,4 +1,4 @@
-import { deletePrivateKeyController } from 'main/components/keys/use-cases/delete-private-key';
+import { deletePrivateKeyController } from '../components/keys/use-cases/delete-private-key';
 import { updateUserConfigController } from '../components/user-config/use-cases/update-user';
 import { decryptController } from '../components/crypto/use-cases/decrypt';
 import { updateSafeBoxController } from '../components/safe-box/usecases/edit-safe-box';

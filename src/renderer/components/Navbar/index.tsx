@@ -20,6 +20,10 @@ export function Navbar() {
     navigate('/userSettings');
   }
 
+  function handleOpenWorkspaceSettings() {
+    navigate('/workspaceSettings');
+  }
+
   return (
     <div
       className={`${styles.navbar} ${
@@ -44,7 +48,7 @@ export function Navbar() {
         <h3>{currentOrganization?.nome}</h3>
       </div>
       <div className={styles.icons}>
-        <button type="button">
+        <button type="button" onClick={handleOpenWorkspaceSettings}>
           <MdSettings />
         </button>
         <div className={styles.iconsUser}>

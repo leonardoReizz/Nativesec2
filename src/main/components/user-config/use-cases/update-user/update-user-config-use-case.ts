@@ -28,7 +28,7 @@ export class UpdateUserConfigUseCase {
     console.log(Boolean(data.savePrivateKey));
 
     if (data.savePrivateKey !== userConfig.savePrivateKey) {
-      if (Boolean(data.savePrivateKey) === false) {
+      if (data.savePrivateKey === 'false') {
         const deleteKeyAPI = await this.keyRepositoryAPI.delete(
           { privateKey, type: 'rsa' },
           authorization

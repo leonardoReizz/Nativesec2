@@ -8,14 +8,19 @@ export class UpdateUserController {
   constructor(private updateUserConfigUseCase: UpdateUserConfigUseCase) {}
 
   async handle(data: UpdateUserConfigRequestDTO) {
+    let message = 'ok';
     try {
       const { myEmail } = store.get('user') as IUser;
       await this.updateUserConfigUseCase.execute({ ...data, email: myEmail });
 
+      if (data.type === 'lastOrganizationId') {
+        message = 'ok, not callback';
+      }
+
       return {
         response: IPCTypes.UPDATE_USER_CONFIG_RESPONSE,
         data: {
-          message: 'ok',
+          message,
         },
       };
     } catch (error) {
