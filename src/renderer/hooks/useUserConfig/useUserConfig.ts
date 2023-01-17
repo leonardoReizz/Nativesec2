@@ -53,12 +53,15 @@ export function useUserConfig() {
 
   const updateTheme = useCallback(
     (newTheme: string) => {
-      updateDatabaseUserConfig({
-        lastOrganizationId: userConfig.lastOrganizationId,
-        refreshTime: userConfig.refreshTime,
-        theme: newTheme,
-        savePrivateKey: userConfig.savePrivateKey,
-      });
+      updateDatabaseUserConfig(
+        {
+          lastOrganizationId: userConfig.lastOrganizationId,
+          refreshTime: userConfig.refreshTime,
+          theme: newTheme,
+          savePrivateKey: userConfig.savePrivateKey,
+        },
+        'lastOrganizationId'
+      );
       userConfig.updateTheme(newTheme);
     },
     [userConfig]

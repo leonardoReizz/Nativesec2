@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { MdSettings } from 'react-icons/md';
 import { FaBell, FaUser } from 'react-icons/fa';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import styles from './styles.module.sass';
 
@@ -14,6 +14,8 @@ export function Navbar() {
     changeCurrentOrganization,
   } = useContext(OrganizationsContext);
   const navigate = useNavigate();
+
+  const { pathname } = useLocation();
 
   function handleOpenUserSettings() {
     changeCurrentOrganization(undefined);
@@ -48,14 +50,24 @@ export function Navbar() {
         <h3>{currentOrganization?.nome}</h3>
       </div>
       <div className={styles.icons}>
-        <button type="button" onClick={handleOpenWorkspaceSettings}>
+        <button
+          type="button"
+          onClick={handleOpenWorkspaceSettings}
+          className={`${
+            pathname === '/workspaceSettings' ? styles.selected : ''
+          }`}
+        >
           <MdSettings />
         </button>
         <div className={styles.iconsUser}>
           <button type="button">
             <FaBell />
           </button>
-          <button type="button" onClick={handleOpenUserSettings}>
+          <button
+            type="button"
+            onClick={handleOpenUserSettings}
+            className={`${pathname === '/userSettings' ? styles.selected : ''}`}
+          >
             <FaUser />
           </button>
         </div>

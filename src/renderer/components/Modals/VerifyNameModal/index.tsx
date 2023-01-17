@@ -11,7 +11,7 @@ import styles from './styles.module.sass';
 
 interface VerifySafetyPhraseModalProps {
   title: string;
-  nameToVerify: string | undefined;
+  nameToVerify: string | undefined | null;
   isOpen: boolean;
   inputText: string;
   onRequestClose: () => void;

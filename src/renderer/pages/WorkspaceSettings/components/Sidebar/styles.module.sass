@@ -1,15 +1,38 @@
 @use '../../../../styles/_util' as *
+
+// --------------------------------------------------------------
+// ---------------------------- THEME ---------------------------
+// --------------------------------------------------------------
+
+.sidebar.dark
+  border-right: 1px solid $gray-700
+  main
+    ul
+      li
+        button
+          color: $white
+  
+.sidebar.light
+  border-right: 1px solid $gray-400
+
+  main
+    ul
+      li
+        button
+          color: $black
+
 .sidebar
   @include flex(flex-start, flex-start, column)
   width: 250px
-  min-width: 200px
+  min-width: 250px
   height: 100%
-  border-right: 1px solid red
   gap: 2rem
   padding: 1rem
 
   header
     @include flex(center, center, row)
+    img
+      max-width: 150px
   
   main
     @include flex(flex-start, flex-start, row)
@@ -21,17 +44,28 @@
 
       li
         width: 100%
-        margin-top: .5rem
+        margin-top: 2px
 
         button
           @include flex(center, flex-start, row)
           width: 100%
-          gap: .5rem
-          padding: .5rem
+          gap: 1rem
+          padding: .3rem .5rem
           border-radius: $default-radius
-          transition: background-color 0.2s ease
+          transition: background-color 0.2s ease, color 0.2s ease
+
+          font-family: 'Anek Devanagari'
+          font-weight: 500
+
+          span
+            margin-top: 4px
 
           svg
             font-size: 1.3rem
+
           &:hover
             background-color: $blue-100
+            color: $white
+          &.selected
+            background-color: $blue-100
+            color: $white
