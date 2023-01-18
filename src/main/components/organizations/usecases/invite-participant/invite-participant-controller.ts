@@ -1,11 +1,11 @@
 import { IPCTypes } from 'renderer/@types/IPCTypes';
-import { AddNewParticipantRequestDTO } from './add-new-participant-request-dto';
-import { AddNewParticipantUseCase } from './add-new-participant-use-case';
+import { InviteParticipantRequestDTO } from './invite-participant-request-dto';
+import { InviteParticipantUseCase } from './invite-participant-use-case';
 
-class AddNewParticipantController {
-  constructor(private addNewParticipantUseCase: AddNewParticipantUseCase) {}
+export class InviteParticipantController {
+  constructor(private addNewParticipantUseCase: InviteParticipantUseCase) {}
 
-  async handle(data: AddNewParticipantRequestDTO) {
+  async handle(data: InviteParticipantRequestDTO) {
     try {
       await this.addNewParticipantUseCase.execute(data);
       return {

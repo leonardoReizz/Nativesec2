@@ -1,8 +1,12 @@
 /* eslint-disable class-methods-use-this */
-import APIOrganization from 'main/API/organizations';
+import axios from 'axios';
 import { ICreateOrganization, IToken } from 'main/ipc/organizations/types';
-import { store } from 'main/main';
-import { IOrganizationRepository } from './IOrganizationRepository';
+import { APIResponse } from '../../../types';
+import { api } from '../../../util';
+import { store } from '../../../main';
+import APIOrganization from '../../../API/organizations';
+import { IOrganizationRepository } from './organization-repository-api-interface';
+import * as types from './types';
 
 export class OrganizationRepositoryAPI implements IOrganizationRepository {
   async create(organization: ICreateOrganization): Promise<any> {
@@ -17,5 +21,57 @@ export class OrganizationRepositoryAPI implements IOrganizationRepository {
       status: APICreateOrganization.status,
       data: APICreateOrganization.data,
     };
+  }
+
+  async inviteParticipant(data: types.InviteParticipantData): Promise<any> {
+    return axios
+      .post(
+        `${api}/organizacao/invitation/participant/?id=${data.organizationId}&user=${data.email}`,
+        {},
+        {
+          headers: {
+            Authorization: data.authorization,
+          },
+        }
+      )
+      .then(async (result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERRO API ORGANIZATION INVITE PARTICIPANT');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
+
+  async inviteAdmin(data: types.InviteAdminData): Promise<APIResponse> {
+    return axios
+      .post(
+        `${api}/organizacao/invitation/admin/?id=${data.organizationId}&user=${data.email}`,
+        {},
+        {
+          headers: {
+            Authorization: data.authorization,
+          },
+        }
+      )
+      .then(async (result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERRO API ORGANIZATION INVITE PARTICIPANT');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
   }
 }

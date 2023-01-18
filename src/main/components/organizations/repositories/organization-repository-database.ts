@@ -1,9 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { myDatabase } from 'main/ipc/database';
-import {
-  Create,
-  IOrganizationRepositoryDatabase,
-} from './IOrganizationRepositoryDatabase';
+import { OrganizationModelDatabase } from '../model/Organization';
+import { IOrganizationRepositoryDatabase } from './organization-repository-database-interface';
 
 export class OrganizationRepositoryDatabase
   implements IOrganizationRepositoryDatabase
@@ -70,4 +68,27 @@ export class OrganizationRepositoryDatabase
       );
     });
   }
+
+  async findById(
+    organizationId: string
+  ): Promise<OrganizationModelDatabase | Error | undefined> {
+    return new Promise((resolve, reject) => {
+      myDatabase.all(
+        `SELECT *  FROM organizations WHERE _id = '${organizationId}'`,
+        async (error, rows) => {
+          if (error) {
+            console.log(error, ' ERRO DATABASE FIND ORGANIZATION BY ID');
+            reject(error);
+          }
+          if (rows.length > 0) {
+            const organization = rows[0] as OrganizationModelDatabase;
+            resolve(organization);
+          }
+          resolve(undefined);
+        }
+      );
+    });
+  }
+
+  async updateGuestParticipants(newGuests: string) {}
 }
