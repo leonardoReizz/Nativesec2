@@ -58,7 +58,9 @@ export function Sidebar() {
         ))}
       </div>
       <div className={styles.createIcon}>
-        <IoMdAdd />
+        <button type="button" onClick={() => navigate('/createOrganization')}>
+          <IoMdAdd />
+        </button>
       </div>
     </div>
   );

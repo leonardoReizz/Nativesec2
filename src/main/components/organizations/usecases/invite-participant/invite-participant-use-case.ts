@@ -33,7 +33,7 @@ export class InviteParticipantUseCase {
       );
 
       if (!(organizaton instanceof Error) && organizaton) {
-        const users = JSON.parse(organizaton);
+        const users = JSON.parse(organizaton.convidados_administradores);
         // this.organizationRepositoryDatabase.update()
       }
     }

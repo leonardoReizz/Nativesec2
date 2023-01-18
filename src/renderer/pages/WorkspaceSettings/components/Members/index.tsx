@@ -58,7 +58,7 @@ export function Members() {
   }
 
   function addUser(email: string) {
-    console.log(email);
+    
   }
 
   return (

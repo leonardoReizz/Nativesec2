@@ -1,0 +1,76 @@
+@use '../../../styles/_util' as *
+
+.stepFour
+  @include flex(center ,center, column)
+  width: 100%
+
+  .list
+    width: 100%
+    @include flex(center,center, column)
+    margin-bottom: 5rem
+    margin-top: 2rem
+    h4
+      margin-bottom: 1rem
+      margin-left: 1rem
+    >div
+      width: 100%
+      @include flex(flex-start ,space-around, row)
+
+    .emails_container
+      max-height: 120px
+      height: 120px
+      overflow: auto
+
+      @media (max-height:800px)
+        max-height: 80px
+        height: 80px
+      .emails_list
+        @include flex(center ,center, column)
+        gap: .5rem
+        text-align: center
+        width:100%
+
+    ::-webkit-scrollbar
+      width: 5px
+    ::-webkit-scrollbar-track
+      background: #f1f1f1
+    ::-webkit-scrollbar-thumb
+      background: $blue-100
+    ::-webkit-scrollbar-thumb:hover
+      background: $blue-100-hover
+
+  .email
+    width: 100%
+    @include flex(center ,center, column)
+
+    >div
+      @include flex(center ,space-around, row)
+      gap: 1rem
+      margin-bottom: 2rem
+      position: relative
+      width: 100%
+
+      .email_switch
+        @include flex(center ,space-around, row)
+        width: 240px
+        gap: .5rem
+
+        p
+          width: 100%
+      .error
+        position: absolute
+        left: 5px
+        bottom: -1.3rem
+        color: $red-100
+
+    button
+      background-color: $blue-100
+      max-width: 350px
+      &:hover
+        background-color: $blue-100-hover
+
+
+
+
+
+

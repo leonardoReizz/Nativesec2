@@ -1,29 +1,27 @@
-import { CreateOrganizationIconUseCase } from 'main/components/organizations-icons/usecases/create-organization-icon/create-organization-icon-usecase';
 import { ICreateOrganization } from 'main/ipc/organizations/types';
+import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { CreateOrganizationUseCase } from './create-organization-usecase';
 
 export class CreateOrganizationController {
-  constructor(
-    private createOrganizationUseCase: CreateOrganizationUseCase,
-    private createOrganizationIconUseCase: CreateOrganizationIconUseCase
-  ) {}
+  constructor(private createOrganizationUseCase: CreateOrganizationUseCase) {}
 
   async handle(organization: ICreateOrganization) {
-    const createOrganization = await this.createOrganizationUseCase.execute(
-      organization
-    );
+    try {
+      await this.createOrganizationUseCase.execute(organization);
 
-    if (createOrganization.created) {
-      const createOrganizationIcon =
-        await this.createOrganizationIconUseCase.execute({
-          organizationId: createOrganization.organization,
-        });
-
-      if (createOrganizationIcon) {
-        return { created: true };
-      }
+      return {
+        response: IPCTypes.CREATE_ORGANIZATION_RESPONSE,
+        data: {
+          message: 'ok',
+        },
+      };
+    } catch (error) {
+      return {
+        response: IPCTypes.CREATE_ORGANIZATION_RESPONSE,
+        data: {
+          message: 'nok',
+        },
+      };
     }
-
-    return { created: false };
   }
 }

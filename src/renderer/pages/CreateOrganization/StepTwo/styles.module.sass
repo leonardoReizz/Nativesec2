@@ -1,0 +1,62 @@
+@use "../../../styles/_util" as *
+
+.stepTwo
+  @include flex(center, flex-start, column)
+  width: 100%
+  gap: 1rem
+
+  svg
+    font-size: 2rem
+
+  .stepTwo_dropzone
+    @include flex(flex-start, space-between, row)
+    gap: 1rem
+    width: 100%
+    
+    h3
+      font-size: 1.2rem
+
+    img
+      border-radius: 5rem
+      min-width: 100px
+      min-height: 100px
+
+      max-width: 100px
+      height: 100px
+
+      @media (max-height: 650px)
+        width: 80px
+        margin-bottom: 0
+    
+    .title
+      @include flex(flex-start, center, column)
+      width: 100%
+
+    .buttons
+      @include flex(center, center, column)
+      gap: .5rem
+      margin-top: -4px
+      button
+        width: 150px
+        height: 35px
+
+      .red
+        background-color: $red-100
+
+        &:hover
+          background-color: $red-100-dark-hover
+        
+    .name_file
+      margin-bottom: 2rem
+      color: $blue-100
+    .error_file
+      margin-bottom: 1rem
+      color: red
+  >p
+    margin-left: 10px
+    width: 100%
+    text-align: start
+    margin-top: .5rem
+    color: $red-100
+
+

@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Loading } from 'renderer/components/Loading';
 import { Auth } from 'renderer/pages/Auth';
+import { CreateOrganization } from 'renderer/pages/CreateOrganization';
 import { Home } from 'renderer/pages/Home/index';
 import { UserSettings } from 'renderer/pages/UserSettings';
 import { Workspace } from 'renderer/pages/Workspace';
@@ -33,6 +34,10 @@ export function AppRoutes() {
             <Route path="/workspace/:id" element={<Workspace />} />
             <Route path="/workspaceSettings" element={<WorkspaceSettings />} />
             <Route path="/userSettings" element={<UserSettings />} />
+            <Route
+              path="/createOrganization"
+              element={<CreateOrganization />}
+            />
           </Route>
         </Route>
       </Routes>

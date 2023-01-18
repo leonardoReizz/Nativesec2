@@ -9,7 +9,7 @@ import { IOrganizationRepository } from './organization-repository-api-interface
 import * as types from './types';
 
 export class OrganizationRepositoryAPI implements IOrganizationRepository {
-  async create(organization: ICreateOrganization): Promise<any> {
+  async create(organization: ICreateOrganization): Promise<APIResponse> {
     const { accessToken, tokenType } = store.get('token') as IToken;
 
     const APICreateOrganization = await APIOrganization.createOrganization({
