@@ -1,3 +1,4 @@
+import { createOrganizationController } from '../components/organizations/usecases/create-organization';
 import { deletePrivateKeyController } from '../components/keys/use-cases/delete-private-key';
 import { updateUserConfigController } from '../components/user-config/use-cases/update-user';
 import { decryptController } from '../components/crypto/use-cases/decrypt';
@@ -13,11 +14,7 @@ import {
   insertDatabaseKeys,
   validatePrivateKeySafetyPhrase,
 } from './keys';
-import {
-  createOrganization,
-  getMyInvites,
-  refreshAllOrganizations,
-} from './organizations';
+import { getMyInvites, refreshAllOrganizations } from './organizations';
 import { refreshSafeBoxes } from './safeBox';
 import {
   authLogin,
@@ -77,7 +74,7 @@ export async function useIpcActions(
     case IPCTypes.DELETE_SAFE_BOX:
       return deleteSafeBoxController.handle(arg.data);
     case IPCTypes.CREATE_ORGANIZATION:
-      return createOrganization(arg);
+      return createOrganizationController.handle(arg.data);
     case IPCTypes.DECRYPT_TEXT:
       return decryptController.handle(arg.data);
     case IPCTypes.UPDATE_SAFE_BOX:

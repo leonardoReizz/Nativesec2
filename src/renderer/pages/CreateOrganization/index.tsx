@@ -3,7 +3,7 @@
 /* eslint-disable no-nested-ternary */
 import { Form, Formik } from 'formik';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 import { Button } from 'renderer/components/Buttons/Button';
 import {
   StepOneSchema,
@@ -12,6 +12,7 @@ import {
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import Step from 'renderer/components/Steps/Step';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
+import { useLoading } from 'renderer/hooks/useLoading';
 import StepOne from './StepOne';
 import { StepThree } from './StepThree';
 import { StepTwo } from './StepTwo';
@@ -40,7 +41,7 @@ export function CreateOrganization() {
   const { createOrganization } = useOrganization();
   const [step, setStep] = useState<number>(1);
   const [users, setUsers] = useState<IUsers[]>([]);
-  const [buttonIsLoading, setButtonIsLoading] = useState<boolean>(false);
+  const { loading, updateLoading } = useLoading();
   const handleNextStep = () => {
     const next = step === 3 ? 1 : step + 1;
     setStep(next);
@@ -48,7 +49,7 @@ export function CreateOrganization() {
 
   const onSubmit = (values: any) => {
     if (step === 3) {
-      setButtonIsLoading(true);
+      updateLoading(true);
       createOrganization({
         ...values,
         theme: '',
@@ -154,7 +155,7 @@ export function CreateOrganization() {
                       : ''
                   }
                   type="submit"
-                  isLoading={buttonIsLoading}
+                  isLoading={loading}
                 />
                 {step !== 1 && (
                   <div className={styles.backButton}>

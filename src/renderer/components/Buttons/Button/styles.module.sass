@@ -26,11 +26,15 @@
     &:hover
       background-color: $blue-100-hover
 
-  div
-    position: absolute
-
-    z-index: 2000
-    max-width: 100px !important
+  .loading
+    @include flex(center, center, row)
+    height: 40px
+    position: relative
     width: 100%
+
+    div
+      position: absolute
+      z-index: 2000
+      max-width: 100px !important
 
 

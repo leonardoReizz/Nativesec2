@@ -1,5 +1,5 @@
-import { validateEmail } from 'main/crypto/utils';
 import { useState } from 'react';
+import { validateEmail } from 'main/crypto/utils';
 import Badge from 'renderer/components/Badge';
 import { Button } from 'renderer/components/Buttons/Button';
 import ToggleSwitch from 'renderer/components/Buttons/ToggleSwitch';

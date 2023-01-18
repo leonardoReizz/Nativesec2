@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { myDatabase } from 'main/ipc/database';
+import { myDatabase } from '../../../ipc/database';
 import { OrganizationModelDatabase } from '../model/Organization';
 import { IOrganizationRepositoryDatabase } from './organization-repository-database-interface';
 

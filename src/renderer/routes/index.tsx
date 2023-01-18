@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Loading } from 'renderer/components/Loading';
+import { useIpcOrganization } from 'renderer/hooks/useIPCOrganizations/useIpcOrganizations';
 import { Auth } from 'renderer/pages/Auth';
 import { CreateOrganization } from 'renderer/pages/CreateOrganization';
 import { Home } from 'renderer/pages/Home/index';
@@ -13,6 +14,7 @@ import { ProtectedRoutes } from './ProtectedRoutes';
 export type LoadingType = 'false' | 'true' | 'finalized';
 
 export function AppRoutes() {
+  useIpcOrganization();
   const [isLoading, setIsLoading] = useState<LoadingType>('false');
 
   const changeLoadingState = useCallback((state: LoadingType) => {

@@ -98,79 +98,78 @@ export async function getMyInvites() {
   };
 }
 
-export async function createOrganization(arg: UseIPCData) {
-  const { accessToken, tokenType } = store.get('token') as IToken;
+// export async function createOrganization(arg: UseIPCData) {
+//   const { accessToken, tokenType } = store.get('token') as IToken;
 
-  const APICreateOrganization = await APIOrganization.createOrganization({
-    data: arg.data,
-    authorization: `${tokenType} ${accessToken}`,
-  });
+//   const APICreateOrganization = await APIOrganization.createOrganization({
+//     data: arg.data,
+//     authorization: `${tokenType} ${accessToken}`,
+//   });
 
-  if (
-    APICreateOrganization.status === 200 &&
-    APICreateOrganization?.data?.status === 'ok' &&
-    APICreateOrganization.data.detail
-  ) {
-    const createDBOrg = await DBOrganization.createOrganization({
-      data: {
-        _id: APICreateOrganization.data.detail[0]._id.$oid,
-        name: APICreateOrganization.data.detail[0].nome,
-        description: APICreateOrganization.data.detail[0].descricao,
-        theme: APICreateOrganization.data.detail[0].tema,
-        ownerEmail: APICreateOrganization.data.detail[0].dono,
-        updateDate: APICreateOrganization.data.detail[0].data_atualizacao.$date,
-        creationDate: APICreateOrganization.data.detail[0].data_criacao.$date,
-        limitUsers: APICreateOrganization.data.detail[0].limite_usuarios,
-        storageLimit: APICreateOrganization.data.detail[0].limite_armazenamento,
-        adminGuests: JSON.stringify(
-          APICreateOrganization.data.detail[0].convidados_administradores
-        ),
-        participantGuests: JSON.stringify(
-          APICreateOrganization.data.detail[0].convidados_participantes
-        ),
-        participants: JSON.stringify(
-          APICreateOrganization.data.detail[0].participantes
-        ),
-        admins: JSON.stringify(
-          APICreateOrganization.data.detail[0].administradores
-        ),
-        deleted: APICreateOrganization.data.detail[0].deletado,
-      },
-    });
+//   if (
+//     APICreateOrganization.status === 200 &&
+//     APICreateOrganization?.data?.status === 'ok' &&
+//     APICreateOrganization.data.detail
+//   ) {
+//     const createDBOrg = await DBOrganization.createOrganization({
+//       data: {
+//         _id: APICreateOrganization.data.detail[0]._id.$oid,
+//         name: APICreateOrganization.data.detail[0].nome,
+//         description: APICreateOrganization.data.detail[0].descricao,
+//         theme: APICreateOrganization.data.detail[0].tema,
+//         ownerEmail: APICreateOrganization.data.detail[0].dono,
+//         updateDate: APICreateOrganization.data.detail[0].data_atualizacao.$date,
+//         creationDate: APICreateOrganization.data.detail[0].data_criacao.$date,
+//         limitUsers: APICreateOrganization.data.detail[0].limite_usuarios,
+//         storageLimit: APICreateOrganization.data.detail[0].limite_armazenamento,
+//         adminGuests: JSON.stringify(
+//           APICreateOrganization.data.detail[0].convidados_administradores
+//         ),
+//         participantGuests: JSON.stringify(
+//           APICreateOrganization.data.detail[0].convidados_participantes
+//         ),
+//         participants: JSON.stringify(
+//           APICreateOrganization.data.detail[0].participantes
+//         ),
+//         admins: JSON.stringify(
+//           APICreateOrganization.data.detail[0].administradores
+//         ),
+//         deleted: APICreateOrganization.data.detail[0].deletado,
+//       },
+//     });
 
-    const createDBIcon = await DBOrganizationIcon.createOrganizationIcon({
-      _id: APICreateOrganization.data.detail[0]._id.$oid,
-      icon: arg.data.icon,
-    });
+//     const createDBIcon = await DBOrganizationIcon.createOrganizationIcon({
+//       _id: APICreateOrganization.data.detail[0]._id.$oid,
+//       icon: arg.data.icon,
+//     });
 
-    if (createDBOrg !== true || createDBIcon !== true) {
-      return {
-        response: IPCTypes.CREATE_ORGANIZATION_RESPONSE,
-        data: {
-          status: 500,
-          data: {
-            msg: 'error database',
-          },
-        },
-      };
-    }
-  }
+//     if (createDBOrg !== true || createDBIcon !== true) {
+//       return {
+//         response: IPCTypes.CREATE_ORGANIZATION_RESPONSE,
+//         data: {
+//           status: 500,
+//           data: {
+//             msg: 'error database',
+//           },
+//         },
+//       };
+//     }
+//   }
+//   const listOrgs = await DBOrganization.listOrganizations();
+//   store.set('organizations', listOrgs);
 
-  const listOrgs = await DBOrganization.listOrganizations();
-  store.set('organizations', listOrgs);
-
-  const listOrgsIcons = await DBOrganizationIcon.listOrganizationsIcons(
-    listOrgs
-  );
-  store.set('iconeAll', listOrgsIcons);
-  return {
-    response: IPCTypes.CREATE_ORGANIZATION_RESPONSE,
-    data: {
-      status: APICreateOrganization.status,
-      data: APICreateOrganization.data,
-    },
-  };
-}
+//   const listOrgsIcons = await DBOrganizationIcon.listOrganizationsIcons(
+//     listOrgs
+//   );
+//   store.set('iconeAll', listOrgsIcons);
+//   return {
+//     response: IPCTypes.CREATE_ORGANIZATION_RESPONSE,
+//     data: {
+//       status: APICreateOrganization.status,
+//       data: APICreateOrganization.data,
+//     },
+//   };
+// }
 
 const organizations = [
   {

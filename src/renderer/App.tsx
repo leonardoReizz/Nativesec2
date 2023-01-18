@@ -7,6 +7,7 @@ import '!style-loader!css-loader!sass-loader!react-toastify/dist/ReactToastify.c
 import { OrganizationsContextProvider } from './contexts/OrganizationsContext/OrganizationsContext';
 import { SafeBoxesContextProvider } from './contexts/SafeBoxesContext/safeBoxesContext';
 import { UserConfigContextProvider } from './contexts/UserConfigContext/UserConfigContext';
+import { LoadingContextProvider } from './contexts/LoadingContext/LoadingContext';
 
 ReactModal.setAppElement('#root');
 export default function App() {
@@ -14,13 +15,15 @@ export default function App() {
     <>
       <ToastContainer />
       <HashRouter>
-        <UserConfigContextProvider>
-          <OrganizationsContextProvider>
-            <SafeBoxesContextProvider>
-              <AppRoutes />
-            </SafeBoxesContextProvider>
-          </OrganizationsContextProvider>
-        </UserConfigContextProvider>
+        <LoadingContextProvider>
+          <UserConfigContextProvider>
+            <OrganizationsContextProvider>
+              <SafeBoxesContextProvider>
+                <AppRoutes />
+              </SafeBoxesContextProvider>
+            </OrganizationsContextProvider>
+          </UserConfigContextProvider>
+        </LoadingContextProvider>
       </HashRouter>
     </>
   );

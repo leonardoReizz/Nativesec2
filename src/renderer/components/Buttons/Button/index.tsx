@@ -36,7 +36,9 @@ export function Button({
           {text}
         </button>
       ) : (
-        <LottieControl animationData={animationData} play loop />
+        <div className={styles.loading}>
+          <LottieControl animationData={animationData} play loop />
+        </div>
       )}
     </div>
   );

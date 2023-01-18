@@ -9,17 +9,17 @@ export function useOrganization() {
   const createOrganization = useCallback(
     (values: types.ICreateOrganization) => {
       console.log('create', values);
-      // window.electron.ipcRenderer.sendMessage('useIPC', {
-      //   event: IPCTypes.CREATE_ORGANIZATION,
-      //   data: {
-      //     name: values.name,
-      //     theme: values.theme,
-      //     description: values.description,
-      //     icon: values.icon === undefined ? 'null' : values.icon,
-      //     adminGuests: values.adminGuest,
-      //     participantGuests: values.participantGuest,
-      //   },
-      // });
+      window.electron.ipcRenderer.sendMessage('useIPC', {
+        event: IPCTypes.CREATE_ORGANIZATION,
+        data: {
+          name: values.name,
+          theme: values.theme,
+          description: values.description,
+          icon: values.icon === undefined ? 'null' : values.icon,
+          adminGuests: values.adminGuest,
+          participantGuests: values.participantGuest,
+        },
+      });
     },
     []
   );
