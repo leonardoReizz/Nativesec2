@@ -4,7 +4,7 @@ import { IStepOneProps } from '../types';
 
 import styles from './styles.module.sass';
 
-const StepOne = ({ currentTheme }: IStepOneProps): JSX.Element => {
+export function StepOne({ currentTheme }: IStepOneProps) {
   return (
     <div
       className={`${styles.stepOne} ${
@@ -23,6 +23,6 @@ const StepOne = ({ currentTheme }: IStepOneProps): JSX.Element => {
       </p>
     </div>
   );
-};
+}
 
 export default StepOne;

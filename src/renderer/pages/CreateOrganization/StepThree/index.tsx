@@ -19,7 +19,7 @@ export function StepThree({ users, setUsers, currentTheme }: StepFourProps) {
   const handleAddUser = () => {
     if (validateEmail(email)) {
       if (users.length > 0) {
-        users.map((user) => {
+        users.forEach((user) => {
           if (user.email === email) {
             setEmailIsValid(false);
           } else {

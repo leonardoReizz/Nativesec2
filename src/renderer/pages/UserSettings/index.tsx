@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { BiExport } from 'react-icons/bi';
 import { Dropdown } from 'renderer/components/Dropdown';

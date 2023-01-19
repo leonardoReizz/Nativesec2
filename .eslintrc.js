@@ -23,6 +23,7 @@ module.exports = {
     ],
     'react-hooks/exhaustive-deps': 'off',
     'no-plusplus': 'off',
+    'react/jsx-no-bind': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
