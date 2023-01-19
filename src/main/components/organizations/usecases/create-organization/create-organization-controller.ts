@@ -7,27 +7,20 @@ export class CreateOrganizationController {
 
   async handle(organization: ICreateOrganization) {
     console.log(organization, ' create');
-    return {
-      response: IPCTypes.CREATE_ORGANIZATION_RESPONSE,
-      data: {
-        message: 'ok',
-      },
-    };
-    // try {
-    //   await this.createOrganizationUseCase.execute(organization);
-    //   return {
-    //     response: IPCTypes.CREATE_ORGANIZATION_RESPONSE,
-    //     data: {
-    //       message: 'ok',
-    //     },
-    //   };
-    // } catch (error) {
-    //   return {
-    //     response: IPCTypes.CREATE_ORGANIZATION_RESPONSE,
-    //     data: {
-    //       message: 'nok',
-    //     },
-    //   };
-    // }
+    try {
+      const create = await this.createOrganizationUseCase.execute(organization);
+      return {
+        response: IPCTypes.CREATE_ORGANIZATION_RESPONSE,
+        data: create,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        response: IPCTypes.CREATE_ORGANIZATION_RESPONSE,
+        data: {
+          message: 'nok',
+        },
+      };
+    }
   }
 }

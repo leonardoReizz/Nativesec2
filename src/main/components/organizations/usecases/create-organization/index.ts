@@ -1,4 +1,4 @@
-import { OrganizationIconRepositoryAPI } from '../../../organizations-icons/repositories/organization-icon-repository-api';
+import { OrganizationIconRepositoryDatabase } from '../../../organizations-icons/repositories/organization-icon-repository-database';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { OrganizationRepositoryDatabase } from '../../repositories/organization-repository-database';
 import { CreateOrganizationController } from './create-organization-controller';
@@ -6,12 +6,13 @@ import { CreateOrganizationUseCase } from './create-organization-usecase';
 
 const organizationRepositoryAPI = new OrganizationRepositoryAPI();
 const organizationRepositoryDatabase = new OrganizationRepositoryDatabase();
-const organizationIconRepositoryAPI = new OrganizationIconRepositoryAPI();
+const organizationIconRepositoryDatabase =
+  new OrganizationIconRepositoryDatabase();
 
 const createOrganizationUseCase = new CreateOrganizationUseCase(
   organizationRepositoryAPI,
   organizationRepositoryDatabase,
-  organizationIconRepositoryAPI
+  organizationIconRepositoryDatabase
 );
 
 const createOrganizationController = new CreateOrganizationController(

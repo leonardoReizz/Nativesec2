@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { IIPCResponse } from 'renderer/@types/types';
-import { IDefaultApiResult } from 'renderer/types';
 import { toastOptions } from 'renderer/utils/options/Toastify';
 import { useLoading } from '../useLoading';
 import { useOrganization } from '../useOrganization/useOrganization';
+import * as types from './types';
 
 export function useIpcOrganization() {
   const { refreshOrganizations, changeCurrentOrganization } = useOrganization();
@@ -94,11 +94,12 @@ export function useIpcOrganization() {
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.CREATE_ORGANIZATION_RESPONSE,
-      async (result: IIPCResponse) => {
+      async (result: types.CreateOrganizationResponse) => {
+        console.log(result);
         if (result.message === 'ok') {
-          // refreshOrganizations();
-          // navigate(`/workspace/${result.data?.id}`);
-          // changeCurrentOrganization(result.data?.id as string);
+          refreshOrganizations();
+          navigate(`/workspace/${result.organization._id}`);
+          changeCurrentOrganization(result.organization._id);
           updateLoading(false);
           toast.success('Organizacão Criado com Sucesso', {
             ...toastOptions,
@@ -107,6 +108,30 @@ export function useIpcOrganization() {
         } else {
           updateLoading(false);
           toast.error('Erro ao criar Workspace', {
+            ...toastOptions,
+            toastId: 'workspace-error',
+          });
+        }
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.DELETE_ORGANIZATION_RESPONSE,
+      async (result: types.CreateOrganizationResponse) => {
+        if (result.message === 'ok') {
+          refreshOrganizations();
+          navigate('/createOrganization');
+          changeCurrentOrganization(undefined);
+          updateLoading(false);
+          toast.success('Organizacão Criado com Sucesso', {
+            ...toastOptions,
+            toastId: 'workspace-created',
+          });
+        } else {
+          updateLoading(false);
+          toast.error('Erro ao deletar Workspace', {
             ...toastOptions,
             toastId: 'workspace-error',
           });

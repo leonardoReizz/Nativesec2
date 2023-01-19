@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
 import { useFormik } from 'formik';
@@ -7,15 +8,17 @@ import * as Yup from 'yup';
 import { Input } from 'renderer/components/Inputs/Input';
 import { verifyNameValues } from 'renderer/utils/Formik/VerifyName/verifyName';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
+import { Button } from 'renderer/components/Buttons/Button';
 import styles from './styles.module.sass';
 
 interface VerifySafetyPhraseModalProps {
   title: string;
   nameToVerify: string | undefined | null;
   isOpen: boolean;
+  isLoading?: boolean;
   inputText: string;
   onRequestClose: () => void;
-  verifyName: (verified: boolean) => void;
+  callback: (verified: boolean) => void;
 }
 
 export function VerifyNameModal({
@@ -23,15 +26,15 @@ export function VerifyNameModal({
   nameToVerify,
   isOpen,
   inputText,
-  verifyName,
+  callback,
   onRequestClose,
+  isLoading = false,
 }: VerifySafetyPhraseModalProps) {
   const { theme } = useUserConfig();
   const user = window.electron.store.get('user') as IUser;
 
-  function handleSubmit(values: typeof verifyNameValues) {
-    verifyName(true);
-    onRequestClose();
+  function handleSubmit() {
+    callback(true);
   }
 
   function handleCloseModal() {
@@ -52,7 +55,7 @@ export function VerifyNameModal({
 
   const formikProps = useFormik({
     initialValues: verifyNameValues,
-    onSubmit: (values) => handleSubmit(values),
+    onSubmit: () => handleSubmit(),
     validationSchema: verifyNameSchema,
   });
 
@@ -95,8 +98,12 @@ export function VerifyNameModal({
             messageError={formikProps.errors.safetyPhrase}
           />
           <div className={styles.buttons}>
-            <button type="submit">Confirmar</button>
-            <button type="button" onClick={handleCloseModal}>
+            <Button text="Confirmar" isLoading={isLoading} type="submit" />
+            <button
+              type="button"
+              onClick={handleCloseModal}
+              className={styles.buttonCancel}
+            >
               Cancelar
             </button>
           </div>

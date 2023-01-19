@@ -8,7 +8,6 @@ export function useOrganization() {
 
   const createOrganization = useCallback(
     (values: types.ICreateOrganization) => {
-      console.log('create', values);
       window.electron.ipcRenderer.sendMessage('useIPC', {
         event: IPCTypes.CREATE_ORGANIZATION,
         data: {
@@ -23,7 +22,15 @@ export function useOrganization() {
     },
     []
   );
+
+  const deleteOrganization = useCallback((organizationId: string) => {
+    window.electron.ipcRenderer.sendMessage('useIPC', {
+      event: IPCTypes.DELETE_ORGANIZATION,
+      data: organizationId,
+    });
+  }, []);
+
   const addNewParticipant = useCallback(() => {}, []);
 
-  return { ...organizationContext, createOrganization };
+  return { ...organizationContext, createOrganization, deleteOrganization };
 }

@@ -57,9 +57,7 @@ export function Members() {
     setIsOpenVerifyNameModal(true);
   }
 
-  function addUser(email: string) {
-    
-  }
+  function addUser(email: string) {}
 
   return (
     <>
@@ -67,7 +65,7 @@ export function Members() {
         title="Confirme o email do usuario"
         nameToVerify={currentUserDelete}
         inputText="Email"
-        verifyName={() => {}}
+        callback={() => {}}
         isOpen={isOpenVerifyNameModal}
         onRequestClose={handleCloseVerifyNameModal}
       />

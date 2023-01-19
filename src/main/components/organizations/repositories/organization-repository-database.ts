@@ -6,7 +6,9 @@ import { IOrganizationRepositoryDatabase } from './organization-repository-datab
 export class OrganizationRepositoryDatabase
   implements IOrganizationRepositoryDatabase
 {
-  async create(organization: any): Promise<boolean | Error> {
+  async create(
+    organization: OrganizationModelDatabase
+  ): Promise<boolean | Error> {
     return new Promise((resolve, reject) => {
       return myDatabase.run(
         `
@@ -28,19 +30,19 @@ export class OrganizationRepositoryDatabase
         )
         VALUES(
           '${organization._id}',
-          '${organization.name}',
-          '${organization.description}',
-          '${organization.theme}',
-          '${organization.ownerEmail}',
-          '${organization.creationDate}',
-          '${organization.updateDate}',
-          '${organization.limitUsers}',
-          '${organization.storageLimit}',
-          '${organization.participantGuests}',
-          '${organization.adminGuests}',
-          '${organization.participants}',
-          '${organization.admins}',
-          '${organization.deleted}'
+          '${organization.nome}',
+          '${organization.descricao}',
+          '${organization.tema}',
+          '${organization.dono}',
+          '${organization.data_criacao}',
+          '${organization.data_atualizacao}',
+          '${organization.limite_usuarios}',
+          '${organization.limite_armazenamento}',
+          '${organization.convidados_participantes}',
+          '${organization.convidados_administradores}',
+          '${organization.participantes}',
+          '${organization.administradores}',
+          '${organization.deletado}'
         )
         `,
         (error) => {
@@ -89,6 +91,4 @@ export class OrganizationRepositoryDatabase
       );
     });
   }
-
-  async updateGuestParticipants(newGuests: string) {}
 }

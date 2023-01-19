@@ -5,10 +5,10 @@ import { APIResponse } from '../../../types';
 import { api } from '../../../util';
 import { store } from '../../../main';
 import APIOrganization from '../../../API/organizations';
-import { IOrganizationRepository } from './organization-repository-api-interface';
+import { IOrganizationRepositoryAPI } from './organization-repository-api-interface';
 import * as types from './types';
 
-export class OrganizationRepositoryAPI implements IOrganizationRepository {
+export class OrganizationRepositoryAPI implements IOrganizationRepositoryAPI {
   async create(organization: ICreateOrganization): Promise<APIResponse> {
     const { accessToken, tokenType } = store.get('token') as IToken;
 
@@ -68,6 +68,33 @@ export class OrganizationRepositoryAPI implements IOrganizationRepository {
       })
       .catch((error) => {
         console.log(error, ' ERRO API ORGANIZATION INVITE PARTICIPANT');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
+
+  async delete(organizationId: string): Promise<APIResponse> {
+    const { accessToken, tokenType } = store.get('token') as IToken;
+
+    return axios
+      .delete(`${api}/organizacao/`, {
+        headers: {
+          Authorization: `${tokenType} ${accessToken}`,
+        },
+        params: {
+          id: organizationId,
+        },
+      })
+      .then(async (result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERRO API DELETE ORGANIZATION');
         return {
           status: error.response.status,
           data: error.response.statusText,

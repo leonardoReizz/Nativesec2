@@ -15,4 +15,19 @@ export interface OrganizationModelDatabase {
   deletado: string;
 }
 
-export interface OrganizationModelAPI {}
+export interface OrganizationModelAPI {
+  _id: { $oid: string };
+  data_criacao: { $date: number };
+  nome: string;
+  tema: string;
+  descricao: string;
+  dono: string;
+  data_atualizacao: { $date: number };
+  convidados_participantes: string[];
+  convidados_administradores: string[];
+  limite_usuarios: number;
+  limite_armazenamento: number;
+  participantes: string[];
+  administradores: string[];
+  deletado: string;
+}

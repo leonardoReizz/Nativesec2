@@ -1,4 +1,3 @@
-import { ICreateOrganization } from 'main/ipc/organizations/types';
 import { OrganizationModelDatabase } from '../model/Organization';
 
 export interface Create {
@@ -7,7 +6,7 @@ export interface Create {
 }
 
 export interface IOrganizationRepositoryDatabase {
-  create(organization: ICreateOrganization): Promise<boolean | Error>;
+  create(organization: OrganizationModelDatabase): Promise<boolean | Error>;
   delete(organizationId: string): Promise<boolean | Error>;
   findById(
     organizationId: string

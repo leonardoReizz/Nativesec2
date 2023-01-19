@@ -56,20 +56,6 @@ export function OrganizationsContextProvider({
     currentOrganizationIcon,
   } = organizationsState;
 
-  useEffect(() => {
-    if (currentOrganization !== undefined) {
-      const root = document.documentElement;
-      root?.style.setProperty(
-        '--main-color',
-        JSON.parse(currentOrganization?.tema as string).mainColor
-      );
-      root?.style.setProperty(
-        '--second-color',
-        JSON.parse(currentOrganization?.tema as string).secondColor
-      );
-    }
-  }, [currentOrganization, location.pathname]);
-
   function updateOrganizations(newOrganizations: IOrganization[]) {
     dispatch(updateOrganizationsAction(newOrganizations));
   }

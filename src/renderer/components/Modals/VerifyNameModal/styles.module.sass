@@ -11,9 +11,9 @@
       color: $white
       &:hover
         background-color: $gray-600
-      &:last-child
-        &:hover
-            background-color: $red-100-hover
+  .buttonCancel
+    &:hover
+        background-color: $red-100-hover
 
 .reactModalContent.light
   background-color: $white
@@ -23,12 +23,12 @@
       background-color: $gray-100
       color: $black
 
-      &:last-child
-        color: $white
-        &:hover
-          background-color: $red-100-dark-hover
       &:hover
         background-color: $gray-400
+  .buttonCancel
+    color: $white
+    &:hover
+      background-color: $red-100-dark-hover
 .reactModalOverlay
   @include flex(center, center ,column)
   z-index: 4000
@@ -80,9 +80,9 @@
         border-radius: $default-radius
         transition: background-color 0.2s ease
 
-
-        &:last-child
-          background-color: $red-100
+      
+      .buttonCancel
+        background-color: $red-100
 
 
 
