@@ -85,6 +85,7 @@ export function VerifyNameModal({
             viewBarError
             touched
             messageError={formikProps.errors.name}
+            theme={theme}
           />
           <Input
             text="Frase Secreta"
@@ -96,6 +97,7 @@ export function VerifyNameModal({
             viewBarError
             touched
             messageError={formikProps.errors.safetyPhrase}
+            theme={theme}
           />
           <div className={styles.buttons}>
             <Button text="Confirmar" isLoading={isLoading} type="submit" />

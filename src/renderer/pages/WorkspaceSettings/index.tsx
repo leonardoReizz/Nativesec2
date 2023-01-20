@@ -14,6 +14,7 @@ export function WorkspaceSettings() {
     },
     []
   );
+
   return (
     <div className={styles.workspaceSettings}>
       <Sidebar

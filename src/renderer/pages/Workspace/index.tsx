@@ -27,6 +27,7 @@ export function Workspace() {
     changeSafeBoxMode,
     changeSearchValue,
     searchValue,
+    safeBoxMode,
   } = useSafeBox();
   const [update, setUpdate] = useState<boolean>(true);
   const [menuCreateIsOpen, setMenuCreateIsOpen] = useState<boolean>(false);
@@ -70,7 +71,11 @@ export function Workspace() {
         theme === 'dark' ? styles.dark : styles.light
       }`}
     >
-      <div className={styles.safeBoxesContainer}>
+      <div
+        className={`${styles.safeBoxesContainer} ${
+          safeBoxMode !== 'create' ? styles.safeBoxesContainerVisible : ''
+        }`}
+      >
         <div className={styles.search}>
           <div className={styles.input}>
             <CiSearch />

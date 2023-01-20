@@ -71,7 +71,9 @@ export function HeaderSafeBox() {
     }
   }
 
-  function handleDiscart() {}
+  function handleDiscart() {
+    changeSafeBoxMode('view');
+  }
 
   function handleSave() {
     if (currentOrganization) {
@@ -135,7 +137,7 @@ export function HeaderSafeBox() {
         title="Tem certeza que deseja excluir"
         inputText="Nome do cofre"
         nameToVerify={currentSafeBox?.nome}
-        verifyName={handleDeleteSafeBox}
+        callback={handleDeleteSafeBox}
       />
 
       <header className={`${theme === 'dark' ? styles.dark : styles.light}`}>
@@ -156,14 +158,33 @@ export function HeaderSafeBox() {
                 <span>Criptografar</span>
               </button>
             )}
-            <button type="button" onClick={handleOpenVerifyNameModal}>
-              <AiFillDelete />
-              <span>Excluir</span>
-            </button>
-            <button type="button" onClick={handleOpenVerifySafetyPhraseModal}>
-              <RiEditFill />
-              <span>Editar</span>
-            </button>
+            {safeBoxMode === 'view' && (
+              <>
+                <button type="button" onClick={handleOpenVerifyNameModal}>
+                  <AiFillDelete />
+                  <span>Excluir</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleOpenVerifySafetyPhraseModal}
+                >
+                  <RiEditFill />
+                  <span>Editar</span>
+                </button>
+              </>
+            )}
+            {(safeBoxMode === 'edit' || safeBoxMode === 'create') && (
+              <>
+                <button type="button" onClick={handleSave}>
+                  <BsCheck2 />
+                  Salvar
+                </button>
+                <button type="button" onClick={handleDiscart}>
+                  <AiFillDelete />
+                  Descartar
+                </button>
+              </>
+            )}
           </div>
           {(safeBoxMode === 'view' || safeBoxMode === 'decrypted') && (
             <div className={styles.title}>
@@ -177,16 +198,6 @@ export function HeaderSafeBox() {
         </>
         {(safeBoxMode === 'edit' || safeBoxMode === 'create') && (
           <>
-            <div className={styles.actions}>
-              <button type="button" onClick={handleSave}>
-                <BsCheck2 />
-                Salvar
-              </button>
-              <button type="button" onClick={handleDiscart}>
-                <AiFillDelete />
-                Descartar
-              </button>
-            </div>
             <div className={styles.dropdown}>
               <SafeBoxIcon type={formik[formikIndex].type as SafeBoxIconType} />
               <div className={styles.input}>
