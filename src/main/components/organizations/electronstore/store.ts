@@ -12,7 +12,7 @@ export async function refreshOrganizations() {
   });
 
   const listOrganizationsIcons =
-    await DBOrganizationIcon.listOrganizationsIcons(listOrganizations);
+    await DBOrganizationIcon.listOrganizationsIcons();
 
   store.set('organizations', sort);
 

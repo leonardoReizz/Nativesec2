@@ -9,7 +9,6 @@ export function useIPCUserConfig() {
     window.electron.ipcRenderer.on(
       IPCTypes.UPDATE_USER_CONFIG_RESPONSE,
       (result: types.IUpdateUserConfigResponse) => {
-        console.log(result);
         if (result.message === 'ok') {
           toast.success('Configuração alterada', {
             ...toastOptions,

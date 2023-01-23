@@ -1,5 +1,4 @@
 import { produce } from 'immer';
-import organizations from 'main/ipc/organizations';
 import {
   IOrganization,
   IOrganizationIcon,

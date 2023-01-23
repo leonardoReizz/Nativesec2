@@ -31,9 +31,14 @@
 
   header
     @include flex(center, center, row)
+    
     img
-      max-width: 150px
-  
+      width: 150px
+      height: 150px
+      border-radius: 5rem
+      border: 1px solid red
+      object-fit: contain
+
   main
     @include flex(flex-start, flex-start, row)
     width: 100%

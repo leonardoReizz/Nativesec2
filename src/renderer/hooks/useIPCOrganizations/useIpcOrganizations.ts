@@ -163,7 +163,7 @@ export function useIpcOrganization() {
         }
       }
     );
-  }, []);
+  }, [currentOrganization]);
 
   //   useEffect(() => {
   //     window.electron.ipcRenderer.on(

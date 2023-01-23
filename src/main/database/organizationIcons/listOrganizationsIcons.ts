@@ -1,18 +1,11 @@
-import { IOrganizationDatabase } from 'renderer/routes/types';
-import database from '../database';
+import { myDatabase } from '../../ipc/database';
 import { IIconsDatabase } from '../../ipc/organizations/types';
 
-export async function listOrganizationsIcons(
-  orgs: IOrganizationDatabase[]
-): Promise<IIconsDatabase[]> {
-  const icons = await Promise.all(
-    orgs.map((org) => {
-      const icon = database.get(
-        `SELECT * FROM organizationsIcons WHERE _id = '${org._id}'`
-      );
-
-      return icon;
-    })
-  );
-  return icons as unknown as IIconsDatabase[];
+export async function listOrganizationsIcons(): Promise<IIconsDatabase[]> {
+  return new Promise((resolve, reject) => {
+    myDatabase.all(`SELECT * FROM organizationsIcons`, async (error, rows) => {
+      if (error) reject(error);
+      resolve(rows);
+    });
+  });
 }

@@ -37,11 +37,11 @@ export class UpdateOrganizationUseCase {
           ...organizationUpdated,
           _id: organizationUpdated._id.$oid,
           data_atualizacao: organizationUpdated.data_atualizacao.$date,
-          participantes: 'JSON.stringify(organizationUpdated.participantes)',
-          administradores:
-            'JSON.stringify(organizationUpdated.administradores)',
-          convidados_administradores:
-            'JSON.stringify(organizationUpdated.convidados_administradores)',
+          participantes: JSON.stringify(organizationUpdated.participantes),
+          administradores: JSON.stringify(organizationUpdated.administradores),
+          convidados_administradores: JSON.stringify(
+            organizationUpdated.convidados_administradores
+          ),
           convidados_participantes: JSON.stringify(
             organizationUpdated.convidados_participantes
           ),
@@ -55,8 +55,8 @@ export class UpdateOrganizationUseCase {
       if (updateIcon !== true && updateOrganization !== true) {
         throw new Error('Error update organization icon in database');
       }
-
       await refreshOrganizations();
+      return { message: 'ok' };
     }
     throw new Error('Erro api update organization');
   }

@@ -106,7 +106,6 @@ export class OrganizationRepositoryAPI implements IOrganizationRepositoryAPI {
     data: types.IUpdateData,
     authorization: string
   ): Promise<APIResponse> {
-    console.log(authorization);
     return axios
       .put(
         `${api}/organizacao/`,
@@ -120,7 +119,6 @@ export class OrganizationRepositoryAPI implements IOrganizationRepositoryAPI {
         }
       )
       .then((result) => {
-        console.log(result, ' update organization api');
         return {
           status: result.status,
           data: result.data,

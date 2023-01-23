@@ -14,6 +14,7 @@ interface ButtonProps {
   onClick?: () => void;
   isLoading?: boolean;
   className?: string;
+  disabled?: boolean;
   Icon?: ReactElement<IconType, IconType>;
 }
 export function Button({
@@ -22,6 +23,7 @@ export function Button({
   onClick,
   isLoading,
   className,
+  disabled = false,
   Icon,
 }: ButtonProps) {
   return (
@@ -31,6 +33,7 @@ export function Button({
           className={`${styles.button} ${className && className}`}
           type={type || 'button'}
           onClick={onClick}
+          disabled={disabled}
         >
           {Icon && Icon}
           {text}
