@@ -1,3 +1,5 @@
+import { updateOrganizationController } from '../components/organizations/usecases/update-organization';
+import { inviteParticipantController } from '../components/organizations/usecases/invite-participant';
 import { deleteOrganizationController } from '../components/organizations/usecases/delete-organization';
 import { createOrganizationController } from '../components/organizations/usecases/create-organization';
 import { deletePrivateKeyController } from '../components/keys/use-cases/delete-private-key';
@@ -86,6 +88,10 @@ export async function useIpcActions(
       return deletePrivateKeyController.handle(arg.data);
     case IPCTypes.DELETE_ORGANIZATION:
       return deleteOrganizationController.handle(arg.data);
+    case IPCTypes.ADD_NEW_PARTICIPANT_ORGANIZATION:
+      return inviteParticipantController.handle(arg.data);
+    case IPCTypes.UPDATE_ORGANIZATION:
+      return updateOrganizationController.handle(arg.data);
     default:
       return {
         response: 'none',

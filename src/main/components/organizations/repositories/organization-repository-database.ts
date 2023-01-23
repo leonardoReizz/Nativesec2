@@ -91,4 +91,32 @@ export class OrganizationRepositoryDatabase
       );
     });
   }
+
+  async update(
+    data: Omit<OrganizationModelDatabase, 'data_criacao'>
+  ): Promise<boolean | Error> {
+    return new Promise((resolve, reject) => {
+      return myDatabase.run(
+        `UPDATE organizations SET
+        nome = '${data.nome}',
+        tema = '${data.tema}',
+        dono = '${data.dono}',
+        descricao = '${data.descricao}',
+        data_atualizacao = '${data.data_atualizacao}',
+        convidados_participantes = '${data.convidados_participantes}',
+        convidados_administradores = '${data.convidados_administradores}',
+        limite_usuarios = '${data.limite_usuarios}',
+        limite_armazenamento = '${data.limite_armazenamento}',
+        participantes = '${data.participantes}',
+        administradores = '${data.administradores}',
+        deletado = '${data.deletado}'
+        WHERE _id = '${data._id}'
+      `,
+        (error) => {
+          if (error) reject(error);
+          resolve(true);
+        }
+      );
+    });
+  }
 }

@@ -1,13 +1,13 @@
 /* eslint-disable class-methods-use-this */
 import { myDatabase } from '../../../ipc/database';
+import { IOrganizationIconRepositoryDatabase } from './organization-icon-repository-database-interface';
 import * as types from './types';
-import { OrganizationIconRepositoryInterface } from './organization-icon-repository-interface';
 
 export class OrganizationIconRepositoryDatabase
-  implements OrganizationIconRepositoryInterface
+  implements IOrganizationIconRepositoryDatabase
 {
   async create(
-    data: types.CreateOrganizationIconData
+    data: types.ICreateOrganizationIconData
   ): Promise<boolean | Error> {
     return new Promise((resolve, reject) => {
       return myDatabase.run(
@@ -32,6 +32,22 @@ export class OrganizationIconRepositoryDatabase
             console.log(error);
             reject(error);
           }
+          resolve(true);
+        }
+      );
+    });
+  }
+
+  async update(organizationId: string, icon: string): Promise<boolean | Error> {
+    return new Promise((resolve, reject) => {
+      myDatabase.run(
+        `
+         UPDATE organizationsIcons SET
+         icone = '${icon}'
+         WHERE _id = '${organizationId}'
+       `,
+        (error) => {
+          if (error) reject(error);
           resolve(true);
         }
       );

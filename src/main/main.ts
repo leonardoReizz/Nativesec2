@@ -260,6 +260,8 @@ const createWindow = async () => {
     },
   });
 
+  console.log(__dirname);
+
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   mainWindow.on('ready-to-show', () => {

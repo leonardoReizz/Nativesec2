@@ -30,7 +30,31 @@ export function useOrganization() {
     });
   }, []);
 
-  const addNewParticipant = useCallback(() => {}, []);
+  const addNewParticipant = useCallback(
+    (data: types.IAddNewParticipantData) => {
+      window.electron.ipcRenderer.sendMessage('useIPC', {
+        event: IPCTypes.ADD_NEW_PARTICIPANT_ORGANIZATION,
+        data,
+      });
+    },
+    []
+  );
 
-  return { ...organizationContext, createOrganization, deleteOrganization };
+  const updateOrganization = useCallback(
+    (data: types.IUpdateOrganizationData) => {
+      window.electron.ipcRenderer.sendMessage('useIPC', {
+        event: IPCTypes.UPDATE_ORGANIZATION,
+        data,
+      });
+    },
+    []
+  );
+
+  return {
+    ...organizationContext,
+    createOrganization,
+    deleteOrganization,
+    addNewParticipant,
+    updateOrganization,
+  };
 }

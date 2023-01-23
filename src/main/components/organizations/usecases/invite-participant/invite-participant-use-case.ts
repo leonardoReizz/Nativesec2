@@ -14,8 +14,9 @@ export class InviteParticipantUseCase {
     const { accessToken, tokenType } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
 
+    console.log(data, ' data invite');
     let response;
-    if (data.type === 'writeAndRead') {
+    if (data.type === 'admin') {
       response = await this.organizationRepositoryAPI.inviteAdmin({
         ...data,
         authorization,
@@ -27,15 +28,16 @@ export class InviteParticipantUseCase {
       });
     }
 
-    if (response.status === 200 && response.data.status === 'ok') {
-      const organizaton = await this.organizationRepositoryDatabase.findById(
-        data.organizationId
-      );
+    console.log(response, ' response api invite');
+    // if (response.status === 200 && response.data.status === 'ok') {
+    //   const organizaton = await this.organizationRepositoryDatabase.findById(
+    //     data.organizationId
+    //   );
 
-      if (!(organizaton instanceof Error) && organizaton) {
-        const users = JSON.parse(organizaton.convidados_administradores);
-        // this.organizationRepositoryDatabase.update()
-      }
-    }
+    //   if (!(organizaton instanceof Error) && organizaton) {
+    //     const users = JSON.parse(organizaton.convidados_administradores);
+    //     // this.organizationRepositoryDatabase.update()
+    //   }
+    // }
   }
 }

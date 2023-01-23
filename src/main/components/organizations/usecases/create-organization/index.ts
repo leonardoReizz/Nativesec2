@@ -1,4 +1,4 @@
-import { OrganizationIconRepositoryDatabase } from '../../../organizations-icons/repositories/organization-icon-repository-database';
+import { OrganizationIconRepositoryDatabase } from '../../repositories/organization-icon-database-repository';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { OrganizationRepositoryDatabase } from '../../repositories/organization-repository-database';
 import { CreateOrganizationController } from './create-organization-controller';

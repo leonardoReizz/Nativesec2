@@ -1,13 +1,22 @@
 import { useCallback, useState } from 'react';
 import { BsFillTrashFill } from 'react-icons/bs';
 import { IoMdAdd } from 'react-icons/io';
-import { FieldModal } from 'renderer/components/Modals/FieldModal';
+import { FieldModalWithDropdown } from 'renderer/components/Modals/FieldModalWithDropdown';
 import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import styles from './styles.module.sass';
 
 type MembersState = 'participant' | 'guest';
+
+interface IAddUserData {
+  email: string;
+  type: {
+    id: number;
+    label: string;
+    value: 'participant' | 'admin';
+  };
+}
 
 const teste = [
   'user@gmail.com',
@@ -27,7 +36,7 @@ const teste = [
 ];
 
 export function Members() {
-  const { currentOrganization } = useOrganization();
+  const { currentOrganization, addNewParticipant } = useOrganization();
   const { theme } = useUserConfig();
 
   const [currentUserDelete, setCurrentUserDelete] = useState<string | null>(
@@ -57,7 +66,20 @@ export function Members() {
     setIsOpenVerifyNameModal(true);
   }
 
-  function addUser(email: string) {}
+  function addUser(user: IAddUserData) {
+    if (currentOrganization) {
+      addNewParticipant({
+        type: user.type.value,
+        email: user.email,
+        organizationId: currentOrganization?._id,
+      });
+    }
+  }
+
+  const options = [
+    { id: 1, value: 'participant', label: 'Participante' },
+    { id: 2, value: 'admin', label: 'Administrador' },
+  ];
 
   return (
     <>
@@ -69,12 +91,13 @@ export function Members() {
         isOpen={isOpenVerifyNameModal}
         onRequestClose={handleCloseVerifyNameModal}
       />
-      <FieldModal
+      <FieldModalWithDropdown
         title="Insira o email do usuario"
         callback={(user) => addUser(user)}
         inputText="Email"
         isOpen={isOpenFieldModal}
         onRequestClose={handleCloseFieldModal}
+        options={options}
       />
       <div
         className={`${styles.members} ${

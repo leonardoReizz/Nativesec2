@@ -1,9 +1,9 @@
-import { OrganizationIconRepositoryDatabase } from '../../../organizations-icons/repositories/organization-icon-repository-database';
 import { ICreateOrganization } from '../../../../ipc/organizations/types';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { OrganizationRepositoryDatabase } from '../../repositories/organization-repository-database';
 import { refreshOrganizations } from '../../electronstore/store';
 import { OrganizationModelAPI } from '../../model/Organization';
+import { OrganizationIconRepositoryDatabase } from '../../repositories/organization-icon-database-repository';
 
 export class CreateOrganizationUseCase {
   constructor(

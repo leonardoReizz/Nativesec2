@@ -7,4 +7,5 @@ export interface IOrganizationRepositoryAPI {
   inviteParticipant(data: types.InviteParticipantData): Promise<APIResponse>;
   inviteAdmin(data: types.InviteAdminData): Promise<APIResponse>;
   delete(organizationId: string): Promise<APIResponse>;
+  update(data: types.IUpdateData, authorization: string): Promise<APIResponse>;
 }

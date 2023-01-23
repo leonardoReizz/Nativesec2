@@ -10,7 +10,11 @@ import { useOrganization } from '../useOrganization/useOrganization';
 import * as types from './types';
 
 export function useIpcOrganization() {
-  const { refreshOrganizations, changeCurrentOrganization } = useOrganization();
+  const {
+    refreshOrganizations,
+    changeCurrentOrganization,
+    currentOrganization,
+  } = useOrganization();
   const { updateLoading } = useLoading();
   const navigate = useNavigate();
   //   const { changeModal } = useContext(ModalContext);
@@ -134,6 +138,27 @@ export function useIpcOrganization() {
           toast.error('Erro ao deletar Workspace', {
             ...toastOptions,
             toastId: 'workspace-error',
+          });
+        }
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.UPDATE_ORGANIZATION_RESPONSE,
+      async (result: types.CreateOrganizationResponse) => {
+        if (result.message === 'ok') {
+          refreshOrganizations();
+          changeCurrentOrganization(currentOrganization?._id);
+          toast.success('Organizacão atualizada com sucesso.', {
+            ...toastOptions,
+            toastId: 'updated-organization',
+          });
+        } else {
+          toast.error('Erro ao atualizar organização.', {
+            ...toastOptions,
+            toastId: 'organization-error',
           });
         }
       }

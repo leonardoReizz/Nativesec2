@@ -101,4 +101,37 @@ export class OrganizationRepositoryAPI implements IOrganizationRepositoryAPI {
         };
       });
   }
+
+  async update(
+    data: types.IUpdateData,
+    authorization: string
+  ): Promise<APIResponse> {
+    console.log(authorization);
+    return axios
+      .put(
+        `${api}/organizacao/`,
+        {
+          ...data,
+        },
+        {
+          headers: {
+            Authorization: authorization,
+          },
+        }
+      )
+      .then((result) => {
+        console.log(result, ' update organization api');
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERRO API UPDATE ORGANIZATION');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
 }

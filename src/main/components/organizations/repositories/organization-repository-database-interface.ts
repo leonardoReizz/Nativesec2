@@ -11,4 +11,5 @@ export interface IOrganizationRepositoryDatabase {
   findById(
     organizationId: string
   ): Promise<OrganizationModelDatabase | undefined | Error>;
+  update(data: OrganizationModelDatabase): Promise<boolean | Error>;
 }

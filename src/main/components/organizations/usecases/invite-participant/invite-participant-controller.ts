@@ -1,4 +1,4 @@
-import { IPCTypes } from 'renderer/@types/IPCTypes';
+import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
 import { InviteParticipantRequestDTO } from './invite-participant-request-dto';
 import { InviteParticipantUseCase } from './invite-participant-use-case';
 

@@ -7,13 +7,14 @@ import styles from './styles.module.sass';
 interface IItem {
   id: number;
   value: string;
+  label: string;
 }
 
 interface DropdownProps {
   value?: string;
   text?: string;
   valueText?: string;
-  onChange?: (value: string) => void;
+  onChange?: (value: IItem) => void;
   theme: ThemeType;
   options?: IItem[];
 }
@@ -42,7 +43,7 @@ export function Dropdown({
             <span>{text}</span>
             <input
               type="text"
-              value={`${value} ${valueText}`}
+              value={`${value} ${valueText || ''}`}
               placeholder=" "
               readOnly
             />
@@ -53,9 +54,12 @@ export function Dropdown({
         {options?.map((item) => (
           <div
             key={item.id}
-            onClick={() => onChange && onChange(item.value || '')}
+            onClick={() =>
+              onChange &&
+              onChange({ id: item.id, label: item.label, value: item.value })
+            }
           >
-            {item.value} {valueText}
+            {item.label} {valueText}
           </div>
         ))}
       </div>

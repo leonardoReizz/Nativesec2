@@ -1,5 +1,5 @@
-import { OrganizationIconRepositoryDatabase } from 'main/components/organizations-icons/repositories/organization-icon-repository-database';
 import { refreshOrganizations } from '../../electronstore/store';
+import { OrganizationIconRepositoryDatabase } from '../../repositories/organization-icon-database-repository';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { OrganizationRepositoryDatabase } from '../../repositories/organization-repository-database';
 

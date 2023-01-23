@@ -9,3 +9,21 @@ export interface InviteAdminData {
   email: string;
   authorization: string;
 }
+
+export interface IUpdateData {
+  id: string;
+  nome: string;
+  tema: string;
+  descricao: string;
+  icone: string;
+}
+
+export interface ICreateOrganizationIconData {
+  organizationId: string;
+  icon: string;
+}
+
+export interface IUpdateOrganizationIcon {
+  organizationId: string;
+  icon: string;
+}
