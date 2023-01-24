@@ -1,8 +1,8 @@
 export interface UserAPI {}
 
-export interface UserDatabase {
+export interface IUserConfigDatabaseModel {
   email: string;
-  refreshTime: string;
+  refreshTime: number;
   savePrivateKey: string;
   theme: string;
   lastOrganizationId: string;

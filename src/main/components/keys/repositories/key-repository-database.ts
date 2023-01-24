@@ -1,4 +1,4 @@
-import { myDatabase } from 'main/ipc/database';
+import { myDatabase } from '../../../ipc/database';
 import { KeyRepositoryDatabaseInterface } from './key-repository-database-interface';
 
 export class KeyRepositoryDatabase implements KeyRepositoryDatabaseInterface {
@@ -12,6 +12,18 @@ export class KeyRepositoryDatabase implements KeyRepositoryDatabaseInterface {
             reject(error);
           }
           resolve(true);
+        }
+      );
+    });
+  }
+
+  async getPublicKey(email: string): Promise<any[] | Error> {
+    return new Promise((resolve, reject) => {
+      return myDatabase.all(
+        `SELECT * FROM public_keys WHERE email = '${email}'`,
+        (error, rows) => {
+          if (error) reject(error);
+          resolve(rows);
         }
       );
     });

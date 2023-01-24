@@ -1,10 +1,9 @@
-import { useCallback, useState } from 'react';
 import { FaUser } from 'react-icons/fa';
 import { IoSettingsSharp } from 'react-icons/io5';
-import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { workspaceSettingsStateType } from '../..';
+import logoNativeSec from '../../../../../../assets/logoNativesec/512.png';
 import styles from './styles.module.sass';
 
 interface SidebarProps {
@@ -22,7 +21,7 @@ export function Sidebar({
   const organizationIcon =
     currentOrganizationIcon && currentOrganizationIcon.icone !== 'null'
       ? currentOrganizationIcon.icone
-      : '';
+      : logoNativeSec;
 
   return (
     <div
@@ -31,11 +30,7 @@ export function Sidebar({
       }`}
     >
       <header>
-        {currentOrganizationIcon && currentOrganizationIcon.icone !== 'null' ? (
-          <img src={organizationIcon} alt="" />
-        ) : (
-          <div className={styles.img} />
-        )}
+        <img src={organizationIcon} alt="" />
       </header>
       <main>
         <ul>

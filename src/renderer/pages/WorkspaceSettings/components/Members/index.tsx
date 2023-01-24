@@ -6,6 +6,7 @@ import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import styles from './styles.module.sass';
+import { TableMembers } from './TableMembers';
 
 type MembersState = 'participant' | 'guest';
 
@@ -17,23 +18,6 @@ interface IAddUserData {
     value: 'participant' | 'admin';
   };
 }
-
-const teste = [
-  'user@gmail.com',
-  'user@gmail.com',
-  'user@gmail.com',
-  'user@gmail.com',
-  'user@gmail.com',
-  'user@gmail.com',
-  'user@gmail.com',
-  'user@gmail.com',
-  'user@gmail.com',
-  'user@gmail.com',
-  'user@gmail.com',
-  'user@gmail.com',
-  'user@gmail.com',
-  'user@gmail.com',
-];
 
 export function Members() {
   const { currentOrganization, addNewParticipant } = useOrganization();
@@ -133,49 +117,39 @@ export function Members() {
           </button>
         </header>
         <main>
-          <div className={styles.title}>
-            <h4>Usuarios de Leitura e Escrita</h4>
-          </div>
-          <div className={styles.membersSection}>
-            {/* {JSON.parse(currentOrganization?.administradores || '[]')?.map(
-            (admin: string) => (
-              <div className={styles.participant}>{admin}</div>
-            )
-          )} */}
+          {currentOrganization && membersState === 'participant' && (
+            <>
+              <TableMembers
+                title="Administradores"
+                options={JSON.parse(currentOrganization.administradores)}
+                callback={(user) => handleDeleteUser(user)}
+              />
+              <TableMembers
+                title="Participantes"
+                options={JSON.parse(currentOrganization.participantes)}
+                callback={(user) => handleDeleteUser(user)}
+              />
+            </>
+          )}
 
-            {teste.map((admin: string) => (
-              <div className={styles.participant}>
-                <div className={styles.info}>
-                  <div className={styles.img}>{admin[0]}</div>
-                  <span>{admin}</span>
-                </div>
-                <button type="button" onClick={() => handleDeleteUser(admin)}>
-                  <BsFillTrashFill />
-                </button>
-              </div>
-            ))}
-          </div>
-          <div className={styles.title}>
-            <h4>Usuarios de Leitura</h4>
-          </div>
-          <div className={styles.membersSection}>
-            {teste.map((admin: string) => (
-              <div className={styles.participant}>
-                <div className={styles.info}>
-                  <div className={styles.img}>{admin[0]}</div>
-                  <span>{admin}</span>
-                </div>
-                <button type="button" onClick={() => handleDeleteUser(admin)}>
-                  <BsFillTrashFill />
-                </button>
-              </div>
-            ))}
-            {/* {JSON.parse(currentOrganization?.administradores || '[]')?.map(
-            (admin: string) => (
-              <div className={styles.participant}>{admin}</div>
-            )
-          )} */}
-          </div>
+          {currentOrganization && membersState === 'guest' && (
+            <>
+              <TableMembers
+                title="Convidados Administradores"
+                options={JSON.parse(
+                  currentOrganization.convidados_administradores
+                )}
+                callback={(user) => handleDeleteUser(user)}
+              />
+              <TableMembers
+                title="Convidados Participantes"
+                options={JSON.parse(
+                  currentOrganization.convidados_participantes
+                )}
+                callback={(user) => handleDeleteUser(user)}
+              />
+            </>
+          )}
         </main>
       </div>
     </>

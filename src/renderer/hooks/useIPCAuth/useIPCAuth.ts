@@ -1,14 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { IUserConfig } from 'main/ipc/user/types';
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { IIPCResponse } from 'renderer/@types/types';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
+import { IUserConfig } from 'renderer/contexts/UserConfigContext/types';
 import { AuthStateType } from 'renderer/pages/Auth';
 import { LoadingType } from 'renderer/routes';
 import { toastOptions } from 'renderer/utils/options/Toastify';
+import { IPCResponse } from '../useIPCSafeBox/types';
 import { useUserConfig } from '../useUserConfig/useUserConfig';
 
 interface UseIPCAuthProps {
@@ -32,15 +33,13 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_PUBLIC_KEY_RESPONSE,
       (result: IIPCResponse) => {
-        switch (result.status) {
-          case 200:
-            window.electron.ipcRenderer.sendMessage('useIPC', {
-              event: IPCTypes.VERIFY_DATABASE_PASSWORD,
-            });
-            break;
-          default:
-            toast.error('Falha Grave.', { ...toastOptions, toastId: 'error' });
-            break;
+        console.log(result, 'aaa');
+        if (result.message === 'ok') {
+          window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.VERIFY_DATABASE_PASSWORD,
+          });
+        } else {
+          toast.error('Falha Grave.', { ...toastOptions, toastId: 'error' });
         }
       }
     );
@@ -72,6 +71,23 @@ export function useIPCAuth({
     );
   }, []);
 
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.AUTH_LOGIN_RESPONSE,
+      (result: IIPCResponse) => {
+        console.log(result);
+        switch (result.status) {
+          case 200:
+            window.electron.ipcRenderer.sendMessage('useIPC', {
+              event: IPCTypes.GET_PUBLIC_KEY,
+            });
+            break;
+          default:
+            break;
+        }
+      }
+    );
+  }, []);
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.GET_PRIVATE_KEY_RESPONSE,
@@ -141,14 +157,11 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_USER_RESPONSE,
       (result: IIPCResponse) => {
-        switch (result.status) {
-          case 200:
-            window.electron.ipcRenderer.sendMessage('useIPC', {
-              event: IPCTypes.INSERT_DATABASE_KEYS,
-            });
-            break;
-          default:
-            break;
+        console.log(result);
+        if (result.message === 'ok') {
+          window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.INSERT_DATABASE_KEYS,
+          });
         }
       }
     );
@@ -186,29 +199,35 @@ export function useIPCAuth({
   }, []);
 
   useEffect(() => {
-    window.electron.ipcRenderer.once(IPCTypes.SET_USER_CONFIG_RESPONSE, () => {
-      const userConfig = window.electron.store.get('userConfig') as IUserConfig;
-      console.log({ ...userConfig }, 'user config');
-      updateUserConfig({ ...userConfig });
-      changeLoadingState('finalized');
-      // handleRefreshTime(Number(userConfig.refreshTime));
-      if (userConfig.lastOrganizationId === null) {
-        navigate('/home');
-      } else {
-        // const filter = organizations?.filter((org) => {
-        //   if (org._id === userConfig.lastOrganizationId) {
-        //     return org;
-        //   }
-        //   return undefined;
-        // });
-        const filter = [];
-        if (filter.length > 0) {
-          changeCurrentOrganization(userConfig.lastOrganizationId);
-          navigate(`/workspace/${userConfig.lastOrganizationId}`);
-        } else {
-          navigate('/home');
+    window.electron.ipcRenderer.once(
+      IPCTypes.SET_USER_CONFIG_RESPONSE,
+      (result: IPCResponse) => {
+        if (result.message === 'ok') {
+          const userConfig = window.electron.store.get(
+            'userConfig'
+          ) as IUserConfig;
+          updateUserConfig({ ...userConfig });
+          changeLoadingState('finalized');
+          // handleRefreshTime(Number(userConfig.refreshTime));
+          if (userConfig.lastOrganizationId === null) {
+            navigate('/home');
+          } else {
+            // const filter = organizations?.filter((org) => {
+            //   if (org._id === userConfig.lastOrganizationId) {
+            //     return org;
+            //   }
+            //   return undefined;
+            // });
+            const filter = [];
+            if (filter.length > 0) {
+              changeCurrentOrganization(userConfig.lastOrganizationId);
+              navigate(`/workspace/${userConfig.lastOrganizationId}`);
+            } else {
+              navigate('/home');
+            }
+          }
         }
       }
-    });
+    );
   }, []);
 }

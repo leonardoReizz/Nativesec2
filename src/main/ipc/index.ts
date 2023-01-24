@@ -1,3 +1,6 @@
+import { getPublicKeyController } from '../components/keys/use-cases/get-public-key';
+import { setUserConfigController } from '../components/user-config/use-cases/set-user-config';
+import { getUserController } from '../components/user/use-cases/getUser';
 import { updateOrganizationController } from '../components/organizations/usecases/update-organization';
 import { inviteParticipantController } from '../components/organizations/usecases/invite-participant';
 import { deleteOrganizationController } from '../components/organizations/usecases/delete-organization';
@@ -19,13 +22,7 @@ import {
 } from './keys';
 import { getMyInvites, refreshAllOrganizations } from './organizations';
 import { refreshSafeBoxes } from './safeBox';
-import {
-  authLogin,
-  authPassword,
-  getUser,
-  setUserConfig,
-  verifyDatabasePassword,
-} from './user';
+import { authLogin, authPassword, verifyDatabasePassword } from './user';
 
 export interface UseIPCData {
   id: string;
@@ -57,15 +54,15 @@ export async function useIpcActions(
     case IPCTypes.REFRESH_ALL_ORGANIZATIONS:
       return refreshAllOrganizations(arg);
     case IPCTypes.GET_PUBLIC_KEY:
-      return getPublicKey();
+      return getPublicKeyController.handle();
     case IPCTypes.SET_USER_CONFIG:
-      return setUserConfig();
+      return setUserConfigController.handle();
     case IPCTypes.INITIALIZEDB:
       return initializeDB(arg);
     case IPCTypes.INSERT_DATABASE_KEYS:
       return insertDatabaseKeys();
     case IPCTypes.GET_USER:
-      return getUser();
+      return getUserController.handle();
     case IPCTypes.REFRESH_SAFEBOXES:
       return refreshSafeBoxes(arg);
     case IPCTypes.GET_MY_INVITES:

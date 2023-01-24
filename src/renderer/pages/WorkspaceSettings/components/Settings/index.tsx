@@ -1,152 +1,46 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useCallback, useState, useEffect } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { FaCamera } from 'react-icons/fa';
 import { BsFillTrashFill } from 'react-icons/bs';
-
-import browserImageSize from 'browser-image-size';
+import { IoExit } from 'react-icons/io5';
 
 import { Button } from 'renderer/components/Buttons/Button';
 import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
 import { useLoading } from 'renderer/hooks/useLoading';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
-
-import { useDropzone } from 'react-dropzone';
 import { VerifyModal } from 'renderer/components/Modals/VerifyModal';
-import { toast } from 'react-toastify';
-import { toastOptions } from 'renderer/utils/options/Toastify';
 import { Input } from 'renderer/components/Inputs/Input';
 import { TextArea } from 'renderer/components/TextAreas/TextArea';
+import { useWorkspaceSettings } from 'renderer/hooks/useWorkspaceSettings/useWorkspaceSettings';
 
-import { IoExit } from 'react-icons/io5';
 import { IUser } from 'main/types';
-import { useFormik } from 'formik';
 import logoNativeSec from '../../../../../../assets/logoNativesec/512.png';
-import settingsSchema from '../../../../utils/Formik/SettingsOrganizations/settingsOrganization';
 
 import styles from './styles.module.sass';
 
 export function Settings() {
-  const { theme } = useUserConfig();
   const {
-    currentOrganization,
-    currentOrganizationIcon,
-    deleteOrganization,
-    updateOrganization,
-  } = useOrganization();
-  const { updateLoading, loading } = useLoading();
+    formikProps,
+    isOpenVerifyModal,
+    isOpenVerifyNameModal,
+    closeOpenVerifyNameModal,
+    verifyDeleteOrganization,
+    openVerifyModal,
+    openVerifyNameModal,
+    verifyRemoveImage,
+    closeVerifyModal,
+    onDrop,
+    discard,
+  } = useWorkspaceSettings();
+  const { currentOrganization, currentOrganizationIcon } = useOrganization();
   const { myEmail } = window.electron.store.get('user') as IUser;
-  const [isOpenVerifyModal, setIsOpenVerifyModal] = useState<boolean>(false);
-  const [isOpenVerifyNameModal, setIsOpenVerifyNameModal] =
-    useState<boolean>(false);
-  async function handleOpenVerifyNameModal() {
-    setIsOpenVerifyNameModal(true);
-  }
-
-  const toBase64 = (file: File) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-
-  const closeOpenVerifyNameModal = () => {
-    setIsOpenVerifyNameModal(false);
-  };
-
-  const onDrop = useCallback(async (acceptedFiles: any) => {
-    toast.dismiss('invalidSize');
-    toast.dismiss('invalidFormat');
-
-    if (
-      acceptedFiles[0].type === 'image/png' ||
-      acceptedFiles[0].type === 'image/jpeg' ||
-      acceptedFiles[0].type === 'image/jpg'
-    ) {
-      const imageSize = await browserImageSize(acceptedFiles[0]).then(
-        (result: any) => {
-          return result;
-        }
-      );
-      if (imageSize.width > 512 || imageSize.height > 512) {
-        toast.error('Tamanho máximo valido: 512 x 512', {
-          ...toastOptions,
-          toastId: 'invalidSize',
-        });
-      } else {
-        const base64 = (await toBase64(acceptedFiles[0])) as string;
-        if (currentOrganization && base64) {
-          updateOrganization({
-            organizationId: currentOrganization._id,
-            name: currentOrganization.nome,
-            description: currentOrganization.descricao,
-            icon: base64,
-            theme: currentOrganization.tema,
-          });
-        }
-      }
-    } else {
-      toast.error('Formatos validos: PNG, JPEG e JPG', {
-        ...toastOptions,
-        toastId: 'invalidFormat',
-      });
-    }
-  }, []);
+  const { loading } = useLoading();
+  const { theme } = useUserConfig();
 
   const { getRootProps } = useDropzone({
     onDrop,
   });
-
-  const closeVerifyModal = useCallback(() => {
-    setIsOpenVerifyModal(false);
-  }, []);
-
-  const verifyDeleteOrganization = useCallback(
-    (verified: boolean) => {
-      if (verified && currentOrganization) {
-        updateLoading(true);
-        deleteOrganization(currentOrganization?._id);
-      }
-    },
-    [currentOrganization]
-  );
-
-  const verifyRemoveImage = useCallback(
-    (verified: boolean) => {
-      if (verified && currentOrganization) {
-        updateOrganization({
-          organizationId: currentOrganization._id,
-          name: currentOrganization.nome,
-          description: currentOrganization.descricao,
-          icon: 'null',
-          theme: currentOrganization.tema,
-        });
-      }
-    },
-    [currentOrganization]
-  );
-
-  function handleOpenVerifyModal() {
-    setIsOpenVerifyModal(true);
-  }
-
-  function handleSubmit(
-    values: typeof settingsSchema.SettingsOrganizationInitialValues
-  ) {}
-
-  const formikProps = useFormik({
-    initialValues: settingsSchema.SettingsOrganizationInitialValues,
-    onSubmit: (values) => handleSubmit(values),
-    validationSchema: settingsSchema.SettingsOrganizationSchema,
-  });
-
-  useEffect(() => {
-    if (currentOrganization) {
-      formikProps.setFieldValue('name', currentOrganization.nome);
-      formikProps.setFieldValue('description', currentOrganization.descricao);
-    }
-  }, []);
 
   return (
     <>
@@ -194,13 +88,13 @@ export function Settings() {
                 Icon={<BsFillTrashFill />}
                 text="Remover"
                 className={styles.red}
-                onClick={handleOpenVerifyModal}
+                onClick={openVerifyModal}
               />
             </div>
           </div>
 
           <div className={styles.form}>
-            <form action="">
+            <form onSubmit={formikProps.handleSubmit}>
               <Input
                 name="name"
                 text="Nome"
@@ -228,7 +122,12 @@ export function Settings() {
                       formikProps.values.description
                   }
                 />
-                <Button type="button" text="Descartar" className={styles.red} />
+                <Button
+                  type="button"
+                  text="Descartar"
+                  className={styles.red}
+                  onClick={discard}
+                />
               </div>
             </form>
           </div>
@@ -246,7 +145,11 @@ export function Settings() {
                   desse workspace tal ação não poderá ser revertida{' '}
                 </span>
               </div>
-              <Button text="Deletar Workspace" Icon={<BsFillTrashFill />} />
+              <Button
+                text="Deletar Workspace"
+                Icon={<BsFillTrashFill />}
+                onClick={openVerifyNameModal}
+              />
             </div>
             <div className={styles.item}>
               <div>
@@ -263,11 +166,6 @@ export function Settings() {
               />
             </div>
           </div>
-
-          {/* deletar workspace */}
-          {/* <button type="button" onClick={handleOpenVerifyNameModal}>
-            Deletar
-          </button> */}
         </div>
       </div>
     </>

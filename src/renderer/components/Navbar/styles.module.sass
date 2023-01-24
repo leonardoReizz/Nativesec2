@@ -11,6 +11,10 @@
   .icons
     button
       background-color: $gray-700
+      &.selected
+        background-color: $blue-100
+        svg
+          color: $white
       &:hover
          background-color: $gray-600
       svg
@@ -22,6 +26,10 @@
   .icons
     button
       background-color: $gray-100
+      &.selected
+        background-color: $blue-100
+        svg
+          color: $white
       &:hover
         background-color: $gray-400
       svg
@@ -54,9 +62,6 @@
     gap: 1rem
     margin-right: 2rem
 
-    button
-      &.selected
-        background-color: $blue-100
     button
       @include flex(center, center, row)
       border-radius: $default-radius

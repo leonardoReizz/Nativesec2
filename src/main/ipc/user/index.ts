@@ -53,7 +53,6 @@ export async function authLogin(arg: UseIPCData) {
       accessToken: result.data.msg.access_token,
       tokenType: result.data.msg.token_type,
     });
-    return getPublicKey();
   }
 
   return {
@@ -102,85 +101,6 @@ export async function verifyDatabasePassword() {
       data: {
         status: 'nok',
       },
-    },
-  };
-}
-
-export async function setUserConfig() {
-  const { accessToken, tokenType } = store.get('token') as IToken;
-  const { myEmail } = store.get('user') as IUser;
-  const userConfig = await DBUser.getUserConfig({
-    email: myEmail,
-  });
-
-  if (userConfig.length === 0) {
-    const apiGetPrivateKey = await APIKey.getPrivateKey({
-      email: myEmail,
-      authorization: `${tokenType} ${accessToken}`,
-    });
-    if (apiGetPrivateKey.data?.status === 'ok') {
-      if (apiGetPrivateKey.data?.msg.length > 0) {
-        store.set('userConfig', {
-          savePrivateKey: true,
-          refreshTime: '30',
-          lastOrganizationId: null,
-          theme: 'light',
-        });
-        DBUser.createUserConfig({
-          userConfig: {
-            email: myEmail,
-            savePrivateKey: true,
-            refreshTime: '30',
-            lastOrganizationId: null,
-            theme: 'light',
-          },
-        });
-      } else {
-        DBUser.createUserConfig({
-          userConfig: {
-            email: myEmail,
-            savePrivateKey: false,
-            refreshTime: '30',
-            lastOrganizationId: null,
-            theme: 'light',
-          },
-        });
-        store.set('userConfig', {
-          refreshTime: '30',
-          theme: 'light',
-          savePrivateKey: false,
-          lastOrganizationId: null,
-        });
-      }
-    }
-  } else {
-    store.set('userConfig', {
-      refreshTime: userConfig[0].refreshTime,
-      theme: userConfig[0].theme,
-      savePrivateKey: userConfig[0].savePrivateKey,
-      lastOrganizationId: userConfig[0].lastOrganizationId,
-    });
-  }
-  return {
-    response: IPCTypes.SET_USER_CONFIG_RESPONSE,
-  };
-}
-
-export async function getUser() {
-  const { accessToken, tokenType } = store.get('token') as IToken;
-  const apiGetUser = await APIUser.getUser({
-    authorization: `${tokenType} ${accessToken}`,
-  });
-  store.set('user', {
-    ...(store.get('user') as IUser),
-    myFullName: apiGetUser.data?.full_name,
-  });
-
-  return {
-    response: IPCTypes.GET_USER_RESPONSE,
-    data: {
-      status: 200,
-      data: {},
     },
   };
 }
