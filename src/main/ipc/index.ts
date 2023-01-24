@@ -1,3 +1,4 @@
+import { generateTokenController } from '../components/auth/use-cases/generateToken';
 import { refreshTokenController } from '../components/auth/use-cases/refreshToken';
 import { loginController } from '../components/auth/use-cases/login';
 import { getPublicKeyController } from '../components/keys/use-cases/get-public-key';
@@ -41,7 +42,7 @@ export async function useIpcActions(
 ): Promise<UseIpcActionsReturn> {
   switch (arg.event) {
     case IPCTypes.AUTH_PASSWORD:
-      return authPassword(arg);
+      return generateTokenController.handle(arg.data);
     case IPCTypes.AUTH_LOGIN:
       return loginController.handle(arg.data);
     case IPCTypes.REFRESH_TOKEN:

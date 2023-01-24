@@ -71,7 +71,9 @@ export class SafeBoxRepositoryDatabase
     });
   }
 
-  async update(data: SafeBoxDatabaseModel): Promise<boolean | Error> {
+  async update(
+    data: Omit<SafeBoxDatabaseModel, 'data_hora_create'>
+  ): Promise<boolean | Error> {
     const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
       db.run(
@@ -85,6 +87,7 @@ export class SafeBoxRepositoryDatabase
           descricao = '${data.descricao}',
           nome = '${data.nome}',
           tipo = '${data.tipo}',
+          data_atualizacao = '${data.data_atualizacao}',
           usuarios_escrita = '${data.usuarios_escrita}',
           usuarios_leitura = '${data.usuarios_leitura}'
           WHERE _id = '${data._id}'

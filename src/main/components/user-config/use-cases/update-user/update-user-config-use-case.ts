@@ -1,6 +1,6 @@
-import { KeyRepositoryAPI } from 'main/components/keys/repositories/key-repository-api';
-import { IKeys, IToken } from 'main/types';
-import { IUserConfig } from 'renderer/contexts/UserConfigContext/types';
+import { IUserConfig } from '../../../../../renderer/contexts/UserConfigContext/types';
+import { IKeys, IToken } from '../../../../types';
+import { KeyRepositoryAPI } from '../../../keys/repositories/key-repository-api';
 import { store } from '../../../../main';
 import { UserConfigRepositoryDatabase } from '../../repositories/user-config-repository-database';
 import { UpdateUserConfigRequestDTO } from './update-user-config-request-dto';

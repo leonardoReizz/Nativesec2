@@ -1,4 +1,4 @@
-import { IPCTypes } from 'renderer/@types/IPCTypes';
+import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
 import { RefreshTokenUseCase } from './refresh-token-use-case';
 
 export class RefreshTokenController {

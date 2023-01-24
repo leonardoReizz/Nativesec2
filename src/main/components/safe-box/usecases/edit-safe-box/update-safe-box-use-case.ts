@@ -1,15 +1,16 @@
 import { store } from '../../../../main';
 import { IToken } from '../../../../types';
 import openpgp from '../../../../crypto/openpgp';
-import apiPubKey from '../../../../API/publicKey/index';
 import { refreshSafeBoxes } from '../../electron-store/store';
 import { SafeBoxRepositoryAPI } from '../../repositories/safe-box-repository-api';
 import { SafeBoxRepositoryDatabase } from '../../repositories/safe-box-repository-database';
 import { IUpdateSafeBoxRequestDTO } from './update-safe-box-request-dto';
+import { KeyRepositoryAPI } from '../../../keys/repositories/key-repository-api';
 
 export class UpdateSafeBoxUseCase {
   constructor(
     private safeBoxRepositoryAPI: SafeBoxRepositoryAPI,
+    private keyRepositoryAPI: KeyRepositoryAPI,
     private safeBoxRepositoryDatabase: SafeBoxRepositoryDatabase
   ) {}
 
@@ -22,10 +23,10 @@ export class UpdateSafeBoxUseCase {
     const pubKeys = await Promise.all(
       users.map(async (email): Promise<string[] | unknown> => {
         try {
-          const apiGetPubKey = await apiPubKey.getPublicKey({
+          const apiGetPubKey = await this.keyRepositoryAPI.getPublicKey(
             email,
-            authorization: `${tokenType} ${accessToken}`,
-          });
+            authorization
+          );
           if (
             apiGetPubKey.status === 200 &&
             apiGetPubKey.data?.status === 'ok'
@@ -82,6 +83,7 @@ export class UpdateSafeBoxUseCase {
         usuarios_leitura_deletado: JSON.stringify(
           data.usuarios_leitura_deletado
         ),
+        data_atualizacao: apiUpdate.data.data_atualizacao.$date,
         anexos: JSON.stringify([]),
       });
       await refreshSafeBoxes(data.organizacao);

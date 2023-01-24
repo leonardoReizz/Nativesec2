@@ -27,4 +27,17 @@ export class KeyRepositoryDatabase implements KeyRepositoryDatabaseInterface {
       );
     });
   }
+
+  async getPrivateKey(email: string): Promise<any[] | Error> {
+    const db = newDatabase.getDatabase();
+    return new Promise((resolve, reject) => {
+      db.all(
+        `SELECT * FROM private_keys WHERE email = '${email}'`,
+        (error, rows) => {
+          if (error) reject(error);
+          resolve(rows);
+        }
+      );
+    });
+  }
 }

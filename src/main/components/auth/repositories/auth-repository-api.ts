@@ -46,4 +46,24 @@ export class AuthRepositoryAPI implements IAuthRepositoryAPI {
         };
       });
   }
+
+  async generateToken(email: string): Promise<APIResponse> {
+    return axios
+      .get(`${api}/auth/password`, {
+        params: { email },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERROR API AUTH PASSWORD');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
 }

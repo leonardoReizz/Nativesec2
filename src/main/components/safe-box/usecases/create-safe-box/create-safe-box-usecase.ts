@@ -4,13 +4,14 @@ import { IToken } from '../../../../types';
 import { SafeBoxRepositoryAPI } from '../../repositories/safe-box-repository-api';
 import { SafeBoxRepositoryDatabase } from '../../repositories/safe-box-repository-database';
 import { CreateSafeBoxRequestDTO } from './create-safe-box-request-dto';
-import apiPubKey from '../../../../API/publicKey/index';
 import openpgp from '../../../../crypto/openpgp';
 import { refreshSafeBoxes } from '../../electron-store/store';
+import { KeyRepositoryAPI } from '../../../keys/repositories/key-repository-api';
 
 export class CreateSafeBoxUseCase {
   constructor(
     private safeBoxRepositoryAPI: SafeBoxRepositoryAPI,
+    private keyRepositoryAPI: KeyRepositoryAPI,
     private safeBoxRepositoryDatabase: SafeBoxRepositoryDatabase
   ) {}
 
@@ -23,10 +24,10 @@ export class CreateSafeBoxUseCase {
     const pubKeys = await Promise.all(
       users.map(async (email): Promise<string[] | unknown> => {
         try {
-          const apiGetPubKey = await apiPubKey.getPublicKey({
+          const apiGetPubKey = await this.keyRepositoryAPI.getPublicKey(
             email,
-            authorization: `${tokenType} ${accessToken}`,
-          });
+            authorization
+          );
           if (
             apiGetPubKey.status === 200 &&
             apiGetPubKey.data?.status === 'ok'
