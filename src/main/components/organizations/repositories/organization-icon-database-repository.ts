@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { myDatabase } from '../../../ipc/database';
+import { newDatabase } from '../../../main';
 import { IOrganizationIconRepositoryDatabase } from './organization-icon-repository-database-interface';
 import * as types from './types';
 
@@ -9,8 +9,9 @@ export class OrganizationIconRepositoryDatabase
   async create(
     data: types.ICreateOrganizationIconData
   ): Promise<boolean | Error> {
+    const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
-      return myDatabase.run(
+      return db.run(
         `INSERT INTO organizationsIcons (_id, icone ) VALUES ('${data.organizationId}','${data.icon}')`,
         (error) => {
           if (error) {
@@ -24,8 +25,9 @@ export class OrganizationIconRepositoryDatabase
   }
 
   async delete(organizationId: string): Promise<boolean | Error> {
+    const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
-      return myDatabase.run(
+      return db.run(
         `DELETE FROM organizationsIcons WHERE _id = '${organizationId}'`,
         (error) => {
           if (error) {
@@ -39,8 +41,9 @@ export class OrganizationIconRepositoryDatabase
   }
 
   async update(organizationId: string, icon: string): Promise<boolean | Error> {
+    const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
-      myDatabase.run(
+      db.run(
         `
          UPDATE organizationsIcons SET
          icone = '${icon}'

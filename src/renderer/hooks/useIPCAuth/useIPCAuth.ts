@@ -33,10 +33,9 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_PUBLIC_KEY_RESPONSE,
       (result: IIPCResponse) => {
-        console.log(result, 'aaa');
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
-            event: IPCTypes.VERIFY_DATABASE_PASSWORD,
+            event: IPCTypes.GET_PRIVATE_KEY,
           });
         } else {
           toast.error('Falha Grave.', { ...toastOptions, toastId: 'error' });
@@ -50,22 +49,23 @@ export function useIPCAuth({
       IPCTypes.VERIFY_DATABASE_PASSWORD_RESPONSE,
       (result: IIPCResponse) => {
         toast.dismiss('safety-invalid');
-        switch (result.status) {
-          case 200:
-            window.electron.ipcRenderer.sendMessage('useIPC', {
-              event: IPCTypes.GET_PRIVATE_KEY,
-            });
-
-            break;
-          case 26:
+        if (result.message === 'ok') {
+          window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.GET_PUBLIC_KEY,
+          });
+        } else {
+          if (result.type === 'invalidPassword') {
             toast.error('Senha Invalida', {
               ...toastOptions,
               toastId: 'safety-invalid',
             });
             changeLoadingState('false');
-            break;
-          default:
-            break;
+          }
+          toast.error('Erro ao realizar login', {
+            ...toastOptions,
+            toastId: 'safety-invalid',
+          });
+          changeLoadingState('false');
         }
       }
     );
@@ -75,15 +75,10 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.AUTH_LOGIN_RESPONSE,
       (result: IIPCResponse) => {
-        console.log(result);
-        switch (result.status) {
-          case 200:
-            window.electron.ipcRenderer.sendMessage('useIPC', {
-              event: IPCTypes.GET_PUBLIC_KEY,
-            });
-            break;
-          default:
-            break;
+        if (result.message === 'ok') {
+          window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.VERIFY_DATABASE_PASSWORD,
+          });
         }
       }
     );
@@ -119,8 +114,11 @@ export function useIPCAuth({
           case 200:
             // Chave privada valida
             window.electron.ipcRenderer.sendMessage('useIPC', {
-              event: IPCTypes.INITIALIZEDB,
+              event: IPCTypes.UPDATE_DATABASE,
             });
+            // window.electron.ipcRenderer.sendMessage('useIPC', {
+            //   event: IPCTypes.INITIALIZEDB,
+            // });
             break;
           case 400:
             // Senha invalida
@@ -138,14 +136,6 @@ export function useIPCAuth({
   }, []);
 
   useEffect(() => {
-    window.electron.ipcRenderer.on(IPCTypes.INITIALIZEDB_RESPONSE, () => {
-      window.electron.ipcRenderer.sendMessage('useIPC', {
-        event: IPCTypes.UPDATE_DATABASE,
-      });
-    });
-  }, []);
-
-  useEffect(() => {
     window.electron.ipcRenderer.on(IPCTypes.UPDATE_DATABASE_RESPONSE, () => {
       window.electron.ipcRenderer.sendMessage('useIPC', {
         event: IPCTypes.GET_USER,
@@ -157,7 +147,6 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_USER_RESPONSE,
       (result: IIPCResponse) => {
-        console.log(result);
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.INSERT_DATABASE_KEYS,

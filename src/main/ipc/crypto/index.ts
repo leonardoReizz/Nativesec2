@@ -23,7 +23,6 @@ const crypto = [
   {
     async DECRYPT_TEXT(event: IpcMainEvent, arg: types.IDecryptData) {
       const { safetyPhrase } = store.get('user') as IUser;
-      console.log(arg.message);
       const encryptedMessage = String(arg.message);
       const decrypted = await openpgp.decrypt({
         encryptedMessage,

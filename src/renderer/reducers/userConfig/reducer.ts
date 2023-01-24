@@ -29,7 +29,6 @@ export function userConfigReducer(state: UserConfigState, action: any) {
       });
     case ActionType.UPDATE_USER_CONFIG:
       return produce(state, (draft) => {
-        console.log(action, ' updateUserConfig');
         draft.lastOrganizationId = action.payload.lastOrganizationId;
         draft.refreshTime = action.payload.refreshTime;
         draft.savePrivateKey = action.payload.savePrivateKey;

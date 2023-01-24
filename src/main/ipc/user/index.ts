@@ -1,22 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable import/no-cycle */
 /* eslint-disable promise/always-return */
-/* eslint-disable @typescript-eslint/naming-convention */
 import axios from 'axios';
-import fs from 'fs';
-import md5 from 'md5';
 import { IPCTypes } from '../../../renderer/@types/IPCTypes';
-import { store } from '../../main';
+import { newDatabase, store } from '../../main';
 import { IInitialData, IToken, IUser, UseIPCData } from '../../types';
 import { api } from '../../util';
 import { ICreateUser } from './types';
 import DB from '../../database';
 import database from '../../database/database';
 import APIUser from '../../API/user';
-import APIKey from '../../API/keys';
 import DBUser from '../../database/user';
-import { getPublicKey } from '../keys';
 
 export async function authPassword(arg: UseIPCData) {
   let response = IPCTypes.AUTH_PASSWORD_RESPONSE;
@@ -42,65 +34,31 @@ export async function authPassword(arg: UseIPCData) {
   };
 }
 
-export async function authLogin(arg: UseIPCData) {
-  const { myEmail } = store.get('user') as IUser;
-  const result = await APIUser.authLogin({
-    email: myEmail,
-    password: arg.data.token,
-  });
-  if (result.status === 200 && result.data?.status === 'ok') {
-    store.set('token', {
-      accessToken: result.data.msg.access_token,
-      tokenType: result.data.msg.token_type,
-    });
-  }
-
-  return {
-    response: IPCTypes.AUTH_LOGIN_RESPONSE,
-    data: {
-      status: result.status,
-      data: result.data,
-    },
-  };
-}
-
 export async function verifyDatabasePassword() {
-  const { myEmail, safetyPhrase } = store.get('user') as IUser;
-  const { PATH } = store.get('initialData') as IInitialData;
-  if (fs.existsSync(`${PATH}/database/default/${md5(myEmail)}.sqlite3`)) {
-    const db = await database.CreateDatabase({ myEmail, PATH });
-    return DB.verifyPasswordDB({ db, secret: safetyPhrase })
-      .then(() => {
-        return {
-          response: IPCTypes.VERIFY_DATABASE_PASSWORD_RESPONSE,
-          data: {
-            status: 200,
-            data: {
-              status: 'ok',
-            },
-          },
-        };
-      })
-      .catch((error) => {
-        console.log(error, ' ERROR DATABASE VERIFY PASSWORD');
-        return {
-          response: IPCTypes.VERIFY_DATABASE_PASSWORD_RESPONSE,
-          data: {
-            status: error.errno,
-            data: {
-              data: 'nok',
-            },
-          },
-        };
-      });
+  const buildDatabase = await newDatabase.build();
+
+  if (buildDatabase instanceof Error) {
+    if (buildDatabase.message === 'SQLITE_NOTADB: file is not a database') {
+      return {
+        response: IPCTypes.VERIFY_DATABASE_PASSWORD_RESPONSE,
+        data: {
+          type: 'invalidPassword',
+          message: 'nok',
+        },
+      };
+    }
+    return {
+      response: IPCTypes.VERIFY_DATABASE_PASSWORD_RESPONSE,
+      data: {
+        message: 'nok',
+      },
+    };
   }
+
   return {
     response: IPCTypes.VERIFY_DATABASE_PASSWORD_RESPONSE,
     data: {
-      status: 200,
-      data: {
-        status: 'nok',
-      },
+      message: 'ok',
     },
   };
 }

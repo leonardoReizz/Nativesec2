@@ -1,3 +1,5 @@
+import { refreshTokenController } from '../components/auth/use-cases/refreshToken';
+import { loginController } from '../components/auth/use-cases/login';
 import { getPublicKeyController } from '../components/keys/use-cases/get-public-key';
 import { setUserConfigController } from '../components/user-config/use-cases/set-user-config';
 import { getUserController } from '../components/user/use-cases/getUser';
@@ -12,17 +14,16 @@ import { updateSafeBoxController } from '../components/safe-box/usecases/edit-sa
 import { deleteSafeBoxController } from '../components/safe-box/usecases/delete-safe-box';
 import { createSafeBoxController } from '../components/safe-box/usecases/create-safe-box';
 import { IPCTypes } from '../../renderer/@types/IPCTypes';
-import { initializeDB, updateDatabase } from './database';
+import { updateDatabase } from './database';
 import {
   generateParKeys,
   getPrivateKey,
-  getPublicKey,
   insertDatabaseKeys,
   validatePrivateKeySafetyPhrase,
 } from './keys';
 import { getMyInvites, refreshAllOrganizations } from './organizations';
 import { refreshSafeBoxes } from './safeBox';
-import { authLogin, authPassword, verifyDatabasePassword } from './user';
+import { authPassword, verifyDatabasePassword } from './user';
 
 export interface UseIPCData {
   id: string;
@@ -42,7 +43,9 @@ export async function useIpcActions(
     case IPCTypes.AUTH_PASSWORD:
       return authPassword(arg);
     case IPCTypes.AUTH_LOGIN:
-      return authLogin(arg);
+      return loginController.handle(arg.data);
+    case IPCTypes.REFRESH_TOKEN:
+      return refreshTokenController.handle();
     case IPCTypes.VERIFY_DATABASE_PASSWORD:
       return verifyDatabasePassword();
     case IPCTypes.GET_PRIVATE_KEY:
@@ -57,8 +60,6 @@ export async function useIpcActions(
       return getPublicKeyController.handle();
     case IPCTypes.SET_USER_CONFIG:
       return setUserConfigController.handle();
-    case IPCTypes.INITIALIZEDB:
-      return initializeDB(arg);
     case IPCTypes.INSERT_DATABASE_KEYS:
       return insertDatabaseKeys();
     case IPCTypes.GET_USER:

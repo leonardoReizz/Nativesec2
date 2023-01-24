@@ -16,7 +16,7 @@ export function useAuth() {
     window.electron.ipcRenderer.sendMessage('useIPC', {
       event: IPCTypes.AUTH_LOGIN,
       data: {
-        token,
+        password: token,
       },
     });
   }

@@ -1,6 +1,17 @@
 import sqlite3 from '@journeyapps/sqlcipher';
 import { IUserConfig } from 'main/ipc/user/types';
 
+export interface IInit {
+  db: sqlite3.Database;
+  secret: string;
+  event?: Electron.IpcMainEvent;
+}
+
+export interface ICreateDatabase {
+  myEmail: string;
+  PATH: string;
+  WORKSPACE?: string;
+}
 export interface ICreatePrivateKey {
   myEmail: string;
   myFullName: string;

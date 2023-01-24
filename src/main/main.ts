@@ -22,8 +22,10 @@ import safeBox from './ipc/safeBox';
 
 import * as types from './types';
 import { useIpcActions } from './ipc';
+import { Database } from './database/MyDatabase';
 
 export const store = new Store();
+export const newDatabase = new Database();
 
 store.clear();
 store.set('initialData', {});

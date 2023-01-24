@@ -46,7 +46,6 @@ export function InputEye({
   encrypted = false,
   ...props
 }: InputEyeProps) {
-  console.log(mode);
   return (
     <div
       className={`${styles.inputContainer} ${

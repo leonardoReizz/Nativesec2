@@ -18,8 +18,11 @@ export class GetPublicKeyUseCase {
     const { PATH } = store.get('initialData') as IInitialData;
 
     if (fs.existsSync(`${PATH}/database/default/${md5(myEmail)}.sqlite3`)) {
+      console.log('database');
       const getPublicKeyInDatabase =
         await this.keyRepositoryDatabase.getPublicKey(myEmail);
+
+      console.log(getPublicKeyInDatabase);
       if (getPublicKeyInDatabase instanceof Error)
         throw new Error('Error get public key in database');
 
@@ -28,7 +31,7 @@ export class GetPublicKeyUseCase {
           myEmail,
           authorization
         );
-
+        console.log(apiGetPublicKey);
         if (
           apiGetPublicKey.status === 200 &&
           apiGetPublicKey.data?.msg.length > 0

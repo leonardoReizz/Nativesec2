@@ -1,4 +1,4 @@
-import { ISafeBoxDatabase } from 'main/ipc/organizations/types';
+import { newDatabase } from '../../../main';
 import { myDatabase } from '../../../ipc/database';
 import { SafeBoxDatabaseModel } from '../model/SafeBox';
 import { SafeBoxRepositoryDatabaseInterface } from './safe-box-repository-database-interface';
@@ -7,8 +7,9 @@ export class SafeBoxRepositoryDatabase
   implements SafeBoxRepositoryDatabaseInterface
 {
   async create(data: SafeBoxDatabaseModel): Promise<boolean | Error> {
+    const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
-      return myDatabase.run(
+      db.run(
         `INSERT INTO safebox (
           _id,
           anexos ,
@@ -52,8 +53,9 @@ export class SafeBoxRepositoryDatabase
   }
 
   async delete(safeBoxId: string): Promise<boolean | Error> {
+    const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
-      return myDatabase.run(
+      db.run(
         `
           DELETE FROM safebox
           WHERE _id = '${safeBoxId}'
@@ -70,8 +72,9 @@ export class SafeBoxRepositoryDatabase
   }
 
   async update(data: SafeBoxDatabaseModel): Promise<boolean | Error> {
+    const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
-      return myDatabase.run(
+      db.run(
         `
           UPDATE safebox SET
           anexos = '${data.anexos}',

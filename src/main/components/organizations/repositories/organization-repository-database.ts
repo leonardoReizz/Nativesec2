@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { myDatabase } from '../../../ipc/database';
+import { newDatabase } from '../../../main';
 import { OrganizationModelDatabase } from '../model/Organization';
 import { IOrganizationRepositoryDatabase } from './organization-repository-database-interface';
 
@@ -10,7 +10,8 @@ export class OrganizationRepositoryDatabase
     organization: OrganizationModelDatabase
   ): Promise<boolean | Error> {
     return new Promise((resolve, reject) => {
-      return myDatabase.run(
+      const db = newDatabase.getDatabase();
+      return db.run(
         `
           INSERT INTO organizations (
           _id,
@@ -57,8 +58,9 @@ export class OrganizationRepositoryDatabase
   }
 
   async delete(organizationId: string): Promise<boolean | Error> {
+    const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
-      myDatabase.run(
+      db.run(
         `DELETE FROM organizations WHERE _id = '${organizationId}'`,
         (error) => {
           if (error) {
@@ -74,8 +76,9 @@ export class OrganizationRepositoryDatabase
   async findById(
     organizationId: string
   ): Promise<OrganizationModelDatabase | Error | undefined> {
+    const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
-      myDatabase.all(
+      db.all(
         `SELECT *  FROM organizations WHERE _id = '${organizationId}'`,
         async (error, rows) => {
           if (error) {
@@ -95,8 +98,9 @@ export class OrganizationRepositoryDatabase
   async update(
     data: Omit<OrganizationModelDatabase, 'data_criacao'>
   ): Promise<boolean | Error> {
+    const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
-      return myDatabase.run(
+      db.run(
         `UPDATE organizations SET
         nome = '${data.nome}',
         tema = '${data.tema}',

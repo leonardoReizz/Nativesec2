@@ -71,7 +71,6 @@ export function Form() {
   );
 
   useCreateSafeBox({ setDecryptedMessage });
-  console.log(safeBoxMode);
 
   return (
     <>

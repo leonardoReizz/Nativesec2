@@ -12,7 +12,6 @@ import { api } from '../../util';
 import { IUserConfig } from '../user/types';
 import { UseIPCData } from '..';
 import APIKey from '../../API/keys/index';
-import APIPubKey from '../../API/publicKey';
 import DBKeys from '../../database/keys';
 import DBUser from '../../database/user';
 
