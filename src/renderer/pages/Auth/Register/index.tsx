@@ -7,10 +7,12 @@ import {
 } from 'renderer/utils/Formik/Register/Register';
 import { useFormik } from 'formik';
 import { FormMessageError } from 'renderer/components/Forms/FormMessageError';
+import { toast } from 'react-toastify';
+import { toastOptions } from 'renderer/utils/options/Toastify';
+import { useAuth } from 'renderer/hooks/useAuth/useAuth';
 import { AuthStateType } from '..';
 import styles from './styles.module.sass';
-import nativeSecLogo from '../../../../../assets/logoNativesec/brand-nativesec.svg'
-
+import nativeSecLogo from '../../../../../assets/logoNativesec/brand-nativesec.svg';
 
 interface RegisterProps {
   authState: AuthStateType;
@@ -20,8 +22,14 @@ interface RegisterProps {
 type RegisterFormType = typeof RegisterInitialValues;
 
 export function Register({ authState, changeAuthState }: RegisterProps) {
+  const { createUser } = useAuth();
+
   function handleSubmit(values: RegisterFormType) {
-    console.log(values);
+    createUser({
+      email: values.email,
+      safetyPhrase: values.safetyPhrase,
+      fullName: values.fullName,
+    });
   }
 
   function handleRegisterStepTwo() {
@@ -42,7 +50,7 @@ export function Register({ authState, changeAuthState }: RegisterProps) {
           authState === 'register-step-two' ? styles.stepTwo : ''
         }`}
       >
-        <form action="#" className={styles.register}>
+        <form onSubmit={formikProps.handleSubmit} className={styles.register}>
           <div>
             <Input
               text="Nome Completo"
@@ -93,7 +101,7 @@ export function Register({ authState, changeAuthState }: RegisterProps) {
               touched={formikProps.touched.confirmSafetyPhrase}
             />
           </div>
-          <Button text="Criar conta" />
+          <Button type="submit" text="Criar conta" />
         </form>
         <div className={styles.buttonStart}>
           <Button

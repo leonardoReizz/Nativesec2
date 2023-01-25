@@ -28,6 +28,6 @@ export interface IGetSafeBoxResponse {
 }
 
 export interface IPCResponse {
-  message: 'ok' | 'nok' | 'noKey' | 'invalidSafetyPhrase';
+  message: 'ok' | 'nok' | 'noKey' | 'invalidSafetyPhrase' | 'accountExists';
   data: any;
 }

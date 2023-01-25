@@ -23,12 +23,19 @@ export function useAuth() {
 
   function ValidatePrivateKey(buff: string) {
     window.electron.ipcRenderer.sendMessage('useIPC', {
-      event: IPCTypes.VALIDATE_PRIVATE_KEY,
+      event: IPCTypes.GET_PRIVATE_KEY,
       data: {
         privateKey: buff,
       },
     });
   }
 
-  return { AuthPassword, AuthLogin, ValidatePrivateKey };
+  function createUser(data: types.ICreateUserData) {
+    window.electron.ipcRenderer.sendMessage('useIPC', {
+      event: IPCTypes.CREATE_USER,
+      data,
+    });
+  }
+
+  return { AuthPassword, AuthLogin, ValidatePrivateKey, createUser };
 }

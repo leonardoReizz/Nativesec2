@@ -10,7 +10,6 @@ import {
 } from 'renderer/utils/Formik/Login/Login';
 import { useAuth } from 'renderer/hooks/useAuth/useAuth';
 import { LoadingType } from 'renderer/routes';
-import { useIPCLogin } from 'renderer/hooks/useIPCLogin/useLogin';
 import styles from './styles.module.sass';
 import nativeSecLogo from '../../../../../assets/logoNativesec/brand-nativesec.svg';
 import { AuthStateType } from '..';
@@ -32,15 +31,6 @@ export function Login({
 }: LoginProps) {
   const { AuthPassword } = useAuth();
   const [buttonIsLoading, setButtonIsLoading] = useState<boolean>(false);
-
-  function changeButtonIsLoading(isLoading: boolean) {
-    setButtonIsLoading(isLoading);
-  }
-
-  useIPCLogin({
-    changeAuthState,
-    changeButtonIsLoading,
-  });
 
   function handleSubmit(values: SubmitFormType) {
     setButtonIsLoading(true);

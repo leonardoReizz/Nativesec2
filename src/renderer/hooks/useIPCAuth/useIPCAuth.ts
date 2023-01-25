@@ -31,6 +31,29 @@ export function useIPCAuth({
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
+      IPCTypes.AUTH_PASSWORD_RESPONSE,
+      (result: IPCResponse) => {
+        console.log(result);
+        if (result.message === 'ok') {
+          toast.info('Um Token de acesso foi enviado para seu email', {
+            ...toastOptions,
+            toastId: 'sendToken',
+          });
+          // changeButtonIsLoading(false);
+          changeAuthState('token');
+        } else {
+          // changeButtonIsLoading(false);
+          toast.error('Email Invalido, tente novamente.', {
+            ...toastOptions,
+            toastId: 'invalid-email',
+          });
+        }
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
       IPCTypes.AUTH_LOGIN_RESPONSE,
       (result: IIPCResponse) => {
         if (result.message === 'ok') {
@@ -183,6 +206,32 @@ export function useIPCAuth({
               navigate('/home');
             }
           }
+        }
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.CREATE_USER_RESPONSE,
+      (result: IPCResponse) => {
+        console.log(result);
+        if (result.message === 'ok') {
+          changeAuthState('login-step-two');
+          toast.info('Um Token de acesso foi enviado para seu email', {
+            ...toastOptions,
+            toastId: 'sendToken',
+          });
+        } else if (result.message === 'accountExists') {
+          toast.error('Este email já esta cadastrado', {
+            ...toastOptions,
+            toastId: 'accountExists',
+          });
+        } else {
+          toast.error('Erro ao registrar usuario', {
+            ...toastOptions,
+            toastId: 'invalid-email',
+          });
         }
       }
     );
