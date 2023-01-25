@@ -1,6 +1,6 @@
+import { DEFAULT_TYPE } from 'main/database/types';
 import { store } from 'main/main';
-import { IKeys, IToken, IUser } from 'main/types';
-import { KeyRepositoryAPI } from '../../repositories/key-repository-api';
+import { IKeys, IUser } from 'main/types';
 import { KeyRepositoryDatabase } from '../../repositories/key-repository-database';
 
 export class InsertKeysUseCase {
@@ -9,8 +9,6 @@ export class InsertKeysUseCase {
   async execute() {
     const { myEmail, myFullName } = store.get('user') as IUser;
     const { privateKey, publicKey } = store.get('keys') as IKeys;
-    const { accessToken, tokenType } = store.get('token') as IToken;
-    const authorization = `${tokenType} ${accessToken}`;
 
     const dbPrivateKey = await this.keyRepositoryDatabase.getPrivateKey(
       myEmail
@@ -23,35 +21,25 @@ export class InsertKeysUseCase {
       throw new Error('Error get public key in database');
 
     if (dbPrivateKey.length === 0 && dbPublicKey.length === 0) {
-      const createPrivKey = await DBKeys.createPrivateKey({
-        email: myEmail,
+      const createPrivKey = await this.keyRepositoryDatabase.createPrivateKey({
+        email: myEmail.toLowerCase(),
         fullName: myFullName,
         privateKey,
+        defaultType: DEFAULT_TYPE,
       });
 
-      const createPubKey = await DBKeys.createPublicKey({
-        email: myEmail,
+      const createPubKey = await this.keyRepositoryDatabase.createPublicKey({
+        email: myEmail.toLowerCase(),
         fullName: myFullName,
         publicKey,
+        defaultType: DEFAULT_TYPE,
       });
 
       if (createPrivKey === true && createPubKey === true) {
-        return {
-          response: IPCTypes.INSERT_DATABASE_KEYS_RESPONSE,
-          data: {
-            status: 200,
-            data: {
-              status: 'ok',
-            },
-          },
-        };
+        return 'ok';
       }
-      return {
-        response: IPCTypes.INSERT_DATABASE_KEYS_RESPONSE,
-        data: {
-          status: 400,
-        },
-      };
+      return 'nok';
     }
+    return 'ok';
   }
 }

@@ -138,55 +138,55 @@ export async function validatePrivateKeySafetyPhrase(arg: UseIPCData) {
   };
 }
 
-export async function insertDatabaseKeys() {
-  const { myEmail, myFullName } = store.get('user') as types.IUser;
-  const { privateKey, publicKey } = store.get('keys') as types.IKeys;
+// export async function insertDatabaseKeys() {
+//   const { myEmail, myFullName } = store.get('user') as types.IUser;
+//   const { privateKey, publicKey } = store.get('keys') as types.IKeys;
 
-  const dbPrivateKey = await DBKeys.getPrivateKey({ email: myEmail });
-  const dbPublicKey = await DBKeys.getPublicKey({ email: myEmail });
+//   const dbPrivateKey = await DBKeys.getPrivateKey({ email: myEmail });
+//   const dbPublicKey = await DBKeys.getPublicKey({ email: myEmail });
 
-  if (dbPrivateKey.length === 0 && dbPublicKey.length === 0) {
-    const createPrivKey = await DBKeys.createPrivateKey({
-      email: myEmail,
-      fullName: myFullName,
-      privateKey,
-    });
+//   if (dbPrivateKey.length === 0 && dbPublicKey.length === 0) {
+//     const createPrivKey = await DBKeys.createPrivateKey({
+//       email: myEmail,
+//       fullName: myFullName,
+//       privateKey,
+//     });
 
-    const createPubKey = await DBKeys.createPublicKey({
-      email: myEmail,
-      fullName: myFullName,
-      publicKey,
-    });
+//     const createPubKey = await DBKeys.createPublicKey({
+//       email: myEmail,
+//       fullName: myFullName,
+//       publicKey,
+//     });
 
-    if (createPrivKey === true && createPubKey === true) {
-      return {
-        response: IPCTypes.INSERT_DATABASE_KEYS_RESPONSE,
-        data: {
-          status: 200,
-          data: {
-            status: 'ok',
-          },
-        },
-      };
-    }
-    return {
-      response: IPCTypes.INSERT_DATABASE_KEYS_RESPONSE,
-      data: {
-        status: 400,
-      },
-    };
-  }
-  return {
-    response: IPCTypes.INSERT_DATABASE_KEYS_RESPONSE,
-    data: {
-      status: 200,
-      data: {
-        status: 'nok',
-        msg: 'already exists',
-      },
-    },
-  };
-}
+//     if (createPrivKey === true && createPubKey === true) {
+//       return {
+//         response: IPCTypes.INSERT_DATABASE_KEYS_RESPONSE,
+//         data: {
+//           status: 200,
+//           data: {
+//             status: 'ok',
+//           },
+//         },
+//       };
+//     }
+//     return {
+//       response: IPCTypes.INSERT_DATABASE_KEYS_RESPONSE,
+//       data: {
+//         status: 400,
+//       },
+//     };
+//   }
+//   return {
+//     response: IPCTypes.INSERT_DATABASE_KEYS_RESPONSE,
+//     data: {
+//       status: 200,
+//       data: {
+//         status: 'nok',
+//         msg: 'already exists',
+//       },
+//     },
+//   };
+// }
 export async function generateParKeys(arg: UseIPCData) {
   const { accessToken, tokenType } = store.get('token') as types.IToken;
   const { savePrivateKey } = arg.data;
