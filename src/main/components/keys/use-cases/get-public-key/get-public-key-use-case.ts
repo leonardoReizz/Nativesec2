@@ -22,10 +22,11 @@ export class GetPublicKeyUseCase {
       const getPublicKeyInDatabase =
         await this.keyRepositoryDatabase.getPublicKey(myEmail);
 
-      console.log(getPublicKeyInDatabase);
+      console.log(getPublicKeyInDatabase, ' database');
       if (getPublicKeyInDatabase instanceof Error)
         throw new Error('Error get public key in database');
 
+      console.log('passei2');
       if (!getPublicKeyInDatabase[0]) {
         const apiGetPublicKey = await this.keyRepositoryAPI.getPublicKey(
           myEmail,
@@ -50,6 +51,7 @@ export class GetPublicKeyUseCase {
       });
       return 'ok';
     }
+
     const apiGetPublicKey = await this.keyRepositoryAPI.getPublicKey(
       myEmail,
       authorization

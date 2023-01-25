@@ -9,7 +9,6 @@ export class LoginController {
     try {
       const message = await this.loginUseCase.execute(data);
 
-      console.log(message);
       return {
         response: IPCTypes.AUTH_LOGIN_RESPONSE,
         data: {

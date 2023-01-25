@@ -16,7 +16,7 @@ import {
   RunReturn,
 } from './types';
 import { IInitialData, IKeys, IToken, IUser } from '../types';
-import { store } from '../main';
+import { newDatabase, store } from '../main';
 import { api } from '../util';
 
 interface ICreateDatabase {
@@ -202,8 +202,9 @@ const get = async (query: string): Promise<unknown> => {
 };
 
 const run = async (query: string): RunReturn => {
+  const db = newDatabase.getDatabase();
   const run = new Promise((resolve, reject) => {
-    myDatabase.run(query, (err) => {
+    db.run(query, (err) => {
       if (err) {
         console.log(err, 'ERROR RUN DATABASE');
         reject(err);

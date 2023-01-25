@@ -31,14 +31,12 @@ export function useIPCAuth({
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
-      IPCTypes.GET_PUBLIC_KEY_RESPONSE,
+      IPCTypes.AUTH_LOGIN_RESPONSE,
       (result: IIPCResponse) => {
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
-            event: IPCTypes.GET_PRIVATE_KEY,
+            event: IPCTypes.VERIFY_DATABASE_PASSWORD,
           });
-        } else {
-          toast.error('Falha Grave.', { ...toastOptions, toastId: 'error' });
         }
       }
     );
@@ -51,7 +49,7 @@ export function useIPCAuth({
         toast.dismiss('safety-invalid');
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
-            event: IPCTypes.GET_PUBLIC_KEY,
+            event: IPCTypes.GET_PRIVATE_KEY,
           });
         } else {
           if (result.type === 'invalidPassword') {
@@ -73,34 +71,23 @@ export function useIPCAuth({
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
-      IPCTypes.AUTH_LOGIN_RESPONSE,
-      (result: IIPCResponse) => {
+      IPCTypes.GET_PRIVATE_KEY_RESPONSE,
+      (result: IPCResponse) => {
+        console.log('getPrivateKey', result);
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
-            event: IPCTypes.VERIFY_DATABASE_PASSWORD,
+            event: IPCTypes.GET_PUBLIC_KEY,
           });
-        }
-      }
-    );
-  }, []);
-  useEffect(() => {
-    window.electron.ipcRenderer.on(
-      IPCTypes.GET_PRIVATE_KEY_RESPONSE,
-      (result: IIPCResponse) => {
-        switch (result.status) {
-          case 200:
-            // Chave privada encontrada
-            window.electron.ipcRenderer.sendMessage('useIPC', {
-              event: IPCTypes.VALIDATE_PRIVATE_KEY,
-            });
-            break;
-          case 404:
-            // Chave privada não encontrada, usuario deve inserir
-            changeAuthState('searchKey');
-            changeLoadingState('false');
-            break;
-          default:
-            break;
+        } else if (result.message === 'noKey') {
+          changeAuthState('searchKey');
+          changeLoadingState('false');
+        } else if (result.message === 'invalidSafetyPhrase') {
+          changeAuthState('token');
+          changeLoadingState('false');
+          toast.error('Senha Invalida', {
+            ...toastOptions,
+            toastId: 'invalid-safety-phrase',
+          });
         }
       }
     );
@@ -108,28 +95,14 @@ export function useIPCAuth({
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
-      IPCTypes.VALIDATE_PRIVATE_KEY_RESPONSE,
+      IPCTypes.GET_PUBLIC_KEY_RESPONSE,
       (result: IIPCResponse) => {
-        switch (result.status) {
-          case 200:
-            // Chave privada valida
-            window.electron.ipcRenderer.sendMessage('useIPC', {
-              event: IPCTypes.UPDATE_DATABASE,
-            });
-            // window.electron.ipcRenderer.sendMessage('useIPC', {
-            //   event: IPCTypes.INITIALIZEDB,
-            // });
-            break;
-          case 400:
-            // Senha invalida
-            changeAuthState('login');
-            toast.error('Senha Invalida', {
-              ...toastOptions,
-              toastId: 'invalid-safety-phrase',
-            });
-            break;
-          default:
-            break;
+        if (result.message === 'ok') {
+          window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.UPDATE_DATABASE,
+          });
+        } else {
+          toast.error('Falha Grave.', { ...toastOptions, toastId: 'error' });
         }
       }
     );
@@ -159,16 +132,11 @@ export function useIPCAuth({
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.INSERT_DATABASE_KEYS_RESPONSE,
-      (result) => {
-        const myResult = result as IIPCResponse;
-        switch (myResult.status) {
-          case 200:
-            window.electron.ipcRenderer.sendMessage('useIPC', {
-              event: IPCTypes.REFRESH_ALL_ORGANIZATIONS,
-            });
-            break;
-          default:
-            break;
+      (result: IPCResponse) => {
+        if (result.message === 'ok') {
+          window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.REFRESH_ALL_ORGANIZATIONS,
+          });
         }
       }
     );

@@ -1,4 +1,4 @@
-import { IPCTypes } from 'renderer/@types/IPCTypes';
+import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
 import { InsertKeysUseCase } from './insert-keys-use-case';
 
 export class InsertKeysController {

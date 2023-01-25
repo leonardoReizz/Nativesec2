@@ -1,12 +1,7 @@
 /* eslint-disable import/no-mutable-exports */
 import sqlite3 from '@journeyapps/sqlcipher';
-import { store } from '../../main';
-import database from '../../database/database';
-import DB from '../../database';
 import { migration } from '../../database/migrations';
-import { IInitialData, IUser } from '../../types';
 import { IPCTypes } from '../../../renderer/@types/IPCTypes';
-import { UseIPCData } from '..';
 
 export let myDatabase: sqlite3.Database;
 

@@ -1,3 +1,5 @@
+import { getPrivateKeyController } from '../components/keys/use-cases/get-private-key';
+import { insertKeysController } from '../components/keys/use-cases/insert-keys';
 import { generateTokenController } from '../components/auth/use-cases/generateToken';
 import { refreshTokenController } from '../components/auth/use-cases/refreshToken';
 import { loginController } from '../components/auth/use-cases/login';
@@ -16,15 +18,10 @@ import { deleteSafeBoxController } from '../components/safe-box/usecases/delete-
 import { createSafeBoxController } from '../components/safe-box/usecases/create-safe-box';
 import { IPCTypes } from '../../renderer/@types/IPCTypes';
 import { updateDatabase } from './database';
-import {
-  generateParKeys,
-  getPrivateKey,
-  insertDatabaseKeys,
-  validatePrivateKeySafetyPhrase,
-} from './keys';
+import { generateParKeys } from './keys';
 import { getMyInvites, refreshAllOrganizations } from './organizations';
 import { refreshSafeBoxes } from './safeBox';
-import { authPassword, verifyDatabasePassword } from './user';
+import { verifyDatabasePassword } from './user';
 
 export interface UseIPCData {
   id: string;
@@ -50,9 +47,7 @@ export async function useIpcActions(
     case IPCTypes.VERIFY_DATABASE_PASSWORD:
       return verifyDatabasePassword();
     case IPCTypes.GET_PRIVATE_KEY:
-      return getPrivateKey(arg);
-    case IPCTypes.VALIDATE_PRIVATE_KEY:
-      return validatePrivateKeySafetyPhrase(arg);
+      return getPrivateKeyController.handle();
     case IPCTypes.UPDATE_DATABASE:
       return updateDatabase();
     case IPCTypes.REFRESH_ALL_ORGANIZATIONS:
@@ -62,7 +57,7 @@ export async function useIpcActions(
     case IPCTypes.SET_USER_CONFIG:
       return setUserConfigController.handle();
     case IPCTypes.INSERT_DATABASE_KEYS:
-      return insertDatabaseKeys();
+      return insertKeysController.handle();
     case IPCTypes.GET_USER:
       return getUserController.handle();
     case IPCTypes.REFRESH_SAFEBOXES:

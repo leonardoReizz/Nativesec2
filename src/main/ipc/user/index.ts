@@ -1,5 +1,7 @@
 /* eslint-disable promise/always-return */
 import axios from 'axios';
+import fs from 'fs';
+import md5 from 'md5';
 import { IPCTypes } from '../../../renderer/@types/IPCTypes';
 import { newDatabase, store } from '../../main';
 import { IInitialData, IToken, IUser, UseIPCData } from '../../types';
@@ -35,26 +37,29 @@ export async function authPassword(arg: UseIPCData) {
 }
 
 export async function verifyDatabasePassword() {
-  const buildDatabase = await newDatabase.build();
-
-  if (buildDatabase instanceof Error) {
-    if (buildDatabase.message === 'SQLITE_NOTADB: file is not a database') {
+  const { myEmail } = store.get('user') as IUser;
+  const { PATH } = store.get('initialData') as IInitialData;
+  if (fs.existsSync(`${PATH}/database/default/${md5(myEmail)}.sqlite3`)) {
+    console.log(' build no banco de dados ');
+    const buildDatabase = await newDatabase.build();
+    if (buildDatabase instanceof Error) {
+      if (buildDatabase.message === 'SQLITE_NOTADB: file is not a database') {
+        return {
+          response: IPCTypes.VERIFY_DATABASE_PASSWORD_RESPONSE,
+          data: {
+            type: 'invalidPassword',
+            message: 'nok',
+          },
+        };
+      }
       return {
         response: IPCTypes.VERIFY_DATABASE_PASSWORD_RESPONSE,
         data: {
-          type: 'invalidPassword',
           message: 'nok',
         },
       };
     }
-    return {
-      response: IPCTypes.VERIFY_DATABASE_PASSWORD_RESPONSE,
-      data: {
-        message: 'nok',
-      },
-    };
   }
-
   return {
     response: IPCTypes.VERIFY_DATABASE_PASSWORD_RESPONSE,
     data: {

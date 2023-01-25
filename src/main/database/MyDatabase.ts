@@ -25,6 +25,8 @@ export class Database {
       if (DB instanceof Error) {
         return DB;
       }
+
+      console.log(db, ' build');
       this.database = db;
 
       return db;
@@ -32,6 +34,9 @@ export class Database {
     await this.createPATH(PATH);
     const db = await this.createDatabase({ myEmail, PATH });
     await this.init({ db, secret: safetyPhrase });
+    await this.createTables(db);
+
+    console.log(db);
     this.database = db;
 
     return db;
@@ -48,17 +53,6 @@ export class Database {
             console.log(err, ' Init database error');
             reject(err);
           }
-          db.all(
-            `select * from public_keys where email = '' and type='${DEFAULT_TYPE}'`,
-            async (error, rows) => {
-              if (
-                error?.message === 'SQLITE_ERROR: no such table: public_keys'
-              ) {
-                await this.createTables(db);
-              }
-              reject(err);
-            }
-          );
           resolve(db);
         });
       });
