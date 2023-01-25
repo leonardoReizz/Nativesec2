@@ -11,6 +11,7 @@ export class GetUserUseCase {
 
     const getUser = await this.userRepository.getUser(authorization);
 
+    console.log(getUser, ' get User');
     if (getUser.status === 200) {
       store.set('user', {
         ...(store.get('user') as IUser),

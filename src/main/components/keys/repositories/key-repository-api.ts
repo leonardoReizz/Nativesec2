@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { APIResponse } from '../../../types';
 import { api } from '../../../util';
-import { KeyAPI } from '../model/Key';
+import { IPrivateKeyApiModel, IPublicKeyApiModel } from '../model/Key';
 import { KeyRepositoryAPIInterface } from './key-repository-api-interface';
 import * as types from './types';
 
 export class KeyRepositoryAPI implements KeyRepositoryAPIInterface {
   async createPrivateKey(
-    data: types.ICreatePrivateKeyData,
+    data: IPrivateKeyApiModel,
     authorization: string
   ): Promise<APIResponse> {
     return axios
@@ -39,7 +39,7 @@ export class KeyRepositoryAPI implements KeyRepositoryAPIInterface {
   }
 
   async createPublicKey(
-    data: types.ICreatePublicKeyData,
+    data: IPublicKeyApiModel,
     authorization: string
   ): Promise<APIResponse> {
     return axios

@@ -58,8 +58,28 @@ export function useIPCAuth({
       (result: IIPCResponse) => {
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.VERIFY_USER_REGISTERED,
+          });
+        }
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.VERIFY_USER_REGISTERED_RESPONSE,
+      (result: IIPCResponse) => {
+        toast.dismiss('safety-invalid');
+        if (result.message === 'ok') {
+          window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.VERIFY_DATABASE_PASSWORD,
           });
+        } else {
+          toast.error('Erro ao gerar par de chaves', {
+            ...toastOptions,
+            toastId: 'error-generate-par-keys',
+          });
+          changeLoadingState('false');
         }
       }
     );

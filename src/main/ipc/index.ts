@@ -1,3 +1,4 @@
+import { verifyUserRegisteredController } from '../components/user/use-cases/verify-user-registered';
 import { createUserController } from '../components/user/use-cases/create-user';
 import { getPrivateKeyController } from '../components/keys/use-cases/get-private-key';
 import { insertKeysController } from '../components/keys/use-cases/insert-keys';
@@ -45,6 +46,8 @@ export async function useIpcActions(
       return loginController.handle(arg.data);
     case IPCTypes.CREATE_USER:
       return createUserController.handle(arg.data);
+    case IPCTypes.VERIFY_USER_REGISTERED:
+      return verifyUserRegisteredController.handle(arg.data);
     case IPCTypes.REFRESH_TOKEN:
       return refreshTokenController.handle();
     case IPCTypes.VERIFY_DATABASE_PASSWORD:

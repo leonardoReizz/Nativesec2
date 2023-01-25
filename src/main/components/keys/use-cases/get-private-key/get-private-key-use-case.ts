@@ -28,7 +28,7 @@ export class GetPrivateKeyUseCase {
       if (privKey instanceof Error)
         throw new Error('Error get private key database');
 
-      console.log(privKey);
+      console.log(privKey, 'database');
       if (privKey.length === 0) {
         const apiGetPrivateKey = await this.keyRepositoryAPI.getPrivateKey(
           myEmail,
@@ -51,22 +51,22 @@ export class GetPrivateKeyUseCase {
       } else {
         checkKey = privKey[0].private_key;
       }
+    } else {
+      const apiGetPrivateKey = await this.keyRepositoryAPI.getPrivateKey(
+        myEmail,
+        authorization
+      );
+      if (
+        apiGetPrivateKey.data?.status === 'ok' &&
+        apiGetPrivateKey.data?.msg.length > 0
+      ) {
+        checkKey = apiGetPrivateKey.data.msg[0].chave;
+      } else {
+        return 'noKey';
+      }
     }
 
     console.log('aqui');
-
-    const apiGetPrivateKey = await this.keyRepositoryAPI.getPrivateKey(
-      myEmail,
-      authorization
-    );
-    if (
-      apiGetPrivateKey.data?.status === 'ok' &&
-      apiGetPrivateKey.data?.msg.length > 0
-    ) {
-      checkKey = apiGetPrivateKey.data.msg[0].chave;
-    } else {
-      return 'noKey';
-    }
 
     const result = await openpgp.validateKey({
       privateKeyArmored: checkKey,

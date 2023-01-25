@@ -6,7 +6,12 @@ export interface KeyDatabase {
   type: string;
 }
 
-export interface KeyAPI {
+export interface IPrivateKeyApiModel {
   privateKey: string;
+  type: string;
+}
+
+export interface IPublicKeyApiModel {
+  publicKey: string;
   type: string;
 }

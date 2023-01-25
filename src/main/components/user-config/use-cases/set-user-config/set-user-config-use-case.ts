@@ -30,7 +30,7 @@ export class SetUserConfigUseCase {
         if (apiGetPrivateKey.data.msg.length > 0) {
           store.set('userConfig', {
             savePrivateKey: true,
-            refreshTime: '30',
+            refreshTime: 30,
             lastOrganizationId: '',
             theme: 'light',
           });
@@ -46,7 +46,7 @@ export class SetUserConfigUseCase {
           return 'ok';
         }
         store.set('userConfig', {
-          refreshTime: '30',
+          refreshTime: 30,
           theme: 'light',
           savePrivateKey: false,
           lastOrganizationId: '',
