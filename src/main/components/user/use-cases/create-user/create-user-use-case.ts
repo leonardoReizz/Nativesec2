@@ -13,8 +13,6 @@ export class CreateUserUseCase {
       email: data.email.toLowerCase(),
     });
 
-    console.log(createUser);
-
     if (createUser.status === 200 && createUser.data.status === 'ok') {
       store.set('register', { register: true });
       store.set('user', {

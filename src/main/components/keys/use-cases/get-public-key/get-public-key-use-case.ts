@@ -18,15 +18,12 @@ export class GetPublicKeyUseCase {
     const { PATH } = store.get('initialData') as IInitialData;
 
     if (fs.existsSync(`${PATH}/database/default/${md5(myEmail)}.sqlite3`)) {
-      console.log('database');
       const getPublicKeyInDatabase =
         await this.keyRepositoryDatabase.getPublicKey(myEmail);
 
-      console.log(getPublicKeyInDatabase, ' database');
       if (getPublicKeyInDatabase instanceof Error)
         throw new Error('Error get public key in database');
 
-      console.log('passei2');
       if (!getPublicKeyInDatabase[0]) {
         const apiGetPublicKey = await this.keyRepositoryAPI.getPublicKey(
           myEmail,
