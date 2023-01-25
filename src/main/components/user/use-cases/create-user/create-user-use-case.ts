@@ -3,13 +3,17 @@ import { UserRepositoryAPI } from '../../repositories/user-repository-api';
 import { ICreateUserRequestDTO } from './create-user-request-dto';
 
 export class CreateUserUseCase {
-  constructor(private userRepository: UserRepositoryAPI) {}
+  constructor(private userRepositoryAPI: UserRepositoryAPI) {}
 
   async execute(data: ICreateUserRequestDTO) {
-    const createUser = await this.userRepository.create({
+    console.log(data);
+
+    const createUser = await this.userRepositoryAPI.create({
       full_name: data.fullName,
       email: data.email.toLowerCase(),
     });
+
+    console.log(createUser);
 
     if (createUser.status === 200 && createUser.data.status === 'ok') {
       store.set('register', { register: true });

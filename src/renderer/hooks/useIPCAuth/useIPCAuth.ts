@@ -215,7 +215,7 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.CREATE_USER_RESPONSE,
       (result: IPCResponse) => {
-        console.log(result);
+        console.log(result, ' create');
         if (result.message === 'ok') {
           changeAuthState('login-step-two');
           toast.info('Um Token de acesso foi enviado para seu email', {

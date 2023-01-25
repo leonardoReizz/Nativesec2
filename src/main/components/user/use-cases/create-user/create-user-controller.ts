@@ -10,7 +10,7 @@ export class CreateUserController {
       const message = await this.createUserUseCase.execute(data);
 
       return {
-        response: IPCTypes.CREATE_USER,
+        response: IPCTypes.CREATE_USER_RESPONSE,
         data: {
           message,
         },
