@@ -3,6 +3,8 @@ import { store } from '../../../../main';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { OrganizationRepositoryDatabase } from '../../repositories/organization-repository-database';
 import { InviteParticipantRequestDTO } from './invite-participant-request-dto';
+import { OrganizationModelAPI } from '../../model/Organization';
+import { refreshOrganizations } from '../../electronstore/store';
 
 export class InviteParticipantUseCase {
   constructor(
@@ -13,31 +15,53 @@ export class InviteParticipantUseCase {
   async execute(data: InviteParticipantRequestDTO) {
     const { accessToken, tokenType } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
-
-    console.log(data, ' data invite');
     let response;
+
     if (data.type === 'admin') {
       response = await this.organizationRepositoryAPI.inviteAdmin({
         ...data,
         authorization,
       });
     } else {
-      response = await this.organizationRepositoryAPI.inviteAdmin({
+      response = await this.organizationRepositoryAPI.inviteParticipant({
         ...data,
         authorization,
       });
     }
 
-    console.log(response, ' response api invite');
-    // if (response.status === 200 && response.data.status === 'ok') {
-    //   const organizaton = await this.organizationRepositoryDatabase.findById(
-    //     data.organizationId
-    //   );
+    if (response.status === 200 && response.data.status === 'ok') {
+      const organizationUpdated = response.data
+        .detail[0] as OrganizationModelAPI;
 
-    //   if (!(organizaton instanceof Error) && organizaton) {
-    //     const users = JSON.parse(organizaton.convidados_administradores);
-    //     // this.organizationRepositoryDatabase.update()
-    //   }
-    // }
+      const updateDatabase = await this.organizationRepositoryDatabase.update({
+        ...organizationUpdated,
+        _id: organizationUpdated._id.$oid,
+        data_atualizacao: organizationUpdated.data_atualizacao.$date,
+        convidados_administradores: JSON.stringify(
+          organizationUpdated.convidados_administradores
+        ),
+        convidados_participantes: JSON.stringify(
+          organizationUpdated.convidados_participantes
+        ),
+        participantes: JSON.stringify(organizationUpdated.participantes),
+        administradores: JSON.stringify(organizationUpdated.administradores),
+      });
+
+      console.log(organizationUpdated);
+
+      if (updateDatabase instanceof Error) {
+        throw new Error(
+          `Error update organization in Invite Participant Use Case: ${updateDatabase}`
+        );
+      }
+      await refreshOrganizations();
+      return {
+        message: 'ok',
+        data: { organizationId: organizationUpdated._id.$oid },
+      };
+    }
+    throw new Error(
+      `Error Invite Participant ${data.type} in API: ${response}`
+    );
   }
 }

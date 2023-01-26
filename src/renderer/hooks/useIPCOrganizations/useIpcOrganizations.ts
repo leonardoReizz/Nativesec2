@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { IIPCResponse } from 'renderer/@types/types';
 import { toastOptions } from 'renderer/utils/options/Toastify';
+import { IPCResponse } from '../useIPCSafeBox/types';
 import { useLoading } from '../useLoading';
 import { useOrganization } from '../useOrganization/useOrganization';
 import * as types from './types';
@@ -86,4 +87,28 @@ export function useIpcOrganization() {
       }
     );
   }, [currentOrganization]);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.ADD_NEW_PARTICIPANT_ORGANIZATION_RESPONSE,
+      async (result: IPCResponse) => {
+        console.log(result);
+        if (result.message === 'ok') {
+          refreshOrganizations();
+          changeCurrentOrganization(undefined);
+          console.log(window.electron.store.get('organizations'));
+          changeCurrentOrganization(result.data.organizationId);
+          toast.success('Convite enviado.', {
+            ...toastOptions,
+            toastId: 'updated-organization',
+          });
+        } else {
+          toast.error('Erro ao enviar convite.', {
+            ...toastOptions,
+            toastId: 'organization-error',
+          });
+        }
+      }
+    );
+  }, []);
 }

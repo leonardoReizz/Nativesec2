@@ -54,6 +54,8 @@ export function organizationsReducer(state: OrganizationsState, action: any) {
         }
       );
 
+      console.log(currentOrganizationIconIndex);
+
       return produce(state, (draft) => {
         draft.currentOrganization =
           state.organizations[currentOrganizationIndex];

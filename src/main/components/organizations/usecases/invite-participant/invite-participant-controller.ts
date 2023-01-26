@@ -7,12 +7,10 @@ export class InviteParticipantController {
 
   async handle(data: InviteParticipantRequestDTO) {
     try {
-      await this.addNewParticipantUseCase.execute(data);
+      const response = await this.addNewParticipantUseCase.execute(data);
       return {
         response: IPCTypes.ADD_NEW_PARTICIPANT_ORGANIZATION_RESPONSE,
-        data: {
-          message: 'ok',
-        },
+        data: response,
       };
     } catch (error) {
       return {

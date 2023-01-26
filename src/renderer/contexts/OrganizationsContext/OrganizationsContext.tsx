@@ -73,12 +73,16 @@ export function OrganizationsContextProvider({
     dispatch(
       updateOrganizationsIconsAction(window.electron.store.get('iconeAll'))
     );
+
+    console.log('acabei de atualizar os cofres');
   }
 
   function changeCurrentOrganization(
     newCurrentOrganizationId: string | undefined
   ) {
     dispatch(changeCurrentOrganizationAction(newCurrentOrganizationId));
+
+    console.log('acabei de trocara  organiza');
   }
 
   function updateOrganizationsInvites(
