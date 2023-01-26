@@ -28,9 +28,8 @@ export class VerifyUserRegisteredUseCase {
       apiGetPublicKey.status === 200 &&
       apiGetPublicKey.data?.msg?.length === 0
     ) {
-      store.set('userConfig', {
-        savePrivateKey: data.savePrivateKey ? data.savePrivateKey : false,
-      });
+      console.log('create keys');
+
       const keys = await openpgp.generateParKeys(user);
 
       if (keys) {
@@ -67,10 +66,8 @@ export class VerifyUserRegisteredUseCase {
 
         return 'ok';
       }
-
       return 'nok';
     }
-
     return 'ok';
   }
 }
