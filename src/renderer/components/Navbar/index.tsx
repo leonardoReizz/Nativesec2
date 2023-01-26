@@ -1,13 +1,16 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { MdSettings } from 'react-icons/md';
 import { FaBell, FaUser } from 'react-icons/fa';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import styles from './styles.module.sass';
 
 export function Navbar() {
   const { theme } = useUserConfig();
+
+  const [notifications, setNotifications] = useState<any[]>([]);
+
   const {
     currentOrganization,
     currentOrganizationIcon,
@@ -17,6 +20,7 @@ export function Navbar() {
 
   const { pathname } = useLocation();
 
+  console.log(pathname);
   function handleOpenUserSettings() {
     changeCurrentOrganization(undefined);
     navigate('/userSettings');
@@ -33,34 +37,28 @@ export function Navbar() {
       }`}
     >
       <div className={styles.title}>
-        {currentOrganization ? (
-          <>
-            {currentOrganizationIcon?.icone !== (null || 'null') ? (
-              <img
-                src={currentOrganizationIcon?.icone}
-                alt="ICONE DO WORKSPACE"
-              />
-            ) : (
-              ''
-            )}
-          </>
-        ) : (
-          ''
+        {pathname === '/userSettings' && <h3>Configurações do Usuario</h3>}
+        {pathname === '/workspaceSettings' && currentOrganization && (
+          <h3>Configurações do Organização</h3>
         )}
-        <h3>{currentOrganization?.nome}</h3>
       </div>
       <div className={styles.icons}>
-        <button
-          type="button"
-          onClick={handleOpenWorkspaceSettings}
-          className={`${
-            pathname === '/workspaceSettings' ? styles.selected : ''
-          }`}
-        >
-          <MdSettings />
-        </button>
+        {currentOrganization && (
+          <button
+            type="button"
+            onClick={handleOpenWorkspaceSettings}
+            className={`${
+              pathname === '/workspaceSettings' ? styles.selected : ''
+            } ${styles.workspaceSettings}`}
+          >
+            <MdSettings />
+          </button>
+        )}
         <div className={styles.iconsUser}>
-          <button type="button">
+          <button
+            type="button"
+            className={`${notifications.length > 0 ? styles.selected : ''}`}
+          >
             <FaBell />
           </button>
           <button

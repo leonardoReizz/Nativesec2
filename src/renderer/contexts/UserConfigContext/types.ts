@@ -14,6 +14,7 @@ export interface UserConfigContextType {
   lastOrganizationId: string;
   refreshTime: number;
   theme: ThemeType;
+  email: string;
   savePrivateKey: string;
   updateUserConfig: (newUserConfig: IUserConfig) => void;
   updateLastOrganizationId: (newLastOrganizationId: string) => void;

@@ -25,10 +25,14 @@ export function ViewSafeBox() {
 
   return (
     <div className={styles.currentSafeBox}>
-      <HeaderSafeBox />
-      <main>
-        <MainSafeBox />
-      </main>
+      {currentSafeBox && (
+        <>
+          <HeaderSafeBox />
+          <main>
+            <MainSafeBox />
+          </main>
+        </>
+      )}
     </div>
   );
 }

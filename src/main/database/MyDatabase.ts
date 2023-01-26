@@ -26,7 +26,6 @@ export class Database {
         return DB;
       }
 
-      console.log(db, ' build');
       this.database = db;
 
       return db;
@@ -36,7 +35,6 @@ export class Database {
     await this.init({ db, secret: safetyPhrase });
     await this.createTables(db);
 
-    console.log(db);
     this.database = db;
 
     return db;

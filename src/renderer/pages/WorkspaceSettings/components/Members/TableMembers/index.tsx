@@ -10,6 +10,7 @@ interface TableMembersProps {
 
 export function TableMembers({ title, options, callback }: TableMembersProps) {
   const { theme } = useUserConfig();
+
   return (
     <div
       className={`${styles.tableMembers} ${
@@ -20,13 +21,14 @@ export function TableMembers({ title, options, callback }: TableMembersProps) {
         <h4>{title}</h4>
       </div>
       <div className={styles.membersSection}>
-        {options?.map((user: string) => (
+        {options?.map((option: string) => (
           <div className={styles.participant}>
             <div className={styles.info}>
-              <div className={styles.img}>{user[0]}</div>
-              <span>{user}</span>
+              <div className={styles.img}>{option[0]}</div>
+              <span>{option}</span>
             </div>
-            <button type="button" onClick={() => callback(user)}>
+
+            <button type="button" onClick={() => callback(option)}>
               <BsFillTrashFill />
             </button>
           </div>

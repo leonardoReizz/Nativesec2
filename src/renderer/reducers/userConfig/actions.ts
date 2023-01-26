@@ -17,7 +17,7 @@ export function updateLastOrganizationIdAction(newLastOrganizationId: string) {
   };
 }
 
-export function updateRefreshTimeAction(newRefreshTime: string) {
+export function updateRefreshTimeAction(newRefreshTime: number) {
   return {
     type: ActionType.UPDATE_REFRESH_TIME,
     payload: {

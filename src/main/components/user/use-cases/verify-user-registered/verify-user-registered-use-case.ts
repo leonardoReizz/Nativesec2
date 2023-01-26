@@ -1,21 +1,21 @@
-import { DEFAULT_TYPE } from '../../../../database/types';
 import { KeyRepositoryDatabase } from '../../../keys/repositories/key-repository-database';
 import openpgp from '../../../../crypto/openpgp';
 import { KeyRepositoryAPI } from '../../../keys/repositories/key-repository-api';
 import { store } from '../../../../main';
 import { IToken, IUser } from '../../../../types';
 import { IVerifyUserRegisteredRequestDTO } from './verify-user-registered-request-dto';
+import { UserRepositoryAPI } from '../../repositories/user-repository-api';
 
 export class VerifyUserRegisteredUseCase {
   constructor(
     private keyRepositoryAPI: KeyRepositoryAPI,
-    private keyRepositoryDatabase: KeyRepositoryDatabase
+    private keyRepositoryDatabase: KeyRepositoryDatabase,
+    private userRepositoryAPI: UserRepositoryAPI
   ) {}
 
   async execute(data: IVerifyUserRegisteredRequestDTO) {
     const { accessToken, tokenType } = store.get('token') as IToken;
-    const { myEmail } = store.get('user') as IUser;
-    const user = store.get('user') as IUser;
+    const { myEmail, safetyPhrase } = store.get('user') as IUser;
 
     const authorization = `${tokenType} ${accessToken}`;
 
@@ -28,34 +28,30 @@ export class VerifyUserRegisteredUseCase {
       apiGetPublicKey.status === 200 &&
       apiGetPublicKey.data?.msg?.length === 0
     ) {
-      console.log('create keys');
+      const getUser = await this.userRepositoryAPI.getUser(authorization);
 
-      const keys = await openpgp.generateParKeys(user);
+      const keys = await openpgp.generateParKeys({
+        myEmail: getUser.data.email,
+        myFullName: getUser.data.full_name,
+        safetyPhrase,
+      });
 
       if (keys) {
-        await this.keyRepositoryDatabase.createPrivateKey({
-          email: user.myEmail,
-          fullName: user.myFullName,
-          privateKey: keys.privateKey,
-          defaultType: DEFAULT_TYPE,
-        });
-
-        await this.keyRepositoryDatabase.createPublicKey({
-          email: user.myEmail,
-          fullName: user.myFullName,
-          publicKey: keys.publicKey,
-          defaultType: DEFAULT_TYPE,
-        });
-
         store.set('keys', {
           privateKey: keys.privateKey,
           publicKey: keys.publicKey,
         });
 
-        await this.keyRepositoryAPI.createPublicKey(
+        const createPublic = await this.keyRepositoryAPI.createPublicKey(
           { publicKey: keys.publicKey, type: 'rsa' },
           authorization
         );
+
+        if (createPublic.status !== 200 || createPublic.data.status !== 'ok') {
+          throw new Error(
+            `Erro create public key api: ${JSON.stringify(createPublic)}`
+          );
+        }
 
         if (data?.savePrivateKey) {
           await this.keyRepositoryAPI.createPrivateKey(

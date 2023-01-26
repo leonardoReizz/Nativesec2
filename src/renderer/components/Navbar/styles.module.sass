@@ -57,10 +57,23 @@
     img
       max-width: 30px
 
+  .workspaceSettings
+    position: relative
+    &::before
+      content: ''
+      position: absolute
+      height: 25px
+      width: 1px
+      border-radius: 5rem
+      top: 5px
+      background-color: $gray-600
+      right: -1rem
+      cursor: default
   .icons
     @include flex(center, center, row)
     gap: 1rem
     margin-right: 2rem
+
 
     button
       @include flex(center, center, row)
@@ -74,21 +87,10 @@
 
     .iconsUser
       @include flex(center, center, row)
-      gap: 1rem
+      gap: .5rem
 
       button
         svg
           font-size: 1.1rem
         &:first-child
           margin-left: 1rem
-          position: relative
-          &::before
-            content: ''
-            position: absolute
-            height: 25px
-            width: 1px
-            border-radius: 5rem
-            top: 5px
-            background-color: $gray-600
-            left: -1rem
-            cursor: default

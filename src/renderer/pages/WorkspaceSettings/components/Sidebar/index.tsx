@@ -15,7 +15,7 @@ export function Sidebar({
   workspaceSettingsState,
   updateWorkspaceSettingsState,
 }: SidebarProps) {
-  const { currentOrganizationIcon } = useOrganization();
+  const { currentOrganizationIcon, currentOrganization } = useOrganization();
   const { theme } = useUserConfig();
 
   const organizationIcon =
@@ -31,6 +31,7 @@ export function Sidebar({
     >
       <header>
         <img src={organizationIcon} alt="" />
+        <h3>{currentOrganization?.nome}</h3>
       </header>
       <main>
         <ul>

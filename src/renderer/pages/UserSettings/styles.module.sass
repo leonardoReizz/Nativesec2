@@ -5,6 +5,8 @@
 // --------------------------------------------------------------
 
 .userSettings.light
+  @include scroolbarDark()
+
   .box.noHover
     background-color: $gray-100 !important
   .box
@@ -20,6 +22,8 @@
 
 .userSettings.dark
   color: $white
+
+  @include scroolbarLight()
 
   .box.noHover
     background-color: $gray-800 !important
@@ -38,8 +42,10 @@
 // --------------------------------------------------------------
 
 .userSettings
-  @include flex(center, center, row)
+  @include flex(flex-start, center, row)
   width: 100%
+
+  overflow: auto
 
   .container
     @include flex(flex-start, center, column)
@@ -53,11 +59,19 @@
       font-family: 'Anek Devanagari', sans-serif
       font-weight: 500
 
+    .leaveButton
+      background-color: $red-100
+      max-width: 200px
+      &:hover
+        background-color: $red-100-hover
+
     .box.dropdown
       span
         flex: 2
       >div
         flex: 1
+
+
     .box
       @include flex(center, space-between, row)
       width: 100%
@@ -73,14 +87,6 @@
 
         svg
           font-size: 1.2rem
-      // select
-      //   background: transparent
-      //   border: 1px solid $gray-700
-      //   outline: 0
-      //   color: $white
-      //   min-width: 100px
-      //   padding: .5rem
-
 
       .checkBox
         width: 15px

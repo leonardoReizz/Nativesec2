@@ -6,7 +6,7 @@ import styles from './styles.module.sass';
 
 interface IItem {
   id: number;
-  value: string;
+  value: string | number;
   label: string;
 }
 

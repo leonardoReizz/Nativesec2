@@ -7,11 +7,11 @@ import { SafeBoxInfo } from 'renderer/components/SafeBox';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
-import { IUserConfig } from 'main/ipc/user/types';
 import { useIPCSafeBox } from 'renderer/hooks/useIPCSafeBox/useIPCSafeBox';
 import { CreateSafeBoxContextProvider } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
+import { IUserConfig } from 'renderer/contexts/UserConfigContext/types';
 import styles from './styles.module.sass';
 import { ViewSafeBox } from './ViewSafeBox';
 

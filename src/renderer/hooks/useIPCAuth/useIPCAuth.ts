@@ -27,13 +27,13 @@ export function useIPCAuth({
     updateOrganizationsIcons,
     updateOrganizations,
     changeCurrentOrganization,
+    organizations,
   } = useContext(OrganizationsContext);
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.AUTH_PASSWORD_RESPONSE,
       (result: IPCResponse) => {
-        console.log(result);
         if (result.message === 'ok') {
           toast.info('Um Token de acesso foi enviado para seu email', {
             ...toastOptions,
@@ -116,7 +116,6 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_PRIVATE_KEY_RESPONSE,
       (result: IPCResponse) => {
-        console.log('getPrivateKey', result);
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.GET_PUBLIC_KEY,
@@ -210,32 +209,28 @@ export function useIPCAuth({
           changeLoadingState('finalized');
           // handleRefreshTime(Number(userConfig.refreshTime));
           if (userConfig.lastOrganizationId === null) {
-            navigate('/home');
+            navigate('/createOrganization');
           } else {
-            // const filter = organizations?.filter((org) => {
-            //   if (org._id === userConfig.lastOrganizationId) {
-            //     return org;
-            //   }
-            //   return undefined;
-            // });
-            const filter = [];
+            const filter = organizations?.filter(
+              (org) => org._id === userConfig.lastOrganizationId
+            );
+
             if (filter.length > 0) {
               changeCurrentOrganization(userConfig.lastOrganizationId);
               navigate(`/workspace/${userConfig.lastOrganizationId}`);
             } else {
-              navigate('/home');
+              navigate('/createOrganization');
             }
           }
         }
       }
     );
-  }, []);
+  }, [organizations]);
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.CREATE_USER_RESPONSE,
       (result: IPCResponse) => {
-        console.log(result, ' create');
         if (result.message === 'ok') {
           changeAuthState('login-step-two');
           toast.info('Um Token de acesso foi enviado para seu email', {

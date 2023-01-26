@@ -6,20 +6,30 @@ import { Dropdown } from 'renderer/components/Dropdown';
 import Buffer from 'buffer';
 import { useIPCUserConfig } from 'renderer/hooks/useIPCUserConfig.ts';
 import { IKeys, IUser } from 'main/types';
+import { Button } from 'renderer/components/Buttons/Button';
 import styles from './styles.module.sass';
+
+interface IItem {
+  id: number;
+  value: number | string;
+  label: string;
+}
 
 const refreshTimeOptions = [
   {
     id: 1,
-    value: '15',
+    value: 15,
+    label: '15',
   },
   {
     id: 2,
-    value: '30',
+    value: 30,
+    label: '30',
   },
   {
     id: 3,
-    value: '60',
+    value: 60,
+    label: '60',
   },
 ];
 
@@ -60,8 +70,9 @@ export function UserSettings() {
     const { privateKey } = window.electron.store.get('keys') as IKeys;
     saveFile(privateKey);
   }
-  function changeValue(value: string) {
-    updateRefreshTime(Number(value));
+
+  function changeValue(item: IItem) {
+    updateRefreshTime(Number(item.value));
   }
 
   function handleSavePrivateKey() {
@@ -76,6 +87,8 @@ export function UserSettings() {
       }`}
     >
       <div className={styles.container}>
+        <h3>Sessão</h3>
+        <Button text="Encerrar Sessão" className={styles.leaveButton} />
         <h3>Segurança</h3>
         <div className={styles.box} onClick={handleExportKey}>
           <div>
@@ -122,13 +135,8 @@ export function UserSettings() {
             options={refreshTimeOptions}
             valueText="segundos"
             value={String(refreshTime)}
-            onChange={(value) => changeValue(value)}
+            onChange={(item) => changeValue(item)}
           />
-          {/* <select name="" id="">
-            <option value="">15 Segundos</option>
-            <option value="">30 Segundos</option>
-            <option value="">60 Segundos</option>
-          </select> */}
         </div>
       </div>
     </div>

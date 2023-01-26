@@ -24,7 +24,8 @@ export function UserConfigContextProvider({
     email: '',
   });
 
-  const { lastOrganizationId, refreshTime, theme, savePrivateKey } = userConfig;
+  const { lastOrganizationId, refreshTime, theme, savePrivateKey, email } =
+    userConfig;
 
   function updateUserConfig(newUserConfig: types.IUserConfig) {
     dispath(updateUserConfigAction(newUserConfig));
@@ -34,7 +35,7 @@ export function UserConfigContextProvider({
     dispath(updateLastOrganizationIdAction(newLastOrganizationId));
   }
 
-  function updateRefreshTime(newRefreshTime: string) {
+  function updateRefreshTime(newRefreshTime: number) {
     dispath(updateRefreshTimeAction(newRefreshTime));
   }
 
@@ -51,6 +52,7 @@ export function UserConfigContextProvider({
       value={{
         lastOrganizationId,
         refreshTime,
+        email,
         theme,
         savePrivateKey,
         updateLastOrganizationId,

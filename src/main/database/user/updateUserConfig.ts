@@ -20,17 +20,4 @@ export async function updateUserConfig({
       WHERE email = '${myEmail}'
     `
   );
-  // return db.run(
-  //   `UPDATE user_config SET
-  //     lastOrganizationId = '${userConfig.lastOrganizationId}',
-  //     refreshTime = '${userConfig.refreshTime}',
-  //     theme = '${userConfig.theme}',
-  //     savePrivateKey = '${userConfig.savePrivateKey}'
-  //     where email = '${myEmail}'`,
-  //   (err) => {
-  //     if (err) {
-  //       console.log(err, ' updateUserConfig Error');
-  //     }
-  //   }
-  // );
 }

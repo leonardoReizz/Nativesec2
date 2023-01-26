@@ -52,21 +52,24 @@ export class GetPrivateKeyUseCase {
         checkKey = privKey[0].private_key;
       }
     } else {
-      const apiGetPrivateKey = await this.keyRepositoryAPI.getPrivateKey(
-        myEmail,
-        authorization
-      );
-      if (
-        apiGetPrivateKey.data?.status === 'ok' &&
-        apiGetPrivateKey.data?.msg.length > 0
-      ) {
-        checkKey = apiGetPrivateKey.data.msg[0].chave;
+      const keys = store.get('keys') as IKeys;
+      if (keys.privateKey) {
+        checkKey = keys.privateKey;
       } else {
-        return 'noKey';
+        const apiGetPrivateKey = await this.keyRepositoryAPI.getPrivateKey(
+          myEmail,
+          authorization
+        );
+        if (
+          apiGetPrivateKey.data?.status === 'ok' &&
+          apiGetPrivateKey.data?.msg.length > 0
+        ) {
+          checkKey = apiGetPrivateKey.data.msg[0].chave;
+        } else {
+          return 'noKey';
+        }
       }
     }
-
-    console.log('aqui');
 
     const result = await openpgp.validateKey({
       privateKeyArmored: checkKey,

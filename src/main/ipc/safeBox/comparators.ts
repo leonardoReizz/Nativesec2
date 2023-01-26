@@ -122,7 +122,6 @@ const safeBoxComparator = async (
         arrayUpdate.push(listAPISafeBox[i]);
       }
     }
-    console.log(arrayUpdate, ' arrayUpdate safebox');
     if (arrayUpdate.length > 0) {
       await Promise.all(
         arrayUpdate.map((item) => {

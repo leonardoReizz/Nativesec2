@@ -6,8 +6,6 @@ export class CreateUserUseCase {
   constructor(private userRepositoryAPI: UserRepositoryAPI) {}
 
   async execute(data: ICreateUserRequestDTO) {
-    console.log(data);
-
     const createUser = await this.userRepositoryAPI.create({
       full_name: data.fullName,
       email: data.email.toLowerCase(),

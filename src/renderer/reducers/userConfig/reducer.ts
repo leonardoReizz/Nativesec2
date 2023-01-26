@@ -1,10 +1,11 @@
 import produce from 'immer';
+import { ThemeType } from 'renderer/contexts/UserConfigContext/types';
 import { ActionType } from './actions';
 
 interface UserConfigState {
   lastOrganizationId: string;
   refreshTime: number;
-  theme: string;
+  theme: ThemeType;
   savePrivateKey: string;
   email: '';
 }

@@ -15,7 +15,7 @@ export class KeyRepositoryAPI implements KeyRepositoryAPIInterface {
         `${api}/privatekey/`,
         {
           chave: data.privateKey,
-          tipo: 'rsa',
+          tipo: data.type,
         },
         {
           headers: {
@@ -44,10 +44,10 @@ export class KeyRepositoryAPI implements KeyRepositoryAPIInterface {
   ): Promise<APIResponse> {
     return axios
       .post(
-        `${api}/privatekey/`,
+        `${api}/pubkey/`,
         {
           chave: data.publicKey,
-          tipo: 'rsa',
+          tipo: data.type,
         },
         {
           headers: {
