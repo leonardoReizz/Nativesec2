@@ -47,12 +47,12 @@ export class GenerateParKeysUseCase {
           publicKey: keys.publicKey,
         });
 
-        await APIKey.createPublicKey({
+        await this.keyRepositoryAPI.createPublicKey({
           authorization: `${tokenType} ${accessToken}`,
           publicKey: keys.publicKey,
         });
         if (savePrivateKey) {
-          await APIKey.createPrivateKey({
+          await this.keyRepositoryAPI.createPrivateKey({
             authorization: `${tokenType} ${accessToken}`,
             privateKey: keys.privateKey,
           });

@@ -27,3 +27,15 @@ export interface IUpdateOrganizationIcon {
   organizationId: string;
   icon: string;
 }
+
+export interface IRemoveParticipantData {
+  organizationId: string;
+  email: string;
+  authorization: string;
+}
+
+export interface IRemoveAdminData {
+  organizationId: string;
+  email: string;
+  authorization: string;
+}

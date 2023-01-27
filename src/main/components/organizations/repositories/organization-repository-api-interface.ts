@@ -8,4 +8,6 @@ export interface IOrganizationRepositoryAPI {
   inviteAdmin(data: types.InviteAdminData): Promise<APIResponse>;
   delete(organizationId: string): Promise<APIResponse>;
   update(data: types.IUpdateData, authorization: string): Promise<APIResponse>;
+  removeParticipant(data: types.IRemoveParticipantData): Promise<APIResponse>;
+  removeAdmin(data: types.IRemoveAdminData): Promise<APIResponse>;
 }

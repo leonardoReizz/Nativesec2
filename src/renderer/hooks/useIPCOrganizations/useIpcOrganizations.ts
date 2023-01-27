@@ -111,4 +111,27 @@ export function useIpcOrganization() {
       }
     );
   }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.REMOVE_PARTICIPANT_RESPONSE,
+      async (result: IPCResponse) => {
+        console.log(result);
+        if (result.message === 'ok') {
+          refreshOrganizations();
+          changeCurrentOrganization(undefined);
+          changeCurrentOrganization(result.data.organizationId);
+          toast.success('Participante removido.', {
+            ...toastOptions,
+            toastId: 'removed-participant',
+          });
+        } else {
+          toast.error('Erro ao remover participante.', {
+            ...toastOptions,
+            toastId: 'remove-participant-error',
+          });
+        }
+      }
+    );
+  }, []);
 }

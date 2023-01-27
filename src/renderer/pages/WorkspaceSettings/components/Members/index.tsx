@@ -19,13 +19,19 @@ interface IAddUserData {
   };
 }
 
+interface ICurrentUserDelete {
+  email: string;
+  type: 'admin' | 'participant';
+}
+
 export function Members() {
-  const { currentOrganization, addNewParticipant } = useOrganization();
+  const { currentOrganization, addNewParticipant, removeUser } =
+    useOrganization();
   const { theme } = useUserConfig();
 
-  const [currentUserDelete, setCurrentUserDelete] = useState<string | null>(
-    null
-  );
+  const [currentUserDelete, setCurrentUserDelete] = useState<
+    ICurrentUserDelete | undefined
+  >();
   const [membersState, setMembersState] = useState<MembersState>('participant');
 
   const [isOpenVerifyNameModal, setIsOpenVerifyNameModal] =
@@ -45,8 +51,13 @@ export function Members() {
     setIsOpenFieldModal(true);
   }
 
-  function handleDeleteUser(user: string) {
-    setCurrentUserDelete(user);
+  function handleDeleteUser(email: string, type: 'admin' | 'participant') {
+    setCurrentUserDelete({ email, type });
+    setIsOpenVerifyNameModal(true);
+  }
+
+  function handleRemoveInvite(email: string, type: 'admin' | 'participant') {
+    setCurrentUserDelete({ email, type });
     setIsOpenVerifyNameModal(true);
   }
 
@@ -60,6 +71,17 @@ export function Members() {
     }
   }
 
+  function remove(verified: boolean) {
+    if (verified && currentOrganization && currentUserDelete) {
+      removeUser({
+        organizationId: currentOrganization._id,
+        email: currentUserDelete?.email,
+        type: currentUserDelete?.type,
+      });
+      setCurrentUserDelete(undefined);
+    }
+  }
+
   const options = [
     { id: 1, value: 'participant', label: 'Participante' },
     { id: 2, value: 'admin', label: 'Administrador' },
@@ -69,9 +91,9 @@ export function Members() {
     <>
       <VerifyNameModal
         title="Confirme o email do usuario"
-        nameToVerify={currentUserDelete}
+        nameToVerify={currentUserDelete?.email}
         inputText="Email"
-        callback={() => {}}
+        callback={(verified) => remove(verified)}
         isOpen={isOpenVerifyNameModal}
         onRequestClose={handleCloseVerifyNameModal}
       />
@@ -122,12 +144,12 @@ export function Members() {
               <TableMembers
                 title="Administradores"
                 options={JSON.parse(currentOrganization.administradores)}
-                callback={(user) => handleDeleteUser(user)}
+                callback={(user) => handleDeleteUser(user, 'admin')}
               />
               <TableMembers
                 title="Participantes"
                 options={JSON.parse(currentOrganization.participantes)}
-                callback={(user) => handleDeleteUser(user)}
+                callback={(user) => handleDeleteUser(user, 'participant')}
               />
             </>
           )}
@@ -139,14 +161,14 @@ export function Members() {
                 options={JSON.parse(
                   currentOrganization.convidados_administradores
                 )}
-                callback={(user) => handleDeleteUser(user)}
+                callback={(user) => handleRemoveInvite(user, 'admin')}
               />
               <TableMembers
                 title="Convidados Participantes"
                 options={JSON.parse(
                   currentOrganization.convidados_participantes
                 )}
-                callback={(user) => handleDeleteUser(user)}
+                callback={(user) => handleRemoveInvite(user, 'participant')}
               />
             </>
           )}

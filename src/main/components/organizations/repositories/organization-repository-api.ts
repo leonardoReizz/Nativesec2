@@ -132,4 +132,58 @@ export class OrganizationRepositoryAPI implements IOrganizationRepositoryAPI {
         };
       });
   }
+
+  async removeParticipant(
+    data: types.IRemoveParticipantData
+  ): Promise<APIResponse> {
+    return axios
+      .delete(`${api}/organizacao/user/participant/`, {
+        headers: {
+          Authorization: data.authorization,
+        },
+        params: {
+          id: data.organizationId,
+          user: data.email,
+        },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERROR API DELETE PARTICIPANT ORGANIZATION');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
+
+  async removeAdmin(data: types.IRemoveAdminData): Promise<APIResponse> {
+    return axios
+      .delete(`${api}/organizacao/user/admin/`, {
+        headers: {
+          Authorization: data.authorization,
+        },
+        params: {
+          id: data.organizationId,
+          user: data.email,
+        },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERROR API DELETE PARTICIPANT ORGANIZATION');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
 }

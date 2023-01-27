@@ -2,32 +2,35 @@ import { IToken } from '../../../../types';
 import { store } from '../../../../main';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { OrganizationRepositoryDatabase } from '../../repositories/organization-repository-database';
-import { InviteParticipantRequestDTO } from './invite-participant-request-dto';
+import { IRemoveParticipantRequestDTO } from './remove-participant-request-dto';
 import { OrganizationModelAPI } from '../../model/Organization';
 import { refreshOrganizations } from '../../electronstore/store';
 
-export class InviteParticipantUseCase {
+export class RemoveParticipantUseCase {
   constructor(
     private organizationRepositoryAPI: OrganizationRepositoryAPI,
     private organizationRepositoryDatabase: OrganizationRepositoryDatabase
   ) {}
 
-  async execute(data: InviteParticipantRequestDTO) {
+  async execute(data: IRemoveParticipantRequestDTO) {
     const { accessToken, tokenType } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
+
     let response;
 
     if (data.type === 'admin') {
-      response = await this.organizationRepositoryAPI.inviteAdmin({
+      response = await this.organizationRepositoryAPI.removeAdmin({
         ...data,
         authorization,
       });
     } else {
-      response = await this.organizationRepositoryAPI.inviteParticipant({
+      response = await this.organizationRepositoryAPI.removeParticipant({
         ...data,
         authorization,
       });
     }
+
+    console.log(response);
 
     if (response.status === 200 && response.data.status === 'ok') {
       const organizationUpdated = response.data
@@ -49,7 +52,7 @@ export class InviteParticipantUseCase {
 
       if (updateDatabase instanceof Error) {
         throw new Error(
-          `Error update organization in Invite Participant Use Case: ${updateDatabase}`
+          `Error update organization in Remove Participant Use Case: ${updateDatabase}`
         );
       }
       await refreshOrganizations();
@@ -59,7 +62,7 @@ export class InviteParticipantUseCase {
       };
     }
     throw new Error(
-      `Error Invite Participant ${data.type} in API: ${response}`
+      `Error Remove Participant ${data.type} in API: ${response}`
     );
   }
 }

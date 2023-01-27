@@ -1,3 +1,4 @@
+import { removeParticipantController } from '../components/organizations/usecases/remove-participant';
 import { verifyUserRegisteredController } from '../components/user/use-cases/verify-user-registered';
 import { createUserController } from '../components/user/use-cases/create-user';
 import { getPrivateKeyController } from '../components/keys/use-cases/get-private-key';
@@ -92,6 +93,8 @@ export async function useIpcActions(
       return inviteParticipantController.handle(arg.data);
     case IPCTypes.UPDATE_ORGANIZATION:
       return updateOrganizationController.handle(arg.data);
+    case IPCTypes.REMOVE_PARTICIPANT:
+      return removeParticipantController.handle(arg.data);
     default:
       return {
         response: 'none',

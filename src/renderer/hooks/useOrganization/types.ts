@@ -20,3 +20,9 @@ export interface IUpdateOrganizationData {
   description: string;
   icon: string;
 }
+
+export interface IRemoveUser {
+  organizationId: string;
+  email: string;
+  type: 'admin' | 'participant';
+}
