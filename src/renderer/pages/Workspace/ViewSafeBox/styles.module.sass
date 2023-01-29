@@ -1,17 +1,17 @@
 @use '../../../styles/_util' as *
 
 .currentSafeBox
-  @include flex(center, center, column)
+  @include flex(center, flex-start, column)
   width: 100%
-  padding: 2rem 4rem
-  max-width: 1100px
+  padding: 1rem 1rem
+  max-width: 1000px
   height: 100%
-  gap: 3rem
+  gap: 2rem
 
   main
     @include flex(flex-start, center, row)
     width: 100%
-    height: calc( 100vh - 320px )
+    height: calc( 100vh - 240px )
     overflow: auto
     padding: 1rem 2rem
 

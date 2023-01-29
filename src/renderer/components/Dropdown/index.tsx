@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/require-default-props */
 import { ThemeType } from 'renderer/contexts/UserConfigContext/types';
+import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import styles from './styles.module.sass';
 
 interface IItem {
@@ -47,6 +48,7 @@ export function Dropdown({
               placeholder=" "
               readOnly
             />
+            <MdOutlineKeyboardArrowDown />
           </div>
         </div>
       </div>

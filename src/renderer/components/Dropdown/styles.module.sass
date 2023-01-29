@@ -13,13 +13,14 @@
 
   .input
     input
-      background-color: $gray-700
       color: $white
+      &:hover
+        background-color: $gray-700
 
 
 .light
   .option
-    background-color: $gray-300
+    background-color: $gray-100
     >div
       &:hover
         background-color: $gray-400
@@ -28,6 +29,8 @@
     background-color: $gray-100
     input
       color: $black
+      &:hover
+        background-color: $gray-400
 
 
 // --------------------------------------------------------------
@@ -61,6 +64,7 @@
   .input
     border-radius: $default-radius
 
+
   .input:focus-within ~ .option
     opacity: 1
     visibility: visible
@@ -87,11 +91,25 @@
   @include flex(center, center, row)
   width: 100%
 
+
+
   .input
     @include flex(flex-start, center, column)
-    width: 100%
     border-radius: $default-radius
     max-height: 57px
+    max-width: 170px
+    position: relative
+
+
+    svg
+      position: absolute
+      right: 5px
+      min-width: 30px !important
+      min-height: 30px !important
+      font-size: 3px !important
+      color: $gray-500
+      top: 1px
+      pointer-events: none
 
     span
       position: relative
@@ -101,7 +119,6 @@
       color: $gray-500
       font-weight: 500
       text-transform: uppercase
-      font-family: 'Anek Devanagari'
 
     input
       width: 100%
@@ -109,4 +126,5 @@
       border-radius: $default-radius
       font-size: .9rem
       margin-top: -5px
+      transition: background-color 0.2s ease
 

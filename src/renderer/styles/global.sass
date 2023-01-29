@@ -1,28 +1,31 @@
 @use "./_util" as *
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap')
-@import url('https://fonts.googleapis.com/css2?family=Anek+Devanagari:wght@400;500;600;700&display=swap')
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap')
+// @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap')
+// @import url('https://fonts.googleapis.com/css2?family=Anek+Devanagari:wght@400;500;600;700&display=swap')
+// @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap')
+
+@font-face 
+    font-family: Helvetica
+    src: url(FreeSans.ttf)
+
 *
   margin: 0
   padding: 0
   box-sizing: border-box
 
- 
-
 html
   height: 100%
 
-@media (max-width: 1080px)
-  html
-    font-size: 93.75%
+// @media (max-width: 1080px)
+//   html
+//     font-size: 93.75%
 
-@media (max-width: 720px)
-  html
-    font-size: 87.5%
+// @media (max-width: 720px)
+//   html
+//     font-size: 87.5%
 
 body, input, textarea, select, button
-  font-family: "Roboto", sans-serif
-  font-size: .9rem
+  font-family: Helvetica, sans-serif
+  font-size: .85rem
 
 
 body

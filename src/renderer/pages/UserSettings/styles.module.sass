@@ -44,7 +44,7 @@
 .userSettings
   @include flex(flex-start, center, row)
   width: 100%
-
+  height: 100%
   overflow: auto
 
   .container
@@ -53,11 +53,9 @@
     width: 100%
     max-width: 800px
 
-
     h3
       margin-top: 2rem
-      font-family: 'Anek Devanagari', sans-serif
-      font-weight: 500
+      font-weight: 400
 
     .leaveButton
       background-color: $red-100
@@ -67,9 +65,12 @@
 
     .box.dropdown
       span
-        flex: 2
+        flex: 3
       >div
         flex: 1
+        input
+          height: 40px
+
 
 
     .box

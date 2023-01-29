@@ -9,7 +9,7 @@ import { MainSafeBox } from './MainSafeBox';
 import { HeaderSafeBox } from './HeaderSafeBox';
 
 export function ViewSafeBox() {
-  const { changeSafeBoxMode } = useSafeBox();
+  const { changeSafeBoxMode, safeBoxMode } = useSafeBox();
   const { currentSafeBox } = useContext(SafeBoxesContext);
   const { changeFormikIndex } = useContext(CreateSafeBoxContext);
 
@@ -25,7 +25,7 @@ export function ViewSafeBox() {
 
   return (
     <div className={styles.currentSafeBox}>
-      {currentSafeBox && (
+      {(currentSafeBox || safeBoxMode === 'create') && (
         <>
           <HeaderSafeBox />
           <main>

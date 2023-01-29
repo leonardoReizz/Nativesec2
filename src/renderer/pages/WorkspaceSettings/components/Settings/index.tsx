@@ -138,7 +138,7 @@ export function Settings() {
 
           <div className={styles.organizationActions}>
             <div className={styles.item}>
-              <div>
+              <div className={styles.text}>
                 <h3>Deletar Organização</h3>
                 <span>
                   Essa ação irá excluir todos cofres, usuarios e configurações
@@ -152,7 +152,7 @@ export function Settings() {
               />
             </div>
             <div className={styles.item}>
-              <div>
+              <div className={styles.text}>
                 <h3>Sair da Organização</h3>
                 <span>
                   Essa ação irá excluir todos cofres, usuarios e configurações

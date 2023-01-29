@@ -25,7 +25,6 @@ export function SafeBoxInfo({ safeBox }: SafeBoxProps) {
       <SafeBoxIcon type={safeBox.tipo as SafeBoxIconType} />
       <div className={styles.text}>
         <h3>{safeBox?.nome}</h3>
-        <p>{safeBox.tipo}</p>
         <p>{safeBox?.descricao}</p>
       </div>
     </div>

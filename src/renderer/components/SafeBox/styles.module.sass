@@ -37,44 +37,46 @@
 .safeBox
   @include flex(center, center, row)
   width: 100%
-  gap: 1rem
+  gap: .5rem
+  
   padding: .8rem
-  transition: background-color 0.2s ease, color 0.2s ease
-  height: 120px
-  position: relative
+  max-height: 80px
   margin-top: -1px
-  border-radius: $default-radius
+  
   cursor: pointer
+  position: relative
+  transition: background-color 0.2s ease, color 0.2s ease
 
 
   &::before
     content: ''
     position: absolute
-    right: 10px
-    width: 80%
+    right: 5px
+    width: 95%
     height: 1px
     bottom: 0px
     z-index: 2002
+
+  svg
+    max-width: 30px
 
   .text
     @include flex(flex-start, center, column)
     width: 100%
 
     h3
-      font-size: .97rem
       white-space: nowrap
       text-overflow: ellipsis
       overflow: hidden
       width: 100%
+      max-width: 200px
       font-weight: 400
-      font-size: 1.05rem
+      font-size: .95rem
 
     p
       white-space: nowrap
       text-overflow: ellipsis
       overflow: hidden
       width: 100%
-      font-size: .9rem
-      &:last-child
-        font-weight: 500
-        margin-top: .5rem
+      max-width: 200px
+      font-size: .8rem

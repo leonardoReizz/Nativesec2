@@ -28,10 +28,10 @@ export default function Users() {
 
   useEffect(() => {
     changeUsersParticipant(
-      JSON.parse(currentSafeBox?.usuarios_leitura || '') as string[]
+      currentSafeBox ? JSON.parse(currentSafeBox.usuarios_leitura) : []
     );
     changeUsersAdmin(
-      JSON.parse(currentSafeBox?.usuarios_escrita || '') as string[]
+      currentSafeBox ? JSON.parse(currentSafeBox.usuarios_escrita) : []
     );
   }, [currentSafeBox]);
 
