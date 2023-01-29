@@ -179,7 +179,63 @@ export class OrganizationRepositoryAPI implements IOrganizationRepositoryAPI {
         };
       })
       .catch((error) => {
-        console.log(error, ' ERROR API DELETE PARTICIPANT ORGANIZATION');
+        console.log(error, ' ERROR API DELETE ADMIN ORGANIZATION');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
+
+  async removeInviteAdmin(
+    data: types.IRemoveInviteAdminData
+  ): Promise<APIResponse> {
+    return axios
+      .delete(`${api}/organizacao/invitation/admin/`, {
+        headers: {
+          Authorization: data.authorization,
+        },
+        params: {
+          id: data.organizationId,
+          user: data.email,
+        },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERROR API DELETE INVITE ADMIN ORGANIZATION');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
+
+  async removeInviteParticipant(
+    data: types.IRemoveInviteParticipantData
+  ): Promise<APIResponse> {
+    return axios
+      .delete(`${api}/organizacao/invitation/admin/`, {
+        headers: {
+          Authorization: data.authorization,
+        },
+        params: {
+          id: data.organizationId,
+          user: data.email,
+        },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERROR API DELETE INVITE PARTICIPANT ORGANIZATION');
         return {
           status: error.response.status,
           data: error.response.statusText,

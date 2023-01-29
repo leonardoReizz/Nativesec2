@@ -1,0 +1,26 @@
+import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IRemoveInviteParticipantRequestDTO } from './remove-invite-participant-request-dto';
+import { RemoveInviteParticipantUseCase } from './remove-invite-participante-use-case';
+
+export class RemoveInviteParticipantController {
+  constructor(
+    private removeInviteParticipantUseCase: RemoveInviteParticipantUseCase
+  ) {}
+
+  async handle(data: IRemoveInviteParticipantRequestDTO) {
+    try {
+      const response = await this.removeInviteParticipantUseCase.execute(data);
+      return {
+        response: IPCTypes.REMOVE_PARTICIPANT_RESPONSE,
+        data: response,
+      };
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+
+      return {
+        response: IPCTypes.REMOVE_PARTICIPANT_RESPONSE,
+        message: errorMessage,
+      };
+    }
+  }
+}

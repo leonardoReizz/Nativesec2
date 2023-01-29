@@ -39,3 +39,15 @@ export interface IRemoveAdminData {
   email: string;
   authorization: string;
 }
+
+export interface IRemoveInviteAdminData {
+  organizationId: string;
+  email: string;
+  authorization: string;
+}
+
+export interface IRemoveInviteParticipantData {
+  organizationId: string;
+  email: string;
+  authorization: string;
+}
