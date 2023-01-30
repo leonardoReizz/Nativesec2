@@ -1,15 +1,14 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { IoMdAdd } from 'react-icons/io';
-import { MdPending } from 'react-icons/md';
 import { Dropdown } from 'renderer/components/Dropdown';
 import { FieldModalWithDropdown } from 'renderer/components/Modals/FieldModalWithDropdown';
 import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Badge } from '@chakra-ui/react';
+import { useLoading } from 'renderer/hooks/useLoading';
+import { Input } from 'renderer/components/Inputs/Input';
 import styles from './styles.module.sass';
-
-type MembersState = 'participant' | 'guest';
 
 interface IAddUserData {
   email: string;
@@ -22,18 +21,29 @@ interface IAddUserData {
 
 interface ICurrentUserDelete {
   email: string;
-  type: 'admin' | 'participant';
+  type: 'admin' | 'participant' | 'guestParticipant' | 'guestAdmin';
 }
 
 export function Members() {
-  const { currentOrganization, addNewParticipant, removeUser } =
-    useOrganization();
+  const { loading, updateLoading } = useLoading();
+
+  const {
+    currentOrganization,
+    addNewParticipant,
+    removeUser,
+    removeInvite,
+    filteredAdmin,
+    filteredGuestAdmin,
+    filteredGuestParticipant,
+    filteredParticipant,
+    changeInput,
+    input,
+  } = useOrganization();
   const { theme } = useUserConfig();
 
   const [currentUserDelete, setCurrentUserDelete] = useState<
     ICurrentUserDelete | undefined
   >();
-  const [membersState, setMembersState] = useState<MembersState>('participant');
 
   const [isOpenVerifyNameModal, setIsOpenVerifyNameModal] =
     useState<boolean>(false);
@@ -48,7 +58,6 @@ export function Members() {
   }, []);
 
   function handleAddParticipant() {
-    setMembersState('guest');
     setIsOpenFieldModal(true);
   }
 
@@ -57,10 +66,13 @@ export function Members() {
   //   setIsOpenVerifyNameModal(true);
   // }
 
-  // function handleRemoveInvite(email: string, type: 'admin' | 'participant') {
-  //   setCurrentUserDelete({ email, type });
-  //   setIsOpenVerifyNameModal(true);
-  // }
+  function handleRemoveInvite(
+    email: string,
+    type: 'guestAdmin' | 'guestParticipant'
+  ) {
+    setCurrentUserDelete({ email, type });
+    setIsOpenVerifyNameModal(true);
+  }
 
   function addUser(user: IAddUserData) {
     if (currentOrganization) {
@@ -74,6 +86,7 @@ export function Members() {
 
   function remove(verified: boolean) {
     if (verified && currentOrganization && currentUserDelete) {
+      updateLoading(true);
       if (
         currentUserDelete.type === 'admin' ||
         currentUserDelete.type === 'participant'
@@ -83,8 +96,12 @@ export function Members() {
           email: currentUserDelete?.email,
           type: currentUserDelete?.type,
         });
-        setCurrentUserDelete(undefined);
       } else {
+        removeInvite({
+          organizationId: currentOrganization._id,
+          email: currentUserDelete?.email,
+          type: currentUserDelete?.type,
+        });
       }
     }
   }
@@ -95,12 +112,20 @@ export function Members() {
   ];
 
   const userOptions = [
-    { id: 1, value: 'participant', label: 'Participante' },
-    { id: 2, value: 'admin', label: 'Administrador' },
+    { id: 1, value: 'participant', label: 'Apenas Leitura' },
+    { id: 2, value: 'admin', label: 'Leitura e Escrita' },
     { id: 3, value: 'remove', label: 'Remover' },
   ];
 
   const changeUser = useCallback((item: any, type: string) => {}, []);
+
+  useEffect(() => {
+    if (!loading) {
+      setCurrentUserDelete(undefined);
+      setIsOpenFieldModal(false);
+      setIsOpenVerifyNameModal(false);
+    }
+  }, [loading]);
 
   return (
     <>
@@ -110,6 +135,7 @@ export function Members() {
         inputText="Email"
         callback={(verified) => remove(verified)}
         isOpen={isOpenVerifyNameModal}
+        isLoading={loading}
         onRequestClose={handleCloseVerifyNameModal}
       />
       <FieldModalWithDropdown
@@ -125,92 +151,95 @@ export function Members() {
           theme === 'dark' ? styles.dark : styles.light
         }`}
       >
-        <header>
-          <div className={styles.actions}>
-            <button
-              type="button"
-              className={`${
-                membersState === 'participant' ? styles.selected : ''
-              }`}
-              onClick={() => setMembersState('participant')}
-            >
-              Participantes
-            </button>
-            <button
-              type="button"
-              className={`${membersState === 'guest' ? styles.selected : ''}`}
-              onClick={() => setMembersState('guest')}
-            >
-              Convidados
-            </button>
-          </div>
-          <button
-            type="button"
-            onClick={handleAddParticipant}
-            className={styles.participantButton}
-          >
-            <IoMdAdd />
-            Adicionar Participante
-          </button>
-        </header>
-        <main>
-          <div className={styles.participantContainer}>
-            <div className={styles.participants}>
-              <div className={styles.title}>
-                <span>Usuario</span>
-                <span>Nivel de Acesso</span>
-              </div>
-              {JSON.parse(
-                currentOrganization?.convidados_administradores || '[]'
-              ).map((user: string) => (
-                <div className={styles.participant} key={user}>
-                  <h4>
-                    {user}
-                    <Badge colorScheme="orange" fontSize="x-small">
-                      Convite Pendente
-                    </Badge>
-                    {/* <Tooltip
-                      className={styles.tooltip}
-                      hasArrow
-                      label="Convite Pendente"
-                      closeDelay={100}
-                    >
-                      <span>
-                        <MdPending />
-                      </span>
-                    </Tooltip> */}
-                  </h4>
-                  <Dropdown
-                    theme={theme}
-                    options={userOptions}
-                    value="Leitura e Escrita"
-                    onChange={(item) => changeUser(item, 'guestAdmin')}
-                  />
-                </div>
-              ))}
-              {JSON.parse(
-                currentOrganization?.convidados_participantes || '[]'
-              ).map((user: string) => (
-                <div className={styles.participant} key={user}>
-                  <h4
-                    id="invitePending"
-                    data-tooltip-content="Convite pendente"
-                  >
-                    {user}
-                    <MdPending />
-                  </h4>
-                  <Dropdown
-                    theme={theme}
-                    options={userOptions}
-                    value="Apenas Leitura"
-                    onChange={(item) => changeUser(item, 'guestParticipant')}
-                  />
-                </div>
-              ))}
+        <div className={styles.membersContainer}>
+          <header>
+            <div className={styles.search}>
+              <Input
+                theme={theme}
+                placeholder="Buscar usuario"
+                onChange={(e) => changeInput(e.target.value)}
+              />
             </div>
-          </div>
+            <button
+              type="button"
+              onClick={handleAddParticipant}
+              className={styles.participantButton}
+            >
+              <IoMdAdd />
+              Adicionar Participante
+            </button>
+          </header>
+          <main>
+            <div className={styles.participantContainer}>
+              <div className={styles.participants}>
+                <div className={styles.title}>
+                  <span>Usuario</span>
+                  <span>Nivel de Acesso</span>
+                </div>
+                {filteredAdmin.map((user: string) => (
+                  <div className={styles.participant} key={user}>
+                    <h4>{user}</h4>
+                    <Dropdown
+                      theme={theme}
+                      options={userOptions}
+                      value="Leitura e Escrita"
+                      onChange={() => handleRemoveInvite(user, 'guestAdmin')}
+                      className={styles.dropDown}
+                    />
+                  </div>
+                ))}
+                {filteredParticipant.map((user: string) => (
+                  <div className={styles.participant} key={user}>
+                    <h4>{user}</h4>
+                    <Dropdown
+                      theme={theme}
+                      options={userOptions}
+                      value="Apenas Leitura"
+                      onChange={() => handleRemoveInvite(user, 'guestAdmin')}
+                      className={styles.dropDown}
+                    />
+                  </div>
+                ))}
+                {filteredGuestAdmin.map((user: string) => (
+                  <div className={styles.participant} key={user}>
+                    <h4>
+                      {user}
+                      <Badge colorScheme="orange" fontSize="x-small">
+                        Convite Pendente
+                      </Badge>
+                    </h4>
+                    <Dropdown
+                      theme={theme}
+                      options={userOptions}
+                      value="Leitura e Escrita"
+                      onChange={() => handleRemoveInvite(user, 'guestAdmin')}
+                      className={styles.dropDown}
+                    />
+                  </div>
+                ))}
+                {filteredGuestParticipant.map((user: string) => (
+                  <div className={styles.participant} key={user}>
+                    <h4>
+                      {user}
+                      <Badge colorScheme="orange" fontSize="x-small">
+                        Convite Pendente
+                      </Badge>
+                    </h4>
+                    <Dropdown
+                      theme={theme}
+                      options={userOptions}
+                      value="Apenas Leitura"
+                      onChange={() =>
+                        handleRemoveInvite(user, 'guestParticipant')
+                      }
+                      className={styles.dropDown}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
 
-          {/* {currentOrganization && membersState === 'participant' && (
+            {/* {currentOrganization && membersState === 'participant' && (
             <>
               <TableMembers
                 title="Administradores"
@@ -225,7 +254,7 @@ export function Members() {
             </>
           )} */}
 
-          {/* {currentOrganization && membersState === 'guest' && (
+            {/* {currentOrganization && membersState === 'guest' && (
             <>
               <TableMembers
                 title="Convidados Administradores"
@@ -243,7 +272,8 @@ export function Members() {
               />
             </>
           )} */}
-        </main>
+          </main>
+        </div>
       </div>
     </>
   );

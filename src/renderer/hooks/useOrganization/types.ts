@@ -26,3 +26,9 @@ export interface IRemoveUser {
   email: string;
   type: 'admin' | 'participant';
 }
+
+export interface IRemoveInvite {
+  organizationId: string;
+  email: string;
+  type: 'guestAdmin' | 'guestParticipant';
+}

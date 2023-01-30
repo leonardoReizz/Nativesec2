@@ -82,6 +82,7 @@ export function FieldModalWithDropdown({
             onChange={formikProps.handleChange}
             onBlur={formikProps.handleBlur}
             viewBarError
+            theme={theme}
             touched
             messageError={formikProps.errors.email}
           />

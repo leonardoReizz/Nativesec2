@@ -18,6 +18,7 @@ interface DropdownProps {
   onChange?: (value: IItem) => void;
   theme: ThemeType;
   options?: IItem[];
+  className?: string;
 }
 
 export function Dropdown({
@@ -27,21 +28,24 @@ export function Dropdown({
   onChange,
   text,
   theme,
+  className,
   ...props
 }: DropdownProps) {
   return (
     <div
       className={`${styles.dropdown} ${
         theme === 'dark' ? styles.dark : styles.light
-      }`}
+      } ${className || ''}`}
     >
       <div className={styles.input}>
         <div className={styles.inputContainer}>
           <div
             className={`${styles.input}
-            ${theme === 'dark' ? styles.dark : styles.light} `}
+            ${theme === 'dark' ? styles.dark : styles.light} ${
+              !text ? styles.noText : ''
+            }`}
           >
-            <span>{text}</span>
+            {text && <span>{text}</span>}
             <input
               type="text"
               value={`${value} ${valueText || ''}`}
@@ -52,7 +56,7 @@ export function Dropdown({
           </div>
         </div>
       </div>
-      <div className={styles.option}>
+      <div className={`${styles.option} ${!text ? styles.noText : ''}`}>
         {options?.map((item) => (
           <div
             key={item.id}

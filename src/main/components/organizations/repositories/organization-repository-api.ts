@@ -219,7 +219,7 @@ export class OrganizationRepositoryAPI implements IOrganizationRepositoryAPI {
     data: types.IRemoveInviteParticipantData
   ): Promise<APIResponse> {
     return axios
-      .delete(`${api}/organizacao/invitation/admin/`, {
+      .delete(`${api}/organizacao/invitation/participant/`, {
         headers: {
           Authorization: data.authorization,
         },

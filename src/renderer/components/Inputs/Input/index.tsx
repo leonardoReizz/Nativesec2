@@ -49,7 +49,7 @@ export function Input({
         }`}
       >
         <span>{text}</span>
-        <input type={type || 'text'} {...props} placeholder=" " />
+        <input type={type || 'text'} {...props} />
       </div>
       {viewBarError ? (
         <p

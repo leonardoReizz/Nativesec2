@@ -95,8 +95,8 @@ export function useIpcOrganization() {
         console.log(result);
         if (result.message === 'ok') {
           refreshOrganizations();
+          updateLoading(false);
           changeCurrentOrganization(undefined);
-          console.log(window.electron.store.get('organizations'));
           changeCurrentOrganization(result.data.organizationId);
           toast.success('Convite enviado.', {
             ...toastOptions,
@@ -121,6 +121,7 @@ export function useIpcOrganization() {
           refreshOrganizations();
           changeCurrentOrganization(undefined);
           changeCurrentOrganization(result.data.organizationId);
+          updateLoading(false);
           toast.success('Participante removido.', {
             ...toastOptions,
             toastId: 'removed-participant',

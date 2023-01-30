@@ -1,4 +1,5 @@
 export interface IRemoveInviteParticipantRequestDTO {
   organizationId: string;
-  type: 'admin' | 'particpant';
+  email: string;
+  type: 'guestAdmin' | 'guestParticipant';
 }
