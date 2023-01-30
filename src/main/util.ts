@@ -12,4 +12,4 @@ export function resolveHtmlPath(htmlFileName: string) {
   return `file://${path.resolve(__dirname, '../renderer/', htmlFileName)}`;
 }
 
-export const api = 'https://nativesec-v2.cloud.jac.bsb.br';
+export const api = 'https://nativesec-v3.cloud.jac.bsb.br';

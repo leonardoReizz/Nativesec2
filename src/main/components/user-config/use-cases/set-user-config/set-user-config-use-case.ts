@@ -26,10 +26,11 @@ export class SetUserConfigUseCase {
         myEmail,
         authorization
       );
+
       if (apiGetPrivateKey.data.status === 'ok') {
         if (apiGetPrivateKey.data.msg.length > 0) {
           store.set('userConfig', {
-            savePrivateKey: true,
+            savePrivateKey: 'true',
             refreshTime: 30,
             lastOrganizationId: '',
             theme: 'light',
@@ -48,7 +49,7 @@ export class SetUserConfigUseCase {
         store.set('userConfig', {
           refreshTime: 30,
           theme: 'light',
-          savePrivateKey: false,
+          savePrivateKey: 'false',
           lastOrganizationId: '',
         });
         this.userConfigRepositoryDatabase.create({
@@ -63,6 +64,7 @@ export class SetUserConfigUseCase {
       }
       throw new Error('Api error get private key');
     }
+
     store.set('userConfig', {
       refreshTime: userConfig[0].refreshTime,
       theme: userConfig[0].theme,

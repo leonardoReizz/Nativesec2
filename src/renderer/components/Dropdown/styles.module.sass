@@ -9,11 +9,13 @@
     color: $white
     >div
       &:hover
-        background-color: $gray-500
+        background-color: $gray-500 !important
 
   .input
+    background-color: $gray-900
     input
       color: $white
+
       &:hover
         background-color: $gray-700
 
@@ -44,7 +46,6 @@
   gap: 2rem
   position: relative
   color: $black
-  z-index: 300
 
   svg
     min-width: 80px
@@ -63,7 +64,7 @@
 
   .input
     border-radius: $default-radius
-
+    z-index: 300
 
   .input:focus-within ~ .option
     opacity: 1
@@ -79,6 +80,7 @@
     opacity: 0
     visibility: hidden
     margin-top: 15px
+    z-index: 400 !important
 
     @media (max-width: 1080px)
       margin-top: 10px
@@ -90,8 +92,6 @@
 .inputContainer
   @include flex(center, center, row)
   width: 100%
-
-
 
   .input
     @include flex(flex-start, center, column)
@@ -110,6 +110,7 @@
       color: $gray-500
       top: 1px
       pointer-events: none
+      z-index: 400
 
     span
       position: relative
@@ -124,7 +125,7 @@
       width: 100%
       padding: .6rem .7rem
       border-radius: $default-radius
-      font-size: .9rem
+      font-size: .85rem
       margin-top: -5px
       transition: background-color 0.2s ease
 

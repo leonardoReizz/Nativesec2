@@ -52,7 +52,7 @@
       bottom: 0
 
   .membersSection
-    @include flex(flex-start, flex-start, column)
+    @include flex(center, center, column)
     @include scroolbarLight()
     height: 100%
     width: 100%
@@ -63,33 +63,35 @@
     gap: 1rem 
 
 
-    .participant
-      @include flex(center, space-between, row)
+   .participant
+      @include flex(center, center, row)
       width: 100%
-      padding: 0 1rem
-      
-      .info
-        @include flex(center, center, row)
-        gap: 1rem
+      margin-top: 1.5rem
+      position: relative
 
-        .img
-          @include flex(center, center, row)
-          width: 45px
-          height: 45px
-          border-radius: 5rem
-          font-size: 1rem
+      &::before
+        content: ''
+        position: absolute
+        bottom: -.5rem
+        width: 100%
+        height: 1px
+        background-color: $gray-500
 
-      button
-        @include flex(center, center, row)
-        width: 40px
-        height: 40px
-        border-radius: $default-radius
-        font-size: 1.1rem
+      h4
+        flex: 2
+        width: 100%
+        font-weight: 400
+      div
+        flex: 1
+        max-width: 180px
 
-        transition: background-color 0.2s ease, color 0.2s ease
-
-        svg
-          font-size: .9rem
-        &:hover
-          background-color: $red-100
-          color: $white
+        div
+          &:nth-child(2)
+            div
+              &:last-child
+                color: $red-100 !important
+                transition: color 0.2s ease, background-color 0.2s ease
+                &:hover
+                  color: $white !important
+                  background-color: $red-100 !important
+                    

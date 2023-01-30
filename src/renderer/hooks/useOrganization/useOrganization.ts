@@ -57,6 +57,13 @@ export function useOrganization() {
     });
   }, []);
 
+  const removeInvite = useCallback((data: any) => {
+    window.electron.ipcRenderer.sendMessage('useIPC', {
+      event: IPCTypes.REMOVE_INVITE_PARTICIPANT,
+      data,
+    });
+  }, []);
+
   return {
     ...organizationContext,
     createOrganization,
@@ -64,5 +71,6 @@ export function useOrganization() {
     addNewParticipant,
     updateOrganization,
     removeUser,
+    removeInvite,
   };
 }

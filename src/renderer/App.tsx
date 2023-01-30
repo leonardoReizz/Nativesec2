@@ -4,6 +4,8 @@ import { ToastContainer } from 'react-toastify';
 import { HashRouter } from 'react-router-dom';
 import ReactModal from 'react-modal';
 import '!style-loader!css-loader!sass-loader!react-toastify/dist/ReactToastify.css';
+
+import { ChakraProvider } from '@chakra-ui/react';
 import { OrganizationsContextProvider } from './contexts/OrganizationsContext/OrganizationsContext';
 import { SafeBoxesContextProvider } from './contexts/SafeBoxesContext/safeBoxesContext';
 import { UserConfigContextProvider } from './contexts/UserConfigContext/UserConfigContext';
@@ -14,17 +16,19 @@ export default function App() {
   return (
     <>
       <ToastContainer />
-      <HashRouter>
-        <LoadingContextProvider>
-          <UserConfigContextProvider>
-            <OrganizationsContextProvider>
-              <SafeBoxesContextProvider>
-                <AppRoutes />
-              </SafeBoxesContextProvider>
-            </OrganizationsContextProvider>
-          </UserConfigContextProvider>
-        </LoadingContextProvider>
-      </HashRouter>
+      <ChakraProvider>
+        <HashRouter>
+          <LoadingContextProvider>
+            <UserConfigContextProvider>
+              <OrganizationsContextProvider>
+                <SafeBoxesContextProvider>
+                  <AppRoutes />
+                </SafeBoxesContextProvider>
+              </OrganizationsContextProvider>
+            </UserConfigContextProvider>
+          </LoadingContextProvider>
+        </HashRouter>
+      </ChakraProvider>
     </>
   );
 }

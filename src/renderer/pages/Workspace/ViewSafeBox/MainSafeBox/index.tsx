@@ -34,7 +34,7 @@ export function MainSafeBox() {
           onClick={handleTabUsers}
           className={`${tab === 'users' ? styles.selected : ''}`}
         >
-          Usuarios
+          Compartilhado com
         </button>
       </div>
       {tab === 'form' ? <Form /> : <Users />}

@@ -121,8 +121,9 @@
     ]
   },
   "dependencies": {
-    "@emotion/react": "^11.10.0",
-    "@emotion/styled": "^11.10.0",
+    "@chakra-ui/react": "^2.4.9",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@journeyapps/sqlcipher": "^5.3.1",
     "@reduxjs/toolkit": "^1.9.0",
     "axios": "^1.2.3",
@@ -134,6 +135,7 @@
     "electron-updater": "^5.0.3",
     "elevate-ui": "^1.2.4",
     "formik": "^2.2.9",
+    "framer-motion": "^8.5.5",
     "immer": "^9.0.16",
     "md5": "^2.3.0",
     "openpgp": "^5.5.0",
@@ -151,6 +153,7 @@
     "react-select": "^5.6.0",
     "react-svg": "^15.1.7",
     "react-toastify": "^9.1.1",
+    "react-tooltip": "^5.7.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {

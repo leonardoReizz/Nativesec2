@@ -160,16 +160,20 @@ export function HeaderSafeBox() {
             )}
             {safeBoxMode === 'view' && (
               <>
-                <button type="button" onClick={handleOpenVerifyNameModal}>
-                  <AiFillDelete />
-                  <span>Excluir</span>
-                </button>
                 <button
                   type="button"
                   onClick={handleOpenVerifySafetyPhraseModal}
                 >
                   <RiEditFill />
                   <span>Editar</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleOpenVerifyNameModal}
+                  className={styles.red}
+                >
+                  <AiFillDelete />
+                  <span>Excluir</span>
                 </button>
               </>
             )}
