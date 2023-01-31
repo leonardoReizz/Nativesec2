@@ -15,7 +15,7 @@ interface IAddUserData {
   type: {
     id: number;
     label: string;
-    value: 'participant' | 'admin' | 'guestParticipant' | 'guestAdmin';
+    value: 'guestParticipant' | 'guestAdmin';
   };
 }
 
@@ -25,17 +25,25 @@ interface ICurrentUserDelete {
 }
 
 const options = [
-  { id: 1, value: 'participant', label: 'Participante' },
-  { id: 2, value: 'admin', label: 'Administrador' },
+  { id: 1, value: 'guestParticipant', label: 'Participante' },
+  { id: 2, value: 'guestAdmin', label: 'Administrador' },
 ];
 
-const userOptions = [
+const userOptions = [{ id: 3, value: 'remove', label: 'Remover' }];
+
+const guestOptions = [
   { id: 1, value: 'participant', label: 'Apenas Leitura' },
-  { id: 2, value: 'admin', label: 'Leitura e Escrita' },
-  { id: 3, value: 'remove', label: 'Remover' },
+  {
+    id: 2,
+    value: 'admin',
+    label: 'Leitura e Escrita',
+  },
+  {
+    id: 3,
+    value: 'remove',
+    label: 'Remover',
+  },
 ];
-
-const guestOptions = [{ id: 3, value: 'remove', label: 'Remover' }];
 
 export function Members() {
   const { loading, updateLoading } = useLoading();
@@ -50,7 +58,6 @@ export function Members() {
     filteredGuestParticipant,
     filteredParticipant,
     changeInput,
-    input,
   } = useOrganization();
   const { theme } = useUserConfig();
 
@@ -72,14 +79,6 @@ export function Members() {
 
   function handleAddParticipant() {
     setIsOpenFieldModal(true);
-  }
-
-  function handleRemoveInvite(
-    email: string,
-    type: 'guestAdmin' | 'guestParticipant' | 'admin' | 'participant'
-  ) {
-    setCurrentUserDelete({ email, type });
-    setIsOpenVerifyNameModal(true);
   }
 
   function addUser(user: IAddUserData) {
@@ -114,7 +113,24 @@ export function Members() {
     }
   }
 
-  const changeUser = useCallback((item: any, type: string) => {}, []);
+  const changeUser = useCallback(
+    (user: any, type: 'guestAdmin' | 'guestParticipant') => {
+      if (currentOrganization) {
+        removeInvite({
+          email: user,
+          organizationId: currentOrganization?._id,
+          type,
+        });
+
+        addNewParticipant({
+          email: user,
+          organizationId: currentOrganization?._id,
+          type,
+        });
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     if (!loading) {
@@ -123,6 +139,47 @@ export function Members() {
       setIsOpenVerifyNameModal(false);
     }
   }, [loading]);
+
+  function handleDropDown(user: any, type: any, email: string) {
+    switch (user.id) {
+      case 1:
+        // Apenas leitura
+        if (currentOrganization) {
+          removeInvite({
+            email,
+            organizationId: currentOrganization?._id,
+            type,
+          });
+          addNewParticipant({
+            email,
+            organizationId: currentOrganization?._id,
+            type: 'guestParticipant',
+          });
+        }
+        break;
+      case 2:
+        // Leitura e escrita
+        if (currentOrganization) {
+          removeInvite({
+            email,
+            organizationId: currentOrganization?._id,
+            type,
+          });
+          addNewParticipant({
+            email,
+            organizationId: currentOrganization?._id,
+            type: 'guestAdmin',
+          });
+        }
+        break;
+      case 3:
+        setCurrentUserDelete({ email, type });
+        setIsOpenVerifyNameModal(true);
+        break;
+      default:
+        break;
+    }
+  }
 
   return (
     <>
@@ -180,7 +237,9 @@ export function Members() {
                       theme={theme}
                       options={userOptions}
                       value="Leitura e Escrita"
-                      onChange={() => handleRemoveInvite(user, 'admin')}
+                      onChange={(option) =>
+                        handleDropDown(option, 'admin', user)
+                      }
                       className={styles.dropDown}
                     />
                   </div>
@@ -192,7 +251,9 @@ export function Members() {
                       theme={theme}
                       options={userOptions}
                       value="Apenas Leitura"
-                      onChange={() => handleRemoveInvite(user, 'participant')}
+                      onChange={(option) =>
+                        handleDropDown(option, 'participant', user)
+                      }
                       className={styles.dropDown}
                     />
                   </div>
@@ -209,7 +270,9 @@ export function Members() {
                       theme={theme}
                       options={guestOptions}
                       value="Leitura e Escrita"
-                      onChange={() => handleRemoveInvite(user, 'guestAdmin')}
+                      onChange={(option) =>
+                        handleDropDown(option, 'guestAdmin', user)
+                      }
                       className={styles.dropDown}
                     />
                   </div>
@@ -226,8 +289,8 @@ export function Members() {
                       theme={theme}
                       options={guestOptions}
                       value="Apenas Leitura"
-                      onChange={() =>
-                        handleRemoveInvite(user, 'guestParticipant')
+                      onChange={(option) =>
+                        handleDropDown(option, 'guestParticipant', user)
                       }
                       className={styles.dropDown}
                     />

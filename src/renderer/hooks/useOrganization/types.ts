@@ -9,7 +9,7 @@ export interface ICreateOrganization {
 
 export interface IAddNewParticipantData {
   email: string;
-  type: 'admin' | 'participant';
+  type: 'guestAdmin' | 'guestParticipant';
   organizationId: string;
 }
 

@@ -37,7 +37,7 @@ export function FieldModalWithDropdown({
 
   const verifyEmailInitialValues = {
     email: '',
-    type: { id: 1, value: 'participant', label: 'Participante' },
+    type: { id: 1, value: 'guestParticipant', label: 'Participante' },
   };
   const verifyEmailSchema = Yup.object().shape({
     email: Yup.string()

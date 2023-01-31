@@ -17,7 +17,7 @@ export class InviteParticipantUseCase {
     const authorization = `${tokenType} ${accessToken}`;
     let response;
 
-    if (data.type === 'admin') {
+    if (data.type === 'guestAdmin') {
       response = await this.organizationRepositoryAPI.inviteAdmin({
         ...data,
         authorization,
