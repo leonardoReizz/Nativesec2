@@ -9,6 +9,17 @@ export class RemoveParticipantController {
     try {
       const response = await this.removeParticipantUseCase.execute(data);
 
+      if (data.changeUser) {
+        return {
+          response: IPCTypes.REMOVE_PARTICIPANT_RESPONSE,
+          data: {
+            ...response,
+            email: data.email,
+            type: data.type,
+            changeUser: data.changeUser,
+          },
+        };
+      }
       return {
         response: IPCTypes.REMOVE_PARTICIPANT_RESPONSE,
         data: response,

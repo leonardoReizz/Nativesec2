@@ -8,6 +8,8 @@ import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Badge } from '@chakra-ui/react';
 import { useLoading } from 'renderer/hooks/useLoading';
 import { Input } from 'renderer/components/Inputs/Input';
+import { toast } from 'react-toastify';
+import { toastOptions } from 'renderer/utils/options/Toastify';
 import styles from './styles.module.sass';
 
 interface IAddUserData {
@@ -29,9 +31,7 @@ const options = [
   { id: 2, value: 'guestAdmin', label: 'Administrador' },
 ];
 
-const userOptions = [{ id: 3, value: 'remove', label: 'Remover' }];
-
-const guestOptions = [
+const userOptions = [
   { id: 1, value: 'participant', label: 'Apenas Leitura' },
   {
     id: 2,
@@ -113,25 +113,6 @@ export function Members() {
     }
   }
 
-  const changeUser = useCallback(
-    (user: any, type: 'guestAdmin' | 'guestParticipant') => {
-      if (currentOrganization) {
-        removeInvite({
-          email: user,
-          organizationId: currentOrganization?._id,
-          type,
-        });
-
-        addNewParticipant({
-          email: user,
-          organizationId: currentOrganization?._id,
-          type,
-        });
-      }
-    },
-    []
-  );
-
   useEffect(() => {
     if (!loading) {
       setCurrentUserDelete(undefined);
@@ -141,43 +122,30 @@ export function Members() {
   }, [loading]);
 
   function handleDropDown(user: any, type: any, email: string) {
-    switch (user.id) {
-      case 1:
-        // Apenas leitura
-        if (currentOrganization) {
-          removeInvite({
-            email,
-            organizationId: currentOrganization?._id,
-            type,
-          });
-          addNewParticipant({
-            email,
-            organizationId: currentOrganization?._id,
-            type: 'guestParticipant',
-          });
-        }
-        break;
-      case 2:
-        // Leitura e escrita
-        if (currentOrganization) {
-          removeInvite({
-            email,
-            organizationId: currentOrganization?._id,
-            type,
-          });
-          addNewParticipant({
-            email,
-            organizationId: currentOrganization?._id,
-            type: 'guestAdmin',
-          });
-        }
-        break;
-      case 3:
-        setCurrentUserDelete({ email, type });
-        setIsOpenVerifyNameModal(true);
-        break;
-      default:
-        break;
+    if (user.id === 3) {
+      setCurrentUserDelete({ email, type });
+      setIsOpenVerifyNameModal(true);
+    } else if (currentOrganization) {
+      toast.loading('Alterando usuario', {
+        ...toastOptions,
+        toastId: 'organizationChangeUser',
+      });
+
+      if (type === 'admin ' || type === 'participant') {
+        removeUser({
+          email,
+          organizationId: currentOrganization._id,
+          type,
+          changeUser: true,
+        });
+      } else {
+        removeInvite({
+          email,
+          organizationId: currentOrganization?._id,
+          type,
+          changeUser: true,
+        });
+      }
     }
   }
 
@@ -268,7 +236,7 @@ export function Members() {
                     </h4>
                     <Dropdown
                       theme={theme}
-                      options={guestOptions}
+                      options={userOptions}
                       value="Leitura e Escrita"
                       onChange={(option) =>
                         handleDropDown(option, 'guestAdmin', user)
@@ -287,7 +255,7 @@ export function Members() {
                     </h4>
                     <Dropdown
                       theme={theme}
-                      options={guestOptions}
+                      options={userOptions}
                       value="Apenas Leitura"
                       onChange={(option) =>
                         handleDropDown(option, 'guestParticipant', user)

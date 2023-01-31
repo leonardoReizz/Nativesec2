@@ -15,6 +15,7 @@ export function useIpcOrganization() {
     refreshOrganizations,
     changeCurrentOrganization,
     currentOrganization,
+    addNewParticipant,
   } = useOrganization();
   const { updateLoading } = useLoading();
   const navigate = useNavigate();
@@ -92,7 +93,7 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.ADD_NEW_PARTICIPANT_ORGANIZATION_RESPONSE,
       async (result: IPCResponse) => {
-        console.log(result);
+        toast.dismiss('organizationChangeUser');
         if (result.message === 'ok') {
           refreshOrganizations();
           updateLoading(false);
@@ -114,10 +115,54 @@ export function useIpcOrganization() {
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
-      IPCTypes.REMOVE_PARTICIPANT_RESPONSE,
-      async (result: IPCResponse) => {
+      IPCTypes.REMOVE_INVITE_PARTICIPANT_RESPONSE,
+      async (result: types.IRemoveParticipantResponse) => {
         console.log(result);
         if (result.message === 'ok') {
+          if (result.changeUser) {
+            addNewParticipant({
+              email: result.email,
+              organizationId: result.data.organizationId,
+              type:
+                result.type === 'guestAdmin'
+                  ? 'guestParticipant'
+                  : 'guestAdmin',
+            });
+            return;
+          }
+          refreshOrganizations();
+          changeCurrentOrganization(undefined);
+          changeCurrentOrganization(result.data.organizationId);
+          updateLoading(false);
+          toast.success('Convite removido.', {
+            ...toastOptions,
+            toastId: 'removed-invite',
+          });
+        } else {
+          toast.error('Erro ao remover participante.', {
+            ...toastOptions,
+            toastId: 'remove-invite-participant-error',
+          });
+          updateLoading(false);
+        }
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.REMOVE_PARTICIPANT_RESPONSE,
+      async (result: types.IRemoveParticipantResponse) => {
+        console.log(result);
+        if (result.message === 'ok') {
+          if (result.changeUser) {
+            addNewParticipant({
+              email: result.email,
+              organizationId: result.data.organizationId,
+              type: result.type === 'admin' ? 'guestParticipant' : 'guestAdmin',
+            });
+            return;
+          }
           refreshOrganizations();
           changeCurrentOrganization(undefined);
           changeCurrentOrganization(result.data.organizationId);

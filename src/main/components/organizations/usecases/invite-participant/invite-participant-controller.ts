@@ -7,6 +7,7 @@ export class InviteParticipantController {
 
   async handle(data: InviteParticipantRequestDTO) {
     try {
+      console.log(data, ' create');
       const response = await this.addNewParticipantUseCase.execute(data);
       return {
         response: IPCTypes.ADD_NEW_PARTICIPANT_ORGANIZATION_RESPONSE,

@@ -25,10 +25,12 @@ export interface IRemoveUser {
   organizationId: string;
   email: string;
   type: 'admin' | 'participant';
+  changeUser?: boolean;
 }
 
 export interface IRemoveInvite {
   organizationId: string;
   email: string;
   type: 'guestAdmin' | 'guestParticipant';
+  changeUser?: boolean;
 }
