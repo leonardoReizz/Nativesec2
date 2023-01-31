@@ -20,7 +20,8 @@
         background-color: $gray-700
 
 
-.light
+.dropdown.light
+  background-color: $gray-100
   .option
     background-color: $gray-100
     >div
@@ -28,7 +29,6 @@
         background-color: $gray-400
 
   .input
-    background-color: $gray-100
     input
       color: $black
       &:hover
@@ -76,15 +76,19 @@
     position: absolute
     top: 65px
     right: 0
-    border-radius: 10px
+    border-radius: $default-radius
     overflow: hidden
     transition: opacity 0.2s, visibility 0.2s
     opacity: 0
     visibility: hidden
     z-index: 400 !important
 
+    -webkit-box-shadow: 0px 0px 20px -8px rgba(0,0,0,0.75)
+    -moz-box-shadow: 0px 0px 20px -8px rgba(0,0,0,0.75)
+    box-shadow: 0px 0px 20px -8px #000000
+
     div
-      padding: 12px 20px
+      padding: 10px 20px
       cursor: pointer
 
   .option.noText
@@ -94,12 +98,10 @@
   @include flex(center, center, row)
   width: 100%
 
-
   .input
     @include flex(flex-start, center, column)
     border-radius: $default-radius
     position: relative
-
 
     svg
       position: absolute

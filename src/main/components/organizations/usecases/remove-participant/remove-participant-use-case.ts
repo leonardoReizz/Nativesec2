@@ -1,3 +1,4 @@
+import { update } from 'main/database/migrations/versions/1.1.3';
 import { IToken } from '../../../../types';
 import { store } from '../../../../main';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
@@ -16,6 +17,7 @@ export class RemoveParticipantUseCase {
     const { accessToken, tokenType } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
 
+    console.log(data);
     let response;
 
     if (data.type === 'admin') {
@@ -31,6 +33,7 @@ export class RemoveParticipantUseCase {
     }
 
     console.log(response);
+    console.log(response.data.detail[0]);
 
     if (response.status === 200 && response.data.status === 'ok') {
       const organizationUpdated = response.data
@@ -50,6 +53,7 @@ export class RemoveParticipantUseCase {
         administradores: JSON.stringify(organizationUpdated.administradores),
       });
 
+      console.log(updateDatabase);
       if (updateDatabase instanceof Error) {
         throw new Error(
           `Error update organization in Remove Participant Use Case: ${updateDatabase}`

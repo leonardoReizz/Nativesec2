@@ -131,6 +131,7 @@ export function useIpcOrganization() {
             ...toastOptions,
             toastId: 'remove-participant-error',
           });
+          updateLoading(false);
         }
       }
     );

@@ -60,6 +60,9 @@ export function Sidebar({
           </li>
         </ul>
       </main>
+      <footer>
+        <button type="button">Voltar</button>
+      </footer>
     </div>
   );
 }

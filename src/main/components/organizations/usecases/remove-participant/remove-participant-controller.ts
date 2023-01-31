@@ -7,13 +7,11 @@ export class RemoveParticipantController {
 
   async handle(data: IRemoveParticipantRequestDTO) {
     try {
-      const message = await this.removeParticipantUseCase.execute(data);
+      const response = await this.removeParticipantUseCase.execute(data);
 
       return {
         response: IPCTypes.REMOVE_PARTICIPANT_RESPONSE,
-        data: {
-          message,
-        },
+        data: response,
       };
     } catch (error) {
       const messageError = (error as Error).message;

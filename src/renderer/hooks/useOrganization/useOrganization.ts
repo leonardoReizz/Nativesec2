@@ -14,10 +14,10 @@ export function useOrganization() {
     organizationContext.currentOrganization?.convidados_participantes || '[]'
   ).filter((user: string) => user.toLowerCase().includes(input));
   const filteredAdmin = JSON.parse(
-    organizationContext.currentOrganization?.participantes || '[]'
+    organizationContext.currentOrganization?.administradores || '[]'
   ).filter((user: string) => user.toLowerCase().includes(input));
   const filteredParticipant = JSON.parse(
-    organizationContext.currentOrganization?.administradores || '[]'
+    organizationContext.currentOrganization?.participantes || '[]'
   ).filter((user: string) => user.toLowerCase().includes(input));
 
   const createOrganization = useCallback(

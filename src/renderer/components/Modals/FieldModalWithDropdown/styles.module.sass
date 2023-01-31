@@ -4,8 +4,10 @@
 .reactModalContent.dark
   color: $white
   background-color: $gray-900
+  
   h2
     color: $white
+
   .buttons
     button
       background-color: $gray-700
@@ -19,6 +21,7 @@
 .reactModalContent.light
   background-color: $white
   h2
+
   .buttons
     button
       background-color: $gray-100
@@ -30,6 +33,7 @@
           background-color: $red-100-hover
       &:hover
         background-color: $gray-400
+        
 .reactModalOverlay
   @include flex(center, center ,column)
   z-index: 4000
@@ -55,9 +59,9 @@
   gap: 1rem
 
   h3
-    font-weight: 600
     text-align: center
-    font-size: 1.3rem
+    font-size: 1.2rem
+
 
     &:nth-child(2)
       margin-top: -1.5rem
@@ -73,7 +77,7 @@
       @include flex(center, center ,column)
       width: 100%
       gap: .5rem
-      margin-top: 5rem
+      margin-top: 3rem
 
       button
         @include flex(center, center ,center)
