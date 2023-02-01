@@ -183,7 +183,11 @@ export function HeaderSafeBox() {
                   <BsCheck2 />
                   Salvar
                 </button>
-                <button type="button" onClick={handleDiscart}>
+                <button
+                  type="button"
+                  onClick={handleDiscart}
+                  className={styles.red}
+                >
                   <AiFillDelete />
                   Descartar
                 </button>

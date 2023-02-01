@@ -4,6 +4,7 @@ import { FaBell, FaUser } from 'react-icons/fa';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
+import { Tooltip } from '@chakra-ui/react';
 import styles from './styles.module.sass';
 
 export function Navbar() {
@@ -44,30 +45,38 @@ export function Navbar() {
       </div>
       <div className={styles.icons}>
         {currentOrganization && (
-          <button
-            type="button"
-            onClick={handleOpenWorkspaceSettings}
-            className={`${
-              pathname === '/workspaceSettings' ? styles.selected : ''
-            } ${styles.workspaceSettings}`}
-          >
-            <MdSettings />
-          </button>
+          <Tooltip hasArrow label="Organização" aria-label="A tooltip">
+            <button
+              type="button"
+              onClick={handleOpenWorkspaceSettings}
+              className={`${
+                pathname === '/workspaceSettings' ? styles.selected : ''
+              } ${styles.workspaceSettings}`}
+            >
+              <MdSettings />
+            </button>
+          </Tooltip>
         )}
         <div className={styles.iconsUser}>
-          <button
-            type="button"
-            className={`${notifications.length > 0 ? styles.selected : ''}`}
-          >
-            <FaBell />
-          </button>
-          <button
-            type="button"
-            onClick={handleOpenUserSettings}
-            className={`${pathname === '/userSettings' ? styles.selected : ''}`}
-          >
-            <FaUser />
-          </button>
+          <Tooltip hasArrow label="Notificações" aria-label="A tooltip">
+            <button
+              type="button"
+              className={`${notifications.length > 0 ? styles.selected : ''}`}
+            >
+              <FaBell />
+            </button>
+          </Tooltip>
+          <Tooltip hasArrow label="Usuario" aria-label="A tooltip">
+            <button
+              type="button"
+              onClick={handleOpenUserSettings}
+              className={`${
+                pathname === '/userSettings' ? styles.selected : ''
+              }`}
+            >
+              <FaUser />
+            </button>
+          </Tooltip>
         </div>
       </div>
     </div>

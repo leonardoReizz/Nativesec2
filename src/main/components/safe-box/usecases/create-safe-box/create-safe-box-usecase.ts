@@ -43,6 +43,7 @@ export class CreateSafeBoxUseCase {
     ).then((result) => {
       return result;
     });
+
     await Promise.all(
       data.conteudo.map(async (item: any) => {
         if (item.crypto === false) {

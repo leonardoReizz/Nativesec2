@@ -152,9 +152,67 @@ export function useSafeBox() {
     }
   }
 
+  function updateUsers(data: types.IUpdateUsersData) {
+    const { myEmail } = window.electron.store.get('user') as IUser;
+
+    let filterUsersAdmin = data.usersAdmin.filter((user) => user === myEmail);
+    let filterUsersParticipant = data.usersParticipant.filter(
+      (user) => user === myEmail
+    );
+
+    if (safeBoxContext.currentSafeBox) {
+      if (data.newType === 'admin') {
+        filterUsersParticipant = filterUsersParticipant.filter(
+          (user) => user === data.user
+        );
+
+        filterUsersAdmin.push(data.user);
+      } else {
+        filterUsersAdmin = filterUsersAdmin.filter(
+          (user) => user === data.user
+        );
+        filterUsersParticipant.push(data.user);
+      }
+
+      window.electron.ipcRenderer.sendMessage('useIPC', {
+        event: IPCTypes.UPDATE_SAFE_BOX,
+        data: {
+          id: safeBoxContext.currentSafeBox?._id,
+          usuarios_leitura: filterUsersParticipant,
+          usuarios_escrita: filterUsersAdmin,
+          usuarios_leitura_deletado:
+            safeBoxContext.currentSafeBox.usuarios_leitura_deletado,
+          usuarios_escrita_deletado:
+            safeBoxContext.currentSafeBox.usuarios_escrita_deletado,
+          tipo: safeBoxContext.currentSafeBox.tipo,
+          criptografia: 'rsa',
+          nome: safeBoxContext.currentSafeBox.nome,
+          descricao: safeBoxContext.currentSafeBox.descricao,
+          conteudo: safeBoxContext.currentSafeBox.conteudo,
+          organizacao: data.organizationId,
+          data_atualizacao: safeBoxContext.currentSafeBox?.data_atualizacao,
+          data_hora_create: safeBoxContext.currentSafeBox?.data_hora_create,
+        },
+      });
+    }
+
+    if (
+      filterUsersAdmin.length === 0 &&
+      filterUsersParticipant.length === 0 &&
+      editUsersAdmin.length === 0
+    ) {
+      deletedUsersAdmin = deletedUsersAdmin.filter((user) => user !== myEmail);
+      editUsersAdmin = [...editUsersAdmin, myEmail];
+      editUsersParticipant = editUsersParticipant.filter(
+        (email) => email !== myEmail
+      );
+    }
+  }
+
   const changeSearchValue = useCallback((newValue: string) => {
     setSearchValue(newValue);
   }, []);
+
   function getSafeBoxes(organizationId: string) {
     safeBoxContext.changeSafeBoxesIsLoading(true);
     window.electron.ipcRenderer.sendMessage('getSafeBoxes', {
@@ -223,6 +281,7 @@ export function useSafeBox() {
     changeSearchValue,
     searchValue,
     filteredSafeBoxes,
+    updateUsers,
     ...createSafeBox,
     ...safeBoxContext,
   };

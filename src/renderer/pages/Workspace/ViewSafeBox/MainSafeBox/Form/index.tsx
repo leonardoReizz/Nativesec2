@@ -88,6 +88,7 @@ export function Form() {
               text="Nome"
               name="0.formName"
               value={formikProps.values[0].formName}
+              theme={theme}
             />
           ) : (
             ''
@@ -153,6 +154,7 @@ export function Form() {
               value={
                 formikProps.values[formikProps.values.length - 1].description
               }
+              theme={theme}
             />
           ) : (
             ''

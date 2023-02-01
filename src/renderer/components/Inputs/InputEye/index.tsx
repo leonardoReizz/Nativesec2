@@ -1,7 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/require-default-props */
+import { Tooltip } from '@chakra-ui/react';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { GiPadlock, GiPadlockOpen } from 'react-icons/gi';
+import { MdContentCopy } from 'react-icons/md';
 import { SafeBoxModeType } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { ThemeType } from 'renderer/contexts/UserConfigContext/types';
 import styles from './styles.module.sass';
@@ -47,34 +49,72 @@ export function InputEye({
   ...props
 }: InputEyeProps) {
   return (
-    <div
-      className={`${styles.inputContainer} ${
-        theme === 'dark' ? styles.dark : styles.light
-      }`}
-    >
-      <div className={`${styles.input} ${!isValid ? styles.notValid : ''}`}>
-        <span>{text}</span>
-        <input type={type || 'text'} {...props} placeholder=" " value={value} />
-        {viewEye && (
-          <div className={styles.eye}>
-            {(mode === 'view' || mode === 'decrypted') && (
-              <button type="button" onClick={decrypt}>
-                {encrypted &&
-                  (value?.startsWith('*****') ? (
-                    <AiFillEye />
-                  ) : (
-                    <AiFillEyeInvisible />
-                  ))}
-              </button>
-            )}
-            {mode === 'edit' && (
-              <button type="button" onClick={changeFormikDecrypt}>
-                {encrypted ? <GiPadlock /> : <GiPadlockOpen />}
-              </button>
-            )}
-          </div>
-        )}
+    <>
+      <div
+        className={`${styles.inputContainer} ${
+          theme === 'dark' ? styles.dark : styles.light
+        }`}
+      >
+        <div className={`${styles.input} ${!isValid ? styles.notValid : ''}`}>
+          <span>{text}</span>
+          <input
+            type={type || 'text'}
+            {...props}
+            placeholder=" "
+            value={value}
+          />
+          {viewEye && (
+            <div className={styles.eye}>
+              {(mode === 'view' || mode === 'decrypted') &&
+                encrypted &&
+                (value?.startsWith('*****') ? (
+                  <Tooltip hasArrow label="Visualizar" aria-label="A tooltip">
+                    <button type="button" onClick={decrypt}>
+                      <AiFillEye />
+                    </button>
+                  </Tooltip>
+                ) : (
+                  <Tooltip hasArrow label="Esconder" aria-label="A tooltip">
+                    <button type="button" onClick={decrypt}>
+                      <AiFillEyeInvisible />
+                    </button>
+                  </Tooltip>
+                ))}
+              {mode === 'edit' &&
+                (encrypted ? (
+                  <Tooltip
+                    hasArrow
+                    label="Descriptografar"
+                    aria-label="A tooltip"
+                  >
+                    <button
+                      type="button"
+                      onClick={changeFormikDecrypt}
+                      className={`${!encrypted ? styles.red : ''}`}
+                    >
+                      <GiPadlock />
+                    </button>
+                  </Tooltip>
+                ) : (
+                  <Tooltip hasArrow label="Criptografar" aria-label="A tooltip">
+                    <button
+                      type="button"
+                      onClick={changeFormikDecrypt}
+                      className={`${!encrypted ? styles.red : ''}`}
+                    >
+                      <GiPadlockOpen />
+                    </button>
+                  </Tooltip>
+                ))}
+              <Tooltip hasArrow label="Copiar" aria-label="A tooltip">
+                <button type="button">
+                  <MdContentCopy />
+                </button>
+              </Tooltip>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

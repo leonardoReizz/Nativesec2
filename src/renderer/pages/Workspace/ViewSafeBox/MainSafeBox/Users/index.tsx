@@ -8,6 +8,10 @@ import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Dropdown } from 'renderer/components/Dropdown';
 import { VerifyModal } from 'renderer/components/Modals/VerifyModal';
+import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
+import { toast } from 'react-toastify';
+import { toastOptions } from 'renderer/utils/options/Toastify';
+import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import styles from './styles.module.sass';
 
 const usersOptions = [
@@ -29,14 +33,16 @@ const usersOptions = [
 ];
 
 export default function Users() {
-  const [isOpenVerifyModal, setIsOpenVerifyModal] = useState<boolean>(false);
+  const [isOpenVerifyNameModal, setIsOpenVerifyNameModal] =
+    useState<boolean>(false);
   const [typeUserAdd, setTypeUserAdd] = useState<'admin' | 'participant'>(
     'participant'
   );
   const [email, setEmail] = useState<string>('');
   const [readUsers, setReadUsers] = useState<string[]>([]);
   const [writeUsers, setWriteUsers] = useState<string[]>([]);
-  const { safeBoxMode } = useSafeBox();
+  const { safeBoxMode, updateUsers } = useSafeBox();
+  const [currentUserDelete, setCurrentUserDelete] = useState<any | undefined>();
 
   const {
     usersAdmin,
@@ -44,6 +50,7 @@ export default function Users() {
     changeUsersAdmin,
     changeUsersParticipant,
   } = useContext(CreateSafeBoxContext);
+  const { currentOrganization } = useOrganization();
 
   const { theme } = useUserConfig();
   const { currentSafeBox } = useContext(SafeBoxesContext);
@@ -72,6 +79,8 @@ export default function Users() {
     }
   }
 
+  console.log(writeUsers, readUsers);
+
   function handleRemoveParticipant(
     emailuser: string,
     type: 'admin' | 'participant'
@@ -89,8 +98,8 @@ export default function Users() {
     }
   }
 
-  const closeVerifyModal = useCallback(() => {
-    setIsOpenVerifyModal(false);
+  const closeVerifyNameModal = useCallback(() => {
+    setIsOpenVerifyNameModal(false);
   }, []);
 
   const changeUser = useCallback((item: any) => {
@@ -104,22 +113,38 @@ export default function Users() {
         break;
       case 3:
         console.log('open');
-        setIsOpenVerifyModal(true);
+        // setIsOpenVerifyModal(true);
         break;
       default:
         break;
     }
   }, []);
 
+  function handleDropDown(user: any, type: any, email: string) {
+    if (user.id === 3) {
+      setCurrentUserDelete({ email, type });
+      setIsOpenVerifyNameModal(true);
+    } else if (currentSafeBox) {
+      toast.loading('Alterando participantes', {
+        ...toastOptions,
+        toastId: 'organizationChangeUser',
+      });
+      if (currentOrganization) {
+        updateUsers(usersAdmin, usersParticipant, currentOrganization?._id);
+      }
+    }
+  }
+
   const removeUser = useCallback((verified: boolean) => {}, []);
 
   return (
     <>
-      <VerifyModal
-        isOpen={isOpenVerifyModal}
-        onRequestClose={closeVerifyModal}
+      <VerifyNameModal
+        isOpen={isOpenVerifyNameModal}
+        onRequestClose={closeVerifyNameModal}
         callback={removeUser}
-        theme={theme}
+        nameToVerify={currentUserDelete}
+        inputText="Confirmar"
         title="Deseja remover"
       />
       <div

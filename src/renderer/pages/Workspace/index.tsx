@@ -12,6 +12,7 @@ import { CreateSafeBoxContextProvider } from 'renderer/contexts/CreateSafeBox/cr
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { IUserConfig } from 'renderer/contexts/UserConfigContext/types';
+import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import styles from './styles.module.sass';
 import { ViewSafeBox } from './ViewSafeBox';
 
@@ -87,7 +88,7 @@ export function Workspace() {
             />
           </div>
           <button type="button" ref={menuRef} onClick={handleOpenMenuIsCreate}>
-            <IoMdAdd />
+            <BiDotsHorizontalRounded />
           </button>
           <div
             className={`${styles.menuCreate} ${
@@ -99,6 +100,10 @@ export function Workspace() {
               <IoMdAdd />
               Novo Cofre
             </button>
+            <button type="button">
+              <IoReloadOutline />
+              Atualizar Cofres
+            </button>
             <span />
             <h4>Grupos</h4>
             <button type="button">
@@ -106,9 +111,6 @@ export function Workspace() {
               Novo Grupo de Cofres
             </button>
           </div>
-          <button type="button">
-            <IoReloadOutline />
-          </button>
         </div>
         <div className={styles.safeBoxes}>
           <div className={styles.safeBox}>

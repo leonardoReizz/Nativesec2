@@ -19,3 +19,11 @@ export interface IDecrypt {
   itemName: string;
   position: string;
 }
+
+export interface IUpdateUsersData {
+  usersAdmin: string[];
+  usersParticipant: string[];
+  user: string;
+  organizationId: string;
+  newType: 'admin' | 'participant';
+}
