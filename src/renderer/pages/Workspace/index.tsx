@@ -64,7 +64,7 @@ export function Workspace() {
         theme === 'dark' ? styles.dark : styles.light
       }`}
     >
-      <div
+      {/* <div
         className={`${styles.safeBoxesContainer} ${
           safeBoxMode !== 'create' ? styles.safeBoxesContainerVisible : ''
         }`}
@@ -119,7 +119,7 @@ export function Workspace() {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
       <div className={styles.currentSafeBox}>
         <CreateSafeBoxContextProvider>
           <ViewSafeBox />

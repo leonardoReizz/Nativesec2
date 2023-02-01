@@ -38,10 +38,10 @@ export function Navbar() {
       }`}
     >
       <div className={styles.title}>
-        {pathname === '/userSettings' && <h3>Configurações do Usuario</h3>}
+        {/* {pathname === '/userSettings' && <h3>Configurações do Usuario</h3>}
         {pathname === '/workspaceSettings' && currentOrganization && (
           <h3>Configurações da Organização</h3>
-        )}
+        )} */}
       </div>
       <div className={styles.icons}>
         {currentOrganization && (
