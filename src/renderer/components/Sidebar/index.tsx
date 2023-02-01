@@ -29,7 +29,7 @@ export function Sidebar() {
       }
       updateSafeBoxes([]);
       changeCurrentSafeBox(undefined);
-      getSafeBoxes(organizationId);
+      // getSafeBoxes(organizationId);
       changeCurrentOrganization(organizationId);
       updateLastOrganizationId(organizationId);
       return navigate(`/workspace/${organizationId}`);

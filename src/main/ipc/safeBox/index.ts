@@ -186,6 +186,7 @@ const safeBox = [
         organizationId: arg[0].organizationId,
         safeBoxId: arg[0].safeBoxId,
       });
+
       event.reply('getSafeBox-response', {
         safeBox: listDBSafeBox,
       });

@@ -1,3 +1,4 @@
+import { listSafeBoxController } from '../components/safe-box/usecases/list-safe-box';
 import { removeInviteParticipantController } from '../components/organizations/usecases/remove-invite-participant';
 import { removeParticipantController } from '../components/organizations/usecases/remove-participant';
 import { verifyUserRegisteredController } from '../components/user/use-cases/verify-user-registered';
@@ -70,6 +71,8 @@ export async function useIpcActions(
       return getUserController.handle();
     case IPCTypes.REFRESH_SAFEBOXES:
       return refreshSafeBoxes(arg);
+    case IPCTypes.GET_SAFE_BOXES:
+      return listSafeBoxController.handle(arg.data);
     case IPCTypes.GET_MY_INVITES:
       return getMyInvites();
     case IPCTypes.GENERATE_PAR_KEYS:

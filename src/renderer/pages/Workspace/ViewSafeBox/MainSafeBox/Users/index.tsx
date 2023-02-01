@@ -130,7 +130,12 @@ export default function Users() {
         toastId: 'organizationChangeUser',
       });
       if (currentOrganization) {
-        updateUsers(usersAdmin, usersParticipant, currentOrganization?._id);
+        updateUsers(
+          usersAdmin,
+          usersParticipant,
+          currentOrganization?._id,
+          type
+        );
       }
     }
   }

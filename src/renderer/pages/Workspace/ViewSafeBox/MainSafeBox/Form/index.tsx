@@ -13,6 +13,8 @@ import {
 } from 'renderer/hooks/useCreateSafeBox/useCreateSafeBox';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { TextAreaEye } from 'renderer/components/TextAreas/TextAreaEye';
+import { toast } from 'react-toastify';
+import { toastOptions } from 'renderer/utils/options/Toastify';
 import formik from '../../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 import * as types from './types';
@@ -28,10 +30,12 @@ export function Form() {
   const { formikIndex, formikProps } = useContext(CreateSafeBoxContext);
   const { decryptMessage, safeBoxMode } = useSafeBox();
   const { theme } = useUserConfig();
+
   function handleDecryptMessage({
     text,
     itemName,
     position,
+    copy,
   }: types.IDecryptItem) {
     if (!text.startsWith('******')) {
       const myValues: IFormikItem = formik[formikIndex].item;
@@ -40,7 +44,7 @@ export function Form() {
         return position;
       });
     } else {
-      setDecryptItem({ text, itemName, position });
+      setDecryptItem({ text, itemName, position, copy });
       setIsOpenVerifySafetyPhraseModal(true);
     }
   }
@@ -58,10 +62,20 @@ export function Form() {
     setIsOpenVerifySafetyPhraseModal(false);
   }, []);
 
-  const setDecryptedMessage = (result: IDecryptResponse) => {
-    handleCloseVerifySafePhraseModal();
-    formikProps.setFieldValue(`${result.position}`, result.message);
-  };
+  const setDecryptedMessage = useCallback((result: IDecryptResponse) => {
+    if (result.copy) {
+      toast.success('Copiado', {
+        ...toastOptions,
+        toastId: 'copied',
+        autoClose: 2000,
+      });
+      navigator.clipboard.writeText(result.message);
+      handleCloseVerifySafePhraseModal();
+    } else {
+      handleCloseVerifySafePhraseModal();
+      formikProps.setFieldValue(`${result.position}`, result.message);
+    }
+  }, []);
 
   const changeFormikDecrypt = useCallback(
     ({ position }: types.IChangeFormikDecrypt) => {
@@ -107,6 +121,14 @@ export function Form() {
                   changeFormikDecrypt({ position: `${index}.${item.name}` })
                 }
                 theme={theme}
+                copy={() =>
+                  handleDecryptMessage({
+                    text: formikProps.values[index][`${item.name}`],
+                    itemName: String(item.name),
+                    position: `${index}.${item.name}`,
+                    copy: true,
+                  })
+                }
                 decrypt={() =>
                   handleDecryptMessage({
                     text: formikProps.values[index][`${item.name}`],

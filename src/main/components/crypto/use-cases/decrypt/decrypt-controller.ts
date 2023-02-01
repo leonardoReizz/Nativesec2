@@ -7,10 +7,11 @@ interface decrypt {
   message: string;
   position: string;
   name: string;
+  copy?: boolean;
 }
 
 export class DecryptController {
-  async handle({ message, position, name }: decrypt) {
+  async handle({ message, position, name, copy }: decrypt) {
     console.log(message, position, name);
     const { safetyPhrase } = store.get('user') as IUser;
     const encryptedMessage = String(message);
@@ -27,6 +28,7 @@ export class DecryptController {
           message: decrypted,
           position,
           name,
+          copy,
         },
       },
     };

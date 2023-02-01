@@ -18,6 +18,7 @@ export interface IDecrypt {
   text: string;
   itemName: string;
   position: string;
+  copy?: boolean;
 }
 
 export interface IUpdateUsersData {

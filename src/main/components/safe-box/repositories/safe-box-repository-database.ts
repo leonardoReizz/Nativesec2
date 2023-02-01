@@ -101,4 +101,31 @@ export class SafeBoxRepositoryDatabase
       );
     });
   }
+
+  async list(organizationId: string) {
+    const db = newDatabase.getDatabase();
+    const select: SafeBoxDatabaseModel[] = await new Promise(
+      (resolve, reject) => {
+        db.all(
+          `SELECT * FROM safebox WHERE organizacao = '${organizationId}'`,
+          (error, rows) => {
+            if (error) reject(error);
+            resolve(rows);
+          }
+        );
+      }
+    );
+
+    if (select instanceof Error) {
+      return select;
+    }
+
+    const sort = select.sort((x, y) => {
+      const a = x.nome.toUpperCase();
+      const b = y.nome.toUpperCase();
+      return a == b ? 0 : a > b ? 1 : -1;
+    });
+
+    return sort;
+  }
 }

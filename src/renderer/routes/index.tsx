@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Loading } from 'renderer/components/Loading';
 import { useIpcOrganization } from 'renderer/hooks/useIPCOrganizations/useIpcOrganizations';
+import { useIPCSafeBox } from 'renderer/hooks/useIPCSafeBox/useIPCSafeBox';
 import { Auth } from 'renderer/pages/Auth';
 import { CreateOrganization } from 'renderer/pages/CreateOrganization';
 import { Home } from 'renderer/pages/Home/index';
@@ -15,6 +16,7 @@ export type LoadingType = 'false' | 'true' | 'finalized';
 
 export function AppRoutes() {
   useIpcOrganization();
+  useIPCSafeBox();
   const [isLoading, setIsLoading] = useState<LoadingType>('false');
 
   const changeLoadingState = useCallback((state: LoadingType) => {

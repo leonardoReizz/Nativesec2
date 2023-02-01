@@ -60,9 +60,9 @@ export function Sidebar({
           </li>
         </ul>
       </main>
-      <footer>
+      {/* <footer>
         <button type="button">Voltar</button>
-      </footer>
+      </footer> */}
     </div>
   );
 }

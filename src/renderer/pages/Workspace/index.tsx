@@ -6,8 +6,6 @@ import { CiSearch } from 'react-icons/ci';
 import { SafeBoxInfo } from 'renderer/components/SafeBox';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
-import { IPCTypes } from 'renderer/@types/IPCTypes';
-import { useIPCSafeBox } from 'renderer/hooks/useIPCSafeBox/useIPCSafeBox';
 import { CreateSafeBoxContextProvider } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
@@ -29,25 +27,19 @@ export function Workspace() {
     changeSearchValue,
     searchValue,
     safeBoxMode,
+    getSafeBoxes,
   } = useSafeBox();
+
   const [update, setUpdate] = useState<boolean>(true);
   const [menuCreateIsOpen, setMenuCreateIsOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLButtonElement>(null);
 
-  useIPCSafeBox();
-
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setUpdate(!update);
-    }, refreshTime * 1000);
-    window.electron.ipcRenderer.sendMessage('useIPC', {
-      event: IPCTypes.REFRESH_SAFEBOXES,
-      data: {
-        organizationId: currentOrganization?._id,
-      },
-    });
-    return () => clearTimeout(timer);
-  }, [update, refreshTime]);
+    if (currentOrganization) {
+      console.log(currentOrganization?._id);
+      getSafeBoxes(currentOrganization._id);
+    }
+  }, [update, refreshTime, currentOrganization]);
 
   function handleCreateSafeBox() {
     changeCurrentSafeBox(undefined);

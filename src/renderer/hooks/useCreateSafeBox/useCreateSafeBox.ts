@@ -6,6 +6,7 @@ export interface IDecryptResponse {
   message: string;
   position: string;
   name: string;
+  copy?: string;
 }
 
 interface UseCreateSafeBoxProps {

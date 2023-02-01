@@ -216,6 +216,7 @@ export function HeaderSafeBox() {
                   text="Tipo"
                   value={formik[formikIndex].name}
                   disabled={currentSafeBox !== undefined}
+                  theme={theme}
                 />
               </div>
               <div className={styles.option}>

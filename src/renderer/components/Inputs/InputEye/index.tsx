@@ -25,6 +25,7 @@ interface InputEyeProps {
   onClick?: React.MouseEventHandler<HTMLInputElement> | undefined;
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement> | undefined;
   disabled?: boolean;
+  copy?: () => void;
   onBlur?: {
     (e: React.FocusEvent): void;
     <T>(fieldOrEvent: T): T extends string ? (e: any) => void : void;
@@ -45,6 +46,7 @@ export function InputEye({
   mode,
   value,
   theme = 'light',
+  copy,
   encrypted = false,
   ...props
 }: InputEyeProps) {
@@ -107,7 +109,7 @@ export function InputEye({
                   </Tooltip>
                 ))}
               <Tooltip hasArrow label="Copiar" aria-label="A tooltip">
-                <button type="button">
+                <button type="button" onClick={copy}>
                   <MdContentCopy />
                 </button>
               </Tooltip>

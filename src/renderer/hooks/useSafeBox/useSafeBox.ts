@@ -215,8 +215,11 @@ export function useSafeBox() {
 
   function getSafeBoxes(organizationId: string) {
     safeBoxContext.changeSafeBoxesIsLoading(true);
-    window.electron.ipcRenderer.sendMessage('getSafeBoxes', {
-      organizationId,
+    window.electron.ipcRenderer.sendMessage('useIPC', {
+      event: IPCTypes.GET_SAFE_BOXES,
+      data: {
+        organizationId,
+      },
     });
   }
 
@@ -231,7 +234,7 @@ export function useSafeBox() {
     });
   }
 
-  function decryptMessage({ text, itemName, position }: types.IDecrypt) {
+  function decryptMessage({ text, itemName, position, copy }: types.IDecrypt) {
     if (
       safeBoxContext.currentSafeBox !== undefined &&
       JSON.parse(safeBoxContext.currentSafeBox.conteudo)[
@@ -247,6 +250,7 @@ export function useSafeBox() {
             ],
             itemName,
             position,
+            copy,
           },
         });
       }

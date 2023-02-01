@@ -24,6 +24,7 @@ export function useIPCSafeBox() {
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_SAFEBOXES_RESPONSE,
       (result: types.IGetAllSafeBoxResponse) => {
+        console.log(result, ' refresh');
         if (result.safeBoxResponse) {
           updateSafeBoxes(window.electron.store.get('safebox'));
           if (currentSafeBox !== undefined) {
@@ -80,13 +81,25 @@ export function useIPCSafeBox() {
   }, []);
 
   useEffect(() => {
-    window.electron.ipcRenderer.on(IPCTypes.GET_SAFE_BOXES_RESPONSE, () => {
-      changeSafeBoxesIsLoading(false);
-      const getSafeBox = window.electron.store.get('safebox');
-      if (getSafeBox !== undefined) {
-        updateSafeBoxes(getSafeBox);
+    window.electron.ipcRenderer.on(
+      IPCTypes.GET_SAFE_BOXES_RESPONSE,
+      (result: types.IPCResponse) => {
+        console.log(result);
+        changeSafeBoxesIsLoading(false);
+        if (result.message === 'ok') {
+          return updateSafeBoxes(window.electron.store.get('safebox'));
+        }
+
+        return toast.error('Erro ao listar cofres', {
+          ...toastOptions,
+          toastId: 'errorListSafeBox',
+        });
+        // const getSafeBox = window.electron.store.get('safebox');
+        // if (getSafeBox !== undefined) {
+        //   updateSafeBoxes(getSafeBox);
+        // }
       }
-    });
+    );
   }, []);
 
   useEffect(() => {
