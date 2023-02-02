@@ -7,7 +7,6 @@ import { Input } from 'renderer/components/Inputs/Input';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Dropdown } from 'renderer/components/Dropdown';
-import { VerifyModal } from 'renderer/components/Modals/VerifyModal';
 import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
 import { toast } from 'react-toastify';
 import { toastOptions } from 'renderer/utils/options/Toastify';
@@ -120,8 +119,9 @@ export default function Users() {
     }
   }, []);
 
-  function handleDropDown(user: any, type: any, email: string) {
-    if (user.id === 3) {
+  function handleDropDown(item: any, type: any, email: string) {
+    console.log('ola');
+    if (item.id === 3) {
       setCurrentUserDelete({ email, type });
       setIsOpenVerifyNameModal(true);
     } else if (currentSafeBox) {
@@ -130,12 +130,13 @@ export default function Users() {
         toastId: 'organizationChangeUser',
       });
       if (currentOrganization) {
-        updateUsers(
+        updateUsers({
           usersAdmin,
           usersParticipant,
-          currentOrganization?._id,
-          type
-        );
+          user: email,
+          organizationId: currentOrganization._id,
+          newType: item.value,
+        });
       }
     }
   }
@@ -199,6 +200,7 @@ export default function Users() {
                   theme={theme}
                   options={usersOptions}
                   value="Leitura e Escrita"
+                  onChange={(item) => handleDropDown(item, 'admin', user)}
                 />
               </div>
             ))}
@@ -209,7 +211,7 @@ export default function Users() {
                   theme={theme}
                   options={usersOptions}
                   value="Leitura e Escrita"
-                  onChange={changeUser}
+                  onChange={(item) => handleDropDown(item, 'participant', user)}
                 />
               </div>
             ))}

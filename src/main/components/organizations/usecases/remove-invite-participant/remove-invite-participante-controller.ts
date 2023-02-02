@@ -13,12 +13,7 @@ export class RemoveInviteParticipantController {
       if (data.changeUser) {
         return {
           response: IPCTypes.REMOVE_INVITE_PARTICIPANT_RESPONSE,
-          data: {
-            ...response,
-            email: data.email,
-            type: data.type,
-            changeUser: data.changeUser,
-          },
+          data: response,
         };
       }
       return {

@@ -22,8 +22,12 @@ interface IWorkspaceMenuProps {
   closeSidebar: () => void;
 }
 export function WorkspaceMenu({ closeSidebar }: IWorkspaceMenuProps) {
-  const { organizations, organizationsIcons, currentOrganization } =
-    useOrganization();
+  const {
+    organizations,
+    organizationsIcons,
+    currentOrganization,
+    changeCurrentOrganization,
+  } = useOrganization();
   const [menuCreateIsOpen, setMenuCreateIsOpen] = useState<boolean>(false);
 
   const {
@@ -41,7 +45,9 @@ export function WorkspaceMenu({ closeSidebar }: IWorkspaceMenuProps) {
   const { theme } = useUserConfig();
 
   function changeOrganization(organizationId: string) {
-    setIsOpenMenu(false);
+    navigate(`/workspace/${organizationId}`);
+    changeCurrentSafeBox(undefined);
+    changeCurrentOrganization(organizationId);
   }
 
   function handleCreateSafeBox() {
@@ -95,10 +101,8 @@ export function WorkspaceMenu({ closeSidebar }: IWorkspaceMenuProps) {
                       (icon) => icon._id === currentOrganization?._id
                     )[0]?.icone
                   }
-                  changeOrganization={changeOrganization}
                   key={currentOrganization._id}
                 />
-                <h4>{currentOrganization.nome}</h4>
                 <HiOutlineChevronUpDown />
               </div>
             </>
@@ -126,7 +130,6 @@ export function WorkspaceMenu({ closeSidebar }: IWorkspaceMenuProps) {
                 changeOrganization={changeOrganization}
                 key={organization._id}
               />
-              <h4>{organization?.nome}</h4>
             </button>
           ))}
         </div>

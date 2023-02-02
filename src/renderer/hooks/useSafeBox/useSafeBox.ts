@@ -1,3 +1,5 @@
+import { ISafeBoxAPIModel } from 'main/components/safe-box/model/SafeBox';
+import { ISafeBoxDatabase } from 'main/ipc/organizations/types';
 import { IUser } from 'main/types';
 import { useCallback, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -157,6 +159,26 @@ export function useSafeBox() {
     }
   }
 
+  function updateSafeBox(safeBox: types.IUpdateSafeBoxData) {
+    window.electron.ipcRenderer.sendMessage('useIPC', {
+      event: IPCTypes.UPDATE_SAFE_BOX,
+      data: {
+        id: safeBox._id,
+        usuarios_leitura: safeBox.usuarios_leitura,
+        usuarios_escrita: safeBox.usuarios_escrita,
+        usuarios_leitura_deletado: safeBox.usuarios_leitura_deletado,
+        usuarios_escrita_deletado: safeBox.usuarios_escrita_deletado,
+        tipo: safeBox.tipo,
+        criptografia: 'rsa',
+        nome: safeBox.nome,
+        descricao: safeBox.descricao,
+        conteudo: safeBox.conteudo,
+        organizacao: safeBox.organizacao,
+        data_atualizacao: safeBox.data_atualizacao,
+      },
+    });
+  }
+
   function updateUsers(data: types.IUpdateUsersData) {
     const { myEmail } = window.electron.store.get('user') as IUser;
 
@@ -165,7 +187,7 @@ export function useSafeBox() {
       (user) => user === myEmail
     );
 
-    if (safeBoxContext.currentSafeBox) {
+    if (safeBoxContext.currentSafeBox && data.user !== myEmail) {
       if (data.newType === 'admin') {
         filterUsersParticipant = filterUsersParticipant.filter(
           (user) => user === data.user
@@ -179,39 +201,45 @@ export function useSafeBox() {
         filterUsersParticipant.push(data.user);
       }
 
-      window.electron.ipcRenderer.sendMessage('useIPC', {
-        event: IPCTypes.UPDATE_SAFE_BOX,
-        data: {
-          id: safeBoxContext.currentSafeBox?._id,
-          usuarios_leitura: filterUsersParticipant,
-          usuarios_escrita: filterUsersAdmin,
-          usuarios_leitura_deletado:
-            safeBoxContext.currentSafeBox.usuarios_leitura_deletado,
-          usuarios_escrita_deletado:
-            safeBoxContext.currentSafeBox.usuarios_escrita_deletado,
-          tipo: safeBoxContext.currentSafeBox.tipo,
-          criptografia: 'rsa',
-          nome: safeBoxContext.currentSafeBox.nome,
-          descricao: safeBoxContext.currentSafeBox.descricao,
-          conteudo: safeBoxContext.currentSafeBox.conteudo,
-          organizacao: data.organizationId,
-          data_atualizacao: safeBoxContext.currentSafeBox?.data_atualizacao,
-          data_hora_create: safeBoxContext.currentSafeBox?.data_hora_create,
-        },
-      });
+      // window.electron.ipcRenderer.sendMessage('useIPC', {
+      //   event: IPCTypes.UPDATE_SAFE_BOX,
+      //   data: {
+      //     id: safeBoxContext.currentSafeBox?._id,
+      //     usuarios_leitura: filterUsersParticipant,
+      //     usuarios_escrita: filterUsersAdmin,
+      //     usuarios_leitura_deletado:
+      //       safeBoxContext.currentSafeBox.usuarios_leitura_deletado,
+      //     usuarios_escrita_deletado:
+      //       safeBoxContext.currentSafeBox.usuarios_escrita_deletado,
+      //     tipo: safeBoxContext.currentSafeBox.tipo,
+      //     criptografia: 'rsa',
+      //     nome: safeBoxContext.currentSafeBox.nome,
+      //     descricao: safeBoxContext.currentSafeBox.descricao,
+      //     conteudo: safeBoxContext.currentSafeBox.conteudo,
+      //     organizacao: data.organizationId,
+      //     data_atualizacao: safeBoxContext.currentSafeBox?.data_atualizacao,
+      //     data_hora_create: safeBoxContext.currentSafeBox?.data_hora_create,
+      //   },
+      // });
     }
 
-    if (
-      filterUsersAdmin.length === 0 &&
-      filterUsersParticipant.length === 0 &&
-      editUsersAdmin.length === 0
-    ) {
-      deletedUsersAdmin = deletedUsersAdmin.filter((user) => user !== myEmail);
-      editUsersAdmin = [...editUsersAdmin, myEmail];
-      editUsersParticipant = editUsersParticipant.filter(
-        (email) => email !== myEmail
-      );
-    }
+    console.log({
+      id: safeBoxContext.currentSafeBox?._id,
+      usuarios_leitura: filterUsersParticipant,
+      usuarios_escrita: filterUsersAdmin,
+      usuarios_leitura_deletado:
+        safeBoxContext.currentSafeBox.usuarios_leitura_deletado,
+      usuarios_escrita_deletado:
+        safeBoxContext.currentSafeBox.usuarios_escrita_deletado,
+      tipo: safeBoxContext.currentSafeBox.tipo,
+      criptografia: 'rsa',
+      nome: safeBoxContext.currentSafeBox.nome,
+      descricao: safeBoxContext.currentSafeBox.descricao,
+      conteudo: safeBoxContext.currentSafeBox.conteudo,
+      organizacao: data.organizationId,
+      data_atualizacao: safeBoxContext.currentSafeBox?.data_atualizacao,
+      data_hora_create: safeBoxContext.currentSafeBox?.data_hora_create,
+    });
   }
 
   const changeSearchValue = useCallback((newValue: string) => {
@@ -300,5 +328,6 @@ export function useSafeBox() {
     filteredSafeBoxes,
     updateUsers,
     changeCurrentSafeBox,
+    updateSafeBox,
   };
 }

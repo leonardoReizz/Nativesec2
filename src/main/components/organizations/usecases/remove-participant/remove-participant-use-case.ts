@@ -1,4 +1,3 @@
-import { update } from 'main/database/migrations/versions/1.1.3';
 import { IToken } from '../../../../types';
 import { store } from '../../../../main';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
@@ -17,7 +16,7 @@ export class RemoveParticipantUseCase {
     const { accessToken, tokenType } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
 
-    console.log(data);
+    console.log(data, 'remove participant');
     let response;
 
     if (data.type === 'admin') {
@@ -32,8 +31,8 @@ export class RemoveParticipantUseCase {
       });
     }
 
-    console.log(response);
-    console.log(response.data.detail[0]);
+    console.log(response, ' remove participant');
+    console.log(response.data.detail[0], 'remove participant');
 
     if (response.status === 200 && response.data.status === 'ok') {
       const organizationUpdated = response.data
@@ -62,7 +61,12 @@ export class RemoveParticipantUseCase {
       await refreshOrganizations();
       return {
         message: 'ok',
-        data: { organizationId: organizationUpdated._id.$oid },
+        data: {
+          organizationId: organizationUpdated._id.$oid,
+          changeUser: data.changeUser,
+          email: data.email,
+          type: data.type,
+        },
       };
     }
     throw new Error(

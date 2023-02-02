@@ -97,7 +97,7 @@ export async function useIpcActions(
       return inviteParticipantController.handle(arg.data);
     case IPCTypes.UPDATE_ORGANIZATION:
       return updateOrganizationController.handle(arg.data);
-    case IPCTypes.REMOVE_PARTICIPANT:
+    case IPCTypes.REMOVE_PARTICIPANT_ORGANIZATION:
       return removeParticipantController.handle(arg.data);
     case IPCTypes.REMOVE_INVITE_PARTICIPANT:
       return removeInviteParticipantController.handle(arg.data);

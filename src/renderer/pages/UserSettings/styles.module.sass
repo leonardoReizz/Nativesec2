@@ -22,13 +22,12 @@
 
 .userSettings.dark
   color: $white
-
   @include scroolbarLight()
 
   .box.noHover
-    background-color: $gray-800 !important
+    background-color: $gray-750 !important
   .box
-    background-color: $gray-800
+    background-color: $gray-750 !important
     &:hover
       background-color: $gray-600
       cursor: pointer
@@ -51,7 +50,8 @@
     @include flex(flex-start, center, column)
     gap: 1rem
     width: 100%
-    max-width: 800px
+    max-width: 1100px
+    padding: 1rem
 
     h3
       margin-top: 2rem

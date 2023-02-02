@@ -5,13 +5,14 @@
 .icon
   @include flex(center, center, row)
   height: 55px
-  width: 55px
   cursor: pointer
   border-radius: 5rem
   position: relative
 
-
   button
+    @include flex(center, flex-start, row)
+    gap: .5rem
+
     p
       @include flex(center, center, row)
       background-color: $blue-100

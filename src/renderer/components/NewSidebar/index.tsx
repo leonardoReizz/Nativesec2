@@ -1,6 +1,6 @@
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi';
 import { useLocation } from 'react-router-dom';
 import styles from './styles.module.sass';
@@ -8,9 +8,9 @@ import { WorkspaceMenu } from './WorkspaceMenu';
 import { WorkspaceSettingsMenu } from './WorkspaceSettingsMenu';
 
 export function NewSidebar() {
+  const { pathname } = useLocation();
   const { theme } = useUserConfig();
   const [isOpenSidebar, setIsOpenSidebar] = useState<boolean>(true);
-  const { pathname } = useLocation();
 
   const closeSidebar = useCallback(() => {
     setIsOpenSidebar(false);
@@ -40,11 +40,7 @@ export function NewSidebar() {
             {pathname.includes('/workspaceSettings') ? (
               <WorkspaceSettingsMenu />
             ) : (
-              <WorkspaceMenu
-                closeSidebar={closeSidebar}
-                openSidebar={openSidebar}
-                isOpenSidebar={isOpenSidebar}
-              />
+              <WorkspaceMenu closeSidebar={closeSidebar} />
             )}
           </div>
         </div>

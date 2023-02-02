@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
-import { IIPCResponse } from 'renderer/@types/types';
 import { toastOptions } from 'renderer/utils/options/Toastify';
 import { IPCResponse } from '../useIPCSafeBox/types';
 import { useLoading } from '../useLoading';
@@ -93,6 +92,7 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.ADD_NEW_PARTICIPANT_ORGANIZATION_RESPONSE,
       async (result: IPCResponse) => {
+        console.log(result);
         toast.dismiss('organizationChangeUser');
         if (result.message === 'ok') {
           refreshOrganizations();
@@ -119,12 +119,12 @@ export function useIpcOrganization() {
       async (result: types.IRemoveParticipantResponse) => {
         console.log(result);
         if (result.message === 'ok') {
-          if (result.changeUser) {
+          if (result.data.changeUser) {
             addNewParticipant({
-              email: result.email,
+              email: result.data.email,
               organizationId: result.data.organizationId,
               type:
-                result.type === 'guestAdmin'
+                result.data.type === 'guestAdmin'
                   ? 'guestParticipant'
                   : 'guestAdmin',
             });
@@ -151,15 +151,18 @@ export function useIpcOrganization() {
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
-      IPCTypes.REMOVE_PARTICIPANT_RESPONSE,
+      IPCTypes.REMOVE_PARTICIPANT_ORGANIZATION_RESPONSE,
       async (result: types.IRemoveParticipantResponse) => {
-        console.log(result);
+        console.log(result, 'aaa');
         if (result.message === 'ok') {
-          if (result.changeUser) {
+          if (result.data.changeUser) {
             addNewParticipant({
-              email: result.email,
+              email: result.data.email,
               organizationId: result.data.organizationId,
-              type: result.type === 'admin' ? 'guestParticipant' : 'guestAdmin',
+              type:
+                result.data.type === 'admin'
+                  ? 'guestParticipant'
+                  : 'guestAdmin',
             });
             return;
           }

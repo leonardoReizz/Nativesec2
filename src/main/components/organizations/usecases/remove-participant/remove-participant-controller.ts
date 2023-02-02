@@ -11,23 +11,18 @@ export class RemoveParticipantController {
 
       if (data.changeUser) {
         return {
-          response: IPCTypes.REMOVE_PARTICIPANT_RESPONSE,
-          data: {
-            ...response,
-            email: data.email,
-            type: data.type,
-            changeUser: data.changeUser,
-          },
+          response: IPCTypes.REMOVE_PARTICIPANT_ORGANIZATION_RESPONSE,
+          data: response,
         };
       }
       return {
-        response: IPCTypes.REMOVE_PARTICIPANT_RESPONSE,
+        response: IPCTypes.REMOVE_PARTICIPANT_ORGANIZATION_RESPONSE,
         data: response,
       };
     } catch (error) {
       const messageError = (error as Error).message;
       return {
-        response: IPCTypes.REMOVE_PARTICIPANT_RESPONSE,
+        response: IPCTypes.REMOVE_PARTICIPANT_ORGANIZATION_RESPONSE,
         data: {
           message: messageError,
         },

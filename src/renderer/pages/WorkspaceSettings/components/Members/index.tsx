@@ -131,7 +131,7 @@ export function Members() {
         toastId: 'organizationChangeUser',
       });
 
-      if (type === 'admin ' || type === 'participant') {
+      if (type === 'admin' || type === 'participant') {
         removeUser({
           email,
           organizationId: currentOrganization._id,

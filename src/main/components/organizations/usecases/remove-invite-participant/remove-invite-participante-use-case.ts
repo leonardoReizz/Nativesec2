@@ -57,6 +57,9 @@ export class RemoveInviteParticipantUseCase {
         message: 'ok',
         data: {
           organizationId: data.organizationId,
+          email: data.email,
+          type: data.type,
+          changeUser: data.changeUser,
         },
       };
     }
