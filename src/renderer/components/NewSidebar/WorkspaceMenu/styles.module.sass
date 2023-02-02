@@ -1,0 +1,281 @@
+@use '../../../styles/_util' as *
+
+.workspaceMenu.dark
+  .search
+    .input
+      input
+        background-color: $gray-700
+        color: $white
+      svg
+        color: $white
+    >button
+      &:hover
+        background-color: $gray-600
+    .menuCreate
+      background-color: $gray-750
+      color: $gray-100
+      border-color: $gray-500 !important
+      span
+        background-color: $gray-500
+
+      button
+        color: $gray-100
+        &:hover
+          background-color: $gray-600
+  .safeBoxes
+    &::-webkit-scrollbar-track
+      background-color: $gray-800
+    &::-webkit-scrollbar-thumb
+      background-color: $gray-600
+    .safeBox
+      .title
+        span
+          &::before
+            background-color: $gray-700
+  .menu
+    .organizations
+      @include scroolbarDark()
+      
+.workspaceMenu.light
+  .search
+    .input
+      input
+        background-color: $gray-100
+    >button
+      background-color: $gray-100
+      svg
+        color: $black
+      &:hover
+        background-color: $gray-400
+    .menuCreate
+      background-color: $white
+      border-color: $white
+      span
+        background-color: $gray-400
+      button
+        &:hover
+          background-color: $gray-100
+  .safeBoxes
+    &::-webkit-scrollbar-track
+      background-color: $gray-100
+    &::-webkit-scrollbar-thumb
+      background-color: $gray-500
+    .safeBox
+      .title
+        span
+          &::before
+            background-color: $gray-300
+
+
+.workspaceMenu
+  width: 100%
+  z-index: 1000
+
+  .bar
+    .organization
+      @include flex(center, space-between, row)
+      width: 100%
+      height: 50px
+      gap: 10px
+      cursor: pointer
+
+      .icon
+        @include flex(center, flex-start, row)
+        width: 100%
+        transition: background-color 0.2s ease
+        
+        &:hover
+          background-color: $gray-700
+
+        svg
+          font-size: 1.3rem
+          margin-left: .5rem
+        img
+          width: 35px !important
+          height: 35px !important
+
+      >button
+        @include flex(center, center, row)
+        margin-right: 12px
+        min-height: 35px
+        min-width: 35px
+        border-radius: 100px
+        transition: background-color 0.2s ease
+        font-size: 1rem
+        &:hover
+          background-color: $gray-700
+  .menu
+    position: absolute
+    max-height: 435px
+    height: 0
+    left: 16px
+    width: 300px
+   
+    background-color: $gray-750
+    border: 1px solid $gray-600
+    border-radius: $default-radius
+    
+    z-index: 2100
+    visibility: hidden
+    opacity: 0
+
+    transition: opacity 0.2s ease-in-out,  visibility 0.6s ease
+
+    .organizations
+      @include flex(flex-start, flex-start, column)
+      padding: .5rem 0
+
+      max-height: calc( 500px - 150px  )
+
+      overflow: auto
+
+      .organization.selected
+        background-color: $gray-700
+      .organization
+        @include flex(center, flex-start, row)
+        width: 100%
+        gap: .5rem
+        height: 50px
+        padding: 0 .5rem
+        transition: background-color 0.2s ease
+
+        &:hover
+          background-color: $gray-700
+
+    .actions
+      width: 100%
+      border-top: 1px solid $gray-700
+      padding: .3rem
+
+      button
+        @include flex(center, flex-start, row)
+        width: 100%
+        height: 35px
+        gap: 1rem
+        padding: 0 1rem
+        font-size: .85rem
+        border-radius: $default-radius
+
+        transition: background-color 0.2s ease
+
+        svg
+          font-size: 1rem
+
+        &:hover
+          background-color: $gray-700
+  .search
+    @include flex(center, center, row)
+    gap: .5rem
+    width: 100%
+    padding: .5rem
+    position: relative
+
+    .input
+      width: 100%
+      position: relative
+
+      input
+        border-radius: $default-radius
+        height: 35px
+        width: 100%
+        padding:  0 .5rem 0 2.3rem
+
+      svg
+        position: absolute
+        top: 6px
+        left: 10px
+        height: 22px
+        width: 22px
+
+    >button
+      @include flex(center, center, row)
+      height: 35px
+      width: 43px
+      font-size: 1rem
+      color: $white
+      border-radius: 100px
+      cursor: pointer
+      transition: background-color 0.2s ease
+
+    .menuCreate
+      @include flex(flex-start, center, column)
+      position: absolute
+
+      visibility: hidden
+      opacity: 0
+
+      background-color: $gray-750
+      
+      width: 200px
+      z-index: 2003
+      top: 60px
+      left: 160px
+      border-radius: .3rem
+      transition: opacity 0.1s ease, visibility 0.1s ease
+      border: 1px solid $white
+
+      span
+        width: 100%
+        height: 1px
+
+      h4
+        padding: 0 .5rem
+        margin-top: .5rem
+
+      button
+        @include flex(center, flex-start, row)
+        width: 100%
+        transition: background-color 0.1s
+        height: 35px
+        padding: 0 1rem
+        gap: .5rem
+        font-size: .85rem
+
+
+
+  .menuCreate.open
+    visibility: visible
+    opacity: 1
+
+.safeBoxes
+  @include flex(center, flex-start, column)
+  width: 100%
+  height: calc( 100vh - 67px )
+  overflow-y: auto
+  overflow-x: hidden
+  
+
+  scroll-behavior: smooth
+
+  &::-webkit-scrollbar
+    width: .4em
+
+  &::-webkit-scrollbar-track
+    border-radius: 5rem
+
+  &::-webkit-scrollbar-thumb
+    border-radius: 5rem
+
+  .safeBox
+    width: 100%
+
+    .title
+      display: flex
+      width: 100%
+      margin-bottom: .5rem
+      margin-top: 1rem
+
+      span
+        @include flex(flex-start, center, column)
+        color: $gray-500
+        width: 100%
+        position: relative
+        margin-left: .5rem
+
+.menu.open  
+  opacity: 1
+  visibility: visible
+  height: 100%
+
+
+  

@@ -17,10 +17,10 @@ export function WorkspaceSettings() {
 
   return (
     <div className={styles.workspaceSettings}>
-      <Sidebar
+      {/* <Sidebar
         workspaceSettingsState={workspaceSettingsState}
         updateWorkspaceSettingsState={updateWorkspaceSettingsState}
-      />
+      /> */}
       {workspaceSettingsState === 'members' && <Members />}
       {workspaceSettingsState === 'settings' && <Settings />}
     </div>

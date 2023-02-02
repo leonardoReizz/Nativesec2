@@ -1,9 +1,8 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { useContext } from 'react';
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
-import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
+import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import styles from './styles.module.sass';
 import { SafeBoxIcon, SafeBoxIconType } from '../SafeBoxIcon';
 
@@ -12,7 +11,7 @@ interface SafeBoxProps {
 }
 
 export function SafeBoxInfo({ safeBox }: SafeBoxProps) {
-  const { changeCurrentSafeBox } = useContext(SafeBoxesContext);
+  const { changeCurrentSafeBox } = useSafeBox();
   const { theme } = useUserConfig();
 
   return (

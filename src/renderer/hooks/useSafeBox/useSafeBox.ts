@@ -1,15 +1,20 @@
 import { IUser } from 'main/types';
 import { useCallback, useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
+import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
 import formik from 'renderer/utils/Formik/formik';
+import { useOrganization } from '../useOrganization/useOrganization';
 import * as types from './types';
 
 export function useSafeBox() {
   const [searchValue, setSearchValue] = useState<string>('');
+  const { currentOrganization } = useOrganization();
   const safeBoxContext = useContext(SafeBoxesContext);
   const createSafeBox = useContext(CreateSafeBoxContext);
+  const navigate = useNavigate();
 
   const filteredSafeBoxes = safeBoxContext.safeBoxes?.filter(
     (safebox) =>
@@ -276,7 +281,15 @@ export function useSafeBox() {
       }
     });
   }
+
+  function changeCurrentSafeBox(safebox: ISafeBox | undefined) {
+    navigate(`/workspace/${currentOrganization?._id}`);
+    safeBoxContext.changeCurrentSafeBox(safebox);
+  }
+
   return {
+    ...createSafeBox,
+    ...safeBoxContext,
     getSafeBoxes,
     deleteSafeBox,
     submitSafeBox,
@@ -286,7 +299,6 @@ export function useSafeBox() {
     searchValue,
     filteredSafeBoxes,
     updateUsers,
-    ...createSafeBox,
-    ...safeBoxContext,
+    changeCurrentSafeBox,
   };
 }
