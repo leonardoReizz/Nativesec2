@@ -13,7 +13,7 @@ export function MainSafeBox() {
   const [isOpenAddParticipantModal, setIsOpenParticipantModal] =
     useState<boolean>(false);
   const { theme } = useUserConfig();
-  const { updateSafeBox, currentSafeBox } = useSafeBox();
+  const { addSafeBoxUsers, currentSafeBox } = useSafeBox();
 
   function handleTabForm() {
     setTab('form');
@@ -26,17 +26,9 @@ export function MainSafeBox() {
     setIsOpenParticipantModal(false);
   }, []);
 
-  function addUsers(users: { email: string; type: 'admin' | 'participant' }[]) {
-    console.log(addUsers);
-    const usuarios_escrita = users
-      .filter((user) => user.type === 'admin')
-      .map((user) => user.email);
-    const usuarios_leitura = users
-      .filter((user) => user.type === 'participant')
-      .map((user) => user.email);
-
+  function addUsers(usersAdmin: string[], usersParticipant: string[]) {
     if (currentSafeBox) {
-      updateSafeBox({
+      addSafeBoxUsers({
         _id: currentSafeBox?._id,
         anexos: JSON.parse(currentSafeBox?.anexos),
         conteudo: JSON.parse(currentSafeBox?.conteudo),
@@ -47,14 +39,14 @@ export function MainSafeBox() {
         tipo: currentSafeBox?.tipo,
         usuarios_escrita: [
           ...JSON.parse(currentSafeBox?.usuarios_escrita),
-          usuarios_escrita,
+          ...usersParticipant,
         ],
         usuarios_escrita_deletado: JSON.parse(
           currentSafeBox?.usuarios_escrita_deletado
         ),
         usuarios_leitura: [
           ...JSON.parse(currentSafeBox?.usuarios_escrita),
-          usuarios_leitura,
+          ...usersAdmin,
         ],
         usuarios_leitura_deletado: JSON.parse(
           currentSafeBox?.usuarios_leitura_deletado
@@ -90,13 +82,15 @@ export function MainSafeBox() {
           >
             Compartilhado com
           </button>
-          <Button
-            type="button"
-            className={styles.addParticipantButton}
-            text="Adicionar Participante"
-            Icon={<IoMdAdd />}
-            onClick={() => setIsOpenParticipantModal(true)}
-          />
+          {tab === 'users' && (
+            <Button
+              type="button"
+              className={styles.addParticipantButton}
+              text="Adicionar Participante"
+              Icon={<IoMdAdd />}
+              onClick={() => setIsOpenParticipantModal(true)}
+            />
+          )}
         </div>
         {tab === 'form' ? <Form /> : <Users />}
       </div>

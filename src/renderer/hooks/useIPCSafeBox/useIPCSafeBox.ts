@@ -107,8 +107,9 @@ export function useIPCSafeBox() {
       window.electron.ipcRenderer.on(
         IPCTypes.UPDATE_SAFE_BOX_RESPONSE,
         (response: types.IPCResponse) => {
+          toast.dismiss('updateSafeBox');
           if (response.message === 'ok') {
-            toast.success('Cofre Editado', {
+            toast.success('Cofre Atualizado', {
               ...toastOptions,
               toastId: 'updatedSafeBox',
             });

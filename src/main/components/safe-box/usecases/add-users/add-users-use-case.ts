@@ -1,25 +1,55 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
+import { KeyRepositoryAPI } from 'main/components/keys/repositories/key-repository-api';
+import { IToken, IUser } from '../../../../types';
 import { store } from '../../../../main';
-import { IToken } from '../../../../types';
+import openpgp from '../../../../crypto/openpgp';
 import { SafeBoxRepositoryAPI } from '../../repositories/safe-box-repository-api';
 import { SafeBoxRepositoryDatabase } from '../../repositories/safe-box-repository-database';
-import { CreateSafeBoxRequestDTO } from './create-safe-box-request-dto';
-import openpgp from '../../../../crypto/openpgp';
+import { IAddUsersRequestDTO } from './add-users-request-dto';
 import { refreshSafeBoxes } from '../../electron-store/store';
-import { KeyRepositoryAPI } from '../../../keys/repositories/key-repository-api';
 
-export class CreateSafeBoxUseCase {
+export class AddUsersUseCase {
   constructor(
     private safeBoxRepositoryAPI: SafeBoxRepositoryAPI,
-    private keyRepositoryAPI: KeyRepositoryAPI,
-    private safeBoxRepositoryDatabase: SafeBoxRepositoryDatabase
+    private safeBoxRepositoryDatabase: SafeBoxRepositoryDatabase,
+    private keyRepositoryAPI: KeyRepositoryAPI
   ) {}
 
-  async execute(data: CreateSafeBoxRequestDTO) {
+  async execute(data: IAddUsersRequestDTO) {
+    const { safetyPhrase } = store.get('user') as IUser;
     const { accessToken, tokenType } = store.get('token') as IToken;
+
     const authorization = `${tokenType} ${accessToken}`;
+
     const users = [...data.usuarios_escrita, ...data.usuarios_leitura];
-    let content = {};
+    let newContent = {};
+
+    const content = Object.entries(data.conteudo);
+
+    const arrayDecrypted = await Promise.all(
+      content.map(async (item) => {
+        if (item[1].startsWith('-----BEGIN PGP MESSAGE-----')) {
+          const decrypted = await openpgp.decrypt({
+            encryptedMessage: item[1],
+            passphrase: safetyPhrase,
+          });
+
+          console.log(decrypted, ' decrypted');
+
+          console.log(item[0], item[1]);
+          return {
+            [`${item[0]}`]: decrypted,
+            name: item[0],
+            crypto: true,
+          };
+        }
+
+        return {
+          [`${item[0]}`]: item[1],
+          name: item[0],
+          crypto: false,
+        };
+      })
+    );
 
     const pubKeys = await Promise.all(
       users.map(async (email): Promise<string[] | unknown> => {
@@ -45,30 +75,30 @@ export class CreateSafeBoxUseCase {
     });
 
     await Promise.all(
-      data.conteudo.map(async (item: any) => {
+      arrayDecrypted.map(async (item) => {
         if (!item.crypto) {
-          content = {
-            ...content,
+          newContent = {
+            ...newContent,
             [`${item.name}`]: item[`${item.name}`],
           };
         } else {
           const encrypted = await openpgp.encrypt({
-            message: item[`${item.name}`],
+            message: item[`${item.name}`] as string,
             publicKeysArmored: pubKeys as string[],
           });
 
-          content = {
-            ...content,
+          newContent = {
+            ...newContent,
             [`${item.name}`]: encrypted.encryptedMessage,
           };
         }
       })
     ).then(() => {
-      return content;
+      return newContent;
     });
 
     const apiCreate = await this.safeBoxRepositoryAPI.create(
-      { ...data, conteudo: JSON.stringify(content), anexos: [] },
+      { ...data, conteudo: JSON.stringify(newContent), anexos: [] },
       authorization
     );
 
@@ -95,5 +125,9 @@ export class CreateSafeBoxUseCase {
     }
 
     throw new Error('nok');
+
+    // console.log(arrayDecrypted, ' bruto');
+    // console.log(Object.assign(arrayDecrypted), ' assinado');
+    return 'ok';
   }
 }

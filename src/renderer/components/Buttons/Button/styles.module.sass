@@ -1,5 +1,17 @@
 @use '../../../styles/_util' as *
 
+.button.dark
+  button
+    background-color: $gray-700
+    &:hover
+      background-color: $gray-600
+.button.light
+  button
+    background-color: $gray-300
+    &:hover
+      background-color: $gray-500
+
+
 .button
   @include flex(center, center, row)
   width: 100%
@@ -13,7 +25,6 @@
     gap: 8px
     font-size: .85rem
 
-    background-color: $blue-100
     color: $white
     border-radius: $default-radius
 

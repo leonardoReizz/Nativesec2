@@ -10,6 +10,7 @@ import {
 } from 'renderer/utils/Formik/Login/Login';
 import { useAuth } from 'renderer/hooks/useAuth/useAuth';
 import { LoadingType } from 'renderer/routes';
+import { useLoading } from 'renderer/hooks/useLoading';
 import styles from './styles.module.sass';
 import nativeSecLogo from '../../../../../assets/logoNativesec/brand-nativesec.svg';
 import { AuthStateType } from '..';
@@ -30,20 +31,16 @@ export function Login({
   changeLoadingState,
 }: LoginProps) {
   const { AuthPassword } = useAuth();
-  const [buttonIsLoading, setButtonIsLoading] = useState<boolean>(false);
+  const { loading, updateLoading } = useLoading();
 
   function handleSubmit(values: SubmitFormType) {
-    setButtonIsLoading(true);
+    updateLoading(true);
     AuthPassword({ email: values.email });
   }
 
   function handleLoginStepTwo() {
     changeAuthState('login-step-two');
   }
-
-  useEffect(() => {
-    setButtonIsLoading(false);
-  }, [authState]);
 
   const formikProps = useFormik({
     initialValues: LoginInitialValues,
@@ -84,11 +81,7 @@ export function Login({
                 touched={formikProps.touched.email}
               />
             </div>
-            <Button
-              type="submit"
-              text="Gerar Token"
-              isLoading={buttonIsLoading}
-            />
+            <Button type="submit" text="Gerar Token" isLoading={loading} />
           </form>
           <div className={styles.buttonStart}>
             <Button type="button" text="Entrar" onClick={handleLoginStepTwo} />

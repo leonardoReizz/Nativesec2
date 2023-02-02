@@ -36,12 +36,18 @@ export class UpdateSafeBoxUseCase {
           return undefined;
         } catch (error) {
           console.log(error);
-          return undefined;
+          throw new Error(
+            `Error api get public key in update safe box ${error}`
+          );
         }
       })
     ).then((result) => {
       return result;
     });
+
+    console.log('rodei as chaves publicas');
+    console.log(data.conteudo);
+
     await Promise.all(
       data.conteudo.map(async (item: any) => {
         if (item.crypto === false) {
@@ -65,10 +71,15 @@ export class UpdateSafeBoxUseCase {
       return content;
     });
 
+    console.log('encriptei');
+    console.log(content);
     const apiUpdate = await this.safeBoxRepositoryAPI.update(
       { ...data, conteudo: JSON.stringify(content) },
       authorization
     );
+
+    console.log('apiUpdate');
+    console.log(apiUpdate);
 
     if (apiUpdate.status === 200 && apiUpdate.data.status === 'ok') {
       this.safeBoxRepositoryDatabase.update({

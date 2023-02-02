@@ -12,7 +12,6 @@ interface decrypt {
 
 export class DecryptController {
   async handle({ message, position, name, copy }: decrypt) {
-    console.log(message, position, name);
     const { safetyPhrase } = store.get('user') as IUser;
     const encryptedMessage = String(message);
     const decrypted = await openpgp.decrypt({

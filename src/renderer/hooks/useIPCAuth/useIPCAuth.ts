@@ -10,6 +10,7 @@ import { AuthStateType } from 'renderer/pages/Auth';
 import { LoadingType } from 'renderer/routes';
 import { toastOptions } from 'renderer/utils/options/Toastify';
 import { IPCResponse } from '../useIPCSafeBox/types';
+import { useLoading } from '../useLoading';
 import { useUserConfig } from '../useUserConfig/useUserConfig';
 
 interface UseIPCAuthProps {
@@ -22,6 +23,7 @@ export function useIPCAuth({
   changeLoadingState,
 }: UseIPCAuthProps): void {
   const navigate = useNavigate();
+  const { updateLoading } = useLoading();
   const { updateUserConfig } = useUserConfig();
   const {
     updateOrganizationsIcons,
@@ -39,10 +41,10 @@ export function useIPCAuth({
             ...toastOptions,
             toastId: 'sendToken',
           });
-          // changeButtonIsLoading(false);
           changeAuthState('token');
+          updateLoading(false);
         } else {
-          // changeButtonIsLoading(false);
+          updateLoading(false);
           toast.error('Email Invalido, tente novamente.', {
             ...toastOptions,
             toastId: 'invalid-email',

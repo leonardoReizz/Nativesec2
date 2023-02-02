@@ -1,3 +1,4 @@
+import { addUsersController } from '../components/safe-box/usecases/add-users';
 import { listSafeBoxController } from '../components/safe-box/usecases/list-safe-box';
 import { removeInviteParticipantController } from '../components/organizations/usecases/remove-invite-participant';
 import { removeParticipantController } from '../components/organizations/usecases/remove-participant';
@@ -101,6 +102,8 @@ export async function useIpcActions(
       return removeParticipantController.handle(arg.data);
     case IPCTypes.REMOVE_INVITE_PARTICIPANT:
       return removeInviteParticipantController.handle(arg.data);
+    case IPCTypes.ADD_SAFE_BOX_USERS:
+      return addUsersController.handle(arg.data);
     default:
       return {
         response: 'none',

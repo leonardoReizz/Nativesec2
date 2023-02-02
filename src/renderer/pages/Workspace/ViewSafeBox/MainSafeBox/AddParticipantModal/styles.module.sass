@@ -1,39 +1,32 @@
 @use '../../../../../styles/_util' as *
 
-.reactModalContent.dark
-  background-color: $gray-900
-  color: $white
-  h2
-    color: $white
-  .buttons
-    button
-      background-color: $gray-700
-      color: $white
-      &:hover
-        background-color: $gray-600
-      &:last-child
-        &:hover
-            background-color: $red-100-hover
 
+.red
+  background-color: $red-100  !important
+  &:hover
+    background-color: $red-100-hover !important
+
+.green
+  background-color: $green-100  !important
+  &:hover
+    background-color: $green-100-hover !important
+
+.reactModalContent.dark
+  background-color: $gray-800
+  color: $white
+
+  .users
+    @include scroolbarDark()
+    
 .reactModalContent.light
   background-color: $white
-  h2
-  .buttons
-    button
-      background-color: $gray-100
-      color: $black
-
-      &:last-child
-        color: $white
-        &:hover
-          background-color: $red-100-hover
-      &:hover
-        background-color: $gray-400
+  @include scroolbarLight()
+  
 
 .reactModalOverlay
   @include flex(center, center ,column)
-  z-index: 4000
-  background: #41414187
+  z-index: 1000
+  background: #000000a2
   position: fixed
   top: 0
   bottom: 0
@@ -48,41 +41,107 @@
   width: 100%
   height: 100%
   max-height: 550px
-  max-width: 450px
-  padding: 3rem
+  max-width: 550px
+  padding: 3rem 1rem
   position: relative
   border-radius: .5rem
   gap: 1rem
 
+  button
+    max-width: 300px
 
-  h3
-    font-size: 1rem
+  h2
+    font-size: 1.2rem
+
   .users
-    background-color: $gray-700
+    @include flex(center, flex-start, column)
+    
     height: 100%
+    max-height: 320px
+    overflow: auto
     width: 100%
     border-radius: $default-radius
     padding: 1rem .5rem
+    gap: 1rem
 
     .selected
       background-color: $green-100-op-50 
-
+    
     .user
-      @include flex(center, space-between, row)
-      border-bottom: 1px solid $gray-600
+      @include flex(center, space-between, column)
+      position: relative
+      width: 100%
+      transition: background-color 0.4s ease
 
-      button
+
+      padding: .5rem 1rem
+      border-radius: $default-radius
+
+      &::before
+        content: ''
+        position: absolute
+        width: 95%
+        height: 1px
+        bottom: -10px
+
+        background-color: $gray-600
+
+      >button
         @include flex(center, center, row)
         width: 100%
-        background-color: $green-100
-
         width: 30px
         height: 30px
         border-radius: $default-radius
 
         transition: background-color 0.2s ease
 
-        &:hover
-          background-color: $green-100-hover
+      .dropdown
+        max-width: 150px
+        border: 1px solid $gray-600
 
-          
+      .header
+        @include flex(center, space-between, row)
+        width: 100%
+
+        button
+          @include flex(center, center, row)
+          border-radius: 100px
+          height: 25px
+          width: 25px
+          transition: background-color 0.2s ease
+          &:hover
+            background-color: $gray-700
+        svg
+          font-size: 1.2rem
+
+      .content
+        @include flex(flex-end, space-between, row)
+        gap: 1rem
+        width: 100%
+        opacity: 0
+        visibility: hidden
+        height: 0
+        padding: 0 1rem
+
+        transition: opacity 0.2s ease, visibility 0.2s ease, height 0.4s ease
+
+        >div
+          max-width: 120px
+
+        .permission
+          @include flex(center, center, row)
+          gap: 1rem
+          max-width: 280px
+
+          >div
+            height: 35px
+
+          button
+            height: 45px
+
+
+      .content.visible
+        opacity: 1
+        visibility: visible
+        height: 80px
+        

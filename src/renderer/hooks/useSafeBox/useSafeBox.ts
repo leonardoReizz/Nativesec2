@@ -1,13 +1,13 @@
-import { ISafeBoxAPIModel } from 'main/components/safe-box/model/SafeBox';
-import { ISafeBoxDatabase } from 'main/ipc/organizations/types';
 import { IUser } from 'main/types';
 import { useCallback, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
 import formik from 'renderer/utils/Formik/formik';
+import { toastOptions } from 'renderer/utils/options/Toastify';
 import { useOrganization } from '../useOrganization/useOrganization';
 import * as types from './types';
 
@@ -160,85 +160,60 @@ export function useSafeBox() {
   }
 
   function updateSafeBox(safeBox: types.IUpdateSafeBoxData) {
+    toast.loading('Atualizando Cofre', {
+      ...toastOptions,
+      toastId: 'updateSafeBox',
+    });
+    const arr = Object.entries(safeBox.conteudo);
+
+    console.log(arr);
+
+    arr.map((item) => {
+      if (item[1].includes('-----BEGIN PGP MESSAGE----')) {
+        console.log('crypto', item[0]);
+      }
+    });
+    // window.electron.ipcRenderer.sendMessage('useIPC', {
+    //   event: IPCTypes.UPDATE_SAFE_BOX,
+    //   data: {
+    //     id: safeBox._id,
+    //     usuarios_leitura: safeBox.usuarios_leitura,
+    //     usuarios_escrita: safeBox.usuarios_escrita,
+    //     usuarios_leitura_deletado: safeBox.usuarios_leitura_deletado,
+    //     usuarios_escrita_deletado: safeBox.usuarios_escrita_deletado,
+    //     tipo: safeBox.tipo,
+    //     criptografia: 'rsa',
+    //     nome: safeBox.nome,
+    //     descricao: safeBox.descricao,
+    //     conteudo: safeBox.conteudo,
+    //     organizacao: safeBox.organizacao,
+    //   },
+    // });
+  }
+
+  function addSafeBoxUsers(safeBox: types.IUpdateSafeBoxData) {
+    toast.loading('Atualizando Cofre', {
+      ...toastOptions,
+      toastId: 'updateSafeBox',
+    });
+
     window.electron.ipcRenderer.sendMessage('useIPC', {
-      event: IPCTypes.UPDATE_SAFE_BOX,
+      event: IPCTypes.ADD_SAFE_BOX_USERS,
       data: {
-        id: safeBox._id,
+        id: safeBoxContext.currentSafeBox?._id,
         usuarios_leitura: safeBox.usuarios_leitura,
         usuarios_escrita: safeBox.usuarios_escrita,
         usuarios_leitura_deletado: safeBox.usuarios_leitura_deletado,
         usuarios_escrita_deletado: safeBox.usuarios_escrita_deletado,
         tipo: safeBox.tipo,
-        criptografia: 'rsa',
+        criptografia: safeBox.criptografia,
         nome: safeBox.nome,
         descricao: safeBox.descricao,
         conteudo: safeBox.conteudo,
-        organizacao: safeBox.organizacao,
-        data_atualizacao: safeBox.data_atualizacao,
+        organizacao: safeBox._id,
+        data_atualizacao: safeBoxContext.currentSafeBox?.data_atualizacao,
+        data_hora_create: safeBoxContext.currentSafeBox?.data_hora_create,
       },
-    });
-  }
-
-  function updateUsers(data: types.IUpdateUsersData) {
-    const { myEmail } = window.electron.store.get('user') as IUser;
-
-    let filterUsersAdmin = data.usersAdmin.filter((user) => user === myEmail);
-    let filterUsersParticipant = data.usersParticipant.filter(
-      (user) => user === myEmail
-    );
-
-    if (safeBoxContext.currentSafeBox && data.user !== myEmail) {
-      if (data.newType === 'admin') {
-        filterUsersParticipant = filterUsersParticipant.filter(
-          (user) => user === data.user
-        );
-
-        filterUsersAdmin.push(data.user);
-      } else {
-        filterUsersAdmin = filterUsersAdmin.filter(
-          (user) => user === data.user
-        );
-        filterUsersParticipant.push(data.user);
-      }
-
-      // window.electron.ipcRenderer.sendMessage('useIPC', {
-      //   event: IPCTypes.UPDATE_SAFE_BOX,
-      //   data: {
-      //     id: safeBoxContext.currentSafeBox?._id,
-      //     usuarios_leitura: filterUsersParticipant,
-      //     usuarios_escrita: filterUsersAdmin,
-      //     usuarios_leitura_deletado:
-      //       safeBoxContext.currentSafeBox.usuarios_leitura_deletado,
-      //     usuarios_escrita_deletado:
-      //       safeBoxContext.currentSafeBox.usuarios_escrita_deletado,
-      //     tipo: safeBoxContext.currentSafeBox.tipo,
-      //     criptografia: 'rsa',
-      //     nome: safeBoxContext.currentSafeBox.nome,
-      //     descricao: safeBoxContext.currentSafeBox.descricao,
-      //     conteudo: safeBoxContext.currentSafeBox.conteudo,
-      //     organizacao: data.organizationId,
-      //     data_atualizacao: safeBoxContext.currentSafeBox?.data_atualizacao,
-      //     data_hora_create: safeBoxContext.currentSafeBox?.data_hora_create,
-      //   },
-      // });
-    }
-
-    console.log({
-      id: safeBoxContext.currentSafeBox?._id,
-      usuarios_leitura: filterUsersParticipant,
-      usuarios_escrita: filterUsersAdmin,
-      usuarios_leitura_deletado:
-        safeBoxContext.currentSafeBox.usuarios_leitura_deletado,
-      usuarios_escrita_deletado:
-        safeBoxContext.currentSafeBox.usuarios_escrita_deletado,
-      tipo: safeBoxContext.currentSafeBox.tipo,
-      criptografia: 'rsa',
-      nome: safeBoxContext.currentSafeBox.nome,
-      descricao: safeBoxContext.currentSafeBox.descricao,
-      conteudo: safeBoxContext.currentSafeBox.conteudo,
-      organizacao: data.organizationId,
-      data_atualizacao: safeBoxContext.currentSafeBox?.data_atualizacao,
-      data_hora_create: safeBoxContext.currentSafeBox?.data_hora_create,
     });
   }
 
@@ -326,7 +301,7 @@ export function useSafeBox() {
     changeSearchValue,
     searchValue,
     filteredSafeBoxes,
-    updateUsers,
+    addSafeBoxUsers,
     changeCurrentSafeBox,
     updateSafeBox,
   };
