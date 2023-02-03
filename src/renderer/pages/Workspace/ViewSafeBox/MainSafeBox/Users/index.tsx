@@ -31,6 +31,11 @@ const usersOptions = [
   },
 ];
 
+interface IUserDelete {
+  email: string;
+  type: 'admin' | 'participant';
+}
+
 export default function Users() {
   const [isOpenVerifyNameModal, setIsOpenVerifyNameModal] =
     useState<boolean>(false);
@@ -40,8 +45,10 @@ export default function Users() {
   const [email, setEmail] = useState<string>('');
   const [readUsers, setReadUsers] = useState<string[]>([]);
   const [writeUsers, setWriteUsers] = useState<string[]>([]);
-  const { safeBoxMode, updateUsers } = useSafeBox();
-  const [currentUserDelete, setCurrentUserDelete] = useState<any | undefined>();
+  const { safeBoxMode, addSafeBoxUsers, removeUser } = useSafeBox();
+  const [currentUserDelete, setCurrentUserDelete] = useState<
+    IUserDelete | undefined
+  >();
 
   const {
     usersAdmin,
@@ -80,44 +87,44 @@ export default function Users() {
 
   console.log(writeUsers, readUsers);
 
-  function handleRemoveParticipant(
-    emailuser: string,
-    type: 'admin' | 'participant'
-  ) {
-    if (type === 'participant') {
-      const readUsersWithoutParticipant = readUsers.filter(
-        (user) => user !== emailuser
-      );
-      setReadUsers(readUsersWithoutParticipant);
-    } else {
-      const writeUsersWithoutParticipant = writeUsers.filter(
-        (user) => user !== emailuser
-      );
-      setWriteUsers(writeUsersWithoutParticipant);
-    }
-  }
+  // function handleRemoveParticipant(
+  //   emailuser: string,
+  //   type: 'admin' | 'participant'
+  // ) {
+  //   if (type === 'participant') {
+  //     const readUsersWithoutParticipant = readUsers.filter(
+  //       (user) => user !== emailuser
+  //     );
+  //     setReadUsers(readUsersWithoutParticipant);
+  //   } else {
+  //     const writeUsersWithoutParticipant = writeUsers.filter(
+  //       (user) => user !== emailuser
+  //     );
+  //     setWriteUsers(writeUsersWithoutParticipant);
+  //   }
+  // }
 
   const closeVerifyNameModal = useCallback(() => {
     setIsOpenVerifyNameModal(false);
   }, []);
 
-  const changeUser = useCallback((item: any) => {
-    console.log(item);
-    switch (item.id) {
-      case 1:
-        console.log('change');
-        break;
-      case 2:
-        console.log('change');
-        break;
-      case 3:
-        console.log('open');
-        // setIsOpenVerifyModal(true);
-        break;
-      default:
-        break;
-    }
-  }, []);
+  // const changeUser = useCallback((item: any) => {
+  //   console.log(item);
+  //   switch (item.id) {
+  //     case 1:
+  //       console.log('change');
+  //       break;
+  //     case 2:
+  //       console.log('change');
+  //       break;
+  //     case 3:
+  //       console.log('open');
+  //       // setIsOpenVerifyModal(true);
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }, []);
 
   function handleDropDown(item: any, type: any, email: string) {
     console.log('ola');
@@ -129,27 +136,35 @@ export default function Users() {
         ...toastOptions,
         toastId: 'organizationChangeUser',
       });
-      if (currentOrganization) {
-        updateUsers({
-          usersAdmin,
-          usersParticipant,
-          user: email,
-          organizationId: currentOrganization._id,
-          newType: item.value,
-        });
-      }
+      // if (currentOrganization) {
+      //   addSafeBoxUsers({
+      //     usersAdmin,
+      //     usersParticipant,
+      //     user: email,
+      //     organizationId: currentOrganization._id,
+      //     newType: item.value,
+      //   });
+      // }
     }
   }
 
-  const removeUser = useCallback((verified: boolean) => {}, []);
+  const handleRemoveUser = useCallback(
+    (verified: boolean) => {
+      if (verified && currentUserDelete) {
+        removeUser(currentUserDelete);
+        setCurrentUserDelete(undefined);
+      }
+    },
+    [removeUser, currentUserDelete]
+  );
 
   return (
     <>
       <VerifyNameModal
         isOpen={isOpenVerifyNameModal}
         onRequestClose={closeVerifyNameModal}
-        callback={removeUser}
-        nameToVerify={currentUserDelete}
+        callback={handleRemoveUser}
+        nameToVerify={currentUserDelete?.email}
         inputText="Confirmar"
         title="Deseja remover"
       />

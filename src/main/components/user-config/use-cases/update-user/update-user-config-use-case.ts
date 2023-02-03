@@ -37,7 +37,7 @@ export class UpdateUserConfigUseCase {
         if (deleteKeyAPI.status !== 200)
           throw new Error('ERRO DELETE PRIVATE KEY -> API');
       } else {
-        const createKeyAPI = await this.keyRepositoryAPI.create(
+        const createKeyAPI = await this.keyRepositoryAPI.createPrivateKey(
           { privateKey, type: 'rsa' },
           authorization
         );

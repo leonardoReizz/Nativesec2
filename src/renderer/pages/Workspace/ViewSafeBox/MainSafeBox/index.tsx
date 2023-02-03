@@ -29,27 +29,27 @@ export function MainSafeBox() {
   function addUsers(usersAdmin: string[], usersParticipant: string[]) {
     if (currentSafeBox) {
       addSafeBoxUsers({
-        _id: currentSafeBox?._id,
-        anexos: JSON.parse(currentSafeBox?.anexos),
-        conteudo: JSON.parse(currentSafeBox?.conteudo),
+        _id: currentSafeBox._id,
+        anexos: JSON.parse(currentSafeBox.anexos),
+        conteudo: JSON.parse(currentSafeBox.conteudo),
         criptografia: 'rsa',
-        descricao: currentSafeBox?.descricao,
+        descricao: currentSafeBox.descricao,
         nome: currentSafeBox.nome,
-        organizacao: currentSafeBox?.organizacao,
-        tipo: currentSafeBox?.tipo,
+        organizacao: currentSafeBox.organizacao,
+        tipo: currentSafeBox.tipo,
         usuarios_escrita: [
-          ...JSON.parse(currentSafeBox?.usuarios_escrita),
+          ...JSON.parse(currentSafeBox.usuarios_escrita),
           ...usersParticipant,
         ],
         usuarios_escrita_deletado: JSON.parse(
-          currentSafeBox?.usuarios_escrita_deletado
+          currentSafeBox.usuarios_escrita_deletado
         ),
         usuarios_leitura: [
-          ...JSON.parse(currentSafeBox?.usuarios_escrita),
+          ...JSON.parse(currentSafeBox.usuarios_leitura),
           ...usersAdmin,
         ],
         usuarios_leitura_deletado: JSON.parse(
-          currentSafeBox?.usuarios_leitura_deletado
+          currentSafeBox.usuarios_leitura_deletado
         ),
       });
     }

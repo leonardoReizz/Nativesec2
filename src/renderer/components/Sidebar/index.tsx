@@ -3,9 +3,9 @@ import { useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoMdAdd } from 'react-icons/io';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
-import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
+import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { Icon } from './Icon';
 import styles from './styles.module.sass';
 
@@ -14,13 +14,12 @@ export function Sidebar() {
   const { theme, updateLastOrganizationId } = useUserConfig();
   const { updateSafeBoxes, changeCurrentSafeBox } =
     useContext(SafeBoxesContext);
-  const { getSafeBoxes } = useSafeBox();
   const {
     organizations,
     organizationsIcons,
     currentOrganization,
     changeCurrentOrganization,
-  } = useContext(OrganizationsContext);
+  } = useOrganization();
 
   const changeOrganization = useCallback(
     (organizationId: string) => {

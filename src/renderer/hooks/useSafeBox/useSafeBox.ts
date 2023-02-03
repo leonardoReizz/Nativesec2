@@ -164,15 +164,6 @@ export function useSafeBox() {
       ...toastOptions,
       toastId: 'updateSafeBox',
     });
-    const arr = Object.entries(safeBox.conteudo);
-
-    console.log(arr);
-
-    arr.map((item) => {
-      if (item[1].includes('-----BEGIN PGP MESSAGE----')) {
-        console.log('crypto', item[0]);
-      }
-    });
     // window.electron.ipcRenderer.sendMessage('useIPC', {
     //   event: IPCTypes.UPDATE_SAFE_BOX,
     //   data: {
@@ -200,7 +191,7 @@ export function useSafeBox() {
     window.electron.ipcRenderer.sendMessage('useIPC', {
       event: IPCTypes.ADD_SAFE_BOX_USERS,
       data: {
-        id: safeBoxContext.currentSafeBox?._id,
+        _id: safeBox._id,
         usuarios_leitura: safeBox.usuarios_leitura,
         usuarios_escrita: safeBox.usuarios_escrita,
         usuarios_leitura_deletado: safeBox.usuarios_leitura_deletado,
@@ -210,16 +201,67 @@ export function useSafeBox() {
         nome: safeBox.nome,
         descricao: safeBox.descricao,
         conteudo: safeBox.conteudo,
-        organizacao: safeBox._id,
+        organizacao: safeBox.organizacao,
         data_atualizacao: safeBoxContext.currentSafeBox?.data_atualizacao,
         data_hora_create: safeBoxContext.currentSafeBox?.data_hora_create,
       },
     });
   }
 
-  const changeSearchValue = useCallback((newValue: string) => {
-    setSearchValue(newValue);
-  }, []);
+  const removeUser = useCallback(
+    (data: types.IRemoveUserData) => {
+      const { currentSafeBox } = safeBoxContext;
+      if (currentSafeBox) {
+        let usersAdmin = JSON.parse(currentSafeBox.usuarios_escrita);
+        let usersParticipant = JSON.parse(currentSafeBox.usuarios_leitura);
+
+        let usersAdminDeleted = JSON.parse(
+          currentSafeBox.usuarios_escrita_deletado
+        );
+        let usersParticipantDeleted = JSON.parse(
+          currentSafeBox.usuarios_leitura_deletado
+        );
+
+        if (data.type === 'admin') {
+          usersAdminDeleted = [...usersAdminDeleted, data.email];
+          usersAdmin = usersAdmin.filter((user: string) => user !== data.email);
+        } else {
+          usersParticipantDeleted = [...usersParticipantDeleted, data.email];
+          usersParticipant = usersParticipant.filter(
+            (user: string) => user !== data.email
+          );
+        }
+
+        const user: types.IIPCUpdateUsersData = {
+          id: currentSafeBox?._id,
+          anexos: currentSafeBox.anexos,
+          conteudo: currentSafeBox.conteudo,
+          criptografia: currentSafeBox.criptografia,
+          descricao: currentSafeBox.descricao,
+          nome: currentSafeBox.nome,
+          organizacao: currentSafeBox.organizacao,
+          tipo: currentSafeBox.tipo,
+          usuarios_escrita: usersParticipant,
+          usuarios_escrita_deletado: usersParticipantDeleted,
+          usuarios_leitura: usersAdmin,
+          usuarios_leitura_deletado: usersAdminDeleted,
+        };
+
+        window.electron.ipcRenderer.sendMessage('useIPC', {
+          event: IPCTypes.UPDATE_USERS_SAFE_BOX,
+          data: { ...user },
+        });
+      }
+    },
+    [safeBoxContext.currentSafeBox]
+  );
+
+  const changeSearchValue = useCallback(
+    (newValue: string) => {
+      setSearchValue(newValue);
+    },
+    [safeBoxContext.currentSafeBox]
+  );
 
   function getSafeBoxes(organizationId: string) {
     safeBoxContext.changeSafeBoxesIsLoading(true);
@@ -300,6 +342,7 @@ export function useSafeBox() {
     decryptMessage,
     changeSearchValue,
     searchValue,
+    removeUser,
     filteredSafeBoxes,
     addSafeBoxUsers,
     changeCurrentSafeBox,

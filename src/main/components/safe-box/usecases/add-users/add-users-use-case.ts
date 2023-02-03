@@ -33,9 +33,6 @@ export class AddUsersUseCase {
             passphrase: safetyPhrase,
           });
 
-          console.log(decrypted, ' decrypted');
-
-          console.log(item[0], item[1]);
           return {
             [`${item[0]}`]: decrypted,
             name: item[0],
@@ -97,25 +94,36 @@ export class AddUsersUseCase {
       return newContent;
     });
 
-    const apiCreate = await this.safeBoxRepositoryAPI.create(
-      { ...data, conteudo: JSON.stringify(newContent), anexos: [] },
+    const apiUpdate = await this.safeBoxRepositoryAPI.update(
+      {
+        ...data,
+        id: data._id,
+        conteudo: JSON.stringify(newContent),
+        anexos: [],
+      },
       authorization
     );
 
-    if (apiCreate.status === 200 && apiCreate.data.status === 'ok') {
-      this.safeBoxRepositoryDatabase.create({
+    console.log(apiUpdate);
+    console.log(apiUpdate?.data?.detail[0]);
+
+    if (apiUpdate.status === 200 && apiUpdate.data.status === 'ok') {
+      await this.safeBoxRepositoryDatabase.update({
         ...data,
-        _id: apiCreate.data?.detail[0]._id.$oid,
-        conteudo: JSON.stringify(content),
-        data_hora_create: apiCreate.data.detail[0].data_hora_create.$date,
-        data_atualizacao: apiCreate.data.detail[0].data_atualizacao.$date,
-        usuarios_escrita: JSON.stringify(data.usuarios_escrita),
-        usuarios_leitura: JSON.stringify(data.usuarios_leitura),
+        _id: apiUpdate.data.detail[0]._id.$oid,
+        conteudo: JSON.stringify(newContent),
+        data_atualizacao: apiUpdate.data.detail[0].data_atualizacao.$date,
+        usuarios_escrita: JSON.stringify(
+          apiUpdate.data.detail[0].usuarios_escrita
+        ),
+        usuarios_leitura: JSON.stringify(
+          apiUpdate.data.detail[0].usuarios_leitura
+        ),
         usuarios_escrita_deletado: JSON.stringify(
-          data.usuarios_escrita_deletado
+          apiUpdate.data.detail[0].usuarios_escrita_deletado
         ),
         usuarios_leitura_deletado: JSON.stringify(
-          data.usuarios_leitura_deletado
+          apiUpdate.data.detail[0].usuarios_leitura_deletado
         ),
         anexos: JSON.stringify([]),
       });
@@ -125,9 +133,5 @@ export class AddUsersUseCase {
     }
 
     throw new Error('nok');
-
-    // console.log(arrayDecrypted, ' bruto');
-    // console.log(Object.assign(arrayDecrypted), ' assinado');
-    return 'ok';
   }
 }

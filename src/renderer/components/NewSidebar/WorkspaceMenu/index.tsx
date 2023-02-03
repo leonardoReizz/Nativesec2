@@ -13,7 +13,11 @@ import styles from './styles.module.sass';
 
 export function WorkspaceMenu() {
   const [menuCreateIsOpen, setMenuCreateIsOpen] = useState<boolean>(false);
+  const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuCreateRef = useRef<HTMLButtonElement>(null);
 
+  const { theme } = useUserConfig();
   const {
     filteredSafeBoxes,
     changeSearchValue,
@@ -21,11 +25,6 @@ export function WorkspaceMenu() {
     changeCurrentSafeBox,
     changeSafeBoxMode,
   } = useSafeBox();
-
-  const menuRef = useRef<HTMLDivElement>(null);
-  const menuCreateRef = useRef<HTMLButtonElement>(null);
-  const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
-  const { theme } = useUserConfig();
 
   function handleCreateSafeBox() {
     changeCurrentSafeBox(undefined);

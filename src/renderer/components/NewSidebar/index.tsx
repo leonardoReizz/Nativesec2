@@ -2,6 +2,7 @@ import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 
 import { useState } from 'react';
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi';
+import { FiMenu } from 'react-icons/fi';
 import { useLocation } from 'react-router-dom';
 import styles from './styles.module.sass';
 import { WorkspaceMenu } from './WorkspaceMenu';
@@ -19,7 +20,16 @@ export function NewSidebar() {
         type="button"
         onClick={() => setIsOpenSidebar((state) => !state)}
       >
-        {!isOpenSidebar && <HiChevronDoubleRight />}
+        {!isOpenSidebar && (
+          <>
+            <div className={styles.burguer}>
+              <FiMenu />
+            </div>
+            <div className={styles.arrowRight}>
+              <HiChevronDoubleRight />
+            </div>
+          </>
+        )}
         {isOpenSidebar && <HiChevronDoubleLeft />}
       </button>
       <div

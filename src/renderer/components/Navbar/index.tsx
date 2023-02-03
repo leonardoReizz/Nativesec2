@@ -5,6 +5,7 @@ import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/Org
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Tooltip } from '@chakra-ui/react';
+import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import styles from './styles.module.sass';
 
 export function Navbar() {
@@ -12,11 +13,7 @@ export function Navbar() {
 
   const [notifications, setNotifications] = useState<any[]>([]);
 
-  const {
-    currentOrganization,
-    currentOrganizationIcon,
-    changeCurrentOrganization,
-  } = useContext(OrganizationsContext);
+  const { currentOrganization, changeCurrentOrganization } = useOrganization();
   const navigate = useNavigate();
 
   const { pathname } = useLocation();

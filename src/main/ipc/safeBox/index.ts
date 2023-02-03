@@ -3,7 +3,6 @@ import apiSafeBox from '../../API/safeBox/index';
 import DBSafeBox from '../../database/safebox/index';
 import { store } from '../../main';
 import * as types from './types';
-import openpgp from '../../crypto/openpgp';
 import { ISafeBox } from './types';
 import { ISafeBoxDatabase, IToken } from '../organizations/types';
 import { UseIPCData } from '..';

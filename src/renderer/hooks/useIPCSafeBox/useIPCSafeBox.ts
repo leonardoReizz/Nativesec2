@@ -82,6 +82,26 @@ export function useIPCSafeBox() {
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
+      IPCTypes.ADD_SAFE_BOX_USERS_RESPONSE,
+      (response: types.IPCResponse) => {
+        toast.dismiss('updateSafeBox');
+        if (response.message === 'ok') {
+          updateSafeBoxes(window.electron.store.get('safebox'));
+          return toast.success('Usuarios Atualizados', {
+            ...toastOptions,
+            toastId: 'deletedSafeBox',
+          });
+        }
+        return toast.error('Erro ao atualizar usuarios', {
+          ...toastOptions,
+          toastId: 'deletedSafeBoxError',
+        });
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
       IPCTypes.GET_SAFE_BOXES_RESPONSE,
       (result: types.IPCResponse) => {
         console.log(result);

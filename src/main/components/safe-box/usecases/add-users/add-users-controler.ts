@@ -9,14 +9,14 @@ export class AddUsersController {
     try {
       const message = await this.addUsersUseCase.execute(data);
       return {
-        response: IPCTypes.ADD_SAFE_BOX_USERS,
+        response: IPCTypes.ADD_SAFE_BOX_USERS_RESPONSE,
         data: message,
       };
     } catch (error) {
       const errorMessage = (error as Error).message;
 
       return {
-        response: IPCTypes.ADD_SAFE_BOX_USERS,
+        response: IPCTypes.ADD_SAFE_BOX_USERS_RESPONSE,
         data: {
           message: 'nok',
         },

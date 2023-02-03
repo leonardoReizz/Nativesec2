@@ -45,6 +45,7 @@ class AppUpdater {
     autoUpdater.on('update-available', () => {
       log.info('Update available');
     });
+
     autoUpdater.on('update-downloaded', (event: UpdateDownloadedEvent) => {
       log.info('Update downloaded');
       store.set('initialData', {

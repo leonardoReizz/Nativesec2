@@ -12,7 +12,6 @@
   bakground-color: $white
   
 
-
 // --------------------------------------------------------------
 // --------------------------- SETTINGS -------------------------
 // --------------------------------------------------------------
@@ -25,7 +24,7 @@
   position: absolute
   border-radius: 100px
   top: 8px
-  left: 10px
+  left: 18px
   height: 35px
   width: 35px
 
@@ -34,7 +33,32 @@
     background-color: $gray-700
 
 .openButton.open
-  left: 200px
+  left: 270px
+
+.burguer
+  opacity: 1
+  position: absolute
+  transition: opacity 0.2s ease, visibility 0.2s ease
+  
+  svg
+    font-size: 1.2rem
+.arrowRight
+  opacity: 0
+  visibility: hidden
+  position: absolute
+  margin: 0 auto
+  transition: opacity 0.2s ease, visibility 0.2s ease
+
+.openButton
+  &:hover > .arrowRight
+    opacity: 1
+    visibility: visible
+
+  &:hover > .burguer
+    opacity: 0
+    visibility: hidden
+
+
 
 .newSidebar
   width: 0

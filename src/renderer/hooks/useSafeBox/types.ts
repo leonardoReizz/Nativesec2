@@ -43,3 +43,23 @@ export interface IUpdateSafeBoxData {
   organizacao: string;
   _id: string;
 }
+
+export interface IRemoveUserData {
+  email: string;
+  type: 'admin' | 'participant';
+}
+
+export interface IIPCUpdateUsersData {
+  usuarios_leitura: string[];
+  usuarios_escrita: string[];
+  tipo: string;
+  usuarios_leitura_deletado: string[];
+  usuarios_escrita_deletado: string[];
+  criptografia: string;
+  nome: string;
+  anexos: string;
+  descricao: string;
+  conteudo: string;
+  organizacao: string;
+  id: string;
+}
