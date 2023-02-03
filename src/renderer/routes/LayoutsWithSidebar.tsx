@@ -14,8 +14,8 @@ export function LayoutsWithSidebar() {
       <div
         className={`${styles.flexApp} ${theme === 'dark' ? styles.dark : ''}`}
       >
+        <Sidebar />
         <NewSidebar />
-        {/* <Sidebar /> */}
         <div className={styles.app}>
           <Navbar />
           <Outlet />

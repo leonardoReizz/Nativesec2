@@ -89,7 +89,7 @@ export function WorkspaceMenu({ closeSidebar }: IWorkspaceMenuProps) {
         theme === 'dark' ? styles.dark : styles.light
       } `}
     >
-      <div className={styles.bar} ref={menuRef}>
+      {/* <div className={styles.bar} ref={menuRef}>
         <div className={styles.organization}>
           {currentOrganization && (
             <>
@@ -108,8 +108,8 @@ export function WorkspaceMenu({ closeSidebar }: IWorkspaceMenuProps) {
             </>
           )}
         </div>
-      </div>
-      <div className={`${styles.menu} ${isOpenMenu ? styles.open : ''}`}>
+      </div> */}
+      {/* <div className={`${styles.menu} ${isOpenMenu ? styles.open : ''}`}>
         <div className={styles.organizations}>
           {organizations.map((organization) => (
             <button
@@ -141,7 +141,7 @@ export function WorkspaceMenu({ closeSidebar }: IWorkspaceMenuProps) {
             <FaLayerGroup /> Novo Grupo de Cofres
           </button>
         </div>
-      </div>
+      </div> */}
       <div className={styles.search}>
         <div className={styles.input}>
           <CiSearch />
