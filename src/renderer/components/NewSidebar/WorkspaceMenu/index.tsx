@@ -1,13 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi';
-import { MdAdd } from 'react-icons/md';
-import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
-import { HiOutlineChevronUpDown } from 'react-icons/hi2';
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaLayerGroup } from 'react-icons/fa';
 import { IoReloadOutline } from 'react-icons/io5';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { CiSearch } from 'react-icons/ci';
@@ -16,18 +10,8 @@ import { IoMdAdd } from 'react-icons/io';
 import { SafeBoxInfo } from 'renderer/components/SafeBox';
 import { Tooltip } from '@chakra-ui/react';
 import styles from './styles.module.sass';
-import { Icon } from './Icon';
 
-interface IWorkspaceMenuProps {
-  closeSidebar: () => void;
-}
-export function WorkspaceMenu({ closeSidebar }: IWorkspaceMenuProps) {
-  const {
-    organizations,
-    organizationsIcons,
-    currentOrganization,
-    changeCurrentOrganization,
-  } = useOrganization();
+export function WorkspaceMenu() {
   const [menuCreateIsOpen, setMenuCreateIsOpen] = useState<boolean>(false);
 
   const {
@@ -38,17 +22,10 @@ export function WorkspaceMenu({ closeSidebar }: IWorkspaceMenuProps) {
     changeSafeBoxMode,
   } = useSafeBox();
 
-  const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
   const menuCreateRef = useRef<HTMLButtonElement>(null);
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   const { theme } = useUserConfig();
-
-  function changeOrganization(organizationId: string) {
-    navigate(`/workspace/${organizationId}`);
-    changeCurrentSafeBox(undefined);
-    changeCurrentOrganization(organizationId);
-  }
 
   function handleCreateSafeBox() {
     changeCurrentSafeBox(undefined);
@@ -57,15 +34,6 @@ export function WorkspaceMenu({ closeSidebar }: IWorkspaceMenuProps) {
 
   function handleOpenMenuIsCreate() {
     setMenuCreateIsOpen(true);
-  }
-
-  function handleMenu() {
-    setIsOpenMenu((state) => !state);
-  }
-
-  function handleCreateOrganization() {
-    navigate('/createOrganization');
-    closeSidebar();
   }
 
   function handleClickOutside(e: MouseEvent) {
@@ -89,59 +57,6 @@ export function WorkspaceMenu({ closeSidebar }: IWorkspaceMenuProps) {
         theme === 'dark' ? styles.dark : styles.light
       } `}
     >
-      {/* <div className={styles.bar} ref={menuRef}>
-        <div className={styles.organization}>
-          {currentOrganization && (
-            <>
-              <div className={styles.icon} onClick={handleMenu}>
-                <Icon
-                  organization={currentOrganization}
-                  icon={
-                    organizationsIcons?.filter(
-                      (icon) => icon._id === currentOrganization?._id
-                    )[0]?.icone
-                  }
-                  key={currentOrganization._id}
-                />
-                <HiOutlineChevronUpDown />
-              </div>
-            </>
-          )}
-        </div>
-      </div> */}
-      {/* <div className={`${styles.menu} ${isOpenMenu ? styles.open : ''}`}>
-        <div className={styles.organizations}>
-          {organizations.map((organization) => (
-            <button
-              type="button"
-              className={`${styles.organization} ${
-                currentOrganization?._id === organization._id
-                  ? styles.selected
-                  : ''
-              }`}
-            >
-              <Icon
-                organization={organization}
-                icon={
-                  organizationsIcons?.filter(
-                    (icon) => icon._id === organization?._id
-                  )[0]?.icone
-                }
-                changeOrganization={changeOrganization}
-                key={organization._id}
-              />
-            </button>
-          ))}
-        </div>
-        <div className={styles.actions}>
-          <button type="button" onClick={handleCreateOrganization}>
-            <MdAdd /> Nova Organizacao
-          </button>
-          <button type="button" onClick={handleCreateOrganization}>
-            <FaLayerGroup /> Novo Grupo de Cofres
-          </button>
-        </div>
-      </div> */}
       <div className={styles.search}>
         <div className={styles.input}>
           <CiSearch />
