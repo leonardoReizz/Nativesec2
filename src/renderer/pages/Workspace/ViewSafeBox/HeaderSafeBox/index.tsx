@@ -18,6 +18,7 @@ import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesCo
 import { FormikContextType } from 'formik';
 import { IFormikItem } from 'renderer/contexts/CreateSafeBox/types';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
+import { Button } from 'renderer/components/Buttons/Button';
 import formik from '../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 
@@ -144,37 +145,36 @@ export function HeaderSafeBox() {
         <>
           <div className={styles.actions}>
             {safeBoxMode === 'view' && (
-              <button
-                type="button"
+              <Button
+                text="Descriptografar"
                 onClick={() => handleDecrypt('decryptSafeBox')}
-              >
-                <GiPadlockOpen />
-                <span>Descriptografar</span>
-              </button>
+                theme={theme}
+                Icon={<GiPadlockOpen />}
+              />
             )}
             {safeBoxMode === 'decrypted' && (
-              <button type="button" onClick={() => handleCrypt()}>
-                <GiPadlock />
-                <span>Criptografar</span>
-              </button>
+              <Button
+                text="Criptografar"
+                theme={theme}
+                onClick={() => handleCrypt()}
+                Icon={<GiPadlock />}
+              />
             )}
             {safeBoxMode === 'view' && (
               <>
-                <button
-                  type="button"
+                <Button
+                  text="Editar"
+                  theme={theme}
                   onClick={handleOpenVerifySafetyPhraseModal}
-                >
-                  <RiEditFill />
-                  <span>Editar</span>
-                </button>
-                <button
-                  type="button"
+                  Icon={<RiEditFill />}
+                />
+                <Button
+                  text="Excluir"
                   onClick={handleOpenVerifyNameModal}
                   className={styles.red}
-                >
-                  <AiFillDelete />
-                  <span>Excluir</span>
-                </button>
+                  theme={theme}
+                  Icon={<AiFillDelete />}
+                />
               </>
             )}
             {(safeBoxMode === 'edit' || safeBoxMode === 'create') && (

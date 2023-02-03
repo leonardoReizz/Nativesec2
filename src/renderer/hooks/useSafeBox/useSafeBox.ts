@@ -241,15 +241,15 @@ export function useSafeBox() {
           nome: currentSafeBox.nome,
           organizacao: currentSafeBox.organizacao,
           tipo: currentSafeBox.tipo,
-          usuarios_escrita: usersParticipant,
-          usuarios_escrita_deletado: usersParticipantDeleted,
-          usuarios_leitura: usersAdmin,
-          usuarios_leitura_deletado: usersAdminDeleted,
+          usuarios_escrita: usersAdmin,
+          usuarios_escrita_deletado: usersAdminDeleted,
+          usuarios_leitura: usersParticipant,
+          usuarios_leitura_deletado: usersParticipantDeleted,
         };
 
         window.electron.ipcRenderer.sendMessage('useIPC', {
           event: IPCTypes.UPDATE_USERS_SAFE_BOX,
-          data: { ...user },
+          data: user,
         });
       }
     },

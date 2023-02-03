@@ -7,6 +7,7 @@ import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization'
 import { Dropdown } from 'renderer/components/Dropdown';
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 import { Tooltip } from '@chakra-ui/react';
+import { useLoading } from 'renderer/hooks/useLoading';
 import styles from './styles.module.sass';
 
 interface UserSelected {
@@ -41,6 +42,7 @@ export function AddParticipantModal({
 }: AddParticipantModalProps) {
   const { theme } = useUserConfig();
   const [usersSelected, setUsersSelected] = useState<UserSelected[]>([]);
+  const { loading, updateLoading } = useLoading();
   const { filteredAdmin, filteredParticipant } = useOrganization();
   const [open, setOpen] = useState<boolean[]>([]);
 
@@ -55,6 +57,7 @@ export function AddParticipantModal({
   }, []);
 
   function save() {
+    updateLoading(true);
     console.log(usersSelected);
 
     const usersAdmin = usersSelected
@@ -104,6 +107,12 @@ export function AddParticipantModal({
     console.log(currentUsers);
     setUsersSelected([...currentUsers]);
   }
+
+  useEffect(() => {
+    if (!loading) {
+      onRequestClose();
+    }
+  }, [loading]);
 
   return (
     <>

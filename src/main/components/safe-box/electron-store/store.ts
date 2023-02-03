@@ -12,5 +12,7 @@ export async function refreshSafeBoxes(organizationId: string) {
     return a == b ? 0 : a > b ? 1 : -1;
   });
 
+  console.log(sort);
+
   store.set('safebox', sort);
 }

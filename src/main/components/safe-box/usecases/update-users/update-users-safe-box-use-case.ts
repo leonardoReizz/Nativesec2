@@ -20,6 +20,8 @@ export class UpdateUsersSafeBoxUseCase {
       authorization
     );
 
+    console.log(apiUpdate);
+
     if (apiUpdate.status === 200 && apiUpdate.data.status === 'ok') {
       this.safeBoxRepositoryDatabase.update({
         _id: data.id,
@@ -44,9 +46,15 @@ export class UpdateUsersSafeBoxUseCase {
         organizacao: apiUpdate.data.detail[0].organizacao,
         tipo: apiUpdate.data.detail[0].tipo,
       });
+
       await refreshSafeBoxes(data.organizacao);
 
-      return { message: 'ok' };
+      return {
+        message: 'ok',
+        data: {
+          safeBoxId: data.id,
+        },
+      };
     }
 
     throw new Error('nok');

@@ -129,7 +129,7 @@ export class AddUsersUseCase {
       });
       await refreshSafeBoxes(data.organizacao);
 
-      return { message: 'ok' };
+      return { message: 'ok', data: { safeBoxId: data._id } };
     }
 
     throw new Error('nok');

@@ -11,6 +11,7 @@ import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
 import { toast } from 'react-toastify';
 import { toastOptions } from 'renderer/utils/options/Toastify';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
+import { useLoading } from 'renderer/hooks/useLoading';
 import styles from './styles.module.sass';
 
 const usersOptions = [
@@ -57,7 +58,7 @@ export default function Users() {
     changeUsersParticipant,
   } = useContext(CreateSafeBoxContext);
   const { currentOrganization } = useOrganization();
-
+  const { loading, updateLoading } = useLoading();
   const { theme } = useUserConfig();
   const { currentSafeBox } = useContext(SafeBoxesContext);
 
@@ -147,7 +148,6 @@ export default function Users() {
       // }
     }
   }
-
   const handleRemoveUser = useCallback(
     (verified: boolean) => {
       if (verified && currentUserDelete) {

@@ -9,6 +9,7 @@ import { Input } from 'renderer/components/Inputs/Input';
 import { verifyNameValues } from 'renderer/utils/Formik/VerifyName/verifyName';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Button } from 'renderer/components/Buttons/Button';
+import { useLoading } from 'renderer/hooks/useLoading';
 import styles from './styles.module.sass';
 
 interface VerifySafetyPhraseModalProps {
@@ -31,9 +32,11 @@ export function VerifyNameModal({
   isLoading = false,
 }: VerifySafetyPhraseModalProps) {
   const { theme } = useUserConfig();
+  const { loading, updateLoading } = useLoading();
   const user = window.electron.store.get('user') as IUser;
 
   function handleSubmit() {
+    updateLoading(true);
     callback(true);
   }
 
@@ -62,6 +65,12 @@ export function VerifyNameModal({
   useEffect(() => {
     formikProps.resetForm();
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!loading) {
+      onRequestClose();
+    }
+  }, [loading]);
 
   return (
     <>

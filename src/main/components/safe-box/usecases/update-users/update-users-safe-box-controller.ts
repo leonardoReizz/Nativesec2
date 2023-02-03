@@ -7,17 +7,14 @@ export class UpdateUsersSafeBoxController {
 
   async handle(data: IUpdateUsersSafeBoxRequestDTO) {
     try {
-      await this.updateUsersSafeBoxUseCase.execute(data);
-
+      const message = await this.updateUsersSafeBoxUseCase.execute(data);
       return {
-        response: IPCTypes.UPDATE_USERS_SAFE_BOX_CONTROLLER,
-        data: {
-          message: 'ok',
-        },
+        response: IPCTypes.UPDATE_USERS_SAFE_BOX_RESPONSE,
+        data: message,
       };
     } catch (error) {
       return {
-        response: IPCTypes.UPDATE_USERS_SAFE_BOX_CONTROLLER,
+        response: IPCTypes.UPDATE_USERS_SAFE_BOX_RESPONSE,
         data: {
           message: 'nok',
         },

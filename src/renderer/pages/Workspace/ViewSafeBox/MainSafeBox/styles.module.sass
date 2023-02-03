@@ -21,13 +21,15 @@
     @include flex(center, flex-start, row)
     width: 100%
     gap: 1rem
+    min-height: 50px
     margin-bottom: 1rem
-
+    
     button
       @include flex(center, center, row)
       position: relative
       font-weight: 500
-      font-size: .9rem
+      font-size: .85rem
+
       &:nth-child(2)
         min-width: 130px
       &::before

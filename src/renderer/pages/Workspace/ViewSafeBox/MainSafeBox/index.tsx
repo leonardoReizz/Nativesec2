@@ -88,6 +88,7 @@ export function MainSafeBox() {
               className={styles.addParticipantButton}
               text="Adicionar Participante"
               Icon={<IoMdAdd />}
+              theme={theme}
               onClick={() => setIsOpenParticipantModal(true)}
             />
           )}
