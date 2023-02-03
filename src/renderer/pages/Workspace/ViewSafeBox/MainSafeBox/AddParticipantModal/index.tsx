@@ -127,10 +127,12 @@ export function AddParticipantModal({
         <h2>Compartilhe o cofre</h2>
         <div className={styles.users}>
           {usersSelected.map((user, index: number) => (
-            <div
-              className={`${styles.user} ${user.added ? styles.selected : ''}`}
-            >
-              <div className={styles.header}>
+            <div className={`${styles.user}`}>
+              <div
+                className={`${styles.header} ${
+                  user.added ? styles.selected : ''
+                }`}
+              >
                 <span>{user.email}</span>
                 {open[index] === true ? (
                   <button type="button" onClick={() => handleOpen(index)}>

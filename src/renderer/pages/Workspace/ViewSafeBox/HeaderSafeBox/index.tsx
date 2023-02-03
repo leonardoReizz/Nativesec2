@@ -160,12 +160,12 @@ export function HeaderSafeBox() {
                 Icon={<GiPadlock />}
               />
             )}
-            {safeBoxMode === 'view' && (
+            {(safeBoxMode === 'view' || safeBoxMode === 'decrypted') && (
               <>
                 <Button
                   text="Editar"
                   theme={theme}
-                  onClick={handleOpenVerifySafetyPhraseModal}
+                  onClick={() => handleDecrypt('edit')}
                   Icon={<RiEditFill />}
                 />
                 <Button
@@ -179,18 +179,19 @@ export function HeaderSafeBox() {
             )}
             {(safeBoxMode === 'edit' || safeBoxMode === 'create') && (
               <>
-                <button type="button" onClick={handleSave}>
-                  <BsCheck2 />
-                  Salvar
-                </button>
-                <button
-                  type="button"
+                <Button
+                  text="Salvar"
+                  Icon={<BsCheck2 />}
+                  onClick={handleSave}
+                  theme={theme}
+                />
+                <Button
+                  text="Descartar"
+                  Icon={<AiFillDelete />}
                   onClick={handleDiscart}
                   className={styles.red}
-                >
-                  <AiFillDelete />
-                  Descartar
-                </button>
+                  theme={theme}
+                />
               </>
             )}
           </div>

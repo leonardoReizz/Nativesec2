@@ -20,21 +20,6 @@ export function AppRoutes() {
   useIPCSafeBox();
   useRefresh();
 
-  const total = 30;
-  let passed = 0;
-
-  function dec() {
-    passed += 1;
-
-    if (total - passed <= 0) {
-      passed = 0;
-    }
-  }
-
-  useEffect(() => {
-    setInterval(dec, 1000);
-  }, [passed]);
-  console.log(passed);
   const [isLoading, setIsLoading] = useState<LoadingType>('false');
 
   const changeLoadingState = useCallback((state: LoadingType) => {

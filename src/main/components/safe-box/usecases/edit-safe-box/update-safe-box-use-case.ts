@@ -99,7 +99,12 @@ export class UpdateSafeBoxUseCase {
       });
       await refreshSafeBoxes(data.organizacao);
 
-      return { message: 'ok' };
+      return {
+        message: 'ok',
+        data: {
+          safeBoxId: data.id,
+        },
+      };
     }
 
     throw new Error('nok');

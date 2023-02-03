@@ -10,6 +10,7 @@ import { useLoading } from 'renderer/hooks/useLoading';
 import { Input } from 'renderer/components/Inputs/Input';
 import { toast } from 'react-toastify';
 import { toastOptions } from 'renderer/utils/options/Toastify';
+import { Button } from 'renderer/components/Buttons/Button';
 import styles from './styles.module.sass';
 
 interface IAddUserData {
@@ -182,14 +183,12 @@ export function Members() {
                 onChange={(e) => changeInput(e.target.value)}
               />
             </div>
-            <button
-              type="button"
+            <Button
+              text="Adicionar Participante"
+              Icon={<IoMdAdd />}
               onClick={handleAddParticipant}
-              className={styles.participantButton}
-            >
-              <IoMdAdd />
-              Adicionar Participante
-            </button>
+              theme={theme}
+            />
           </header>
           <main>
             <div className={styles.participantContainer}>

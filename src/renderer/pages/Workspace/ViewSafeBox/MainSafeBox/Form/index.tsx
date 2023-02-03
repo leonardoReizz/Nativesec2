@@ -40,7 +40,11 @@ export function Form() {
     if (!text.startsWith('******')) {
       const myValues: IFormikItem = formik[formikIndex].item;
       myValues.map(() => {
-        formikProps.setFieldValue(`${position}`, '******************');
+        if (text === '') {
+          formikProps.setFieldValue(`${position}`, '');
+        } else {
+          formikProps.setFieldValue(`${position}`, '******************');
+        }
         return position;
       });
     } else {

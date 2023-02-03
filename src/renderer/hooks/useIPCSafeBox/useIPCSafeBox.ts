@@ -93,7 +93,7 @@ export function useIPCSafeBox() {
       (response: types.IPCResponse) => {
         if (response.message === 'ok') {
           updateSafeBoxes(window.electron.store.get('safebox'));
-          return toast.success('Cofre deletado com sucesso', {
+          return toast.success('Cofre deletado.', {
             ...toastOptions,
             toastId: 'deletedSafeBox',
           });
