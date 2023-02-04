@@ -6,6 +6,7 @@ import { SafeBoxRepositoryAPI } from '../../repositories/safe-box-repository-api
 import { SafeBoxRepositoryDatabase } from '../../repositories/safe-box-repository-database';
 import { IUpdateSafeBoxRequestDTO } from './update-safe-box-request-dto';
 import { KeyRepositoryAPI } from '../../../keys/repositories/key-repository-api';
+import { SafeBoxAPIModel } from '../../model/SafeBox';
 
 export class UpdateSafeBoxUseCase {
   constructor(
@@ -79,26 +80,36 @@ export class UpdateSafeBoxUseCase {
     );
 
     console.log('apiUpdate');
-    console.log(apiUpdate);
+    console.log(apiUpdate.data.detail[0]);
 
     if (apiUpdate.status === 200 && apiUpdate.data.status === 'ok') {
-      this.safeBoxRepositoryDatabase.update({
-        ...data,
-        _id: data.id,
-        conteudo: JSON.stringify(content),
-        usuarios_escrita: JSON.stringify(data.usuarios_escrita),
-        usuarios_leitura: JSON.stringify(data.usuarios_leitura),
+      console.log('updateDatabase');
+
+      const updatedSafeBox: SafeBoxAPIModel = apiUpdate.data.detail[0];
+      const updateDatabase = await this.safeBoxRepositoryDatabase.update({
+        _id: updatedSafeBox._id.$oid,
+        conteudo: updatedSafeBox.conteudo,
+        usuarios_escrita: JSON.stringify(updatedSafeBox.usuarios_escrita),
+        usuarios_leitura: JSON.stringify(updatedSafeBox.usuarios_leitura),
         usuarios_escrita_deletado: JSON.stringify(
-          data.usuarios_escrita_deletado
+          updatedSafeBox.usuarios_escrita_deletado
         ),
         usuarios_leitura_deletado: JSON.stringify(
-          data.usuarios_leitura_deletado
+          updatedSafeBox.usuarios_leitura_deletado
         ),
-        data_atualizacao: apiUpdate.data.data_atualizacao.$date,
-        anexos: JSON.stringify([]),
+        data_atualizacao: updatedSafeBox.data_atualizacao.$date,
+        anexos: JSON.stringify(updatedSafeBox.anexos),
+        criptografia: updatedSafeBox.criptografia,
+        descricao: updatedSafeBox.descricao,
+        nome: updatedSafeBox.nome,
+        organizacao: updatedSafeBox.organizacao,
+        tipo: updatedSafeBox.tipo,
       });
-      await refreshSafeBoxes(data.organizacao);
 
+      console.log('updateDatabase');
+      console.log(updateDatabase);
+      await refreshSafeBoxes(data.organizacao);
+      console.log('refresh');
       return {
         message: 'ok',
         data: {

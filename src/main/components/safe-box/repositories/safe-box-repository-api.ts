@@ -5,6 +5,7 @@ import { api } from '../../../util';
 import { SafeBoxAPIModel, SafeBoxDatabaseModel } from '../model/SafeBox';
 import { SafeBoxRepositoryAPIInterface } from './safe-box-repository-api-interface';
 import { DeleteSafeBoxAPI } from './types';
+import * as types from './types';
 
 export class SafeBoxRepositoryAPI implements SafeBoxRepositoryAPIInterface {
   async create(
@@ -76,7 +77,7 @@ export class SafeBoxRepositoryAPI implements SafeBoxRepositoryAPIInterface {
       });
   }
 
-  async update(data: SafeBoxAPIModel, authorization: string) {
+  async update(data: types.IUpdateSafeBoxData, authorization: string) {
     return axios
       .put(
         `${api}/cofre/`,

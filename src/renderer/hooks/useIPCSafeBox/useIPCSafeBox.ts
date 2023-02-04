@@ -158,31 +158,29 @@ export function useIPCSafeBox() {
   }, []);
 
   useEffect(() => {
-    if (currentSafeBox?._id !== undefined) {
-      window.electron.ipcRenderer.on(
-        IPCTypes.UPDATE_SAFE_BOX_RESPONSE,
-        (response: types.IPCResponse) => {
-          toast.dismiss('updateSafeBox');
-          if (response.message === 'ok') {
-            toast.success('Cofre Atualizado', {
-              ...toastOptions,
-              toastId: 'updatedSafeBox',
-            });
+    window.electron.ipcRenderer.on(
+      IPCTypes.UPDATE_SAFE_BOX_RESPONSE,
+      (response: types.IUpdateSafeBoxResponse) => {
+        toast.dismiss('updateSafeBox');
 
-            refreshSafeBoxes();
-            changeSafeBoxMode('view');
+        console.log(response);
+        if (response.message === 'ok') {
+          toast.success('Cofre Atualizado', {
+            ...toastOptions,
+            toastId: 'updatedSafeBox',
+          });
 
-            const safeBoxes = window.electron.store.get(
-              'safebox'
-            ) as ISafeBox[];
-            const filter = safeBoxes.filter(
-              (safebox) => safebox._id === currentSafeBox?._id
-            );
+          refreshSafeBoxes();
+          changeSafeBoxMode('view');
 
-            changeCurrentSafeBox(filter[0]);
-          }
+          const safeBoxes = window.electron.store.get('safebox') as ISafeBox[];
+          const filter = safeBoxes.filter(
+            (safebox) => safebox._id === response.data.safeBoxId
+          );
+
+          changeCurrentSafeBox(filter[0]);
         }
-      );
-    }
+      }
+    );
   }, [currentSafeBox]);
 }
