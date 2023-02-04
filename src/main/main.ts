@@ -13,12 +13,6 @@ import Store from 'electron-store';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import crypto from './ipc/crypto';
-import organizations from './ipc/organizations';
-import database from './database/database';
-import user from './ipc/user';
-import { keyLocal } from './ipc/keys';
-import userLocal from './ipc/user/local';
-import safeBox from './ipc/safeBox';
 
 import * as types from './types';
 import { useIpcActions } from './ipc';
@@ -72,41 +66,35 @@ ipcMain.on('electron-store-set', async (event, key, val) => {
   store.set(key, val);
 });
 
-[...safeBox].forEach((p) => {
-  const key = Object.keys(p)[0];
-  const value = Object.values(p)[0];
-  ipcMain.on(key, value);
-});
-
 [...crypto].forEach((p) => {
   const key = Object.keys(p)[0];
   const value = Object.values(p)[0];
   ipcMain.on(key, value);
 });
 
-[...organizations].forEach((p) => {
-  const key = Object.keys(p)[0];
-  const value = Object.values(p)[0];
-  ipcMain.on(key, value);
-});
+// [...organizations].forEach((p) => {
+//   const key = Object.keys(p)[0];
+//   const value = Object.values(p)[0];
+//   ipcMain.on(key, value);
+// });
 
-[...user].forEach((p) => {
-  const key = Object.keys(p)[0];
-  const value = Object.values(p)[0];
-  ipcMain.on(key, value);
-});
+// [...user].forEach((p) => {
+//   const key = Object.keys(p)[0];
+//   const value = Object.values(p)[0];
+//   ipcMain.on(key, value);
+// });
 
-[...userLocal].forEach((p) => {
-  const key = Object.keys(p)[0];
-  const value = Object.values(p)[0];
-  ipcMain.on(key, value);
-});
+// [...userLocal].forEach((p) => {
+//   const key = Object.keys(p)[0];
+//   const value = Object.values(p)[0];
+//   ipcMain.on(key, value);
+// });
 
-[...keyLocal].forEach((p) => {
-  const key = Object.keys(p)[0];
-  const value = Object.values(p)[0];
-  ipcMain.on(key, value);
-});
+// [...keyLocal].forEach((p) => {
+//   const key = Object.keys(p)[0];
+//   const value = Object.values(p)[0];
+//   ipcMain.on(key, value);
+// });
 
 ipcMain.on('updateQuitAndInstall', (event, arg) => {
   autoUpdater.quitAndInstall();
@@ -198,7 +186,7 @@ ipcMain.on(
 
 ipcMain.on('createPath', async (event, arg) => {
   const { PATH } = store.get('initialData') as types.IInitialData;
-  database.CreatePATH(PATH);
+  await newDatabase.createPATH(PATH);
 });
 
 ipcMain.on('leave', async (event, arg) => {

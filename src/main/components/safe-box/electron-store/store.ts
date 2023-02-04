@@ -1,8 +1,8 @@
-import database from '../../../database/database';
-import { store } from '../../../main';
+import { newDatabase, store } from '../../../main';
 
 export async function refreshSafeBoxes(organizationId: string) {
-  const select = await database.all(
+  const db = newDatabase.getDatabase();
+  const select = await db.all(
     `SELECT * FROM safebox WHERE organizacao = '${organizationId}'`
   );
 

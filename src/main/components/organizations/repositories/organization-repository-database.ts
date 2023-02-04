@@ -95,6 +95,30 @@ export class OrganizationRepositoryDatabase
     });
   }
 
+  async list(): Promise<OrganizationModelDatabase[] | Error | undefined> {
+    const db = newDatabase.getDatabase();
+
+    const select: OrganizationModelDatabase[] = await new Promise(
+      (resolve, reject) => {
+        db.all(`SELECT * FROM organizations`, async (error, rows) => {
+          if (error) {
+            console.log(error, ' ERROR DATABASE LIST ORGANIZATIONS');
+            reject(error);
+          }
+          resolve(rows);
+        });
+      }
+    );
+
+    const sort = select.sort((x, y) => {
+      const a = x.nome.toUpperCase();
+      const b = y.nome.toUpperCase();
+      return a == b ? 0 : a > b ? 1 : -1;
+    });
+
+    return sort as OrganizationModelDatabase[];
+  }
+
   async update(
     data: Omit<OrganizationModelDatabase, 'data_criacao'>
   ): Promise<boolean | Error> {

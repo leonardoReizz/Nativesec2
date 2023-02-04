@@ -1,5 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { newDatabase } from '../../../main';
+import { OrganizationIconModelDatabase } from '../model/Organization';
 import { IOrganizationIconRepositoryDatabase } from './organization-icon-repository-database-interface';
 import * as types from './types';
 
@@ -37,6 +38,20 @@ export class OrganizationIconRepositoryDatabase
           resolve(true);
         }
       );
+    });
+  }
+
+  async list(): Promise<OrganizationIconModelDatabase[] | Error> {
+    const db = newDatabase.getDatabase();
+    return new Promise((resolve, reject) => {
+      db.all(`SELECT * FROM organizationsIcons`, (error, rows) => {
+        if (error) {
+          console.log(error, 'ERROR  DATABASE SELECT ORGANIZTION ICONS');
+          reject(error);
+        }
+
+        resolve(rows);
+      });
     });
   }
 

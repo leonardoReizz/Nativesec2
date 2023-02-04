@@ -81,10 +81,21 @@ export function Login({
                 touched={formikProps.touched.email}
               />
             </div>
-            <Button type="submit" text="Gerar Token" isLoading={loading} />
+            <Button
+              type="submit"
+              text="Gerar Token"
+              className={styles.blue}
+              isLoading={loading}
+            />
           </form>
           <div className={styles.buttonStart}>
-            <Button type="button" text="Entrar" onClick={handleLoginStepTwo} />
+            <Button
+              type="button"
+              text="Entrar"
+              onClick={handleLoginStepTwo}
+              theme="light"
+              className={styles.blue}
+            />
           </div>
         </div>
       ) : authState === 'token' ? (

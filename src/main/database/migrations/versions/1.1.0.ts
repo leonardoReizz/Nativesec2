@@ -52,16 +52,10 @@ const tables = [
   },
 ];
 
-const update = async (db: sqlite3.Database) => {
+export async function update(db: sqlite3.Database) {
   await Promise.all(
     tables.map(async (table) => {
-      db.run(table.query, async (err) => {
-        if (err) {
-          console.log(err);
-        }
-      });
+      await db.run(table.query);
     })
   );
-};
-
-export { update };
+}

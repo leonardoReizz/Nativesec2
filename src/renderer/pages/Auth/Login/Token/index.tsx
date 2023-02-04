@@ -72,7 +72,7 @@ export function Token({ changeLoadingState }: TokenProps) {
             touched={formikProps.touched.safetyPhrase}
           />
         </div>
-        <Button text="Entrar" type="submit" />
+        <Button text="Entrar" type="submit" className={styles.blue} />
       </form>
 
       <button

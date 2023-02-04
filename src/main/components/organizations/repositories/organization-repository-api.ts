@@ -49,6 +49,49 @@ export class OrganizationRepositoryAPI implements IOrganizationRepositoryAPI {
       });
   }
 
+  async list(authorization: string) {
+    return axios
+      .get(`${api}/organizacao/my`, {
+        headers: {
+          Authorization: authorization,
+        },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERROR API LIST MY ORGANIZATIONS');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
+
+  async listIcons(authorization: string) {
+    return axios
+      .get(`${api}/organizacao/icone-all`, {
+        headers: {
+          Authorization: authorization,
+        },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        return {
+          status: error.response?.status,
+          data: error.response.statusText,
+        };
+      });
+  }
+
   async inviteAdmin(data: types.InviteAdminData): Promise<APIResponse> {
     return axios
       .post(
@@ -95,6 +138,31 @@ export class OrganizationRepositoryAPI implements IOrganizationRepositoryAPI {
       })
       .catch((error) => {
         console.log(error, ' ERRO API DELETE ORGANIZATION');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
+
+  async getOrganization(organizationId: string, authorization: string) {
+    return axios
+      .get(`${api}/organizacao/`, {
+        headers: {
+          Authorization: authorization,
+        },
+        params: {
+          id: organizationId,
+        },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERROR API GET ORGANIZATION');
         return {
           status: error.response.status,
           data: error.response.statusText,

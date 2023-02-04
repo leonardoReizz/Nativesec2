@@ -1,3 +1,5 @@
+/* eslint-disable import/no-dynamic-require */
+/* eslint-disable global-require */
 import sqlite3 from '@journeyapps/sqlcipher';
 import fs from 'fs';
 import path from 'path';
@@ -6,6 +8,7 @@ import { IInitialData, IUser } from '../types';
 import { store } from '../main';
 import tables, { ITables } from './tables';
 import { DEFAULT_TYPE, ICreateDatabase, IInit } from './types';
+import { versions } from './migrations/versions';
 
 export class Database {
   private database: sqlite3.Database | undefined;
@@ -113,5 +116,111 @@ export class Database {
         }
       }
     );
+  };
+
+  // ChangeSafetyPhrase = async ({ newSafetyPhrase, db }: IChangeSafetyPhrase) => {
+  //   try {
+  //     const { myEmail, myFullName, safetyPhrase } = store.get('user') as IUser;
+  //     const { privateKey } = store.get('keys') as IKeys;
+  //     const { tokenType, accessToken } = store.get('token') as IToken;
+  //     const privateKeyDecrypt = await openpgp.decryptKey({
+  //       privateKey: await openpgp.readPrivateKey({ armoredKey: privateKey }),
+  //       passphrase: safetyPhrase,
+  //     });
+
+  //     const newKey = await openpgp.reformatKey({
+  //       privateKey: privateKeyDecrypt,
+  //       userIDs: [{ email: myEmail.toLowerCase(), name: myFullName }],
+  //       passphrase: newSafetyPhrase,
+  //     });
+
+  //     const userConfig = store.get('userConfig') as IUserConfig;
+  //     if (Boolean(userConfig.savePrivateKey) === true) {
+  //       const result = await axios
+  //         .delete(`${api}/privatekey/`, {
+  //           data: {
+  //             chave: privateKey,
+  //             tipo: 'rsa',
+  //           },
+  //           headers: {
+  //             Authorization: `${tokenType} ${accessToken}`,
+  //           },
+  //         })
+  //         .then(async (result) => {
+  //           return true;
+  //         })
+  //         .catch((err) => {
+  //           return false;
+  //         });
+  //       if (result === true) {
+  //         axios
+  //           .post(
+  //             `${api}/privatekey/`,
+  //             {
+  //               chave: newKey.privateKey,
+  //               tipo: DEFAULT_TYPE,
+  //             },
+  //             {
+  //               headers: {
+  //                 Authorization: `${tokenType} ${accessToken}`,
+  //               },
+  //             }
+  //           )
+  //           .catch((err) => {
+  //             console.log('APIPrivateKeyError: ', err);
+  //             throw new Error('APIPrivateKeyError');
+  //           });
+  //       }
+  //     }
+  //     store.set('keys', {
+  //       ...(store.get('keys') as IKeys),
+  //       privateKey: newKey.privateKey,
+  //     });
+
+  //     db.all(
+  //       `UPDATE private_keys SET private_key ='${newKey.privateKey}' WHERE email = '${myEmail}'`
+  //     );
+
+  //     return true;
+  //   } catch (err) {
+  //     console.log(err);
+  //     return false;
+  //   }
+  // };
+
+  migration = async () => {
+    const version: any = await this.database.all(
+      `SELECT * FROM database_version`
+    );
+
+    if (version[0] === undefined) {
+      await this.database.run(
+        `INSERT INTO database_version (version) VALUES ('${version}') `
+      );
+    } else if (version[0] !== null) {
+      if (version[0].version !== version) {
+        await this.database.run(
+          `UPDATE database_version SET version = '${version}'`
+        );
+      }
+    }
+
+    // Update Database
+    const currentVersionNumber = Number(version[0].version.replaceAll('.', ''));
+    const listToUpdate = versions
+      .map((v) => {
+        if (v.number > currentVersionNumber) {
+          return v;
+        }
+        return undefined;
+      })
+      .filter((v) => v !== undefined);
+
+    if (listToUpdate.length > 0) {
+      listToUpdate.map(async (v) => {
+        const updateDatase = require(`./versions/${v?.version}.ts`);
+        await updateDatase.update();
+      });
+    }
   };
 }

@@ -1,5 +1,4 @@
 import { newDatabase } from '../../../main';
-import { myDatabase } from '../../../ipc/database';
 import { SafeBoxDatabaseModel } from '../model/SafeBox';
 import { SafeBoxRepositoryDatabaseInterface } from './safe-box-repository-database-interface';
 

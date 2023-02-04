@@ -7,12 +7,12 @@ export interface ITables {
 
 const tables = [
   {
-    name: 'safeBoxAdmin',
-    query: 'ALTER TABLE safebox ADD usuarios_leitura_deletado type TEXT',
+    name: 'pubKey',
+    query: 'ALTER TABLE public_keys ADD _id type TEXT',
   },
   {
     name: 'safeBoxParticipant',
-    query: 'ALTER TABLE safebox ADD usuarios_escrita_deletado type TEXT',
+    query: 'ALTER TABLE private_keys ADD _id type TEXT',
   },
 ];
 

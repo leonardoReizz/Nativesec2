@@ -51,14 +51,12 @@ export function Input({
         <span>{text}</span>
         <input type={type || 'text'} {...props} />
       </div>
-      {viewBarError ? (
+      {viewBarError && (
         <p
           className={` ${styles.bar} ${
             messageError && touched ? styles.error : styles.correct
           }`}
         />
-      ) : (
-        ''
       )}
     </div>
   );

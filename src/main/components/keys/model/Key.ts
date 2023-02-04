@@ -6,12 +6,20 @@ export interface KeyDatabase {
   type: string;
 }
 
-export interface IPrivateKeyApiModel {
-  privateKey: string;
-  type: string;
+export interface IPrivateKeyAPIModel {
+  _id: {
+    $oid: string;
+  };
+  chave: string;
+  tipo: string;
+  email: string;
 }
 
-export interface IPublicKeyApiModel {
-  publicKey: string;
-  type: string;
+export interface IPublicKeyAPIModel {
+  _id: {
+    $oid: string;
+  };
+  chave: string;
+  tipo: string;
+  email: string;
 }

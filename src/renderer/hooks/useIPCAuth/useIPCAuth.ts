@@ -143,7 +143,7 @@ export function useIPCAuth({
       (result: IIPCResponse) => {
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
-            event: IPCTypes.UPDATE_DATABASE,
+            event: IPCTypes.GET_USER,
           });
         } else {
           toast.error('Falha Grave.', { ...toastOptions, toastId: 'error' });
@@ -152,13 +152,13 @@ export function useIPCAuth({
     );
   }, []);
 
-  useEffect(() => {
-    window.electron.ipcRenderer.on(IPCTypes.UPDATE_DATABASE_RESPONSE, () => {
-      window.electron.ipcRenderer.sendMessage('useIPC', {
-        event: IPCTypes.GET_USER,
-      });
-    });
-  }, []);
+  // useEffect(() => {
+  //   window.electron.ipcRenderer.on(IPCTypes.UPDATE_DATABASE_RESPONSE, () => {
+  //     window.electron.ipcRenderer.sendMessage('useIPC', {
+  //       event: IPCTypes.GET_USER,
+  //     });
+  //   });
+  // }, []);
 
   useEffect(() => {
     window.electron.ipcRenderer.on(

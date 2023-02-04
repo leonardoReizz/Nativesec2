@@ -1,3 +1,4 @@
+import { refreshOrganizationController } from '../components/organizations/usecases/refresh-organizations';
 import { updateUsersSafeBoxController } from '../components/safe-box/usecases/update-users';
 import { addUsersController } from '../components/safe-box/usecases/add-users';
 import { listSafeBoxController } from '../components/safe-box/usecases/list-safe-box';
@@ -24,7 +25,6 @@ import { updateSafeBoxController } from '../components/safe-box/usecases/edit-sa
 import { deleteSafeBoxController } from '../components/safe-box/usecases/delete-safe-box';
 import { createSafeBoxController } from '../components/safe-box/usecases/create-safe-box';
 import { IPCTypes } from '../../renderer/@types/IPCTypes';
-import { updateDatabase } from './database';
 import { generateParKeys } from './keys';
 import { getMyInvites, refreshAllOrganizations } from './organizations';
 import { refreshSafeBoxes } from './safeBox';
@@ -55,14 +55,12 @@ export async function useIpcActions(
       return verifyUserRegisteredController.handle(arg.data);
     case IPCTypes.REFRESH_TOKEN:
       return refreshTokenController.handle();
-    case IPCTypes.VERIFY_DATABASE_PASSWORD:
-      return verifyDatabasePassword();
+    // case IPCTypes.VERIFY_DATABASE_PASSWORD:
+    //   return verifyDatabasePassword();
     case IPCTypes.GET_PRIVATE_KEY:
       return getPrivateKeyController.handle();
-    case IPCTypes.UPDATE_DATABASE:
-      return updateDatabase();
     case IPCTypes.REFRESH_ALL_ORGANIZATIONS:
-      return refreshAllOrganizations(arg);
+      return refreshOrganizationController.execute();
     case IPCTypes.GET_PUBLIC_KEY:
       return getPublicKeyController.handle();
     case IPCTypes.SET_USER_CONFIG:
@@ -75,10 +73,10 @@ export async function useIpcActions(
       return refreshSafeBoxes(arg);
     case IPCTypes.GET_SAFE_BOXES:
       return listSafeBoxController.handle(arg.data);
-    case IPCTypes.GET_MY_INVITES:
-      return getMyInvites();
-    case IPCTypes.GENERATE_PAR_KEYS:
-      return generateParKeys(arg);
+    // case IPCTypes.GET_MY_INVITES:
+    //   return getMyInvites();
+    // case IPCTypes.GENERATE_PAR_KEYS:
+    //   return generateParKeys(arg);
     case IPCTypes.CREATE_SAFE_BOX:
       return createSafeBoxController.handle(arg.data);
     case IPCTypes.DELETE_SAFE_BOX:

@@ -1,9 +1,16 @@
 @use '../../../styles/_util' as *
 
+.blue
+  background-color: $blue-100 !important
+  &:hover
+    background-color: $blue-100-hover !important
+
 .login
   @include flex(center, center, column)
   height: 100vh
   width: 100%
+
+  max-width: 330px
 
   img
     position: absolute
@@ -11,7 +18,8 @@
     max-width: 200px
 
     @media (min-width: 1800px)
-      max-width: 300px
+      max-width: 250px
+
 
   .loginContainer
     @include flex(center, center, column)
@@ -44,5 +52,3 @@
     .buttonStart
       display: none
       pointer-events: none
-
-

@@ -1,20 +1,24 @@
-import DBOrganizationIcon from '../../../database/organizationIcons';
 import { store } from '../../../main';
-import DBOrganization from '../../../database/organizations';
+import { OrganizationIconRepositoryDatabase } from '../repositories/organization-icon-database-repository';
+import { OrganizationRepositoryDatabase } from '../repositories/organization-repository-database';
 
-export async function refreshOrganizations() {
-  const listOrganizations = await DBOrganization.listOrganizations();
+export async function refreshOrganizations(
+  organizationRepositoryDatabase: OrganizationRepositoryDatabase,
+  organizationIconRepositoryDatabase: OrganizationIconRepositoryDatabase
+) {
+  const listOrganizations = await organizationRepositoryDatabase.list();
 
-  const sort = listOrganizations.sort((x, y) => {
-    const a = x.nome.toUpperCase();
-    const b = y.nome.toUpperCase();
-    return a == b ? 0 : a > b ? 1 : -1;
-  });
+  if (listOrganizations && !(listOrganizations instanceof Error)) {
+    const sort = listOrganizations.sort((x, y) => {
+      const a = x.nome.toUpperCase();
+      const b = y.nome.toUpperCase();
+      return a == b ? 0 : a > b ? 1 : -1;
+    });
+    const listOrganizationsIcons =
+      await organizationIconRepositoryDatabase.list();
 
-  const listOrganizationsIcons =
-    await DBOrganizationIcon.listOrganizationsIcons();
+    store.set('organizations', sort);
 
-  store.set('organizations', sort);
-
-  store.set('iconeAll', listOrganizationsIcons);
+    store.set('iconeAll', listOrganizationsIcons);
+  }
 }

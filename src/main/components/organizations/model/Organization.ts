@@ -31,3 +31,8 @@ export interface OrganizationModelAPI {
   administradores: string[];
   deletado: string;
 }
+
+export interface OrganizationIconModelDatabase {
+  _id: string;
+  icone: string;
+}
