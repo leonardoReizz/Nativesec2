@@ -1,28 +1,35 @@
-export class VerifyUserPassword {
-  constructor() {}
+import fs from 'fs';
+import md5 from 'md5';
+import { IInitialData, IUser } from '../../../../types';
+import { store } from '../../../../main';
+import { UserRepositoryDatabase } from '../../repositories/user-repository-database';
+
+export class VerifyUserPasswordUseCase {
+  constructor(private userRepositoryDatabase: UserRepositoryDatabase) {}
 
   async execute() {
-
-
-  }
-  export async function verifyDatabasePassword() {
     const { myEmail, safetyPhrase } = store.get('user') as IUser;
     const { PATH } = store.get('initialData') as IInitialData;
+
     if (fs.existsSync(`${PATH}/database/default/${md5(myEmail)}.sqlite3`)) {
-      const db = await database.CreateDatabase({ myEmail, PATH });
-      const verify: any = await DB.verifyPasswordDB({ db, secret: safetyPhrase });
+      const verify: any =
+        await this.userRepositoryDatabase.verifyDatabasePassword({
+          PATH,
+          myEmail,
+          safetyPhrase,
+        });
+
       if (verify.errno === 26) {
         return {
-          response: IPCTypes.VERIFY_DATABASE_PASSWORD_RESPONSE,
-          data: {
-            status: verify.errno,
-            data: {
-              data: 'nok',
-            },
-          },
+          message: 'invalidSafetyPhrase',
         };
       }
-     
+      return {
+        message: 'ok',
+      };
+    }
+    return {
+      message: 'ok',
+    };
   }
-  
 }

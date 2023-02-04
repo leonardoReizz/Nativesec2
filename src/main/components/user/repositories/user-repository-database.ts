@@ -1,13 +1,14 @@
 import fs from 'fs';
-import { newDatabase } from 'main/main';
 import md5 from 'md5';
+import { newDatabase } from '../../../main';
+import * as types from './types';
 
 export class UserRepositoryDatabase {
-  async verifyDatabasePassword(
-    PATH: string,
-    myEmail: string,
-    safetyPhrase: string
-  ) {
+  async verifyDatabasePassword({
+    PATH,
+    myEmail,
+    safetyPhrase,
+  }: types.IVerifyDatabasePassword) {
     const db = await newDatabase.build();
 
     if (db instanceof Error) {
@@ -23,5 +24,7 @@ export class UserRepositoryDatabase {
 
       return verify;
     }
+
+    return false;
   }
 }

@@ -1,3 +1,4 @@
+import { verifyUserPasswordController } from '../components/user/use-cases/verify-user-password';
 import { refreshOrganizationController } from '../components/organizations/usecases/refresh-organizations';
 import { updateUsersSafeBoxController } from '../components/safe-box/usecases/update-users';
 import { addUsersController } from '../components/safe-box/usecases/add-users';
@@ -55,8 +56,8 @@ export async function useIpcActions(
       return verifyUserRegisteredController.handle(arg.data);
     case IPCTypes.REFRESH_TOKEN:
       return refreshTokenController.handle();
-    // case IPCTypes.VERIFY_DATABASE_PASSWORD:
-    //   return verifyDatabasePassword();
+    case IPCTypes.VERIFY_DATABASE_PASSWORD:
+      return verifyUserPasswordController.handle();
     case IPCTypes.GET_PRIVATE_KEY:
       return getPrivateKeyController.handle();
     case IPCTypes.REFRESH_ALL_ORGANIZATIONS:
