@@ -32,8 +32,8 @@ export class RefreshOrganizationsUseCase {
         apiOrganizations.map(async (org: OrganizationModelAPI) => {
           const APIGetOrganization =
             await this.organizationRepositoryAPI.getOrganization(
-              authorization,
-              org._id.$oid
+              org._id.$oid,
+              authorization
             );
 
           return APIGetOrganization?.data?.msg[0];
@@ -53,10 +53,12 @@ export class RefreshOrganizationsUseCase {
       const APIListOrganizationIcons =
         await this.organizationRepositoryAPI.listIcons(authorization);
 
+      console.log(APIListOrganizationIcons, 'api list icons');
       if (
         APIListOrganizationIcons.status === 200 &&
         APIListOrganizationIcons.data.status === 'ok'
       ) {
+        console.log('icons comparator');
         if (APIListOrganizationIcons?.data?.msg.length > 0) {
           const keys = store.get('keys') as IKeys;
           if (keys.publicKey !== undefined) {
@@ -66,6 +68,7 @@ export class RefreshOrganizationsUseCase {
           }
         }
 
+        console.log('refresh orgs');
         await refreshOrganizations(
           this.organizationRepositoryDatabase,
           this.organizationIconRepositoryDatabase

@@ -11,12 +11,12 @@ export class RefreshOrganizationsController {
       const message = await this.refreshOrganizationsUseCase.execute();
 
       return {
-        response: IPCTypes.REFRESH_ALL_ORGANIZATIONS_REFRESH_RESPONSE,
+        response: IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
         data: message,
       };
     } catch (error) {
       return {
-        response: IPCTypes.REFRESH_ALL_ORGANIZATIONS_REFRESH_RESPONSE,
+        response: IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
         data: {
           message: 'nok',
         },

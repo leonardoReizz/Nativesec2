@@ -142,9 +142,10 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_PUBLIC_KEY_RESPONSE,
       (result: IIPCResponse) => {
+        console.log(result, ' get public key');
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
-            event: IPCTypes.UPDATE_DATABASE_RESPONSE,
+            event: IPCTypes.GET_USER,
           });
         } else {
           toast.error('Falha Grave.', { ...toastOptions, toastId: 'error' });
@@ -153,13 +154,13 @@ export function useIPCAuth({
     );
   }, []);
 
-  useEffect(() => {
-    window.electron.ipcRenderer.on(IPCTypes.UPDATE_DATABASE_RESPONSE, () => {
-      window.electron.ipcRenderer.sendMessage('useIPC', {
-        event: IPCTypes.GET_USER,
-      });
-    });
-  }, []);
+  // useEffect(() => {
+  //   window.electron.ipcRenderer.on(IPCTypes.UPDATE_DATABASE_RESPONSE, () => {
+  //     window.electron.ipcRenderer.sendMessage('useIPC', {
+  //       event: IPCTypes.GET_USER,
+  //     });
+  //   });
+  // }, []);
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
@@ -190,7 +191,8 @@ export function useIPCAuth({
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
-      () => {
+      (result: IPCResponse) => {
+        console.log(result, 'refresh all organization response');
         updateOrganizationsIcons(window.electron.store.get('iconeAll'));
         updateOrganizations(window.electron.store.get('organizations'));
         window.electron.ipcRenderer.sendMessage('useIPC', {
