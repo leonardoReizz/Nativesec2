@@ -51,3 +51,8 @@ export interface IRemoveInviteParticipantData {
   email: string;
   authorization: string;
 }
+
+export interface IUpdateIconData {
+  icon: string;
+  organizationId: string;
+}

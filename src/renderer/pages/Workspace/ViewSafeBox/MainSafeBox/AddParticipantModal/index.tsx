@@ -127,7 +127,7 @@ export function AddParticipantModal({
         <h2>Compartilhe o cofre</h2>
         <div className={styles.users}>
           {usersSelected.map((user, index: number) => (
-            <div className={`${styles.user}`}>
+            <div className={`${styles.user}`} key={user.email}>
               <div
                 className={`${styles.header} ${
                   user.added ? styles.selected : ''

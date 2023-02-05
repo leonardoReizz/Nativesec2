@@ -95,7 +95,7 @@ export class OrganizationRepositoryDatabase
     });
   }
 
-  async list(): Promise<OrganizationModelDatabase[] | Error | undefined> {
+  async list(): Promise<OrganizationModelDatabase[] | Error> {
     const db = newDatabase.getDatabase();
 
     const select: OrganizationModelDatabase[] = await new Promise(

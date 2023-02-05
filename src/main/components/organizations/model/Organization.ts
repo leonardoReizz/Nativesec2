@@ -36,3 +36,10 @@ export interface OrganizationIconModelDatabase {
   _id: string;
   icone: string;
 }
+
+export interface OrganizationIconModelAPI {
+  _id: {
+    $oid: string;
+  };
+  icone: string;
+}

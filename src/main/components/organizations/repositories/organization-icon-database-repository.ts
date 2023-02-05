@@ -55,7 +55,10 @@ export class OrganizationIconRepositoryDatabase
     });
   }
 
-  async update(organizationId: string, icon: string): Promise<boolean | Error> {
+  async update({
+    organizationId,
+    icon,
+  }: types.IUpdateIconData): Promise<boolean | Error> {
     const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
       db.run(

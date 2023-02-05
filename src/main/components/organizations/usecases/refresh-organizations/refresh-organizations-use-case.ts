@@ -1,12 +1,11 @@
 import { store } from '../../../../main';
-import { IKeys, IToken } from '../../../../types';
+import { IToken } from '../../../../types';
 import { refreshOrganizations } from '../../electronstore/store';
 import { OrganizationModelAPI } from '../../model/Organization';
 import { OrganizationIconRepositoryDatabase } from '../../repositories/organization-icon-database-repository';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { OrganizationRepositoryDatabase } from '../../repositories/organization-repository-database';
 import { organizationComparator } from './comparators/organizationComparator';
-import { iconsComparator } from './comparators/organizationIconComparator';
 
 export class RefreshOrganizationsUseCase {
   constructor(
@@ -16,14 +15,12 @@ export class RefreshOrganizationsUseCase {
   ) {}
 
   async execute() {
-    let iconeAllResponse = false;
     let organizationsResponse = false;
 
     const { tokenType, accessToken } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
 
     const listAPI = await this.organizationRepositoryAPI.list(authorization);
-    const listDatabase = await this.organizationRepositoryDatabase.list();
 
     if (listAPI.status === 200 && listAPI.data.status === 'ok') {
       const apiOrganizations: OrganizationModelAPI[] = listAPI.data.msg;
@@ -41,46 +38,35 @@ export class RefreshOrganizationsUseCase {
       );
 
       if (organizationInfo.length > 0) {
-        const keys = store.get('keys') as IKeys;
-        if (keys.publicKey !== undefined) {
-          organizationsResponse = await organizationComparator(
-            organizationInfo,
-            this.organizationRepositoryDatabase
+        const APIListOrganizationIcons =
+          await this.organizationRepositoryAPI.listIcons(authorization);
+        console.log(APIListOrganizationIcons, 'api list icons');
+        if (
+          APIListOrganizationIcons.status === 200 &&
+          APIListOrganizationIcons.data.status === 'ok'
+        ) {
+          organizationsResponse = true;
+          organizationsResponse = await organizationComparator({
+            organizations: organizationInfo,
+            organizationRepositoryDatabase: this.organizationRepositoryDatabase,
+            icons: APIListOrganizationIcons.data.msg,
+            organizationIconRepositoryDatabase:
+              this.organizationIconRepositoryDatabase,
+          });
+
+          await refreshOrganizations(
+            this.organizationRepositoryDatabase,
+            this.organizationIconRepositoryDatabase
           );
+
+          return {
+            message: 'ok',
+            data: {
+              organizationsResponse,
+            },
+          };
         }
-      }
-
-      const APIListOrganizationIcons =
-        await this.organizationRepositoryAPI.listIcons(authorization);
-
-      console.log(APIListOrganizationIcons, 'api list icons');
-      if (
-        APIListOrganizationIcons.status === 200 &&
-        APIListOrganizationIcons.data.status === 'ok'
-      ) {
-        console.log('icons comparator');
-        if (APIListOrganizationIcons?.data?.msg.length > 0) {
-          const keys = store.get('keys') as IKeys;
-          if (keys.publicKey !== undefined) {
-            iconeAllResponse = await iconsComparator(
-              APIListOrganizationIcons?.data?.msg
-            );
-          }
-        }
-
-        console.log('refresh orgs');
-        await refreshOrganizations(
-          this.organizationRepositoryDatabase,
-          this.organizationIconRepositoryDatabase
-        );
-
-        return {
-          message: 'ok',
-          data: {
-            organizationsResponse,
-            iconeAllResponse,
-          },
-        };
+        throw new Error('Erro API List Icons');
       }
 
       throw new Error('ERRO API GET ORGANIZATIONS ICONS');

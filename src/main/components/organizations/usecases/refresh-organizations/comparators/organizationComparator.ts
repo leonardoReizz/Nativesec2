@@ -1,27 +1,32 @@
+import { OrganizationIconRepositoryDatabase } from '../../../repositories/organization-icon-database-repository';
 import { OrganizationRepositoryDatabase } from '../../../repositories/organization-repository-database';
-import { newDatabase } from '../../../../../main';
 import {
+  OrganizationIconModelAPI,
   OrganizationModelAPI,
   OrganizationModelDatabase,
 } from '../../../model/Organization';
 
-export async function organizationComparator(
-  organizations: OrganizationModelAPI[],
-  organizationRepositoryDatabase: OrganizationRepositoryDatabase
-): Promise<boolean> {
-  const db = newDatabase.getDatabase();
+interface IOrganizationComparatorData {
+  organizations: OrganizationModelAPI[];
+  organizationRepositoryDatabase: OrganizationRepositoryDatabase;
+  organizationIconRepositoryDatabase: OrganizationIconRepositoryDatabase;
+  icons: OrganizationIconModelAPI[];
+}
 
-  const queryOrganizations: OrganizationModelDatabase[] = await new Promise(
-    (resolve, reject) => {
-      db.all(`SELECT * FROM organizations`, async (error, rows) => {
-        if (error) {
-          console.log('ERROR COMPARATOR ORGANIZATIONS -> SELECT ORGANIZATIONS');
-          reject(error);
-        }
-        resolve(rows);
-      });
-    }
-  );
+export async function organizationComparator({
+  organizations,
+  organizationRepositoryDatabase,
+  organizationIconRepositoryDatabase,
+  icons,
+}: IOrganizationComparatorData): Promise<boolean> {
+  const queryOrganizations = await organizationRepositoryDatabase.list();
+
+  if (queryOrganizations instanceof Error) {
+    throw new Error(
+      'Erro database list organization -> organization comparator'
+    );
+  }
+
   const qOrgFilter = queryOrganizations.filter((qOrg) => qOrg !== undefined);
 
   if (qOrgFilter.length === 0 && organizations.length > 0) {
@@ -46,6 +51,14 @@ export async function organizationComparator(
           administradores: JSON.stringify(item.administradores),
           deletado: item.deletado,
           tema: item.tema,
+        });
+
+        const filterIcons = icons.filter(
+          (icon) => icon._id.$oid === item._id.$oid
+        );
+        await organizationIconRepositoryDatabase.create({
+          icon: filterIcons[0].icone,
+          organizationId: filterIcons[0]._id.$oid,
         });
       })
     );
@@ -88,6 +101,14 @@ export async function organizationComparator(
             deletado: item.deletado,
             tema: item.tema,
           });
+
+          const filterIcons = icons.filter(
+            (icon) => icon._id.$oid === item._id.$oid
+          );
+          await organizationIconRepositoryDatabase.create({
+            icon: filterIcons[0].icone,
+            organizationId: filterIcons[0]._id.$oid,
+          });
         })
       );
     }
@@ -111,6 +132,7 @@ export async function organizationComparator(
       await Promise.all(
         arrayDelete.map(async (item) => {
           organizationRepositoryDatabase.delete(item._id);
+          organizationIconRepositoryDatabase.delete(item._id);
         })
       );
     }
@@ -157,6 +179,14 @@ export async function organizationComparator(
             limite_usuarios: item.limite_usuarios,
             limite_armazenamento: item.limite_armazenamento,
             deletado: item.deletado,
+          });
+
+          const filterIcons = icons.filter(
+            (icon) => icon._id.$oid === item._id.$oid
+          );
+          await organizationIconRepositoryDatabase.update({
+            icon: filterIcons[0].icone,
+            organizationId: filterIcons[0]._id.$oid,
           });
         })
       );
