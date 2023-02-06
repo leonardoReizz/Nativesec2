@@ -18,6 +18,7 @@ interface ButtonProps {
   disabled?: boolean;
   theme?: ThemeType;
   Icon?: ReactElement<IconType, IconType>;
+  color?: 'red';
 }
 export function Button({
   type,
@@ -28,6 +29,7 @@ export function Button({
   disabled = false,
   theme = 'light',
   Icon,
+  color,
 }: ButtonProps) {
   return (
     <div
@@ -37,7 +39,9 @@ export function Button({
     >
       {!isLoading ? (
         <button
-          className={`${styles.button} ${className && className}`}
+          className={`${styles.button} ${className && className} ${
+            color === 'red' ? styles.red : ''
+          }`}
           type={type || 'button'}
           onClick={onClick}
           disabled={disabled}

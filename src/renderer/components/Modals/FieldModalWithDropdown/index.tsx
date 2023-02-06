@@ -73,7 +73,7 @@ export function FieldModalWithDropdown({
             options={options}
             onChange={(value) => formikProps.setFieldValue('type', value)}
             value={formikProps.values.type?.label}
-            text="Permissão"
+            text="Nivel de acesso"
           />
           <Input
             text={inputText}

@@ -1,6 +1,8 @@
 import { FaUser } from 'react-icons/fa';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Button } from 'renderer/components/Buttons/Button';
+import { MdOutlineExitToApp } from 'react-icons/md';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import logoNativeSec from '../../../../../assets/logoNativesec/512.png';
@@ -41,34 +43,36 @@ export function WorkspaceSettingsMenu() {
       <main>
         <ul>
           <li>
-            <button
-              type="button"
+            <Button
+              text="Membros"
+              Icon={<FaUser />}
               className={`${
-                pathname.includes('members') ? styles.selected : ''
+                pathname.includes('organizationMembers') ? styles.selected : ''
               }`}
-              onClick={() => handleLocation('/members')}
-            >
-              <FaUser /> <span>Membros</span>
-            </button>
+              onClick={() => handleLocation('/organizationMembers')}
+              theme={theme}
+            />
           </li>
           <li>
-            <button
-              type="button"
+            <Button
+              text="Configuraçoes"
+              Icon={<IoSettingsSharp />}
               className={`${
-                pathname.includes('settings') ? styles.selected : ''
+                pathname.includes('organizationSettings') ? styles.selected : ''
               }`}
-              onClick={() => handleLocation('/settings')}
-            >
-              <IoSettingsSharp />
-              <span>Configuraçoes</span>
-            </button>
+              onClick={() => handleLocation('/organizationSettings')}
+              theme={theme}
+            />
           </li>
         </ul>
       </main>
       <footer>
-        <button type="button" onClick={handleBack}>
-          Voltar
-        </button>
+        <Button
+          text="Voltar"
+          onClick={handleBack}
+          Icon={<MdOutlineExitToApp />}
+          theme={theme}
+        />
       </footer>
     </div>
   );

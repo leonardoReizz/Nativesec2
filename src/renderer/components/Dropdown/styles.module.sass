@@ -45,7 +45,7 @@
   position: relative
   color: $black
   border-radius: $default-radius
-  height: 40px
+  height: 57px
 
   .input
     @include flex(flex-start, center, row)
@@ -71,17 +71,18 @@
         pointer-events: none
         
 
-      // span
-      //   position: relative
-      //   
-      //   padding: 0 .7rem
-      //   margin-top: 5px
-      //   height: 12px
-      //   color: $gray-500
+      span
+        position: absolute
+        margin-top: 5px
+        height: 12px
+        left: 10px
+        top: 0
+        color: $gray-500
 
       input
         width: 100%
         height: 100%
+        margin-top: 5px
 
         padding: 0 10px
         

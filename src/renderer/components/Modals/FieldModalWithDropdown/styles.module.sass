@@ -20,7 +20,6 @@
 
 .reactModalContent.light
   background-color: $white
-  h2
 
   .buttons
     button
@@ -58,9 +57,9 @@
   border-radius: .5rem
   gap: 1rem
 
-  h3
-    text-align: center
-    font-size: 1.2rem
+  h2
+    font-weight: 600
+    font-size: 1.3rem
 
 
     &:nth-child(2)
@@ -72,6 +71,9 @@
     gap: 2rem
     height: 100%
     width: 100%
+
+    >div
+      max-width: 400px
     
     .buttons
       @include flex(center, center ,column)
@@ -81,7 +83,6 @@
 
       button
         @include flex(center, center ,center)
-        font-weight: 500
         width: 300px
         height: 45px
         border-radius: $default-radius

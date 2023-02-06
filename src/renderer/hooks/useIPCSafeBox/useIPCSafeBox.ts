@@ -91,6 +91,7 @@ export function useIPCSafeBox() {
     window.electron.ipcRenderer.on(
       IPCTypes.DELETE_SAFE_BOX_RESPONSE,
       (response: types.IPCResponse) => {
+        updateLoading(false);
         if (response.message === 'ok') {
           updateSafeBoxes(window.electron.store.get('safebox'));
           return toast.success('Cofre deletado.', {

@@ -3,7 +3,7 @@
 
 .reactModalContent.dark
   background-color: $gray-900
-  h2
+  h3
     color: $white
   .buttons
     button
@@ -17,7 +17,6 @@
 
 .reactModalContent.light
   background-color: $white
-  h2
   .buttons
     button
       background-color: $gray-100
@@ -54,8 +53,8 @@
   border-radius: .5rem
   gap: 1rem
 
-  h2
-    font-weight: 400
+  h3
+    font-weight: 600
     text-align: center
     font-size: 1.1rem
 
@@ -74,16 +73,14 @@
       width: 100%
       gap: 1rem
       margin-top: 3rem
+      max-width: 300px
 
-      button
-        width: 300px
-        height: 45px
-        border-radius: $default-radius
-        transition: background-color 0.2s ease
 
       
-      .buttonCancel
-        background-color: $red-100
+.red
+  background-color: $red-100 !important
+  &:hover
+    background-color: $red-100-hover !important
 
 
 

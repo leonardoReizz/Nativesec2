@@ -20,15 +20,8 @@ export function Workspace() {
     'userConfig'
   ) as IUserConfig;
   const { currentOrganization } = useContext(OrganizationsContext);
-  const {
-    filteredSafeBoxes,
-    changeCurrentSafeBox,
-    changeSafeBoxMode,
-    changeSearchValue,
-    searchValue,
-    safeBoxMode,
-    getSafeBoxes,
-  } = useSafeBox();
+  const { changeCurrentSafeBox, changeSafeBoxMode, getSafeBoxes } =
+    useSafeBox();
 
   const [update, setUpdate] = useState<boolean>(true);
   const [menuCreateIsOpen, setMenuCreateIsOpen] = useState<boolean>(false);

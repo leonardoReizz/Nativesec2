@@ -5,10 +5,12 @@
 // ---------------------------- THEME ---------------------------
 // --------------------------------------------------------------
 
-.newSidebar.dark
+.dark
+  color: $white
   background-color: $gray-750
 
-.newSidebar.light
+.light
+  color: $black
   bakground-color: $white
   
 
@@ -19,12 +21,12 @@
 .openButton
   @include flex(center, center, row)
   font-size: 1rem
-  z-index: 3000
+  z-index: 1001
   color: $white
   position: absolute
   border-radius: 100px
   top: 8px
-  left: 18px
+  left: -53px
   height: 35px
   width: 35px
 
@@ -33,7 +35,7 @@
     background-color: $gray-700
 
 .openButton.open
-  left: 270px
+  left: 200px
 
 .burguer
   opacity: 1
@@ -42,6 +44,7 @@
   
   svg
     font-size: 1.2rem
+
 .arrowRight
   opacity: 0
   visibility: hidden
@@ -59,6 +62,30 @@
     visibility: hidden
 
 
+.sidebarHeader
+  width: 0
+  position: relative
+  
+  .organization
+    @include flex(center, center, row)
+    font-size: 1rem
+    left: 15px
+    top: 15px
+    gap: .5rem
+    z-index: 5000 !important
+    position: absolute
+
+    img
+      max-width: 25px
+      max-height: 25px
+      border-radius: 100px
+
+    h5
+      font-size: .9rem
+      max-width: 140px
+      text-overflow: ellipsis
+      white-space: nowrap
+      overflow: hidden
 
 .newSidebar
   width: 0

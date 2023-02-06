@@ -1,13 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
+import { Tooltip } from '@chakra-ui/react';
+import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
+import { IoMdAdd, IoMdRemove } from 'react-icons/io';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Button } from 'renderer/components/Buttons/Button';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { Dropdown } from 'renderer/components/Dropdown';
-import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
-import { Tooltip } from '@chakra-ui/react';
 import { useLoading } from 'renderer/hooks/useLoading';
+
 import styles from './styles.module.sass';
 
 interface UserSelected {
@@ -139,16 +141,33 @@ export function AddParticipantModal({
                     <BiChevronUp />
                   </button>
                 ) : (
-                  <Tooltip
-                    hasArrow
-                    label={!user.added ? 'Adicionar Usuario' : 'Configurações'}
-                    aria-label="A tooltip"
-                    zIndex={100000}
-                  >
-                    <button type="button" onClick={() => handleOpen(index)}>
-                      <BiChevronDown />
-                    </button>
-                  </Tooltip>
+                  <>
+                    {user.added && (
+                      <Tooltip
+                        hasArrow
+                        label="Remover"
+                        aria-label="A tooltip"
+                        zIndex={100000}
+                      >
+                        <button type="button" onClick={() => handleOpen(index)}>
+                          <IoMdRemove />
+                        </button>
+                      </Tooltip>
+                    )}
+
+                    {!user.added && (
+                      <Tooltip
+                        hasArrow
+                        label="Adicionar usuario"
+                        aria-label="A tooltip"
+                        zIndex={100000}
+                      >
+                        <button type="button" onClick={() => handleOpen(index)}>
+                          <IoMdAdd />
+                        </button>
+                      </Tooltip>
+                    )}
+                  </>
                 )}
               </div>
               <div

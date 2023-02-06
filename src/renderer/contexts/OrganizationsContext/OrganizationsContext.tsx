@@ -1,5 +1,4 @@
-import { createContext, ReactNode, useEffect, useReducer } from 'react';
-import { useLocation } from 'react-router-dom';
+import { createContext, ReactNode, useReducer } from 'react';
 import {
   changeCurrentOrganizationAction,
   updateOrganizationsAction,
@@ -39,7 +38,6 @@ interface CyclesContextProviderProps {
 export function OrganizationsContextProvider({
   children,
 }: CyclesContextProviderProps) {
-  const location = useLocation();
   const [organizationsState, dispatch] = useReducer(organizationsReducer, {
     organizations: [],
     organizationsIcons: [],
@@ -89,10 +87,6 @@ export function OrganizationsContextProvider({
     newOrganizationsInvites: IOrganizationInvite[]
   ) {
     dispatch(updateOrganizationsInvitesAction(newOrganizationsInvites));
-  }
-
-  function createOrganization() {
-    console.log('create');
   }
 
   return (

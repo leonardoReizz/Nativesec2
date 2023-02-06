@@ -32,11 +32,9 @@ export function VerifyNameModal({
   isLoading = false,
 }: VerifySafetyPhraseModalProps) {
   const { theme } = useUserConfig();
-  const { loading, updateLoading } = useLoading();
   const user = window.electron.store.get('user') as IUser;
 
   function handleSubmit() {
-    updateLoading(true);
     callback(true);
   }
 
@@ -67,10 +65,10 @@ export function VerifyNameModal({
   }, [isOpen]);
 
   useEffect(() => {
-    if (!loading) {
+    if (!isLoading) {
       onRequestClose();
     }
-  }, [loading]);
+  }, [isLoading]);
 
   return (
     <>
@@ -82,8 +80,8 @@ export function VerifyNameModal({
           theme === 'dark' ? styles.dark : styles.light
         }`}
       >
-        <h2>{title}</h2>
-        <h2>{nameToVerify}</h2>
+        <h3>{title}</h3>
+        <h3>{nameToVerify} ?</h3>
         <form onSubmit={formikProps.handleSubmit}>
           <Input
             text={inputText}
@@ -110,13 +108,7 @@ export function VerifyNameModal({
           />
           <div className={styles.buttons}>
             <Button text="Confirmar" isLoading={isLoading} type="submit" />
-            <button
-              type="button"
-              onClick={handleCloseModal}
-              className={styles.buttonCancel}
-            >
-              Cancelar
-            </button>
+            <Button text="Cancelar" type="button" className={styles.red} />
           </div>
         </form>
       </ReactModal>

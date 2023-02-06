@@ -14,6 +14,7 @@ export function SafeBoxInfo({ safeBox }: SafeBoxProps) {
   const { changeCurrentSafeBox } = useSafeBox();
   const { theme } = useUserConfig();
 
+  console.log(safeBox);
   return (
     <div
       className={`${styles.safeBox} ${

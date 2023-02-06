@@ -47,15 +47,15 @@ export class UpdateOrganizationUseCase {
           ),
         });
 
-      const updateIcon = await this.organizationIconRepositoryDatabase.update(
-        data.organizationId,
-        data.icon
-      );
+      const updateIcon = await this.organizationIconRepositoryDatabase.update({
+        organizationId: data.organizationId,
+        icon: data.icon
+    });
 
       if (updateIcon !== true && updateOrganization !== true) {
         throw new Error('Error update organization icon in database');
       }
-      await refreshOrganizations();
+      await refreshOrganizations(this.organizationRepositoryDatabase, this.organizationIconRepositoryDatabase);
       return { message: 'ok' };
     }
     throw new Error('Erro api update organization');

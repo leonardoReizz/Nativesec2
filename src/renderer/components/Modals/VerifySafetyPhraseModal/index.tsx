@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import ReactModal from 'react-modal';
 import { verirySafetyPhraseValues } from 'renderer/utils/Formik/VerifySafetyPhrase/verifySafetyPhrase';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
+import { Button } from 'renderer/components/Buttons/Button';
 import { Input } from '../../Inputs/Input';
 
 import styles from './styles.module.sass';
@@ -82,10 +83,14 @@ export function VerifySafetyPhraseModal({
             theme={theme}
           />
           <div className={styles.buttons}>
-            <button type="submit">Confirmar</button>
-            <button type="button" onClick={handleCloseModal}>
-              Cancelar
-            </button>
+            <Button type="submit" text="Confirmar" theme={theme} />
+            <Button
+              type="button"
+              text="Cancelar"
+              onClick={handleCloseModal}
+              theme={theme}
+              className={styles.red}
+            />
           </div>
         </form>
       </ReactModal>

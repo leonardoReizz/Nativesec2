@@ -46,7 +46,7 @@ const userOptions = [
   },
 ];
 
-export function Members() {
+export function WorkspaceMembers() {
   const { loading, updateLoading } = useLoading();
 
   const {

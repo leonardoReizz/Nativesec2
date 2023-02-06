@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Loading } from 'renderer/components/Loading';
+import { WorkspaceSettingsMenu } from 'renderer/components/NewSidebar/WorkspaceSettingsMenu';
 import { useIpcOrganization } from 'renderer/hooks/useIPCOrganizations/useIpcOrganizations';
 import { useIPCSafeBox } from 'renderer/hooks/useIPCSafeBox/useIPCSafeBox';
 import { useRefresh } from 'renderer/hooks/useRefresh/useRefresh';
@@ -9,6 +10,7 @@ import { CreateOrganization } from 'renderer/pages/CreateOrganization';
 import { Home } from 'renderer/pages/Home/index';
 import { UserSettings } from 'renderer/pages/UserSettings';
 import { Workspace } from 'renderer/pages/Workspace';
+import { WorkspaceMembers } from 'renderer/pages/WorkspaceMembers';
 import { WorkspaceSettings } from 'renderer/pages/WorkspaceSettings';
 import { LayoutsWithSidebar } from './LayoutsWithSidebar';
 import { ProtectedRoutes } from './ProtectedRoutes';
@@ -39,11 +41,15 @@ export function AppRoutes() {
           <Route element={<LayoutsWithSidebar />}>
             <Route path="/home" element={<Home />} />
             <Route path="/workspace/:id" element={<Workspace />} />
-            <Route path="/workspaceSettings" element={<WorkspaceSettings />} />
             <Route path="/userSettings" element={<UserSettings />} />
             <Route
               path="/createOrganization"
               element={<CreateOrganization />}
+            />
+            <Route path="/organizationMembers" element={<WorkspaceMembers />} />
+            <Route
+              path="/organizationSettings"
+              element={<WorkspaceSettings />}
             />
           </Route>
         </Route>

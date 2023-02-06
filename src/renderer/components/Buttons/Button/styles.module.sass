@@ -1,5 +1,13 @@
 @use '../../../styles/_util' as *
 
+
+
+.red
+  background-color: $red-100 !important
+
+  &:hover
+    background-color: $red-100-hover !important
+
 .button.dark
   svg
     color: $white
@@ -36,7 +44,10 @@
 
     &:disabled
       background-color: $gray-700 !important
+      color: $gray-500 !important
 
+      svg
+        color: $gray-500 !important
       &:hover
         background-color: $gray-700 !important
 
@@ -49,7 +60,7 @@
 
   .loading
     @include flex(center, center, row)
-    height: 40px
+    height: 35px
     position: relative
     width: 100%
 
@@ -57,5 +68,3 @@
       position: absolute
       z-index: 2000
       max-width: 100px !important
-
-

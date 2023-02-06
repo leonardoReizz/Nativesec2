@@ -19,6 +19,7 @@ import { FormikContextType } from 'formik';
 import { IFormikItem } from 'renderer/contexts/CreateSafeBox/types';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Button } from 'renderer/components/Buttons/Button';
+import { useLoading } from 'renderer/hooks/useLoading';
 import formik from '../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 
@@ -42,6 +43,8 @@ export function HeaderSafeBox() {
     changeSafeBoxMode,
     safeBoxMode,
   } = useSafeBox();
+
+  const { loading, updateLoading } = useLoading();
 
   const handleCloseVerifySafetyPhraseModal = useCallback(() => {
     setVerifySafetyPhraseIsOpen(false);
@@ -91,6 +94,7 @@ export function HeaderSafeBox() {
   const handleDeleteSafeBox = useCallback(
     (isVerified: boolean) => {
       if (isVerified && currentOrganization && currentSafeBox) {
+        updateLoading(true);
         deleteSafeBox({
           organizationId: currentOrganization?._id,
           safeBoxId: currentSafeBox?._id,
@@ -139,6 +143,7 @@ export function HeaderSafeBox() {
         inputText="Nome do cofre"
         nameToVerify={currentSafeBox?.nome}
         callback={handleDeleteSafeBox}
+        isLoading={loading}
       />
 
       <header className={`${theme === 'dark' ? styles.dark : styles.light}`}>

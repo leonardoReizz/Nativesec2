@@ -2,7 +2,6 @@
 import { useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoMdAdd } from 'react-icons/io';
-import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
