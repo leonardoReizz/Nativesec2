@@ -10,75 +10,66 @@
     @include scroolbarDark()
   
 
-
-
-.reactModalOverlay
-  @include flex(center, center ,column)
-  z-index: 4000
-
-  position: fixed
-  top: 0
-  bottom: 0
-  right: 0
-  left: 0
-  display: flex
-  align-items:  center
-  justify-content: center
-
-.reactModalContent
-  @include flex(center, center ,column)
+.notification.open
+  width: 0
+  height: 0
+  opacity: 0
+  visibility: hidden
+  
+.notification
+  @include flex(flex-start, flex-start, column)
   width: 100%
+  height: 100%
+
+  max-width: 400px
   max-height: 300px
-  max-width: 550px
-  padding: 1rem
+  color: $white
+  overflow: auto
+
   position: absolute
+  z-index: 3001
+  background-color: $gray-800
+  border: 1px solid $gray-700
+  border-radius: $default-radius
+  padding: 1rem
+
   right: 50px
   top: 50px
-  border-radius: .5rem
-  gap: 1rem
-  border: 1px solid $gray-700
-  background-color: $gray-900
+  
 
-  .notification
+  .notifications
     @include flex(flex-start, flex-start, column)
+    gap: .5rem
     width: 100%
     height: 100%
-    color: $white
     overflow: auto
+    margin-top: 16px
 
-    .notifications
-      @include flex(flex-start, flex-start, column)
-      gap: .5rem
+    .notificationBox
+      @include flex(flex-start, flex-start, row)
       width: 100%
-      height: 100%
-      overflow: auto
-      margin-top: 16px
+      position: relative
+      gap: 1rem
 
-      .notificationBox
+      &::before
+        content: ''
+        position: absolute
+        width: 100%
+        height: 1px
+        background-color: $gray-700
+        bottom: -5px
+
+      h2
+        font-size: 1.1rem
+        font-weight: 600
+
+      .text
         @include flex(flex-start, flex-start, row)
         width: 100%
-        position: relative
-        gap: 1rem
+      .actions
+        @include flex(flex-start, flex-start, column)
+        gap: 8px
+        width: 100%
+        max-width: 150px
 
-        &::before
-          content: ''
-          position: absolute
-          width: 100%
-          height: 1px
-          background-color: $gray-700
-          bottom: -5px
-
-        h2
-          font-size: 1.1rem
-          font-weight: 600
-
-        .text
-          @include flex(flex-start, flex-start, row)
-          width: 100%
-        .actions
-          @include flex(flex-start, flex-start, column)
-          gap: 8px
-          width: 100%
-          max-width: 150px
-  
 

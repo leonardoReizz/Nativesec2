@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useRef } from 'react';
 import { MdSettings } from 'react-icons/md';
 import { FaBell, FaUser } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -12,6 +12,8 @@ export function Navbar() {
   const { theme } = useUserConfig();
 
   const [notifications, setNotifications] = useState<any[]>([]);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const notificationButtonRef = useRef<HTMLButtonElement>(null);
   const [isOpenNotificationModal, setIsOpenNotificationModal] =
     useState<boolean>(false);
 
@@ -25,20 +27,31 @@ export function Navbar() {
     navigate('/userSettings');
   }
 
+  console.log(isOpenNotificationModal);
+
   function handleOpenWorkspaceSettings() {
     navigate('/organizationMembers');
   }
 
-  const closeNotificationModal = useCallback(() => {
-    setIsOpenNotificationModal(false);
-  }, []);
+  function handleNotificationModal() {
+    setIsOpenNotificationModal((state) => !state);
+  }
+
+  function handleClickOutside(e: MouseEvent) {
+    if (
+      isOpenNotificationModal &&
+      !menuRef.current?.contains(e.target as Node) &&
+      !notificationButtonRef.current?.contains(e.target as Node)
+    ) {
+      setIsOpenNotificationModal(false);
+    }
+  }
+
+  window.addEventListener('click', handleClickOutside);
 
   return (
     <>
-      <NotificationModal
-        isOpen={isOpenNotificationModal}
-        onRequestClose={closeNotificationModal}
-      />
+      <NotificationModal isOpen={isOpenNotificationModal} ref={menuRef} />
       <div
         className={`${styles.navbar} ${
           theme === 'dark' ? styles.dark : styles.light
@@ -69,7 +82,8 @@ export function Navbar() {
               <button
                 type="button"
                 className={`${notifications.length > 0 ? styles.selected : ''}`}
-                onClick={() => setIsOpenNotificationModal(true)}
+                onClick={() => handleNotificationModal()}
+                ref={notificationButtonRef}
               >
                 <FaBell />
               </button>
