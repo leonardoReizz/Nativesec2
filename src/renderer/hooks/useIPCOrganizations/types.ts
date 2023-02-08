@@ -20,3 +20,10 @@ export interface IRemoveInviteParticipantResponse {
   changeUser?: boolean;
   data: any;
 }
+
+export interface IInvite {
+  _id: {
+    $oid: string;
+  };
+  nome: string;
+}

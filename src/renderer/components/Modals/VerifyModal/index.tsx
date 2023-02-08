@@ -1,4 +1,5 @@
 /* eslint-disable react/require-default-props */
+import { useEffect } from 'react';
 import ReactModal from 'react-modal';
 import { Button } from 'renderer/components/Buttons/Button';
 import { ThemeType } from 'renderer/contexts/UserConfigContext/types';
@@ -25,6 +26,12 @@ export function VerifyModal({
     callback(true);
   }
 
+  useEffect(() => {
+    if (!isLoading) {
+      onRequestClose();
+    }
+  }, [isLoading]);
+
   return (
     <>
       <ReactModal
@@ -35,21 +42,23 @@ export function VerifyModal({
           theme === 'dark' ? styles.dark : styles.light
         }`}
       >
-        <h2>{title}</h2>
+        <h3>{title}</h3>
         <div className={styles.buttons}>
           <Button
             text="Confirmar"
             isLoading={isLoading}
             type="submit"
             onClick={handleSubmit}
+            theme={theme}
           />
-          <button
+          <Button
+            text="Cancelar"
             type="button"
             onClick={onRequestClose}
             className={styles.buttonCancel}
-          >
-            Cancelar
-          </button>
+            theme={theme}
+            color="red"
+          />
         </div>
       </ReactModal>
     </>

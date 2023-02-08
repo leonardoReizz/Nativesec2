@@ -23,6 +23,7 @@ export const newDatabase = new Database();
 
 store.clear();
 store.set('initialData', {});
+store.set('organizationInvites', []);
 const VERSIONNPM = process.env.npm_package_version;
 const isDevelopment =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';

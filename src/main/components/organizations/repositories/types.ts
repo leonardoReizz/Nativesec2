@@ -56,3 +56,18 @@ export interface IUpdateIconData {
   icon: string;
   organizationId: string;
 }
+
+export interface IAcceptInviteData {
+  organizationId: string;
+  authorization: string;
+}
+
+export interface IDeclineInviteData {
+  organizationId: string;
+  authorization: string;
+}
+
+export interface ILeaveData {
+  organizationId: string;
+  authorization: string;
+}

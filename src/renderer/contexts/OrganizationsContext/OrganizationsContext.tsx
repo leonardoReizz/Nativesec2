@@ -1,6 +1,7 @@
-import { createContext, ReactNode, useReducer } from 'react';
+import { createContext, ReactNode, useEffect, useReducer } from 'react';
 import {
   changeCurrentOrganizationAction,
+  updateIsParticipantAction,
   updateOrganizationsAction,
   updateOrganizationsIconsAction,
   updateOrganizationsInvitesAction,
@@ -14,6 +15,7 @@ interface OrganizationsContextType {
   organizationsInvites: IOrganizationInvite[];
   currentOrganization: IOrganization | undefined;
   currentOrganizationIcon: IOrganizationIcon | undefined;
+  isParticipant: boolean;
 
   updateOrganizations: (newOrganizations: IOrganization[]) => void;
   updateOrganizationsIcons: (
@@ -39,6 +41,7 @@ export function OrganizationsContextProvider({
   children,
 }: CyclesContextProviderProps) {
   const [organizationsState, dispatch] = useReducer(organizationsReducer, {
+    isParticipant: false,
     organizations: [],
     organizationsIcons: [],
     organizationsInvites: [],
@@ -52,7 +55,23 @@ export function OrganizationsContextProvider({
     organizationsInvites,
     currentOrganization,
     currentOrganizationIcon,
+    isParticipant,
   } = organizationsState;
+
+  useEffect(() => {
+    if (currentOrganization) {
+      const { myEmail } = window.electron.store.get('user');
+      const filter = JSON.parse(currentOrganization.participantes).filter(
+        (email: string) => email === myEmail
+      );
+
+      if (filter.length > 0) {
+        dispatch(updateIsParticipantAction(true));
+      } else {
+        dispatch(updateIsParticipantAction(false));
+      }
+    }
+  }, [currentOrganization]);
 
   function updateOrganizations(newOrganizations: IOrganization[]) {
     dispatch(updateOrganizationsAction(newOrganizations));
@@ -71,16 +90,12 @@ export function OrganizationsContextProvider({
     dispatch(
       updateOrganizationsIconsAction(window.electron.store.get('iconeAll'))
     );
-
-    console.log('acabei de atualizar os cofres');
   }
 
   function changeCurrentOrganization(
     newCurrentOrganizationId: string | undefined
   ) {
     dispatch(changeCurrentOrganizationAction(newCurrentOrganizationId));
-
-    console.log('acabei de trocara  organiza');
   }
 
   function updateOrganizationsInvites(
@@ -102,6 +117,7 @@ export function OrganizationsContextProvider({
         updateOrganizationsInvites,
         changeCurrentOrganization,
         refreshOrganizations,
+        isParticipant,
       }}
     >
       {children}

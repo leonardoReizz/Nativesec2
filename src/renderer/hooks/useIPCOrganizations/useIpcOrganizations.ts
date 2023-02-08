@@ -4,9 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { toastOptions } from 'renderer/utils/options/Toastify';
+import uuid from 'react-uuid';
 import { IPCResponse } from '../useIPCSafeBox/types';
 import { useLoading } from '../useLoading';
+import { useNotifications } from '../useNotifications/useNotifications';
 import { useOrganization } from '../useOrganization/useOrganization';
+
 import * as types from './types';
 
 export function useIpcOrganization() {
@@ -17,6 +20,7 @@ export function useIpcOrganization() {
     addNewParticipant,
   } = useOrganization();
   const { updateLoading } = useLoading();
+  const { updateNotifications } = useNotifications();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -92,7 +96,6 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.ADD_NEW_PARTICIPANT_ORGANIZATION_RESPONSE,
       async (result: IPCResponse) => {
-        console.log(result);
         toast.dismiss('organizationChangeUser');
         if (result.message === 'ok') {
           refreshOrganizations();
@@ -117,7 +120,6 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.REMOVE_INVITE_PARTICIPANT_RESPONSE,
       async (result: types.IRemoveParticipantResponse) => {
-        console.log(result);
         if (result.message === 'ok') {
           if (result.data.changeUser) {
             addNewParticipant({
@@ -153,7 +155,6 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.REMOVE_PARTICIPANT_ORGANIZATION_RESPONSE,
       async (result: types.IRemoveParticipantResponse) => {
-        console.log(result, 'aaa');
         if (result.message === 'ok') {
           if (result.data.changeUser) {
             addNewParticipant({
@@ -181,6 +182,84 @@ export function useIpcOrganization() {
           });
           updateLoading(false);
         }
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.LIST_MY_INVITES_RESPONSE,
+      async (result: IPCResponse) => {
+        console.log(result, ' listInvites');
+        if (result.message === 'ok') {
+          const notifications = window.electron.store.get(
+            'organizationInvites'
+          ) as types.IInvite[];
+
+          const notificionsWithId: any[] = notifications.map((notification) => {
+            return {
+              type: 'inviteOrganization',
+              message: `Você recebeu um convite para se juntar a organização: ${notification.nome} `,
+              id: notification._id.$oid,
+            };
+          });
+
+          updateNotifications(notificionsWithId);
+          return;
+        }
+
+        toast.error('Erro ao listar convites', {
+          ...toastOptions,
+          toastId: 'errorListOrganizationInvites',
+        });
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.ACCEPT_ORGANIZATION_INVITE_RESPONSE,
+      async (result: IPCResponse) => {
+        console.log(result, ' acceptInvite');
+        if (result.message === 'ok') {
+          toast.success('Convite aceito', {
+            ...toastOptions,
+            toastId: 'acceptedInvite',
+          });
+          updateLoading(false);
+          refreshOrganizations();
+          return;
+        }
+
+        toast.error('Erro ao aceitar convite', {
+          ...toastOptions,
+          toastId: 'errorAcceptInvite',
+        });
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.LEAVE_ORGANIZATION_RESPONSE,
+      async (result: IPCResponse) => {
+        console.log(result, ' leave organizations');
+        if (result.message === 'ok') {
+          toast.success('Você saiu da organizaçao', {
+            ...toastOptions,
+            toastId: 'acceptedInvite',
+          });
+          changeCurrentOrganization(undefined);
+          navigate('/createOrganization');
+          updateLoading(false);
+          refreshOrganizations();
+          return;
+        }
+
+        toast.error('Erro ao sair da organização', {
+          ...toastOptions,
+          toastId: 'errorAcceptInvite',
+        });
       }
     );
   }, []);

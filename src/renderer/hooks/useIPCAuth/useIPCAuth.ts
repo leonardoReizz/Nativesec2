@@ -91,7 +91,6 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.VERIFY_DATABASE_PASSWORD_RESPONSE,
       (result: IIPCResponse) => {
-        console.log(result, 'verifyDatabase');
         toast.dismiss('safety-invalid');
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
@@ -142,7 +141,6 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_PUBLIC_KEY_RESPONSE,
       (result: IIPCResponse) => {
-        console.log(result, ' get public key');
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.GET_USER,
@@ -183,6 +181,9 @@ export function useIPCAuth({
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.REFRESH_ALL_ORGANIZATIONS,
           });
+          window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.LIST_MY_INVITES,
+          });
         }
       }
     );
@@ -192,7 +193,6 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
       (result: IPCResponse) => {
-        console.log(result, 'refresh all organization response');
         updateOrganizationsIcons(window.electron.store.get('iconeAll'));
         updateOrganizations(window.electron.store.get('organizations'));
         window.electron.ipcRenderer.sendMessage('useIPC', {

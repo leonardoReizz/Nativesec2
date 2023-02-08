@@ -32,8 +32,14 @@ export function WorkspaceSettings() {
     closeVerifyModal,
     onDrop,
     discard,
+    verifyOrganizationLeave,
+    closeOpenVerifyModalLeave,
+    isOpenVerifyModalLeave,
+    openVerifyModalLeave,
   } = useWorkspaceSettings();
-  const { currentOrganization, currentOrganizationIcon } = useOrganization();
+
+  const { currentOrganization, currentOrganizationIcon, isParticipant } =
+    useOrganization();
   const { myEmail } = window.electron.store.get('user') as IUser;
   const { loading } = useLoading();
   const { theme } = useUserConfig();
@@ -60,6 +66,15 @@ export function WorkspaceSettings() {
         theme={theme}
         callback={verifyRemoveImage}
       />
+
+      <VerifyModal
+        title="Tem certeza que deseja sair dessa organização?"
+        isOpen={isOpenVerifyModalLeave}
+        onRequestClose={closeOpenVerifyModalLeave}
+        theme={theme}
+        callback={verifyOrganizationLeave}
+        isLoading={loading}
+      />
       <div
         className={`${styles.settings} ${
           theme === 'dark' ? styles.dark : styles.light
@@ -82,7 +97,12 @@ export function WorkspaceSettings() {
             </div>
             <div className={styles.actions}>
               <div {...getRootProps()}>
-                <Button Icon={<FaCamera />} theme={theme} text="Selecionar" />
+                <Button
+                  Icon={<FaCamera />}
+                  theme={theme}
+                  text="Selecionar"
+                  disabled={isParticipant}
+                />
               </div>
               <Button
                 Icon={<BsFillTrashFill />}
@@ -90,6 +110,7 @@ export function WorkspaceSettings() {
                 className={styles.red}
                 onClick={openVerifyModal}
                 theme={theme}
+                disabled={isParticipant}
               />
             </div>
           </div>
@@ -103,6 +124,7 @@ export function WorkspaceSettings() {
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 theme={theme}
+                disabled={isParticipant}
               />
               <TextArea
                 name="description"
@@ -111,6 +133,7 @@ export function WorkspaceSettings() {
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 theme={theme}
+                disabled={isParticipant}
               />
 
               <div className={styles.actions}>
@@ -118,9 +141,10 @@ export function WorkspaceSettings() {
                   type="submit"
                   text="Salvar"
                   disabled={
-                    currentOrganization?.nome === formikProps.values.name &&
-                    currentOrganization?.descricao ===
-                      formikProps.values.description
+                    (currentOrganization?.nome === formikProps.values.name &&
+                      currentOrganization?.descricao ===
+                        formikProps.values.description) ||
+                    isParticipant
                   }
                   theme={theme}
                 />
@@ -130,6 +154,7 @@ export function WorkspaceSettings() {
                   className={styles.red}
                   onClick={discard}
                   theme={theme}
+                  disabled={isParticipant}
                 />
               </div>
             </form>
@@ -153,6 +178,7 @@ export function WorkspaceSettings() {
                 Icon={<BsFillTrashFill />}
                 onClick={openVerifyNameModal}
                 theme={theme}
+                disabled={isParticipant}
               />
             </div>
             <div className={styles.item}>
@@ -168,6 +194,7 @@ export function WorkspaceSettings() {
                 Icon={<IoExit />}
                 disabled={currentOrganization?.dono === myEmail}
                 theme={theme}
+                onClick={openVerifyModalLeave}
               />
             </div>
           </div>

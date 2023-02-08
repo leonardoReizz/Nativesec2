@@ -1,3 +1,6 @@
+import { leaveOrganizationController } from '../components/organizations/usecases/leave-organization';
+import { listOrganizationsInvitesController } from '../components/organizations/usecases/list-organizations-invites';
+import { acceptOrganizationInviteController } from '../components/organizations/usecases/accept-organization-invite';
 import { verifyUserPasswordController } from '../components/user/use-cases/verify-user-password';
 import { refreshOrganizationController } from '../components/organizations/usecases/refresh-organizations';
 import { updateUsersSafeBoxController } from '../components/safe-box/usecases/update-users';
@@ -26,10 +29,8 @@ import { updateSafeBoxController } from '../components/safe-box/usecases/edit-sa
 import { deleteSafeBoxController } from '../components/safe-box/usecases/delete-safe-box';
 import { createSafeBoxController } from '../components/safe-box/usecases/create-safe-box';
 import { IPCTypes } from '../../renderer/@types/IPCTypes';
-import { generateParKeys } from './keys';
-import { getMyInvites, refreshAllOrganizations } from './organizations';
 import { refreshSafeBoxes } from './safeBox';
-import { verifyDatabasePassword } from './user';
+import { declineOrganizationInviteController } from '../components/organizations/usecases/decline-organization-invite';
 
 export interface UseIPCData {
   id: string;
@@ -74,10 +75,8 @@ export async function useIpcActions(
       return refreshSafeBoxes(arg);
     case IPCTypes.GET_SAFE_BOXES:
       return listSafeBoxController.handle(arg.data);
-    // case IPCTypes.GET_MY_INVITES:
-    //   return getMyInvites();
-    // case IPCTypes.GENERATE_PAR_KEYS:
-    //   return generateParKeys(arg);
+    case IPCTypes.LIST_MY_INVITES:
+      return listOrganizationsInvitesController.handle();
     case IPCTypes.CREATE_SAFE_BOX:
       return createSafeBoxController.handle(arg.data);
     case IPCTypes.DELETE_SAFE_BOX:
@@ -106,6 +105,12 @@ export async function useIpcActions(
       return addUsersController.handle(arg.data);
     case IPCTypes.UPDATE_USERS_SAFE_BOX:
       return updateUsersSafeBoxController.handle(arg.data);
+    case IPCTypes.ACCEPT_ORGANIZATION_INVITE:
+      return acceptOrganizationInviteController.handle(arg.data);
+    case IPCTypes.DECLINE_ORGANIZATION_INVITE:
+      return declineOrganizationInviteController.handle(arg.data);
+    case IPCTypes.LEAVE_ORGANIZATION:
+      return leaveOrganizationController.handle(arg.data);
     default:
       return {
         response: 'none',

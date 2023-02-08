@@ -59,6 +59,7 @@ export function WorkspaceMembers() {
     filteredGuestParticipant,
     filteredParticipant,
     changeInput,
+    isParticipant,
   } = useOrganization();
   const { theme } = useUserConfig();
 
@@ -188,6 +189,7 @@ export function WorkspaceMembers() {
               Icon={<IoMdAdd />}
               onClick={handleAddParticipant}
               theme={theme}
+              disabled={isParticipant}
             />
           </header>
           <main>
@@ -208,6 +210,7 @@ export function WorkspaceMembers() {
                         handleDropDown(option, 'admin', user)
                       }
                       className={styles.dropDown}
+                      disabled={isParticipant}
                     />
                   </div>
                 ))}

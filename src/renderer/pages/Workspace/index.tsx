@@ -29,7 +29,6 @@ export function Workspace() {
 
   useEffect(() => {
     if (currentOrganization) {
-      console.log(currentOrganization?._id);
       getSafeBoxes(currentOrganization._id);
     }
   }, [update, refreshTime, currentOrganization]);

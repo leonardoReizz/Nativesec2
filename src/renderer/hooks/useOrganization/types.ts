@@ -34,3 +34,7 @@ export interface IRemoveInvite {
   type: 'guestAdmin' | 'guestParticipant';
   changeUser?: boolean;
 }
+
+export interface ILeaveOrganizationData {
+  organizationId: string;
+}

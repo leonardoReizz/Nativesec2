@@ -86,8 +86,6 @@ export default function Users() {
     }
   }
 
-  console.log(writeUsers, readUsers);
-
   // function handleRemoveParticipant(
   //   emailuser: string,
   //   type: 'admin' | 'participant'

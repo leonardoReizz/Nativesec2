@@ -3,37 +3,10 @@
 
 .reactModalContent.dark
   background-color: $gray-900
-  
-  h2
-    color: $white
-  
-  .buttons
-    button
-      background-color: $gray-700
-      color: $white
-      &:hover
-        background-color: $gray-600
-  
-  .buttonCancel
-    color: $white !important
-    background-color: $red-100 !important
-    &:hover
-        background-color: $red-100-hover !important
+  color: $white
 
 .reactModalContent.light
   background-color: $white
-  .buttons
-    button
-      background-color: $gray-100
-      color: $black
-      &:hover
-        background-color: $gray-400
-  
-  .buttonCancel
-    color: $white !important
-    background-color: $red-100 !important
-    &:hover
-      background-color: $red-100-hover !important
 
 .reactModalOverlay
   @include flex(center, center ,column)
@@ -52,17 +25,17 @@
   @include flex(center, center ,column)
   width: 100%
   height: 100%
-  max-height: 350px
+  max-height: 250px
   max-width: 500px
   padding: 3rem
   position: relative
   border-radius: .5rem
   gap: 1rem
 
-  h2
+  h3
     font-weight: 600
     text-align: center
-    font-size: 1.3rem
+    font-size: 1.1rem
 
     &:nth-child(2)
       margin-top: -1.5rem
@@ -73,14 +46,8 @@
     @include flex(center, center ,column)
     width: 100%
     gap: 1rem
-    margin-top: 5rem
-
-    button
-      font-weight: 500
-      width: 300px
-      height: 45px
-      border-radius: $default-radius
-      transition: background-color 0.2s ease
+    margin-top: 2rem
+    max-width: 300px
 
 
 

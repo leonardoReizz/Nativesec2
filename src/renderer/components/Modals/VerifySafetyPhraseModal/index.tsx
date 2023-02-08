@@ -68,7 +68,7 @@ export function VerifySafetyPhraseModal({
           theme === 'dark' ? styles.dark : styles.light
         }`}
       >
-        <h2>{title}</h2>
+        <h3>{title}</h3>
         <form onSubmit={formikProps.handleSubmit}>
           <Input
             text="Frase Secreta"

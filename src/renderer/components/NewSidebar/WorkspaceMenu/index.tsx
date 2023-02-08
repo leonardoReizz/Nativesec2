@@ -9,6 +9,7 @@ import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import { IoMdAdd } from 'react-icons/io';
 import { SafeBoxInfo } from 'renderer/components/SafeBox';
 import { Tooltip } from '@chakra-ui/react';
+import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import styles from './styles.module.sass';
 
 export function WorkspaceMenu() {
@@ -25,6 +26,8 @@ export function WorkspaceMenu() {
     changeCurrentSafeBox,
     changeSafeBoxMode,
   } = useSafeBox();
+
+  const { isParticipant } = useOrganization();
 
   function handleCreateSafeBox() {
     changeCurrentSafeBox(undefined);
@@ -81,17 +84,21 @@ export function WorkspaceMenu() {
           }`}
         >
           <h4>Cofres</h4>
-          <button type="button" onClick={handleCreateSafeBox}>
+          <button
+            type="button"
+            onClick={handleCreateSafeBox}
+            disabled={isParticipant}
+          >
             <IoMdAdd />
             Novo Cofre
           </button>
-          <button type="button">
+          <button type="button" disabled={isParticipant}>
             <IoReloadOutline />
             Atualizar Cofres
           </button>
           <span />
           <h4>Grupos</h4>
-          <button type="button">
+          <button type="button" disabled={isParticipant}>
             <IoMdAdd />
             Novo Grupo de Cofres
           </button>

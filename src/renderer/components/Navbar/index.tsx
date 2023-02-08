@@ -5,13 +5,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Tooltip } from '@chakra-ui/react';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
+import { useNotifications } from 'renderer/hooks/useNotifications/useNotifications';
 import styles from './styles.module.sass';
 import { NotificationModal } from './components/NotificationModal';
 
 export function Navbar() {
   const { theme } = useUserConfig();
-
-  const [notifications, setNotifications] = useState<any[]>([]);
+  const { notifications } = useNotifications();
   const menuRef = useRef<HTMLDivElement>(null);
   const notificationButtonRef = useRef<HTMLButtonElement>(null);
   const [isOpenNotificationModal, setIsOpenNotificationModal] =
@@ -23,11 +23,10 @@ export function Navbar() {
   const { pathname } = useLocation();
 
   console.log(pathname);
+
   function handleOpenUserSettings() {
     navigate('/userSettings');
   }
-
-  console.log(isOpenNotificationModal);
 
   function handleOpenWorkspaceSettings() {
     navigate('/organizationMembers');
@@ -51,7 +50,9 @@ export function Navbar() {
 
   return (
     <>
-      <NotificationModal isOpen={isOpenNotificationModal} ref={menuRef} />
+      <div className={styles.modal} ref={menuRef}>
+        <NotificationModal isOpen={isOpenNotificationModal} />
+      </div>
       <div
         className={`${styles.navbar} ${
           theme === 'dark' ? styles.dark : styles.light
@@ -81,7 +82,9 @@ export function Navbar() {
             <Tooltip hasArrow label="Notificações" aria-label="A tooltip">
               <button
                 type="button"
-                className={`${notifications.length > 0 ? styles.selected : ''}`}
+                className={`${
+                  notifications.length > 0 ? styles.selected : ''
+                } ${notifications.length > 0 ? styles.notificated : ''}`}
                 onClick={() => handleNotificationModal()}
                 ref={notificationButtonRef}
               >

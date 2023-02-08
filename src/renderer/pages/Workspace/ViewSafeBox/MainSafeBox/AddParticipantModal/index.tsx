@@ -60,7 +60,6 @@ export function AddParticipantModal({
 
   function save() {
     updateLoading(true);
-    console.log(usersSelected);
 
     const usersAdmin = usersSelected
       .filter((user) => user.type === 'admin')
@@ -106,7 +105,6 @@ export function AddParticipantModal({
 
     currentUsers[index].type = type;
 
-    console.log(currentUsers);
     setUsersSelected([...currentUsers]);
   }
 

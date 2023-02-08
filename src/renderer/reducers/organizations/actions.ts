@@ -9,6 +9,7 @@ export enum ActionType {
   UPDATE_ORGANIZATIONS_ICONS = 'UPDATE_ORGANIZATIONS_ICONS',
   CHANGE_CURRENT_ORGANIZATION = 'CHANGE_CURRENT_ORGANIZATION',
   UPDATE_ORGANIZATIONS_INVITES = 'UPDATE_ORGANIZATIONS_INVITES',
+  UPDATE_IS_PARTICIPANT = ' UPDATE_IS_PARTICIPANT',
 }
 
 export function updateOrganizationsAction(newOrganizations: IOrganization[]) {
@@ -49,6 +50,15 @@ export function updateOrganizationsInvitesAction(
     type: ActionType.UPDATE_ORGANIZATIONS_INVITES,
     payload: {
       newOrganizationsInvites,
+    },
+  };
+}
+
+export function updateIsParticipantAction(isParticipant: boolean) {
+  return {
+    type: ActionType.UPDATE_IS_PARTICIPANT,
+    payload: {
+      isParticipant,
     },
   };
 }

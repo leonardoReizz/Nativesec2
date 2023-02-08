@@ -14,15 +14,14 @@ export function useWorkspaceSettings() {
     currentOrganizationIcon,
     deleteOrganization,
     updateOrganization,
+    leaveOrganization,
   } = useOrganization();
   const { updateLoading } = useLoading();
   const [isOpenVerifyModal, setIsOpenVerifyModal] = useState<boolean>(false);
+  const [isOpenVerifyModalLeave, setIsOpenVerifyModalLeave] =
+    useState<boolean>(false);
   const [isOpenVerifyNameModal, setIsOpenVerifyNameModal] =
     useState<boolean>(false);
-
-  async function openVerifyNameModal() {
-    setIsOpenVerifyNameModal(true);
-  }
 
   const toBase64 = (file: File) =>
     new Promise((resolve, reject) => {
@@ -32,9 +31,23 @@ export function useWorkspaceSettings() {
       reader.onerror = (error) => reject(error);
     });
 
-  const closeOpenVerifyNameModal = () => {
+  const openVerifyNameModal = useCallback(() => {
+    setIsOpenVerifyNameModal(true);
+  }, []);
+  const openVerifyModalLeave = useCallback(() => {
+    setIsOpenVerifyModalLeave(true);
+  }, []);
+  const closeOpenVerifyNameModal = useCallback(() => {
     setIsOpenVerifyNameModal(false);
-  };
+  }, []);
+
+  const closeOpenVerifyModalLeave = useCallback(() => {
+    setIsOpenVerifyModalLeave(false);
+  }, []);
+
+  const closeVerifyModal = useCallback(() => {
+    setIsOpenVerifyModal(false);
+  }, []);
 
   const onDrop = useCallback(async (acceptedFiles: any) => {
     toast.dismiss('invalidSize');
@@ -73,10 +86,6 @@ export function useWorkspaceSettings() {
         toastId: 'invalidFormat',
       });
     }
-  }, []);
-
-  const closeVerifyModal = useCallback(() => {
-    setIsOpenVerifyModal(false);
   }, []);
 
   const verifyDeleteOrganization = useCallback(
@@ -142,17 +151,28 @@ export function useWorkspaceSettings() {
     }
   }, [currentOrganization, formikProps]);
 
+  const verifyOrganizationLeave = useCallback(() => {
+    if (currentOrganization) {
+      updateLoading(true);
+      leaveOrganization({ organizationId: currentOrganization._id });
+    }
+  }, [currentOrganization]);
+
   return {
     formikProps,
     openVerifyNameModal,
     openVerifyModal,
+    openVerifyModalLeave,
     isOpenVerifyModal,
+    isOpenVerifyModalLeave,
     isOpenVerifyNameModal,
     closeOpenVerifyNameModal,
     verifyDeleteOrganization,
     verifyRemoveImage,
     closeVerifyModal,
+    closeOpenVerifyModalLeave,
     onDrop,
     discard,
+    verifyOrganizationLeave,
   };
 }

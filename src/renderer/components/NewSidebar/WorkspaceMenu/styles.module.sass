@@ -22,6 +22,10 @@
         color: $gray-100
         &:hover
           background-color: $gray-600
+        &:disabled
+          color: $gray-500
+          &:hover
+            background-color: $gray-750
   .safeBoxes
     &::-webkit-scrollbar-track
       background-color: $gray-800
@@ -48,13 +52,19 @@
       &:hover
         background-color: $gray-400
     .menuCreate
+      color: $black
       background-color: $white
-      border-color: $white
+      border-color: $gray-400 !important
       span
         background-color: $gray-400
       button
+        color: $black
         &:hover
           background-color: $gray-100
+        &:disabled
+          color: $gray-400
+          &:hover
+            background-color: $white
   .safeBoxes
     &::-webkit-scrollbar-track
       background-color: $gray-100
@@ -138,9 +148,6 @@
         height: 35px
         padding: 0 1rem
         gap: .5rem
-        
-
-
 
   .menuCreate.open
     visibility: visible

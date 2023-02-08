@@ -8,6 +8,7 @@ import { ActionType } from './actions';
 
 interface OrganizationsState {
   organizations: IOrganization[];
+  isParticipant: boolean;
   organizationsIcons: IOrganizationIcon[];
   organizationsInvites: IOrganizationInvite[];
   currentOrganization: IOrganization | undefined;
@@ -54,8 +55,6 @@ export function organizationsReducer(state: OrganizationsState, action: any) {
         }
       );
 
-      console.log(currentOrganizationIconIndex);
-
       return produce(state, (draft) => {
         draft.currentOrganization =
           state.organizations[currentOrganizationIndex];
@@ -67,6 +66,11 @@ export function organizationsReducer(state: OrganizationsState, action: any) {
     case ActionType.UPDATE_ORGANIZATIONS_INVITES:
       return produce(state, (draft) => {
         draft.organizationsInvites = action.payload.newOrganizationsInvites;
+      });
+
+    case ActionType.UPDATE_IS_PARTICIPANT:
+      return produce(state, (draft) => {
+        draft.isParticipant = action.payload.isParticipant;
       });
 
     default:

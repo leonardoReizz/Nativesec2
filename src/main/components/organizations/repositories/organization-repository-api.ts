@@ -310,4 +310,106 @@ export class OrganizationRepositoryAPI implements IOrganizationRepositoryAPI {
         };
       });
   }
+
+  async acceptInvite({
+    organizationId,
+    authorization,
+  }: types.IAcceptInviteData) {
+    return axios
+      .get(`${api}/invitation/accept`, {
+        headers: {
+          Authorization: authorization,
+        },
+        params: {
+          id: organizationId,
+        },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERROR API ACCEPT INVITE');
+        return {
+          status: error.response.status,
+          data: error.response.data,
+        };
+      });
+  }
+
+  async listMyInvites(authorization: string) {
+    return axios
+      .get(`${api}/organizacao/my-invite`, {
+        headers: {
+          Authorization: authorization,
+        },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERROR API GET MY INVITES');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
+
+  async declineInvite({
+    organizationId,
+    authorization,
+  }: types.IDeclineInviteData) {
+    return axios
+      .get(`${api}/invitation/decline`, {
+        headers: {
+          Authorization: authorization,
+        },
+        params: {
+          id: organizationId,
+        },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
+
+  async leave({ authorization, organizationId }: types.ILeaveData) {
+    return axios
+      .delete(`${api}/organizacao/user/leave`, {
+        headers: {
+          Authorization: authorization,
+        },
+        params: {
+          id: organizationId,
+        },
+      })
+      .then(async (result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERROR API LEAVE ORGANIZATION');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
 }

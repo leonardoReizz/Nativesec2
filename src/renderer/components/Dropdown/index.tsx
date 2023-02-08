@@ -19,6 +19,7 @@ interface DropdownProps {
   theme: ThemeType;
   options?: IItem[];
   className?: string;
+  disabled?: boolean;
 }
 
 export function Dropdown({
@@ -29,6 +30,7 @@ export function Dropdown({
   text,
   theme,
   className,
+  disabled = false,
   ...props
 }: DropdownProps) {
   return (
@@ -51,23 +53,25 @@ export function Dropdown({
               value={`${value} ${valueText || ''}`}
               placeholder=" "
               readOnly
+              disabled={disabled}
             />
             <MdOutlineKeyboardArrowDown />
           </div>
         </div>
       </div>
       <div className={`${styles.option} ${!text ? styles.noText : ''}`}>
-        {options?.map((item) => (
-          <div
-            key={item.id}
-            onClick={() =>
-              onChange &&
-              onChange({ id: item.id, label: item.label, value: item.value })
-            }
-          >
-            {item.label} {valueText}
-          </div>
-        ))}
+        {disabled &&
+          options?.map((item) => (
+            <div
+              key={item.id}
+              onClick={() =>
+                onChange &&
+                onChange({ id: item.id, label: item.label, value: item.value })
+              }
+            >
+              {item.label} {valueText}
+            </div>
+          ))}
       </div>
     </div>
   );

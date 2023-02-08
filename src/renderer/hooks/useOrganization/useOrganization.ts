@@ -83,6 +83,34 @@ export function useOrganization() {
     });
   }, []);
 
+  const acceptOrganizationInvite = useCallback((organizationId: any) => {
+    window.electron.ipcRenderer.sendMessage('useIPC', {
+      event: IPCTypes.ACCEPT_ORGANIZATION_INVITE,
+      data: {
+        organizationId,
+      },
+    });
+  }, []);
+
+  const declineInvite = useCallback((data: any) => {
+    window.electron.ipcRenderer.sendMessage('useIPC', {
+      event: IPCTypes.DECLINE_ORGANIZATION_INVITE,
+      data,
+    });
+  }, []);
+
+  const leaveOrganization = useCallback(
+    (data: types.ILeaveOrganizationData) => {
+      window.electron.ipcRenderer.sendMessage('useIPC', {
+        event: IPCTypes.LEAVE_ORGANIZATION,
+        data: {
+          organizationId: data.organizationId,
+        },
+      });
+    },
+    []
+  );
+
   return {
     ...organizationContext,
     createOrganization,
@@ -91,6 +119,8 @@ export function useOrganization() {
     updateOrganization,
     removeUser,
     removeInvite,
+    leaveOrganization,
+    acceptOrganizationInvite,
     changeInput,
     filteredGuestAdmin,
     filteredGuestParticipant,
