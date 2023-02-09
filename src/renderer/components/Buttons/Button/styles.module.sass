@@ -22,6 +22,15 @@
     &:hover
       background-color: $gray-600
 
+    &:disabled
+      background-color: $gray-700 !important
+      color: $gray-500 !important
+
+      &:hover
+        background-color: $gray-700 !important
+      svg
+        color: $gray-500 !important
+
 .button.light
   svg
     color: $black
@@ -29,6 +38,15 @@
     background-color: $gray-300
     &:hover
       background-color: $gray-500
+
+    &:disabled
+      background-color: $gray-400 !important
+      color: $gray-500 !important
+
+      &:hover
+        background-color: $gray-400 !important
+      svg
+        color: $gray-500 !important
 
 .button
   @include flex(center, center, row)
@@ -42,26 +60,12 @@
     height: 35px
     gap: 8px
     
-    color: $white
     border-radius: $default-radius
 
     transition: background-color 0.3s ease
 
-    &:disabled
-      background-color: $gray-700 !important
-      color: $gray-500 !important
-
-      svg
-        color: $gray-500 !important
-      &:hover
-        background-color: $gray-700 !important
-
     svg
-      color: $white
       font-size: 1rem
-
-    &:hover
-      background-color: $blue-100-hover
 
   .loading
     @include flex(center, center, row)

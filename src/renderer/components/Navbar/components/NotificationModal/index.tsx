@@ -45,7 +45,11 @@ export function NotificationModal({ isOpen }: NotificationModalProps) {
         theme={theme}
         title="Tem certeza que deseja recusar este convite?"
       />
-      <div className={`${styles.notification} ${!isOpen ? styles.open : ''}`}>
+      <div
+        className={`${styles.notification} ${!isOpen ? styles.open : ''} ${
+          theme === 'dark' ? styles.dark : styles.light
+        }`}
+      >
         <h3>Notificações</h3>
         <div className={styles.notifications}>
           {notifications.map((notification) => (
