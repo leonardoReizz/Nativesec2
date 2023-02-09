@@ -21,27 +21,27 @@ export function useIPCSafeBox() {
 
   const { changeSafeBoxMode } = useSafeBox();
   const { updateLoading } = useLoading();
-  useEffect(() => {
-    window.electron.ipcRenderer.on(
-      IPCTypes.REFRESH_SAFEBOXES_RESPONSE,
-      (result: types.IGetAllSafeBoxResponse) => {
-        console.log(result, ' refresh');
-        if (result.safeBoxResponse) {
-          updateSafeBoxes(window.electron.store.get('safebox'));
-          if (currentSafeBox !== undefined) {
-            const safeBoxes = window.electron.store.get(
-              'safeBox'
-            ) as ISafeBox[];
-            const filter = safeBoxes.filter(
-              (safebox) => safebox._id === currentSafeBox._id
-            );
-            changeCurrentSafeBox(filter[0]);
-          }
-        }
-        // changeSafeBoxesIsLoading(false);
-      }
-    );
-  }, []);
+  // useEffect(() => {
+  //   window.electron.ipcRenderer.on(
+  //     IPCTypes.REFRESH_SAFEBOXES_RESPONSE,
+  //     (result: types.IGetAllSafeBoxResponse) => {
+  //       console.log(result, ' refresh');
+  //       if (result.safeBoxResponse) {
+  //         updateSafeBoxes(window.electron.store.get('safebox'));
+  //         if (currentSafeBox !== undefined) {
+  //           const safeBoxes = window.electron.store.get(
+  //             'safeBox'
+  //           ) as ISafeBox[];
+  //           const filter = safeBoxes.filter(
+  //             (safebox) => safebox._id === currentSafeBox._id
+  //           );
+  //           changeCurrentSafeBox(filter[0]);
+  //         }
+  //       }
+  //       // changeSafeBoxesIsLoading(false);
+  //     }
+  //   );
+  // }, []);
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
@@ -85,7 +85,7 @@ export function useIPCSafeBox() {
         });
       }
     );
-  });
+  }, []);
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
@@ -138,7 +138,7 @@ export function useIPCSafeBox() {
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
-      IPCTypes.GET_SAFE_BOXES_RESPONSE,
+      IPCTypes.LIST_SAFE_BOXES_RESPONSE,
       (result: types.IPCResponse) => {
         console.log(result);
         changeSafeBoxesIsLoading(false);
@@ -150,10 +150,6 @@ export function useIPCSafeBox() {
           ...toastOptions,
           toastId: 'errorListSafeBox',
         });
-        // const getSafeBox = window.electron.store.get('safebox');
-        // if (getSafeBox !== undefined) {
-        //   updateSafeBoxes(getSafeBox);
-        // }
       }
     );
   }, []);
@@ -183,5 +179,32 @@ export function useIPCSafeBox() {
         }
       }
     );
-  }, [currentSafeBox]);
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.REFRESH_SAFE_BOXES_RESPONSE,
+      (response: types.IPCResponse) => {
+        console.log(response, 'refreshSafeBox');
+        if (response.message === 'ok') {
+          if (response.data.safeBoxResponse) refreshSafeBoxes();
+          return;
+        }
+
+        // if (currentSafeBox !== undefined) {
+        //   const safeBoxes = window.electron.store.get('safeBox') as ISafeBox[];
+        //   const filter = safeBoxes.filter(
+        //     (safebox) => safebox._id === currentSafeBox._id
+        //   );
+        //   changeCurrentSafeBox(filter[0]);
+        //   return;
+        // }
+
+        toast.error('Erro ao atualizar cofres', {
+          ...toastOptions,
+          toastId: 'errorRefreshSafeBoxes',
+        });
+      }
+    );
+  }, []);
 }

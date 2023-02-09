@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Loading } from 'renderer/components/Loading';
-import { WorkspaceSettingsMenu } from 'renderer/components/NewSidebar/WorkspaceSettingsMenu';
 import { useIpcOrganization } from 'renderer/hooks/useIPCOrganizations/useIpcOrganizations';
 import { useIPCSafeBox } from 'renderer/hooks/useIPCSafeBox/useIPCSafeBox';
 import { useRefresh } from 'renderer/hooks/useRefresh/useRefresh';

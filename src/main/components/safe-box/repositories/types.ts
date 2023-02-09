@@ -17,3 +17,21 @@ export interface IUpdateSafeBoxData {
   conteudo: string;
   organizacao: string;
 }
+
+export interface IListSafeBoxesData {
+  authorization: string;
+  organizationId: string;
+  date: number;
+}
+
+export interface IListSafeBoxesDeletedData {
+  authorization: string;
+  organizationId: string;
+  date: number;
+}
+
+export interface IGetSafeBoxByIdData {
+  authorization: string;
+  organizationId: string;
+  safeBoxId: string;
+}

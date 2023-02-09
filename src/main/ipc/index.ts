@@ -1,3 +1,4 @@
+import { refreshSafeBoxesController } from '../components/safe-box/usecases/refresh-safe-boxes';
 import { leaveOrganizationController } from '../components/organizations/usecases/leave-organization';
 import { listOrganizationsInvitesController } from '../components/organizations/usecases/list-organizations-invites';
 import { acceptOrganizationInviteController } from '../components/organizations/usecases/accept-organization-invite';
@@ -29,7 +30,6 @@ import { updateSafeBoxController } from '../components/safe-box/usecases/edit-sa
 import { deleteSafeBoxController } from '../components/safe-box/usecases/delete-safe-box';
 import { createSafeBoxController } from '../components/safe-box/usecases/create-safe-box';
 import { IPCTypes } from '../../renderer/@types/IPCTypes';
-import { refreshSafeBoxes } from './safeBox';
 import { declineOrganizationInviteController } from '../components/organizations/usecases/decline-organization-invite';
 
 export interface UseIPCData {
@@ -71,9 +71,9 @@ export async function useIpcActions(
       return insertKeysController.handle();
     case IPCTypes.GET_USER:
       return getUserController.handle();
-    case IPCTypes.REFRESH_SAFEBOXES:
-      return refreshSafeBoxes(arg);
-    case IPCTypes.GET_SAFE_BOXES:
+    case IPCTypes.REFRESH_SAFE_BOXES:
+      return refreshSafeBoxesController.handle(arg.data);
+    case IPCTypes.LIST_SAFE_BOXES:
       return listSafeBoxController.handle(arg.data);
     case IPCTypes.LIST_MY_INVITES:
       return listOrganizationsInvitesController.handle();

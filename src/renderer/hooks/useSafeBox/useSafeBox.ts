@@ -266,7 +266,7 @@ export function useSafeBox() {
   function getSafeBoxes(organizationId: string) {
     safeBoxContext.changeSafeBoxesIsLoading(true);
     window.electron.ipcRenderer.sendMessage('useIPC', {
-      event: IPCTypes.GET_SAFE_BOXES,
+      event: IPCTypes.LIST_SAFE_BOXES,
       data: {
         organizationId,
       },

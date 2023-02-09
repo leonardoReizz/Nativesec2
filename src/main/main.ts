@@ -137,41 +137,38 @@ ipcMain.on('closeModal', async (event, arg) => {
   event.reply('closeModal');
 });
 
-let newQueue = <types.QueueType[]>[];
-let startedQueue = false;
+// let newQueue = <types.QueueType[]>[];
+// let startedQueue = false;
 
-async function startQueue(event: any) {
-  // console.log(newQueue, ' ANTES');
-  const result = await useIpcActions(newQueue[0]);
-  newQueue[0].ipcEvent.reply(result?.response, result.data);
-  const filterQueue = newQueue.filter((queue) => queue.id !== newQueue[0].id);
-  newQueue = filterQueue;
-  // console.log(newQueue, ' DEPOIS');
-  // console.log(' -----------------------------------------------');
-  if (newQueue.length > 0) {
-    startQueue(event);
-  } else {
-    startedQueue = false;
-  }
-}
+// async function startQueue(event: any) {
+//   // console.log(newQueue, ' ANTES');
+//   const result = await useIpcActions(newQueue[0]);
+//   newQueue[0].ipcEvent.reply(result?.response, result.data);
+//   const filterQueue = newQueue.filter((queue) => queue.id !== newQueue[0].id);
+//   newQueue = filterQueue;
+//   // console.log(newQueue, ' DEPOIS');
+//   // console.log(' -----------------------------------------------');
+//   if (newQueue.length > 0) {
+//     startQueue(event);
+//   } else {
+//     startedQueue = false;
+//   }
+// }
 
 ipcMain.on(
   'useIPC',
   async (event: Electron.IpcMainEvent, arg: types.UseIPCData) => {
     const date = new Date();
-    if (arg?.id === undefined) {
-      newQueue.push({
-        id: `${arg.event}${date.getSeconds()}${date.getMilliseconds()}`,
-        event: arg.event,
-        data: arg.data,
-        ipcEvent: event,
-      });
-    }
 
-    const result = await useIpcActions(newQueue[0]);
-    newQueue[0].ipcEvent.reply(result?.response, result.data);
-    const filterQueue = newQueue.filter((queue) => queue.id !== newQueue[0].id);
-    newQueue = filterQueue;
+    const newQueue = {
+      id: `${arg.event}${date.getSeconds()}${date.getMilliseconds()}`,
+      event: arg.event,
+      data: arg.data,
+      ipcEvent: event,
+    };
+
+    const result = await useIpcActions(newQueue);
+    newQueue.ipcEvent.reply(result?.response, result.data);
     // console.log(arg, ' DEU ENTRADA')
     // console.log(' -----------------------------------------------');
     // console.log(newQueue, ' FILA ATUAL', startedQueue)

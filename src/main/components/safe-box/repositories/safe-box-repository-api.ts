@@ -8,6 +8,14 @@ import { DeleteSafeBoxAPI } from './types';
 import * as types from './types';
 
 export class SafeBoxRepositoryAPI implements SafeBoxRepositoryAPIInterface {
+  listSafeBoxesDeleted(arg0: {
+    organizationId: string;
+    authorization: typeof import('../../auth/repositories/auth-repository-api').AuthRepositoryAPI;
+    date: number;
+  }) {
+    throw new Error('Method not implemented.');
+  }
+
   async create(
     data: Omit<SafeBoxAPIModel, 'id'>,
     authorization: string
@@ -46,6 +54,36 @@ export class SafeBoxRepositoryAPI implements SafeBoxRepositoryAPIInterface {
         };
       });
     return create;
+  }
+
+  async getSafeBoxById({
+    organizationId,
+    authorization,
+    safeBoxId,
+  }: types.IGetSafeBoxByIdData) {
+    return axios
+      .get(`${api}/cofre/`, {
+        headers: {
+          Authorization: authorization,
+        },
+        params: {
+          organizacao: organizationId,
+          id: safeBoxId,
+        },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERROR API GET SAFE BOX');
+        return {
+          status: error.response.status,
+          data: error.response,
+        };
+      });
   }
 
   async delete(data: DeleteSafeBoxAPI): Promise<APIResponse> {
@@ -109,6 +147,65 @@ export class SafeBoxRepositoryAPI implements SafeBoxRepositoryAPIInterface {
       })
       .catch((error) => {
         console.log(error, 'API ERROR CREATE SAFE BOX');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
+
+  async list({
+    organizationId,
+    authorization,
+    date,
+  }: types.IListSafeBoxesData) {
+    return axios
+      .get(`${api}/cofre/list`, {
+        headers: {
+          Authorization: authorization,
+        },
+        params: {
+          organizacao: organizationId,
+          data: date,
+        },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERROR API LIST SAFE BOX');
+        return {
+          status: error.response.status,
+          data: error.response,
+        };
+      });
+  }
+
+  async listDeleted({
+    organizationId,
+    authorization,
+    date,
+  }: types.IListSafeBoxesDeletedData) {
+    return axios
+      .get(`${api}/cofre/list_deleted`, {
+        headers: {
+          Authorization: authorization,
+        },
+        params: {
+          data: date,
+          organizacao: organizationId,
+        },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
         return {
           status: error.response.status,
           data: error.response.statusText,

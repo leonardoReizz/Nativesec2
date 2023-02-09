@@ -9,12 +9,12 @@ export class ListSafeBoxController {
     try {
       const message = await this.listSafeBoxUseCase.execute(data);
       return {
-        response: IPCTypes.GET_SAFE_BOXES_RESPONSE,
+        response: IPCTypes.LIST_SAFE_BOXES_RESPONSE,
         data: message,
       };
     } catch (error) {
       return {
-        response: IPCTypes.GET_SAFE_BOXES_RESPONSE,
+        response: IPCTypes.LIST_SAFE_BOXES_RESPONSE,
         data: {
           message: 'nok',
         },
