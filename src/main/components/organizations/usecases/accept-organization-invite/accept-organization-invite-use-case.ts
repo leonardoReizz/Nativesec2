@@ -22,7 +22,6 @@ export class AcceptOrganizationInviteUseCase {
       authorization,
     });
 
-    console.log(accept, ' accept invite api');
     if (accept.status === 200 && accept.data.status === 'ok') {
       const organization = accept.data.msg.detail[0] as OrganizationModelAPI;
       await this.organizationRepositoryDatabase.update({

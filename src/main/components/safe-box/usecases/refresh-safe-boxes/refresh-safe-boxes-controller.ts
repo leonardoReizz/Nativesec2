@@ -6,7 +6,6 @@ export class RefreshSafeBoxesController {
   constructor(private refreshSafeBoxesUseCase: RefreshSafeBoxesUseCase) {}
 
   async handle(data: IRefreshSafeBoxesRequestDTO) {
-    console.log(data, 'refresh');
     try {
       const message = await this.refreshSafeBoxesUseCase.execute(data);
 

@@ -7,7 +7,6 @@ export class ListOrganizationsInvitesController {
   ) {}
 
   async handle() {
-    console.log('list');
     try {
       const message = await this.listOrganizationsUseCase.execute();
 

@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
@@ -6,8 +7,8 @@ import { IUser } from 'main/types';
 import * as Yup from 'yup';
 import ReactModal from 'react-modal';
 import { verirySafetyPhraseValues } from 'renderer/utils/Formik/VerifySafetyPhrase/verifySafetyPhrase';
-import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Button } from 'renderer/components/Buttons/Button';
+import { ThemeType } from 'renderer/contexts/UserConfigContext/types';
 import { Input } from '../../Inputs/Input';
 
 import styles from './styles.module.sass';
@@ -17,6 +18,7 @@ interface VerifySafetyPhraseModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   callback: (verified: boolean) => void;
+  theme?: ThemeType;
 }
 
 export function VerifySafetyPhraseModal({
@@ -24,9 +26,8 @@ export function VerifySafetyPhraseModal({
   isOpen,
   callback,
   onRequestClose,
+  theme = 'light',
 }: VerifySafetyPhraseModalProps) {
-  const { theme } = useUserConfig();
-
   const user = window.electron.store.get('user') as IUser;
 
   const verirySafetyPhraseSchema = Yup.object().shape({

@@ -1,6 +1,11 @@
 @use '../../../styles/_util' as *
 
 
+.blue
+  color: $white !important
+  background-color: $blue-100 !important
+  &:hover
+    background-color: $blue-100-hover !important
 
 .red
   background-color: $red-100 !important
@@ -19,6 +24,7 @@
     color: $white
   button
     background-color: $gray-700
+    color: $white
     &:hover
       background-color: $gray-600
 

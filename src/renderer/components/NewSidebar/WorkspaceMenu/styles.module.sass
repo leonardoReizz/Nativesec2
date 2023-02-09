@@ -2,6 +2,7 @@
 
 .workspaceMenu.dark
   .search
+    background-color: $gray-700
     .input
       input
         background-color: $gray-700
@@ -10,7 +11,7 @@
         color: $white
     >button
       &:hover
-        background-color: $gray-700
+        background-color: $gray-600
     .menuCreate
       background-color: $gray-750
       color: $gray-100
@@ -42,9 +43,13 @@
       
 .workspaceMenu.light
   .search
+    background-color: $gray-100
     .input
       input
+        color: $black
         background-color: $gray-100
+      svg
+        color: $black
     >button
       background-color: $gray-100
       svg
@@ -88,6 +93,7 @@
     width: 100%
     padding: .5rem
     position: relative
+
 
     .input
       width: 100%

@@ -6,12 +6,11 @@ export interface IStepOneProps {
   currentTheme: ThemeType;
 }
 export interface StepFourProps {
-  currentTheme: ThemeType;
+  theme: ThemeType;
   users: IUsers[];
   setUsers: React.Dispatch<React.SetStateAction<IUsers[]>>;
 }
 export interface IStepProps {
-  currentTheme: ThemeType;
   values: any;
   errors: FormikErrors<any>;
   handleChange: {
@@ -32,6 +31,7 @@ export interface IStepProps {
     value: any,
     shouldValidate?: boolean | undefined
   ) => void;
+  theme: ThemeType;
 }
 
 export interface ICreateWorkspaceProps {

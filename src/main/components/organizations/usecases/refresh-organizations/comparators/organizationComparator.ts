@@ -157,7 +157,6 @@ export async function organizationComparator({
         arrayUpdate.push(organizations[i]);
       }
     }
-    console.log(arrayUpdate, ' arrayUpdate organization');
     if (arrayUpdate.length > 0) {
       await Promise.all(
         arrayUpdate.map(async (item) => {

@@ -6,7 +6,6 @@ export class CreateOrganizationController {
   constructor(private createOrganizationUseCase: CreateOrganizationUseCase) {}
 
   async handle(organization: ICreateOrganization) {
-    console.log(organization, ' create');
     try {
       const create = await this.createOrganizationUseCase.execute(organization);
       return {
@@ -14,7 +13,6 @@ export class CreateOrganizationController {
         data: create,
       };
     } catch (error) {
-      console.log(error);
       return {
         response: IPCTypes.CREATE_ORGANIZATION_RESPONSE,
         data: {

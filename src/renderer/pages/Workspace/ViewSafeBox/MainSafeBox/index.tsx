@@ -3,6 +3,7 @@ import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Button } from 'renderer/components/Buttons/Button';
 import { IoMdAdd } from 'react-icons/io';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { Form } from './Form';
 import Users from './Users';
 import styles from './styles.module.sass';
@@ -14,6 +15,7 @@ export function MainSafeBox() {
     useState<boolean>(false);
   const { theme } = useUserConfig();
   const { addSafeBoxUsers, currentSafeBox } = useSafeBox();
+  const { isParticipant } = useOrganization();
 
   function handleTabForm() {
     setTab('form');
@@ -86,10 +88,11 @@ export function MainSafeBox() {
             <Button
               type="button"
               className={styles.addParticipantButton}
-              text="Adicionar Participante"
+              text="Compartilhar"
               Icon={<IoMdAdd />}
               theme={theme}
               onClick={() => setIsOpenParticipantModal(true)}
+              disabled={isParticipant}
             />
           )}
         </div>

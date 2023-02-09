@@ -46,9 +46,6 @@ export class UpdateSafeBoxUseCase {
       return result;
     });
 
-    console.log('rodei as chaves publicas');
-    console.log(data.conteudo);
-
     await Promise.all(
       data.conteudo.map(async (item: any) => {
         if (item.crypto === false) {
@@ -72,19 +69,12 @@ export class UpdateSafeBoxUseCase {
       return content;
     });
 
-    console.log('encriptei');
-    console.log(content);
     const apiUpdate = await this.safeBoxRepositoryAPI.update(
       { ...data, conteudo: JSON.stringify(content) },
       authorization
     );
 
-    console.log('apiUpdate');
-    console.log(apiUpdate.data.detail[0]);
-
     if (apiUpdate.status === 200 && apiUpdate.data.status === 'ok') {
-      console.log('updateDatabase');
-
       const updatedSafeBox: SafeBoxAPIModel = apiUpdate.data.detail[0];
       const updateDatabase = await this.safeBoxRepositoryDatabase.update({
         _id: updatedSafeBox._id.$oid,
@@ -106,10 +96,7 @@ export class UpdateSafeBoxUseCase {
         tipo: updatedSafeBox.tipo,
       });
 
-      console.log('updateDatabase');
-      console.log(updateDatabase);
       await refreshSafeBoxes(data.organizacao);
-      console.log('refresh');
       return {
         message: 'ok',
         data: {

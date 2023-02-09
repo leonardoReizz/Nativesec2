@@ -15,7 +15,6 @@ export class CreateOrganizationUseCase {
   async execute(organization: ICreateOrganization) {
     const apiCreate = await this.organizationRepositoryAPI.create(organization);
 
-    console.log(apiCreate.status, apiCreate.data.msg, apiCreate.data.detail);
     if (apiCreate.status === 200 && apiCreate.data.msg === 'org created') {
       const organizationCreated = <OrganizationModelAPI>(
         apiCreate.data.detail[0]

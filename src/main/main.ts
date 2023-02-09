@@ -73,30 +73,6 @@ ipcMain.on('electron-store-set', async (event, key, val) => {
   ipcMain.on(key, value);
 });
 
-// [...organizations].forEach((p) => {
-//   const key = Object.keys(p)[0];
-//   const value = Object.values(p)[0];
-//   ipcMain.on(key, value);
-// });
-
-// [...user].forEach((p) => {
-//   const key = Object.keys(p)[0];
-//   const value = Object.values(p)[0];
-//   ipcMain.on(key, value);
-// });
-
-// [...userLocal].forEach((p) => {
-//   const key = Object.keys(p)[0];
-//   const value = Object.values(p)[0];
-//   ipcMain.on(key, value);
-// });
-
-// [...keyLocal].forEach((p) => {
-//   const key = Object.keys(p)[0];
-//   const value = Object.values(p)[0];
-//   ipcMain.on(key, value);
-// });
-
 ipcMain.on('updateQuitAndInstall', (event, arg) => {
   autoUpdater.quitAndInstall();
 });
@@ -137,24 +113,6 @@ ipcMain.on('closeModal', async (event, arg) => {
   event.reply('closeModal');
 });
 
-// let newQueue = <types.QueueType[]>[];
-// let startedQueue = false;
-
-// async function startQueue(event: any) {
-//   // console.log(newQueue, ' ANTES');
-//   const result = await useIpcActions(newQueue[0]);
-//   newQueue[0].ipcEvent.reply(result?.response, result.data);
-//   const filterQueue = newQueue.filter((queue) => queue.id !== newQueue[0].id);
-//   newQueue = filterQueue;
-//   // console.log(newQueue, ' DEPOIS');
-//   // console.log(' -----------------------------------------------');
-//   if (newQueue.length > 0) {
-//     startQueue(event);
-//   } else {
-//     startedQueue = false;
-//   }
-// }
-
 ipcMain.on(
   'useIPC',
   async (event: Electron.IpcMainEvent, arg: types.UseIPCData) => {
@@ -169,16 +127,6 @@ ipcMain.on(
 
     const result = await useIpcActions(newQueue);
     newQueue.ipcEvent.reply(result?.response, result.data);
-    // console.log(arg, ' DEU ENTRADA')
-    // console.log(' -----------------------------------------------');
-    // console.log(newQueue, ' FILA ATUAL', startedQueue)
-    // console.log(' -----------------------------------------------');
-    // if (newQueue.length > 0 && !startedQueue) {
-    //   startedQueue = true;
-    //   startQueue(event);
-    // }
-
-    // return null;
   }
 );
 

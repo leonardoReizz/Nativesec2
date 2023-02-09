@@ -13,7 +13,6 @@ export class ListOrganizationsInvitesUseCase {
       authorization
     );
 
-    console.log(listInvites, ' list Invites');
     if (listInvites.status === 200 && listInvites.data.status === 'ok') {
       const invites = listInvites.data.msg as IInvite[];
       store.set('organizationInvites', invites);

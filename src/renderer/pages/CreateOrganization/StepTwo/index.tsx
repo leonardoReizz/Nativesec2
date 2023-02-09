@@ -29,33 +29,11 @@ export function StepTwo({
   touched,
   values,
   setFieldValue,
-  currentTheme,
+  theme,
 }: IStepProps) {
   const [messageError, setMessageError] = useState<string | undefined>(
     undefined
   );
-  // const handleUploadImage = async (e: File[]) => {
-  //   if (
-  //     e[0].type === 'image/png' ||
-  //     e[0].type === 'image/jpeg' ||
-  //     e[0].type === 'image/jpg'
-  //   ) {
-  //     const imageSize = await browserImageSize(e[0]).then((result: any) => {
-  //       return result;
-  //     });
-  //     if (imageSize.width > 512 || imageSize.height > 512) {
-  //       setMessageError('A imagem nao pode ter mais de 512x512');
-  //     } else {
-  //       setMessageError(undefined);
-  //       const base64 = await toBase64(e[0]);
-  //       const temp = base64;
-  //       setFieldValue('icon', temp);
-  //     }
-  //   } else {
-  //     setFieldValue('icon', null);
-  //     setMessageError('Formato invalido');
-  //   }
-  // };
 
   async function onDrop(file: File[]) {
     if (
@@ -93,43 +71,11 @@ export function StepTwo({
   return (
     <div
       className={`${styles.stepTwo} ${
-        currentTheme === 'dark' ? styles.dark : styles.light
+        theme === 'dark' ? styles.dark : styles.light
       }`}
     >
       <div className={styles.stepTwo_dropzone}>
         <img src={values.icon ? values.icon : logoNativeSec} alt="" />
-
-        {/* <Dropzone
-          onDrop={(acceptedFiles) => {
-            handleUploadImage(acceptedFiles);
-          }}
-        >
-          {({ getRootProps, getInputProps, acceptedFiles }) => (
-            <section>
-              <div {...getRootProps()}>
-                <input {...getInputProps()} />
-                <img src={uploadImage} alt="Enviar Imagem" />
-              </div>
-              {messageError !== undefined ? (
-                <p className={styles.error_file}>{messageError}</p>
-              ) : (
-                <p className={styles.name_file}>{acceptedFiles[0]?.name}</p>
-              )}
-              {acceptedFiles.length > 0 ? (
-                acceptedFiles[0].type === 'image/png' ||
-                acceptedFiles[0].type === 'image/jpeg' ? (
-                  <p className={styles.name_file}>{acceptedFiles[0].name}</p>
-                ) : (
-                  <p className={styles.error_file}>
-                    Formato de imagem não suportado
-                  </p>
-                )
-              ) : (
-                ''
-              )}
-            </section>
-          )}
-        </Dropzone> */}
         <div className={styles.title}>
           <h3>Adicione uma imagem para sua organizacao</h3>
           <p>Tamanho maximo 512 x 512 </p>
@@ -139,7 +85,7 @@ export function StepTwo({
         </div>
         <div className={styles.buttons}>
           <div {...getRootProps()}>
-            <Button text="Adicionar" Icon={<IoCameraSharp />} />
+            <Button text="Adicionar" Icon={<IoCameraSharp />} theme={theme} />
           </div>
 
           <Button
@@ -158,7 +104,7 @@ export function StepTwo({
         onChange={handleChange}
         onBlur={handleBlur}
         isValid={!(Boolean(errors.name) && touched.name)}
-        theme={currentTheme}
+        theme={theme}
       />
       <TextArea
         text="Descrição sobre a organização"
@@ -167,11 +113,8 @@ export function StepTwo({
         name="description"
         value={values.description}
         onBlur={handleBlur}
-        theme={currentTheme}
+        theme={theme}
       />
-      {/* {errors.name && touched.name && (
-        <p className={styles.form_error}>{errors.name as string}</p>
-      )} */}
     </div>
   );
 }

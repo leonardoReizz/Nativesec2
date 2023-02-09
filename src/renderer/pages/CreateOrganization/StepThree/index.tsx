@@ -7,7 +7,7 @@ import { Input } from 'renderer/components/Inputs/Input';
 import { StepFourProps } from '../types';
 import styles from './styles.module.sass';
 
-export function StepThree({ users, setUsers, currentTheme }: StepFourProps) {
+export function StepThree({ users, setUsers, theme }: StepFourProps) {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [emailIsValid, setEmailIsValid] = useState<boolean>(true);
@@ -51,7 +51,7 @@ export function StepThree({ users, setUsers, currentTheme }: StepFourProps) {
   return (
     <div
       className={`${styles.stepFour} ${
-        currentTheme === 'dark' ? styles.dark : styles.light
+        theme === 'dark' ? styles.dark : styles.light
       }`}
     >
       <h3>Convide os membros de seu Workspace</h3>
@@ -95,7 +95,7 @@ export function StepThree({ users, setUsers, currentTheme }: StepFourProps) {
             onChange={handleSetEmail}
             isValid={emailIsValid}
             value={email}
-            theme={currentTheme}
+            theme={theme}
           />
           <div className={styles.email_switch}>
             <ToggleSwitch onChange={(e) => setIsAdmin(e.target.checked)} />

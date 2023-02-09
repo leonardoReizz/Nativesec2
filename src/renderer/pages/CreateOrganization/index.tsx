@@ -112,14 +112,10 @@ export function CreateOrganization() {
                     handleBlur={handleBlur}
                     touched={touched}
                     setFieldValue={setFieldValue}
-                    currentTheme={theme}
+                    theme={theme}
                   />
                 ) : (
-                  <StepThree
-                    setUsers={setUsers}
-                    users={users}
-                    currentTheme={theme}
-                  />
+                  <StepThree setUsers={setUsers} users={users} theme={theme} />
                 )}
               </>
               <div className={styles.createWorkspace_buttons}>
@@ -134,6 +130,7 @@ export function CreateOrganization() {
                       : ''
                   }
                   type="submit"
+                  theme={theme}
                   isLoading={loading}
                 />
                 {step !== 1 && (

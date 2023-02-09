@@ -19,14 +19,6 @@ export class UpdateUserConfigUseCase {
 
     store.set('userConfig', { ...data });
 
-    console.log(
-      data.savePrivateKey,
-      userConfig.savePrivateKey,
-      data.savePrivateKey !== userConfig.savePrivateKey
-    );
-
-    console.log(Boolean(data.savePrivateKey));
-
     if (data.savePrivateKey !== userConfig.savePrivateKey) {
       if (data.savePrivateKey === 'false') {
         const deleteKeyAPI = await this.keyRepositoryAPI.delete(

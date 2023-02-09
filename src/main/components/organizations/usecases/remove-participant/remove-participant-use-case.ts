@@ -16,7 +16,6 @@ export class RemoveParticipantUseCase {
     const { accessToken, tokenType } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
 
-    console.log(data, 'remove participant');
     let response;
 
     if (data.type === 'admin') {
@@ -30,9 +29,6 @@ export class RemoveParticipantUseCase {
         authorization,
       });
     }
-
-    console.log(response, ' remove participant');
-    console.log(response.data.detail[0], 'remove participant');
 
     if (response.status === 200 && response.data.status === 'ok') {
       const organizationUpdated = response.data
@@ -52,7 +48,6 @@ export class RemoveParticipantUseCase {
         administradores: JSON.stringify(organizationUpdated.administradores),
       });
 
-      console.log(updateDatabase);
       if (updateDatabase instanceof Error) {
         throw new Error(
           `Error update organization in Remove Participant Use Case: ${updateDatabase}`

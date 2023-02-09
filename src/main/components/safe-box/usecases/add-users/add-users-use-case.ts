@@ -104,9 +104,6 @@ export class AddUsersUseCase {
       authorization
     );
 
-    console.log(apiUpdate);
-    console.log(apiUpdate?.data?.detail[0]);
-
     if (apiUpdate.status === 200 && apiUpdate.data.status === 'ok') {
       await this.safeBoxRepositoryDatabase.update({
         ...data,

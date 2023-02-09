@@ -30,7 +30,7 @@ export function NewSidebar() {
         {isOpenSidebar && (
           <div className={styles.organization}>
             <img src={organizationIcon} alt="" />
-            <h5>{currentOrganization?.nome} aaaaaaaaaaaaaaaaaa</h5>
+            <h5>{currentOrganization?.nome}</h5>
           </div>
         )}
         <button

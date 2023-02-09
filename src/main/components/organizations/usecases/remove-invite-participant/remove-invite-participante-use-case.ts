@@ -16,8 +16,6 @@ export class RemoveInviteParticipantUseCase {
     const { accessToken, tokenType } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
 
-    console.log(data);
-
     let response;
 
     if (data.type === 'guestAdmin') {
@@ -32,7 +30,6 @@ export class RemoveInviteParticipantUseCase {
       });
     }
 
-    console.log(response?.data?.detail);
     if (response.status === 200 && response.data.status === 'ok') {
       const organizationUpdated = response.data
         .detail[0] as OrganizationModelAPI;

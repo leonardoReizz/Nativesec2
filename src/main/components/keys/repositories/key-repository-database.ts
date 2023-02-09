@@ -40,7 +40,6 @@ export class KeyRepositoryDatabase implements KeyRepositoryDatabaseInterface {
 
   async getPrivateKey(email: string): Promise<any[] | Error> {
     const db = newDatabase.getDatabase();
-    console.log(db);
     return new Promise((resolve, reject) => {
       return db.all(
         `SELECT * FROM private_keys WHERE email = '${email}'`,
@@ -50,7 +49,6 @@ export class KeyRepositoryDatabase implements KeyRepositoryDatabaseInterface {
             reject(error);
           }
 
-          console.log(rows);
           resolve(rows);
         }
       );

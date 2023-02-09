@@ -86,6 +86,7 @@ export function Login({
               text="Gerar Token"
               className={styles.blue}
               isLoading={loading}
+              color="blue"
             />
           </form>
           <div className={styles.buttonStart}>
@@ -95,6 +96,7 @@ export function Login({
               onClick={handleLoginStepTwo}
               theme="light"
               className={styles.blue}
+              color="blue"
             />
           </div>
         </div>

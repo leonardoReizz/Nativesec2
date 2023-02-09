@@ -9,9 +9,27 @@
   color: $white
   background-color: $gray-750
 
+  .openButton
+    color: $white
+
+    &:hover
+      background-color: $gray-700
+
+
 .light
   color: $black
   bakground-color: $white
+  .openButton
+    color: $black
+
+    &:hover
+      background-color: $gray-400
+
+
+.newSidebar.light
+    border-right: 1px solid $gray-300
+
+    
   
 
 // --------------------------------------------------------------
@@ -22,7 +40,6 @@
   @include flex(center, center, row)
   font-size: 1rem
   z-index: 1001
-  color: $white
   position: absolute
   border-radius: 100px
   top: 8px
@@ -30,9 +47,8 @@
   height: 35px
   width: 35px
 
-  transition: left 0.4s ease
-  &:hover
-    background-color: $gray-700
+  transition: left 0.4s ease, background-color 0.2s ease
+
 
 .openButton.open
   left: 200px
@@ -62,9 +78,12 @@
     visibility: hidden
 
 
+
+
 .sidebarHeader
   width: 0
   position: relative
+
   
   .organization
     @include flex(center, center, row)
@@ -99,10 +118,8 @@
   .newSidebarContainer
     height: 100%
     width: 100%
-
     color: $white
-    
-    border-right: 1px solid $gray-700
+   
 
 .newSidebar.open
   width: 100%

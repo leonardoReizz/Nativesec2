@@ -40,7 +40,6 @@ export class RefreshOrganizationsUseCase {
       if (organizationInfo.length > 0) {
         const APIListOrganizationIcons =
           await this.organizationRepositoryAPI.listIcons(authorization);
-        console.log(APIListOrganizationIcons, 'api list icons');
         if (
           APIListOrganizationIcons.status === 200 &&
           APIListOrganizationIcons.data.status === 'ok'

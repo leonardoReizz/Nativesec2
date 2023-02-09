@@ -75,7 +75,7 @@ export function WorkspaceMenu() {
             ref={menuCreateRef}
             onClick={handleOpenMenuIsCreate}
           >
-            <BiDotsHorizontalRounded />
+            <IoMdAdd />
           </button>
         </Tooltip>
         <div

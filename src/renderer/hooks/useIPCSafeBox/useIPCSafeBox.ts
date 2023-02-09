@@ -140,10 +140,11 @@ export function useIPCSafeBox() {
     window.electron.ipcRenderer.on(
       IPCTypes.LIST_SAFE_BOXES_RESPONSE,
       (result: types.IPCResponse) => {
-        console.log(result);
+        console.log(result, ' list safe box');
         changeSafeBoxesIsLoading(false);
         if (result.message === 'ok') {
-          return updateSafeBoxes(window.electron.store.get('safebox'));
+          console.log(window.electron.store.get('safebox'));
+          return refreshSafeBoxes();
         }
 
         return toast.error('Erro ao listar cofres', {

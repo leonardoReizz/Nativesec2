@@ -17,7 +17,6 @@ export class SetUserConfigUseCase {
       myEmail
     );
 
-    console.log(userConfig);
     if (userConfig instanceof Error)
       throw new Error('Error get user config api');
 

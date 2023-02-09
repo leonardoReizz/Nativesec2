@@ -134,6 +134,7 @@ export function HeaderSafeBox() {
         onRequestClose={handleCloseVerifySafetyPhraseModal}
         title="Confirme sua frase secreta"
         callback={verify}
+        theme={theme}
       />
 
       <VerifyNameModal

@@ -193,10 +193,32 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
       (result: IPCResponse) => {
-        updateOrganizationsIcons(window.electron.store.get('iconeAll'));
-        updateOrganizations(window.electron.store.get('organizations'));
         window.electron.ipcRenderer.sendMessage('useIPC', {
-          event: IPCTypes.SET_USER_CONFIG,
+          event: IPCTypes.REFRESH_ALL_SAFE_BOXES,
+        });
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.REFRESH_ALL_SAFE_BOXES_RESPONSE,
+      (result: IPCResponse) => {
+        console.log(result, ' refresh all safe boxes');
+        if (result.message === 'ok') {
+          updateOrganizationsIcons(window.electron.store.get('iconeAll'));
+          updateOrganizations(window.electron.store.get('organizations'));
+          window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.SET_USER_CONFIG,
+          });
+
+          return;
+        }
+
+        changeLoadingState('false');
+        toast.error('Error ao atualizar cofres', {
+          ...toastOptions,
+          toastId: 'errorUpdateAllSafeBoxes',
         });
       }
     );
@@ -221,6 +243,13 @@ export function useIPCAuth({
             );
 
             if (filter.length > 0) {
+              console.log(userConfig.lastOrganizationId, ' last');
+              window.electron.ipcRenderer.sendMessage('useIPC', {
+                event: IPCTypes.LIST_SAFE_BOXES,
+                data: {
+                  organizationId: userConfig.lastOrganizationId,
+                },
+              });
               changeCurrentOrganization(userConfig.lastOrganizationId);
               navigate(`/workspace/${userConfig.lastOrganizationId}`);
             } else {
