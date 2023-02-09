@@ -1,8 +1,15 @@
-import { ICreateOrganization } from '../../../../ipc/organizations/types';
+import { store } from '../../../../main';
+import {
+  ICreateOrganization,
+  IToken,
+} from '../../../../ipc/organizations/types';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { OrganizationRepositoryDatabase } from '../../repositories/organization-repository-database';
 import { refreshOrganizations } from '../../electronstore/store';
-import { OrganizationModelAPI } from '../../model/Organization';
+import {
+  OrganizationModelAPI,
+  OrganizationModelDatabase,
+} from '../../model/Organization';
 import { OrganizationIconRepositoryDatabase } from '../../repositories/organization-icon-database-repository';
 
 export class CreateOrganizationUseCase {
@@ -13,44 +20,92 @@ export class CreateOrganizationUseCase {
   ) {}
 
   async execute(organization: ICreateOrganization) {
-    const apiCreate = await this.organizationRepositoryAPI.create(organization);
+    const { accessToken, tokenType } = store.get('token') as IToken;
+    const authorization = `${tokenType} ${accessToken}`;
+
+    const apiCreate = await this.organizationRepositoryAPI.create(
+      organization,
+      authorization
+    );
+
+    console.log(apiCreate.data.detail[0], ' create org');
 
     if (apiCreate.status === 200 && apiCreate.data.msg === 'org created') {
       const organizationCreated = <OrganizationModelAPI>(
         apiCreate.data.detail[0]
       );
-
-      const organizationCreatedModelDatabase = {
-        ...organizationCreated,
-        _id: organizationCreated._id.$oid,
-        convidados_administradores: JSON.stringify(
-          organizationCreated.convidados_administradores
-        ),
-        convidados_participantes: JSON.stringify(
-          organizationCreated.convidados_participantes
-        ),
-        participantes: JSON.stringify(organizationCreated.participantes),
-        administradores: JSON.stringify(organizationCreated.administradores),
-        data_criacao: organizationCreated.data_criacao.$date,
-        data_atualizacao: organizationCreated.data_atualizacao.$date,
-      };
-
-      await this.organizationRepositoryDatabase.create(
-        organizationCreatedModelDatabase
+      await Promise.all(
+        organization.participantGuests.map(async (email: string) => {
+          await this.organizationRepositoryAPI.inviteParticipant({
+            email,
+            authorization,
+            organizationId: organizationCreated._id.$oid,
+          });
+        })
+      );
+      await Promise.all(
+        organization.adminGuests.map(async (email: string) => {
+          await this.organizationRepositoryAPI.inviteAdmin({
+            email,
+            authorization,
+            organizationId: organizationCreated._id.$oid,
+          });
+        })
       );
 
-      await this.organizationIconRepositoryDatabase.create({
-        organizationId: organizationCreatedModelDatabase._id,
-        icon: organization.icon,
-      });
+      const getOrganization =
+        await this.organizationRepositoryAPI.getOrganization(
+          organizationCreated._id.$oid,
+          authorization
+        );
 
-      await refreshOrganizations();
-      return {
-        message: 'ok',
-        organization: organizationCreatedModelDatabase,
-      };
+      console.log(getOrganization, 'getOrganization');
+
+      if (
+        getOrganization.status === 200 &&
+        getOrganization.data.status === 'ok'
+      ) {
+        const updatedOrganization = <OrganizationModelAPI>(
+          getOrganization.data.msg[0]
+        );
+
+        const organizationCreatedModelDatabase: OrganizationModelDatabase = {
+          ...updatedOrganization,
+          _id: updatedOrganization._id.$oid,
+          convidados_administradores: JSON.stringify(
+            updatedOrganization.convidados_administradores
+          ),
+          convidados_participantes: JSON.stringify(
+            updatedOrganization.convidados_participantes
+          ),
+          participantes: JSON.stringify(updatedOrganization.participantes),
+          administradores: JSON.stringify(updatedOrganization.administradores),
+          data_criacao: updatedOrganization.data_criacao.$date,
+          data_atualizacao: updatedOrganization.data_atualizacao.$date,
+        };
+
+        await this.organizationRepositoryDatabase.create(
+          organizationCreatedModelDatabase
+        );
+
+        await this.organizationIconRepositoryDatabase.create({
+          organizationId: organizationCreatedModelDatabase._id,
+          icon: organization.icon,
+        });
+
+        await refreshOrganizations(
+          this.organizationRepositoryDatabase,
+          this.organizationIconRepositoryDatabase
+        );
+
+        return {
+          message: 'ok',
+          organization: organizationCreatedModelDatabase,
+        };
+      }
+      throw new Error('Error create organization -> GET ORGANIZATION');
     }
 
-    throw new Error('Error create organization -> API ERROR');
+    throw new Error('Error API create organization -> CREATE ');
   }
 }

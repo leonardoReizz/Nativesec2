@@ -2,25 +2,34 @@
   
 
 .notification.dark
-  @include scroolbarDark()
-  border-color:$gray-700
+  border-color: $gray-700
   background-color: $gray-800
   color: $white
 
+  .notifications
+    @include scroolbarDark()
   .notificationBox
-    background-color: $gray-700
-    
+    background-color: $gray-800
+
+    &::before
+      background-color: $gray-600
+
+
+   
 
 .notification.light
   @include scroolbarDark()
+
   border-color: $gray-100
   background-color: $white
   box-shadow: 0px 0px 18px -6px rgba(0,0,0,0.25)
   color: $black
 
+
+  .notifications
+    @include scroolbarLight()
   .notificationBox
     background-color: $white
-
     &::before
       background-color: $gray-500
     button
@@ -36,7 +45,7 @@
 .notification
   @include flex(flex-start, flex-start, column)
   width: 100%
-  height: 100%
+  
 
   max-width: 550px
   max-height: 300px
@@ -47,11 +56,13 @@
   z-index: 3001
   border: 1px solid 
   border-radius: $default-radius
-  padding: 1rem
+  padding: 1rem 0
 
   right: 50px
   top: 50px
   
+  >h3
+    margin-left: 1rem
 
   .notifications
     @include flex(flex-start, flex-start, column)
@@ -61,12 +72,14 @@
     overflow: auto
     margin-top: 16px
     gap: 1rem
+    padding: 1rem 
 
     .notificationBox
       @include flex(flex-start, flex-start, row)
       width: 100%
       position: relative
       gap: 1rem
+      height: 50px
 
       &::before
         content: ''
@@ -78,6 +91,7 @@
       h3
         font-size: 1.1rem
         font-weight: 600
+       
 
       .text
         @include flex(flex-start, flex-start, row)

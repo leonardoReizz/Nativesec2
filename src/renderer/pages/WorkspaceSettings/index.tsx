@@ -102,6 +102,7 @@ export function WorkspaceSettings() {
                   theme={theme}
                   text="Selecionar"
                   disabled={isParticipant}
+                  color="blue"
                 />
               </div>
               <Button
@@ -111,6 +112,7 @@ export function WorkspaceSettings() {
                 onClick={openVerifyModal}
                 theme={theme}
                 disabled={isParticipant}
+                color="red"
               />
             </div>
           </div>
@@ -155,6 +157,7 @@ export function WorkspaceSettings() {
                   onClick={discard}
                   theme={theme}
                   disabled={isParticipant}
+                  color="red"
                 />
               </div>
             </form>
@@ -179,6 +182,7 @@ export function WorkspaceSettings() {
                 onClick={openVerifyNameModal}
                 theme={theme}
                 disabled={isParticipant}
+                color="red"
               />
             </div>
             <div className={styles.item}>
@@ -195,6 +199,7 @@ export function WorkspaceSettings() {
                 disabled={currentOrganization?.dono === myEmail}
                 theme={theme}
                 onClick={openVerifyModalLeave}
+                color="red"
               />
             </div>
           </div>

@@ -5,6 +5,6 @@ import { RefreshTokenUseCase } from './refresh-token-use-case';
 const authRepositoryAPI = new AuthRepositoryAPI();
 
 const refreshTokenUseCase = new RefreshTokenUseCase(authRepositoryAPI);
-// const refreshTokenController = new RefreshTokenController(refreshTokenUseCase);
+const refreshTokenController = new RefreshTokenController(refreshTokenUseCase);
 
 export { refreshTokenController };

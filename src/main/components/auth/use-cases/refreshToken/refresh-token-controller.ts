@@ -10,9 +10,7 @@ export class RefreshTokenController {
 
       return {
         response: IPCTypes.REFRESH_TOKEN,
-        data: {
-          message,
-        },
+        data: message,
       };
     } catch (error) {
       console.log(error);

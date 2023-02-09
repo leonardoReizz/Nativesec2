@@ -71,7 +71,10 @@ export function Navbar() {
                 type="button"
                 onClick={handleOpenWorkspaceSettings}
                 className={`${
-                  pathname === '/workspaceSettings' ? styles.selected : ''
+                  pathname === '/organizationSettings' ||
+                  pathname === '/organizationMembers'
+                    ? styles.selected
+                    : ''
                 } ${styles.workspaceSettings}`}
               >
                 <MdSettings />
@@ -82,9 +85,9 @@ export function Navbar() {
             <Tooltip hasArrow label="Notificações" aria-label="A tooltip">
               <button
                 type="button"
-                className={`${
-                  notifications.length > 0 ? styles.selected : ''
-                } ${notifications.length > 0 ? styles.notificated : ''}`}
+                className={` ${
+                  notifications.length > 0 ? styles.notificated : ''
+                }`}
                 onClick={() => handleNotificationModal()}
                 ref={notificationButtonRef}
               >

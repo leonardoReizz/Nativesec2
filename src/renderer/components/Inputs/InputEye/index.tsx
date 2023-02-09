@@ -82,7 +82,7 @@ export function InputEye({
                     </button>
                   </Tooltip>
                 ))}
-              {mode === 'edit' &&
+              {(mode === 'edit' || mode === 'create') &&
                 (encrypted ? (
                   <Tooltip
                     hasArrow
@@ -92,7 +92,7 @@ export function InputEye({
                     <button
                       type="button"
                       onClick={changeFormikDecrypt}
-                      className={`${!encrypted ? styles.red : ''}`}
+                      className={`${!encrypted ? styles.red : styles.green}`}
                     >
                       <GiPadlock />
                     </button>
@@ -108,11 +108,13 @@ export function InputEye({
                     </button>
                   </Tooltip>
                 ))}
-              <Tooltip hasArrow label="Copiar" aria-label="A tooltip">
-                <button type="button" onClick={copy}>
-                  <MdContentCopy />
-                </button>
-              </Tooltip>
+              {mode === 'view' && (
+                <Tooltip hasArrow label="Copiar" aria-label="A tooltip">
+                  <button type="button" onClick={copy}>
+                    <MdContentCopy />
+                  </button>
+                </Tooltip>
+              )}
             </div>
           )}
         </div>

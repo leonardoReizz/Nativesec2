@@ -15,6 +15,7 @@ import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { TextAreaEye } from 'renderer/components/TextAreas/TextAreaEye';
 import { toast } from 'react-toastify';
 import { toastOptions } from 'renderer/utils/options/Toastify';
+import { FormikProvider } from 'formik';
 import formik from '../../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 import * as types from './types';
@@ -81,12 +82,13 @@ export function Form() {
     }
   }, []);
 
-  const changeFormikDecrypt = useCallback(
-    ({ position }: types.IChangeFormikDecrypt) => {
-      console.log(position);
-    },
-    []
-  );
+  function changeFormikDecrypt({ index }: types.IChangeFormikDecrypt) {
+    formikProps.setFieldValue(
+      `${index}.crypto`,
+      !formikProps.values[index].crypto
+    );
+    console.log(formikProps.values);
+  }
 
   useCreateSafeBox({ setDecryptedMessage });
 
@@ -121,9 +123,7 @@ export function Form() {
                 text={item.text}
                 value={formikProps.values[index][`${item.name}`]}
                 encrypted={formikProps.values[index].crypto}
-                changeFormikDecrypt={() =>
-                  changeFormikDecrypt({ position: `${index}.${item.name}` })
-                }
+                changeFormikDecrypt={() => changeFormikDecrypt({ index })}
                 theme={theme}
                 copy={() =>
                   handleDecryptMessage({
@@ -155,9 +155,7 @@ export function Form() {
                 viewEye
                 mode={safeBoxMode}
                 encrypted={formikProps.values[index].crypto}
-                changeFormikDecrypt={() =>
-                  changeFormikDecrypt({ position: `${index}.${item.name}` })
-                }
+                changeFormikDecrypt={() => changeFormikDecrypt({ index })}
                 decrypt={() =>
                   handleDecryptMessage({
                     text: formikProps.values[index][`${item.name}`],

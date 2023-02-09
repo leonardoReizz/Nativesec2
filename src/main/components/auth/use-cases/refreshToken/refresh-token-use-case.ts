@@ -11,12 +11,21 @@ export class RefreshTokenUseCase {
     const token = await this.authRepositoryAPI.refreshToken(authorization);
 
     if (token.status === 200) {
+      const currentDate = Math.floor(Date.now() / 1000);
       store.set('token', {
         accessToken: token.data.access_token,
         tokenType: token.data.token_type,
+        createdAt: currentDate,
       });
-      return 'ok';
+      return { message: 'ok' };
     }
-    return 'nok';
+    if (token.status === 401) {
+      store.set('token', {});
+      store.set('initialData', {});
+      store.set('user', {});
+      return { message: 'authorizationError' };
+    }
+
+    throw new Error('ERROR REFRESH TOKEN');
   }
 }

@@ -12,9 +12,12 @@ export class LoginUseCase {
     const result = await this.authRepository.login({ ...data, email: myEmail });
 
     if (result.status === 200) {
+      const currentDate = Math.floor(Date.now() / 1000);
+
       store.set('token', {
         accessToken: result.data.access_token,
         tokenType: result.data.token_type,
+        createdAt: currentDate,
       });
       return 'ok';
     }

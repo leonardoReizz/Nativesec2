@@ -10,6 +10,7 @@ import log from 'electron-log';
 import fs from 'fs';
 import os from 'os';
 import Store from 'electron-store';
+import { IPCTypes } from '../renderer/@types/IPCTypes';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import crypto from './ipc/crypto';
@@ -17,6 +18,7 @@ import crypto from './ipc/crypto';
 import * as types from './types';
 import { useIpcActions } from './ipc';
 import { Database } from './database/MyDatabase';
+import { refreshTokenController } from './components/auth/use-cases/refreshToken/index';
 
 export const store = new Store();
 export const newDatabase = new Database();
@@ -116,8 +118,20 @@ ipcMain.on('closeModal', async (event, arg) => {
 ipcMain.on(
   'useIPC',
   async (event: Electron.IpcMainEvent, arg: types.UseIPCData) => {
-    const date = new Date();
+    const currentDate = Math.floor(Date.now() / 1000);
 
+    const tokenDate = (store.get('token') as any)?.createdAt;
+    if (tokenDate) {
+      if (tokenDate + 1200 > currentDate) {
+        const result = await refreshTokenController.handle();
+
+        if (result.data.message === 'authorizationError') {
+          return event.reply(IPCTypes.SESSION_EXPIRED, {});
+        }
+      }
+    }
+
+    const date = new Date();
     const newQueue = {
       id: `${arg.event}${date.getSeconds()}${date.getMilliseconds()}`,
       event: arg.event,
@@ -126,7 +140,7 @@ ipcMain.on(
     };
 
     const result = await useIpcActions(newQueue);
-    newQueue.ipcEvent.reply(result?.response, result.data);
+    return newQueue.ipcEvent.reply(result?.response, result.data);
   }
 );
 

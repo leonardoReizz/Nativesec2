@@ -5,6 +5,7 @@ import ReactModal from 'react-modal';
 import * as Yup from 'yup';
 import { Input } from 'renderer/components/Inputs/Input';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
+import { Button } from 'renderer/components/Buttons/Button';
 import { Dropdown } from '../../Dropdown';
 import styles from './styles.module.sass';
 
@@ -39,6 +40,7 @@ export function FieldModalWithDropdown({
     email: '',
     type: { id: 1, value: 'guestParticipant', label: 'Participante' },
   };
+
   const verifyEmailSchema = Yup.object().shape({
     email: Yup.string()
       .email()
@@ -87,12 +89,14 @@ export function FieldModalWithDropdown({
             messageError={formikProps.errors.email}
           />
           <div className={styles.buttons}>
-            <button type="submit">
-              <span>Confirmar</span>
-            </button>
-            <button type="button" onClick={handleCloseModal}>
-              <span>Cancelar</span>
-            </button>
+            <Button text="Confirmar" type="submit" theme={theme} />
+            <Button
+              text="Cancelar"
+              type="submit"
+              onClick={handleCloseModal}
+              color="red"
+              theme={theme}
+            />
           </div>
         </form>
       </ReactModal>

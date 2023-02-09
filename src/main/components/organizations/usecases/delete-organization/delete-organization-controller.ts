@@ -6,14 +6,12 @@ export class DeleteOrganizationController {
 
   async handle(organizationId: string) {
     try {
-      const create = await this.deleteOrganizationUseCase.execute(
+      const message = await this.deleteOrganizationUseCase.execute(
         organizationId
       );
       return {
         response: IPCTypes.DELETE_ORGANIZATION_RESPONSE,
-        data: {
-          message: 'ok',
-        },
+        data: message,
       };
     } catch (error) {
       console.log(error);

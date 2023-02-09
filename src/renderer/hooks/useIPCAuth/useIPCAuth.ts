@@ -190,11 +190,22 @@ export function useIPCAuth({
   }, []);
 
   useEffect(() => {
-    window.electron.ipcRenderer.on(
+    window.electron.ipcRenderer.once(
       IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
       (result: IPCResponse) => {
-        window.electron.ipcRenderer.sendMessage('useIPC', {
-          event: IPCTypes.REFRESH_ALL_SAFE_BOXES,
+        console.log(result, ' refresh organizations');
+        if (result.message === 'ok') {
+          updateOrganizationsIcons(window.electron.store.get('iconeAll'));
+          updateOrganizations(window.electron.store.get('organizations'));
+          window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.REFRESH_ALL_SAFE_BOXES,
+          });
+          return;
+        }
+        changeLoadingState('false');
+        toast.error('Error ao atualizar as organizações', {
+          ...toastOptions,
+          toastId: 'errorUpdateAllSafeBoxes',
         });
       }
     );
@@ -206,8 +217,6 @@ export function useIPCAuth({
       (result: IPCResponse) => {
         console.log(result, ' refresh all safe boxes');
         if (result.message === 'ok') {
-          updateOrganizationsIcons(window.electron.store.get('iconeAll'));
-          updateOrganizations(window.electron.store.get('organizations'));
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.SET_USER_CONFIG,
           });

@@ -3,7 +3,10 @@ import { APIResponse } from '../../../types';
 import * as types from './types';
 
 export interface IOrganizationRepositoryAPI {
-  create(organization: ICreateOrganization): Promise<any>;
+  create(
+    organization: ICreateOrganization,
+    authorization: string
+  ): Promise<APIResponse>;
   inviteParticipant(data: types.InviteParticipantData): Promise<APIResponse>;
   inviteAdmin(data: types.InviteAdminData): Promise<APIResponse>;
   delete(organizationId: string): Promise<APIResponse>;

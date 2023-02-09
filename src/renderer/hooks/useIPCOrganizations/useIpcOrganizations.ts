@@ -1,10 +1,8 @@
-import { update } from 'main/database/migrations/versions/1.1.3';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { toastOptions } from 'renderer/utils/options/Toastify';
-import uuid from 'react-uuid';
 import { IPCResponse } from '../useIPCSafeBox/types';
 import { useLoading } from '../useLoading';
 import { useNotifications } from '../useNotifications/useNotifications';
@@ -18,6 +16,8 @@ export function useIpcOrganization() {
     changeCurrentOrganization,
     currentOrganization,
     addNewParticipant,
+    updateOrganizationsIcons,
+    updateOrganizations,
   } = useOrganization();
   const { updateLoading } = useLoading();
   const { updateNotifications } = useNotifications();
@@ -27,22 +27,22 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.CREATE_ORGANIZATION_RESPONSE,
       async (result: types.CreateOrganizationResponse) => {
+        console.log(result);
         if (result.message === 'ok') {
           refreshOrganizations();
           navigate(`/workspace/${result.organization._id}`);
           changeCurrentOrganization(result.organization._id);
           updateLoading(false);
-          toast.success('Organizacão Criado com Sucesso', {
+          return toast.success('Organizacão Criado com Sucesso', {
             ...toastOptions,
             toastId: 'workspace-created',
           });
-        } else {
-          updateLoading(false);
-          toast.error('Erro ao criar Workspace', {
-            ...toastOptions,
-            toastId: 'workspace-error',
-          });
         }
+        updateLoading(false);
+        return toast.error('Erro ao criar Workspace', {
+          ...toastOptions,
+          toastId: 'workspace-error',
+        });
       }
     );
   }, []);
@@ -211,6 +211,24 @@ export function useIpcOrganization() {
         toast.error('Erro ao listar convites', {
           ...toastOptions,
           toastId: 'errorListOrganizationInvites',
+        });
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
+      (result: IPCResponse) => {
+        console.log(result, ' refresh organizations refresh');
+        if (result.message === 'ok') {
+          updateOrganizationsIcons(window.electron.store.get('iconeAll'));
+          updateOrganizations(window.electron.store.get('organizations'));
+          return;
+        }
+        toast.error('Error ao atualizar as organizações', {
+          ...toastOptions,
+          toastId: 'errorUpdateAllSafeBoxes',
         });
       }
     );

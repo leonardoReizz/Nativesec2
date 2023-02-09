@@ -9,18 +9,40 @@ import { IOrganizationRepositoryAPI } from './organization-repository-api-interf
 import * as types from './types';
 
 export class OrganizationRepositoryAPI implements IOrganizationRepositoryAPI {
-  async create(organization: ICreateOrganization): Promise<APIResponse> {
-    const { accessToken, tokenType } = store.get('token') as IToken;
-
-    const APICreateOrganization = await APIOrganization.createOrganization({
-      data: organization,
-      authorization: `${tokenType} ${accessToken}`,
-    });
-
-    return {
-      status: APICreateOrganization.status,
-      data: APICreateOrganization.data,
-    };
+  async create(
+    organization: ICreateOrganization,
+    authorization: string
+  ): Promise<APIResponse> {
+    return axios
+      .post(
+        `${api}/organizacao/`,
+        {
+          nome: organization.name,
+          tema: organization.theme,
+          descricao: organization.description,
+          icone: organization.icon,
+          convidados_administradores: [],
+          convidados_participantes: [],
+        },
+        {
+          headers: {
+            Authorization: authorization,
+          },
+        }
+      )
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERROR API CREATE ORGANIZATION');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
   }
 
   async inviteParticipant(data: types.InviteParticipantData): Promise<any> {

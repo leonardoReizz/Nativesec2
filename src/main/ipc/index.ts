@@ -112,7 +112,6 @@ export async function useIpcActions(
       return declineOrganizationInviteController.handle(arg.data);
     case IPCTypes.LEAVE_ORGANIZATION:
       return leaveOrganizationController.handle(arg.data);
-
     case IPCTypes.REFRESH_ALL_SAFE_BOXES:
       return refreshAllSafeBoxesController.handle();
     default:

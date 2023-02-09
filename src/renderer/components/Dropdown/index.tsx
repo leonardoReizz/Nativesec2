@@ -53,14 +53,13 @@ export function Dropdown({
               value={`${value} ${valueText || ''}`}
               placeholder=" "
               readOnly
-              disabled={disabled}
             />
             <MdOutlineKeyboardArrowDown />
           </div>
         </div>
       </div>
       <div className={`${styles.option} ${!text ? styles.noText : ''}`}>
-        {disabled &&
+        {!disabled &&
           options?.map((item) => (
             <div
               key={item.id}

@@ -20,7 +20,11 @@ export class DeleteOrganizationUseCase {
 
       await this.organizationIconRepositoryDatabase.delete(organizationId);
 
-      await refreshOrganizations();
+      await refreshOrganizations(
+        this.organizationRepositoryDatabase,
+        this.organizationIconRepositoryDatabase
+      );
+
       return { message: 'ok' };
     }
 

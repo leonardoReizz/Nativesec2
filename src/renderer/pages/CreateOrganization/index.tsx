@@ -24,10 +24,10 @@ const steps = [
   },
   {
     number: 2,
-    text: 'Novo Workspace',
+    text: 'Nova Organização',
   },
   {
-    number: 4,
+    number: 3,
     text: 'Convidar Membros',
   },
 ];
@@ -132,10 +132,16 @@ export function CreateOrganization() {
                   type="submit"
                   theme={theme}
                   isLoading={loading}
+                  color="blue"
                 />
                 {step !== 1 && (
                   <div className={styles.backButton}>
-                    <Button text="Voltar" type="button" onClick={handleBack} />
+                    <Button
+                      text="Voltar"
+                      type="button"
+                      onClick={handleBack}
+                      color="red"
+                    />
                   </div>
                 )}
               </div>

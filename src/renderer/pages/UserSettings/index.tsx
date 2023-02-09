@@ -88,7 +88,12 @@ export function UserSettings() {
     >
       <div className={styles.container}>
         <h3>Sessão</h3>
-        <Button text="Encerrar Sessão" className={styles.leaveButton} />
+        <Button
+          text="Encerrar Sessão"
+          className={styles.leaveButton}
+          theme={theme}
+          color="red"
+        />
         <h3>Segurança</h3>
         <div className={styles.box} onClick={handleExportKey}>
           <div>

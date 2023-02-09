@@ -19,6 +19,12 @@ export function useRefresh() {
             organizationId: currentOrganization._id,
           },
         });
+        window.electron.ipcRenderer.sendMessage('useIPC', {
+          event: IPCTypes.REFRESH_ALL_ORGANIZATIONS,
+          data: {
+            organizationId: currentOrganization._id,
+          },
+        });
       }
     }, refreshTime * 1000);
 

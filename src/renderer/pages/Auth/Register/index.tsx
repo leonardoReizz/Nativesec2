@@ -101,13 +101,14 @@ export function Register({ authState, changeAuthState }: RegisterProps) {
               touched={formikProps.touched.confirmSafetyPhrase}
             />
           </div>
-          <Button type="submit" text="Criar conta" />
+          <Button type="submit" text="Criar conta" color="blue" />
         </form>
         <div className={styles.buttonStart}>
           <Button
             type="button"
             text="Crie uma conta"
             onClick={handleRegisterStepTwo}
+            color="blue"
           />
         </div>
       </div>

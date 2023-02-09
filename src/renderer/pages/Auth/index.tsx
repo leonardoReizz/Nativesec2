@@ -64,17 +64,17 @@ export function Auth({ changeLoadingState }: AuthProps) {
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat,
             porro nam, magnam facilis sint ad doloremque nulla expedita minus
             praesentium illum. Dolor sunt autem consequatur animi eos, tempore
-            quis. Distinctio.
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat,
-            porro nam, magnam facilis sint ad doloremque nulla expedita minus
-            praesentium illum. Dolor sunt autem consequatur animi eos, tempore
-            quis. Distinctio.
+            quis. Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Repellat, porro nam, magnam facilis sint ad doloremque nulla
+            expedita minus praesentium illum. Dolor sunt autem consequatur animi
+            eos, tempore quis.
           </p>
           <ButtonOutlined
             type="button"
             text="Entrar"
             onClick={() => handleAuthState('login-step-one')}
           />
+          <img src={vault} className={styles.firstImage} />
         </div>
         <div className={styles.loginText}>
           <h1>Registre-se Agora Mesmo</h1>
@@ -82,23 +82,22 @@ export function Auth({ changeLoadingState }: AuthProps) {
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat,
             porro nam, magnam facilis sint ad doloremque nulla expedita minus
             praesentium illum. Dolor sunt autem consequatur animi eos, tempore
-            quis. Distinctio.
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat,
-            porro nam, magnam facilis sint ad doloremque nulla expedita minus
-            praesentium illum. Dolor sunt autem consequatur animi eos, tempore
-            quis. Distinctio.
+            quis. Distinctio. Lorem ipsum dolor sit amet consectetur adipisicing
+            elit. Repellat, porro nam, magnam facilis sint ad doloremque nulla
+            expedita minus praesentium illum. Dolor sunt autem consequatur animi
+            eos, tempore quis. Distinctio.
           </p>
           <ButtonOutlined
             type="button"
             text="Registrar"
             onClick={() => handleAuthState('register-step-one')}
           />
+          <img src={securityImage} className={styles.secondImage} />
         </div>
       </div>
 
       <div className={styles.background}>
-        <img src={vault} />
-        <img src={securityImage} />
+        <div className={styles.imageContainer} />
       </div>
     </div>
   );

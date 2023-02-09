@@ -85,7 +85,12 @@ export function StepTwo({
         </div>
         <div className={styles.buttons}>
           <div {...getRootProps()}>
-            <Button text="Adicionar" Icon={<IoCameraSharp />} theme={theme} />
+            <Button
+              text="Adicionar"
+              Icon={<IoCameraSharp />}
+              theme={theme}
+              color="blue"
+            />
           </div>
 
           <Button
@@ -93,6 +98,7 @@ export function StepTwo({
             className={styles.red}
             Icon={<BsFillTrashFill />}
             onClick={handleRemoveImage}
+            color="red"
           />
         </div>
       </div>

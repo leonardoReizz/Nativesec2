@@ -6,5 +6,5 @@ export interface IDecryptItem {
 }
 
 export interface IChangeFormikDecrypt {
-  position: string;
+  index: number;
 }

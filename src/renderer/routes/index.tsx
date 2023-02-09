@@ -4,6 +4,7 @@ import { Loading } from 'renderer/components/Loading';
 import { useIpcOrganization } from 'renderer/hooks/useIPCOrganizations/useIpcOrganizations';
 import { useIPCSafeBox } from 'renderer/hooks/useIPCSafeBox/useIPCSafeBox';
 import { useRefresh } from 'renderer/hooks/useRefresh/useRefresh';
+import { useSession } from 'renderer/hooks/useSession/useSession';
 import { Auth } from 'renderer/pages/Auth';
 import { CreateOrganization } from 'renderer/pages/CreateOrganization';
 import { Home } from 'renderer/pages/Home/index';
@@ -20,6 +21,7 @@ export function AppRoutes() {
   useIpcOrganization();
   useIPCSafeBox();
   useRefresh();
+  useSession();
 
   const [isLoading, setIsLoading] = useState<LoadingType>('false');
 

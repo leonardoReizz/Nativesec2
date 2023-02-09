@@ -1,18 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoMdAdd } from 'react-icons/io';
-import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
+import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { Icon } from './Icon';
 import styles from './styles.module.sass';
 
 export function Sidebar() {
   const navigate = useNavigate();
   const { theme, updateLastOrganizationId } = useUserConfig();
-  const { updateSafeBoxes, changeCurrentSafeBox } =
-    useContext(SafeBoxesContext);
+  const { updateSafeBoxes, changeCurrentSafeBox, getSafeBoxes } = useSafeBox();
   const {
     organizations,
     organizationsIcons,
@@ -27,9 +26,9 @@ export function Sidebar() {
       }
       updateSafeBoxes([]);
       changeCurrentSafeBox(undefined);
-      // getSafeBoxes(organizationId);
       changeCurrentOrganization(organizationId);
       updateLastOrganizationId(organizationId);
+      getSafeBoxes(organizationId);
       return navigate(`/workspace/${organizationId}`);
     },
     [currentOrganization]

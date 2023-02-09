@@ -8,30 +8,10 @@
   h2
     color: $white
 
-  .buttons
-    button
-      background-color: $gray-700
-      color: $white
-      &:hover
-        background-color: $gray-600
-      &:last-child
-        &:hover
-            background-color: $red-100-hover
-
 .reactModalContent.light
   background-color: $white
 
-  .buttons
-    button
-      background-color: $gray-100
-      color: $black
-
-      &:last-child
-        color: $white
-        &:hover
-          background-color: $red-100-hover
-      &:hover
-        background-color: $gray-400
+  
         
 .reactModalOverlay
   @include flex(center, center ,column)
@@ -58,7 +38,7 @@
   gap: 1rem
 
   h2
-    font-weight: 600
+    font-weight: 600 
     font-size: 1.3rem
 
 
@@ -78,18 +58,8 @@
     .buttons
       @include flex(center, center ,column)
       width: 100%
+      max-width: 300px
       gap: .5rem
       margin-top: 3rem
-
-      button
-        @include flex(center, center ,center)
-        width: 300px
-        height: 45px
-        border-radius: $default-radius
-        transition: background-color 0.2s ease
-
-        &:last-child
-          background-color: $red-100
-
 
 
