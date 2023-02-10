@@ -96,9 +96,7 @@ export function Auth({ changeLoadingState }: AuthProps) {
         </div>
       </div>
 
-      <div className={styles.background}>
-        <div className={styles.imageContainer} />
-      </div>
+      <div className={styles.background} />
     </div>
   );
 }

@@ -17,36 +17,6 @@
     z-index: 1000
     transition: right 2s ease-in-out
 
-    .imageContainer
-      margin-top: auto
-      border: 1px solid red
-      height: 20%
-      width: 100%
-      position: relative
-    img
-      position: fixed
-      max-width: 400px
-      transition: left 2s ease-in-out, right 2s ease-in-out,  opacity 1.5s ease
-
-      // &:first-child
-      //   right: 30%
-      //   top: 37%
-      //   opacity: 0
-
-      //   @media (min-width: 1500px)
-      //     max-width: 550px !important
-      //     right: 35%
-      //     top: 35% !important
-
-      // &:last-child
-      //   left: 35%
-      //   top: 20%
-      //   opacity: 1
-
-      //   @media (min-width: 1500px)
-      //     max-width: 550px !important
-      //     left: 35%
-      //     top: 20%
 
   .form
     @include flex(center, center, row)
@@ -70,19 +40,18 @@
       left: 20%
 
   .text
-    height: 100vh
+
 
     .registerText, .loginText
       @include flex(center, center, column)
       position: absolute
-      top: 70px
+      top: 30px
       width: 45%
       color: $white
       z-index: 2000
       gap: 2rem
       transition: opacity 1.5s ease, right 1.5s ease, left 1.5s ease
       
-
       h1
         font-size: 1.2rem
         font-weight: 600
@@ -96,9 +65,41 @@
     .registerText
       right: -350px
       opacity: 0
+
+      img
+        position: relative
+        max-width: 500px
+        transition: left 2s ease-in-out, right 2s ease-in-out,  opacity 1.5s ease
+        bottom: -6rem
+
+        @media (max-height: 1200px)
+          max-width: 400px
+          bottom: -4rem
+        @media (max-height: 800px)
+          max-width: 300px
+          bottom: -2rem
+        @media (max-height: 630px)
+          max-width: 280px
+          bottom: 3rem
+    
     .loginText
       left: 20px
       opacity: 1
+
+      img
+        position: relative
+        max-width: 500px
+        transition: left 2s ease-in-out, right 2s ease-in-out,  opacity 1.5s ease
+        bottom: -6rem
+        @media (max-height: 1200px)
+          max-width: 500px
+          bottom: -4rem
+        @media (max-height: 800px)
+          max-width: 400px
+          bottom: -2rem
+        @media (max-height: 630px)
+          max-width: 300px
+          bottom: 1rem
 
 .button
   position: absolute
@@ -108,17 +109,6 @@
 .signUpMode
   .background
     right: -85%
-
-    // img
-    //   &:first-child
-    //     right: 35%
-    //     top: 37%
-    //     opacity: 1
-
-    //   &:last-child
-    //     left: 600px
-    //     top: 20%
-    //     opacity: 0
 
   .form
     .register
