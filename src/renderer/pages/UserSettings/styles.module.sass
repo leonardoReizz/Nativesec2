@@ -25,11 +25,12 @@
   @include scroolbarLight()
 
   .box.noHover
-    background-color: $gray-750 !important
+    &:hover
+      background-color: $gray-750 !important
   .box
     background-color: $gray-750 !important
     &:hover
-      background-color: $gray-600
+      background-color: $gray-600 !important
       cursor: pointer
   
     div
@@ -62,13 +63,10 @@
       
 
     .box.dropdown
-      span
-        flex: 3
+     
       >div
-        flex: 1
-        input
-          height: 40px
-
+        max-width: 200px
+        max-height: 40px
 
 
     .box

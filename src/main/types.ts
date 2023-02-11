@@ -67,4 +67,5 @@ export interface APIResponse {
   data: any;
   status: number;
 }
+
 export type DatabaseType = sqlite3.Database;

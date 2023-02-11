@@ -11,17 +11,14 @@ import { Dropdown } from 'renderer/components/Dropdown';
 import { useLoading } from 'renderer/hooks/useLoading';
 
 import styles from './styles.module.sass';
-
-interface UserSelected {
-  email: string;
-  type: 'admin' | 'participant';
-  added: boolean;
-}
+import { IUsersSelected } from '..';
 
 interface AddParticipantModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   callback: (usersAdmin: string[], usersParticipant: string[]) => void;
+  updateUsersSelected: (newUsersSelected: IUsersSelected[]) => void;
+  usersSelected: IUsersSelected[];
 }
 
 const options = [
@@ -41,21 +38,24 @@ export function AddParticipantModal({
   isOpen,
   callback,
   onRequestClose,
+  updateUsersSelected,
+  usersSelected,
 }: AddParticipantModalProps) {
   const { theme } = useUserConfig();
-  const [usersSelected, setUsersSelected] = useState<UserSelected[]>([]);
   const { loading, updateLoading } = useLoading();
   const { filteredAdmin, filteredParticipant } = useOrganization();
   const [open, setOpen] = useState<boolean[]>([]);
 
   useEffect(() => {
-    const usersAdmin = filteredAdmin.map((email: string) => {
-      return { email, type: 'participant', added: false };
+    const usersAdmin: IUsersSelected[] = filteredAdmin.map((email: string) => {
+      return { email, type: 'admin', added: false };
     });
-    const usersParticipant = filteredParticipant.map((email: string) => {
-      return { email, type: 'participant', added: false };
-    });
-    setUsersSelected([...usersAdmin, ...usersParticipant]);
+    const usersParticipant: IUsersSelected[] = filteredParticipant.map(
+      (email: string) => {
+        return { email, type: 'participant', added: false };
+      }
+    );
+    updateUsersSelected([...usersAdmin, ...usersParticipant]);
   }, []);
 
   function save() {
@@ -63,9 +63,11 @@ export function AddParticipantModal({
 
     const usersAdmin = usersSelected
       .filter((user) => user.type === 'admin')
+      .filter((user) => user.added === true)
       .map((user) => user.email);
     const usersParticipant = usersSelected
       .filter((user) => user.type === 'participant')
+      .filter((user) => user.added === true)
       .map((user) => user.email);
 
     callback(usersAdmin, usersParticipant);
@@ -84,10 +86,11 @@ export function AddParticipantModal({
   }
 
   function removeUser(index: number) {
-    const currentUsers = usersSelected;
+    const currentUsers = [...usersSelected];
     currentUsers[index].added = false;
     currentUsers[index].type = 'participant';
-    setUsersSelected(currentUsers);
+    updateUsersSelected(currentUsers);
+
     handleOpen(index);
   }
 
@@ -96,7 +99,7 @@ export function AddParticipantModal({
 
     currentUsers[index].added = true;
 
-    setUsersSelected(currentUsers);
+    updateUsersSelected(currentUsers);
     handleOpen(index);
   }
 
@@ -105,7 +108,7 @@ export function AddParticipantModal({
 
     currentUsers[index].type = type;
 
-    setUsersSelected([...currentUsers]);
+    updateUsersSelected([...currentUsers]);
   }
 
   useEffect(() => {
@@ -192,14 +195,14 @@ export function AddParticipantModal({
                 {user.added ? (
                   <Button
                     text="Remover"
-                    className={styles.red}
                     onClick={() => removeUser(index)}
+                    color="red"
                   />
                 ) : (
                   <Button
                     text="Adicionar"
-                    className={styles.green}
                     onClick={() => addUser(index)}
+                    color="green"
                   />
                 )}
               </div>
@@ -210,7 +213,7 @@ export function AddParticipantModal({
         <Button
           text="Cancelar"
           onClick={onRequestClose}
-          className={styles.red}
+          color="red"
           theme={theme}
         />
       </ReactModal>

@@ -42,6 +42,7 @@ export function HeaderSafeBox() {
     usersParticipant,
     changeSafeBoxMode,
     safeBoxMode,
+    isSafeBoxParticipant,
   } = useSafeBox();
 
   const { loading, updateLoading } = useLoading();
@@ -173,6 +174,7 @@ export function HeaderSafeBox() {
                   theme={theme}
                   onClick={() => handleDecrypt('edit')}
                   Icon={<RiEditFill />}
+                  disabled={isSafeBoxParticipant}
                 />
                 <Button
                   text="Excluir"
@@ -180,11 +182,12 @@ export function HeaderSafeBox() {
                   className={styles.red}
                   theme={theme}
                   Icon={<AiFillDelete />}
+                  disabled={isSafeBoxParticipant}
                 />
               </>
             )}
             {(safeBoxMode === 'edit' || safeBoxMode === 'create') && (
-              <>
+              <div className={styles.createSafeBoxActions}>
                 <Button
                   text="Salvar"
                   Icon={<BsCheck2 />}
@@ -198,7 +201,7 @@ export function HeaderSafeBox() {
                   className={styles.red}
                   theme={theme}
                 />
-              </>
+              </div>
             )}
           </div>
           {(safeBoxMode === 'view' || safeBoxMode === 'decrypted') && (

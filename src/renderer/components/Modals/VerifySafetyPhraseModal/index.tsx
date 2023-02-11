@@ -90,7 +90,7 @@ export function VerifySafetyPhraseModal({
               text="Cancelar"
               onClick={handleCloseModal}
               theme={theme}
-              className={styles.red}
+              color="red"
             />
           </div>
         </form>

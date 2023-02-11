@@ -22,6 +22,7 @@ export class InsertKeysUseCase {
 
     if (dbPrivateKey.length === 0 && dbPublicKey.length === 0) {
       const createPrivKey = await this.keyRepositoryDatabase.createPrivateKey({
+        _id: '',
         email: myEmail.toLowerCase(),
         fullName: myFullName,
         privateKey,
@@ -29,6 +30,7 @@ export class InsertKeysUseCase {
       });
 
       const createPubKey = await this.keyRepositoryDatabase.createPublicKey({
+        _id: '',
         email: myEmail.toLowerCase(),
         fullName: myFullName,
         publicKey,

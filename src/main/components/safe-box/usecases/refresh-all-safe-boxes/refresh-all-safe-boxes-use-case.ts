@@ -26,9 +26,12 @@ export class RefreshAllSafeBoxesUseCase {
 
       await Promise.all(
         organizations.map(async (organization) => {
-          const response = await this.refreshSafeBoxesUseCase.execute({
-            organizationId: organization._id.$oid,
-          });
+          const response = await this.refreshSafeBoxesUseCase.execute(
+            {
+              organizationId: organization._id.$oid,
+            },
+            1
+          );
 
           if (response.message !== 'ok')
             throw new Error('ERRO REFRESH SAFE BOX USE CASE');

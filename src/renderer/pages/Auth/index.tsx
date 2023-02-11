@@ -24,18 +24,15 @@ export type AuthStateType =
 
 interface AuthProps {
   changeLoadingState: (state: LoadingType) => void;
+  authState: AuthStateType;
+  handleAuthState: (state: AuthStateType) => void;
 }
 
-export function Auth({ changeLoadingState }: AuthProps) {
-  const [authState, setAuthState] = useState<AuthStateType>('login-step-one');
-
-  const handleAuthState = useCallback((state: AuthStateType) => {
-    toast.dismiss('resendToken');
-    setAuthState(state);
-  }, []);
-
-  useIPCAuth({ changeAuthState: handleAuthState, changeLoadingState });
-
+export function Auth({
+  changeLoadingState,
+  authState,
+  handleAuthState,
+}: AuthProps) {
   return (
     <div
       className={`${styles.container} ${

@@ -21,14 +21,11 @@ export class GetPrivateKeyUseCase {
     let checkKey = '';
 
     if (fs.existsSync(`${PATH}/database/default/${md5(myEmail)}.sqlite3`)) {
-      console.log('tenho banco', myEmail);
       const privKey = await this.keyRepositoryDatabase.getPrivateKey(myEmail);
 
-      console.log(privKey instanceof Error);
       if (privKey instanceof Error)
         throw new Error('Error get private key database');
 
-      console.log(privKey, 'database');
       if (privKey.length === 0) {
         const apiGetPrivateKey = await this.keyRepositoryAPI.getPrivateKey(
           myEmail,
@@ -87,37 +84,5 @@ export class GetPrivateKeyUseCase {
     }
 
     return 'invalidSafetyPhrase';
-
-    // console.log('teste');
-
-    // const apiGetPrivateKey = await this.keyRepositoryAPI.getPrivateKey(
-    //   if (fs.existsSync(`${PATH}/database/default/${md5(myEmail)}.sqlite3`)) {myEmail,
-    //   authorization
-    // );
-
-    // if (apiGetPrivateKey.data?.status === 'ok') {
-    //   if (apiGetPrivateKey.data?.msg.length > 0) {
-    //     store.set('keys', {
-    //       ...(store.get('keys') as IKeys),
-    //       privateKey: apiGetPrivateKey.data.msg[0].chave,
-    //     });
-
-    //     const result = await openpgp.validateKey({
-    //       privateKeyArmored: apiGetPrivateKey.data.msg[0].chave,
-    //       safetyPhrase,
-    //     });
-
-    //     if (result === true) {
-    //       store.set('keys', {
-    //         ...(store.get('keys') as IKeys),
-    //         privateKey: undefined,
-    //       });
-    //       return 'ok';
-    //     }
-    //     return 'invalidSafetyPhrase';
-    //   }
-    // }
-
-    // return 'noKey';
   }
 }

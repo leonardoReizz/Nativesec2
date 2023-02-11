@@ -68,7 +68,11 @@ export class CreateSafeBoxUseCase {
     });
 
     const apiCreate = await this.safeBoxRepositoryAPI.create(
-      { ...data, conteudo: JSON.stringify(content), anexos: [] },
+      {
+        ...data,
+        conteudo: JSON.stringify(content),
+        anexos: [],
+      },
       authorization
     );
 
@@ -91,7 +95,12 @@ export class CreateSafeBoxUseCase {
       });
       await refreshSafeBoxes(data.organizacao);
 
-      return { message: 'ok' };
+      return {
+        message: 'ok',
+        data: {
+          safeBoxId: apiCreate.data?.detail[0]._id.$oid,
+        },
+      };
     }
 
     throw new Error('nok');

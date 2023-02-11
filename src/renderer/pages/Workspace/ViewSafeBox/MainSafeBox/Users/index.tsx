@@ -1,16 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { IoMdAdd } from 'react-icons/io';
-import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
-import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { Input } from 'renderer/components/Inputs/Input';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Dropdown } from 'renderer/components/Dropdown';
 import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
-import { toast } from 'react-toastify';
-import { toastOptions } from 'renderer/utils/options/Toastify';
-import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
+import { IUser } from 'main/types';
 import { useLoading } from 'renderer/hooks/useLoading';
 import styles from './styles.module.sass';
 
@@ -40,13 +36,11 @@ interface IUserDelete {
 export default function Users() {
   const [isOpenVerifyNameModal, setIsOpenVerifyNameModal] =
     useState<boolean>(false);
+  const { loading, updateLoading } = useLoading();
   const [typeUserAdd, setTypeUserAdd] = useState<'admin' | 'participant'>(
     'participant'
   );
   const [email, setEmail] = useState<string>('');
-  const [readUsers, setReadUsers] = useState<string[]>([]);
-  const [writeUsers, setWriteUsers] = useState<string[]>([]);
-  const { safeBoxMode, addSafeBoxUsers, removeUser } = useSafeBox();
   const [currentUserDelete, setCurrentUserDelete] = useState<
     IUserDelete | undefined
   >();
@@ -56,18 +50,24 @@ export default function Users() {
     usersParticipant,
     changeUsersAdmin,
     changeUsersParticipant,
-  } = useContext(CreateSafeBoxContext);
-  const { currentOrganization } = useOrganization();
-  const { loading, updateLoading } = useLoading();
+    currentSafeBox,
+    updateUsersSafeBox,
+    safeBoxMode,
+    isSafeBoxParticipant,
+    removeUser,
+  } = useSafeBox();
+
   const { theme } = useUserConfig();
-  const { currentSafeBox } = useContext(SafeBoxesContext);
 
   useEffect(() => {
+    console.log(currentSafeBox);
     changeUsersParticipant(
-      currentSafeBox ? JSON.parse(currentSafeBox.usuarios_leitura) : []
+      currentSafeBox
+        ? JSON.parse(currentSafeBox.usuarios_leitura)
+        : usersParticipant
     );
     changeUsersAdmin(
-      currentSafeBox ? JSON.parse(currentSafeBox.usuarios_escrita) : []
+      currentSafeBox ? JSON.parse(currentSafeBox.usuarios_escrita) : usersAdmin
     );
   }, [currentSafeBox]);
 
@@ -86,71 +86,24 @@ export default function Users() {
     }
   }
 
-  // function handleRemoveParticipant(
-  //   emailuser: string,
-  //   type: 'admin' | 'participant'
-  // ) {
-  //   if (type === 'participant') {
-  //     const readUsersWithoutParticipant = readUsers.filter(
-  //       (user) => user !== emailuser
-  //     );
-  //     setReadUsers(readUsersWithoutParticipant);
-  //   } else {
-  //     const writeUsersWithoutParticipant = writeUsers.filter(
-  //       (user) => user !== emailuser
-  //     );
-  //     setWriteUsers(writeUsersWithoutParticipant);
-  //   }
-  // }
-
   const closeVerifyNameModal = useCallback(() => {
     setIsOpenVerifyNameModal(false);
   }, []);
 
-  // const changeUser = useCallback((item: any) => {
-  //   console.log(item);
-  //   switch (item.id) {
-  //     case 1:
-  //       console.log('change');
-  //       break;
-  //     case 2:
-  //       console.log('change');
-  //       break;
-  //     case 3:
-  //       console.log('open');
-  //       // setIsOpenVerifyModal(true);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }, []);
-
-  function handleDropDown(item: any, type: any, email: string) {
-    console.log('ola');
+  function handleDropDown(item: any, type: any, user: string) {
     if (item.id === 3) {
-      setCurrentUserDelete({ email, type });
+      setCurrentUserDelete({ email: user, type });
       setIsOpenVerifyNameModal(true);
     } else if (currentSafeBox) {
-      toast.loading('Alterando participantes', {
-        ...toastOptions,
-        toastId: 'organizationChangeUser',
-      });
-      // if (currentOrganization) {
-      //   addSafeBoxUsers({
-      //     usersAdmin,
-      //     usersParticipant,
-      //     user: email,
-      //     organizationId: currentOrganization._id,
-      //     newType: item.value,
-      //   });
-      // }
+      updateUsersSafeBox(user, type === 'admin' ? 'participant' : 'admin');
     }
   }
+
   const handleRemoveUser = useCallback(
     (verified: boolean) => {
       if (verified && currentUserDelete) {
+        updateLoading(true);
         removeUser(currentUserDelete);
-        setCurrentUserDelete(undefined);
       }
     },
     [removeUser, currentUserDelete]
@@ -165,10 +118,11 @@ export default function Users() {
         nameToVerify={currentUserDelete?.email}
         inputText="Confirmar"
         title="Deseja remover"
+        isLoading={loading}
       />
       <div
         className={`${styles.users} ${
-          theme === 'dark' ? styles.dark : styles.white
+          theme === 'dark' ? styles.dark : styles.light
         }`}
       >
         {safeBoxMode === 'edit' && (
@@ -214,6 +168,7 @@ export default function Users() {
                   options={usersOptions}
                   value="Leitura e Escrita"
                   onChange={(item) => handleDropDown(item, 'admin', user)}
+                  disabled={safeBoxMode === 'create' || isSafeBoxParticipant}
                 />
               </div>
             ))}
@@ -223,8 +178,9 @@ export default function Users() {
                 <Dropdown
                   theme={theme}
                   options={usersOptions}
-                  value="Leitura e Escrita"
+                  value="Apenas Leitura"
                   onChange={(item) => handleDropDown(item, 'participant', user)}
+                  disabled={safeBoxMode === 'create' || isSafeBoxParticipant}
                 />
               </div>
             ))}

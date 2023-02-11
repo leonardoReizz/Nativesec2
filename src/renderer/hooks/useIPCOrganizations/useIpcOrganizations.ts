@@ -27,7 +27,6 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.CREATE_ORGANIZATION_RESPONSE,
       async (result: types.CreateOrganizationResponse) => {
-        console.log(result);
         if (result.message === 'ok') {
           refreshOrganizations();
           navigate(`/workspace/${result.organization._id}`);
@@ -190,7 +189,6 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.LIST_MY_INVITES_RESPONSE,
       async (result: IPCResponse) => {
-        console.log(result, ' listInvites');
         if (result.message === 'ok') {
           const notifications = window.electron.store.get(
             'organizationInvites'
@@ -220,7 +218,6 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
       (result: IPCResponse) => {
-        console.log(result, ' refresh organizations refresh');
         if (result.message === 'ok') {
           updateOrganizationsIcons(window.electron.store.get('iconeAll'));
           updateOrganizations(window.electron.store.get('organizations'));
@@ -238,7 +235,6 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.ACCEPT_ORGANIZATION_INVITE_RESPONSE,
       async (result: IPCResponse) => {
-        console.log(result, ' acceptInvite');
         if (result.message === 'ok') {
           toast.success('Convite aceito', {
             ...toastOptions,
@@ -261,7 +257,6 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.LEAVE_ORGANIZATION_RESPONSE,
       async (result: IPCResponse) => {
-        console.log(result, ' leave organizations');
         if (result.message === 'ok') {
           toast.success('Você saiu da organizaçao', {
             ...toastOptions,

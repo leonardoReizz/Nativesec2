@@ -22,8 +22,6 @@ export function Navbar() {
 
   const { pathname } = useLocation();
 
-  console.log(pathname);
-
   function handleOpenUserSettings() {
     navigate('/userSettings');
   }

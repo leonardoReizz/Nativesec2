@@ -42,7 +42,7 @@ export class SafeBoxRepositoryDatabase
         )`,
         (error) => {
           if (error) {
-            console.log(' ERROR DATABASE CREATE SAFE BOX');
+            console.log(error, ' ERROR DATABASE CREATE SAFE BOX');
             reject(error);
           }
           resolve(true);

@@ -13,7 +13,6 @@ import Store from 'electron-store';
 import { IPCTypes } from '../renderer/@types/IPCTypes';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import crypto from './ipc/crypto';
 
 import * as types from './types';
 import { useIpcActions } from './ipc';
@@ -69,12 +68,6 @@ ipcMain.on('electron-store-set', async (event, key, val) => {
   store.set(key, val);
 });
 
-[...crypto].forEach((p) => {
-  const key = Object.keys(p)[0];
-  const value = Object.values(p)[0];
-  ipcMain.on(key, value);
-});
-
 ipcMain.on('updateQuitAndInstall', (event, arg) => {
   autoUpdater.quitAndInstall();
 });
@@ -120,12 +113,25 @@ ipcMain.on(
   async (event: Electron.IpcMainEvent, arg: types.UseIPCData) => {
     const currentDate = Math.floor(Date.now() / 1000);
 
+    if (arg.event === IPCTypes.SESSION_EXPIRED) {
+      store.set('keys', {});
+      store.set('user', {});
+      store.set('userConfig', {});
+      store.set('safebox', []);
+      store.set('organizations', []);
+      store.set('organizationInvites', []);
+      newDatabase.clear();
+      return event.reply(IPCTypes.SESSION_EXPIRED, { data: { type: 'close' } });
+    }
+
     const tokenDate = (store.get('token') as any)?.createdAt;
     if (tokenDate) {
-      if (tokenDate + 1200 > currentDate) {
+      if (tokenDate + 1200 < currentDate) {
+        console.log('refresh');
         const result = await refreshTokenController.handle();
 
         if (result.data.message === 'authorizationError') {
+          newDatabase.clear();
           return event.reply(IPCTypes.SESSION_EXPIRED, {});
         }
       }
@@ -147,12 +153,6 @@ ipcMain.on(
 ipcMain.on('createPath', async (event, arg) => {
   const { PATH } = store.get('initialData') as types.IInitialData;
   await newDatabase.createPATH(PATH);
-});
-
-ipcMain.on('leave', async (event, arg) => {
-  store.clear();
-  store.set('initialData', {});
-  event.reply('leave-response');
 });
 
 if (process.env.NODE_ENV === 'production') {

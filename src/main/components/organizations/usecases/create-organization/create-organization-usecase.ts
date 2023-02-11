@@ -1,8 +1,5 @@
 import { store } from '../../../../main';
-import {
-  ICreateOrganization,
-  IToken,
-} from '../../../../ipc/organizations/types';
+import { IToken } from '../../../../types';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { OrganizationRepositoryDatabase } from '../../repositories/organization-repository-database';
 import { refreshOrganizations } from '../../electronstore/store';
@@ -11,6 +8,7 @@ import {
   OrganizationModelDatabase,
 } from '../../model/Organization';
 import { OrganizationIconRepositoryDatabase } from '../../repositories/organization-icon-database-repository';
+import { ICreateOrganizationRequestDTO } from './create-organization-request-dto';
 
 export class CreateOrganizationUseCase {
   constructor(
@@ -19,7 +17,7 @@ export class CreateOrganizationUseCase {
     private organizationIconRepositoryDatabase: OrganizationIconRepositoryDatabase
   ) {}
 
-  async execute(organization: ICreateOrganization) {
+  async execute(organization: ICreateOrganizationRequestDTO) {
     const { accessToken, tokenType } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
 
@@ -27,8 +25,6 @@ export class CreateOrganizationUseCase {
       organization,
       authorization
     );
-
-    console.log(apiCreate.data.detail[0], ' create org');
 
     if (apiCreate.status === 200 && apiCreate.data.msg === 'org created') {
       const organizationCreated = <OrganizationModelAPI>(
@@ -58,8 +54,6 @@ export class CreateOrganizationUseCase {
           organizationCreated._id.$oid,
           authorization
         );
-
-      console.log(getOrganization, 'getOrganization');
 
       if (
         getOrganization.status === 200 &&

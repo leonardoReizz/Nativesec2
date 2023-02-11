@@ -76,7 +76,7 @@ export class UpdateSafeBoxUseCase {
 
     if (apiUpdate.status === 200 && apiUpdate.data.status === 'ok') {
       const updatedSafeBox: SafeBoxAPIModel = apiUpdate.data.detail[0];
-      const updateDatabase = await this.safeBoxRepositoryDatabase.update({
+      await this.safeBoxRepositoryDatabase.update({
         _id: updatedSafeBox._id.$oid,
         conteudo: updatedSafeBox.conteudo,
         usuarios_escrita: JSON.stringify(updatedSafeBox.usuarios_escrita),

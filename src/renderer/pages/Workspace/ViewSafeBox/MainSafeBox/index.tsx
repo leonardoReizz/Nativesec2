@@ -1,20 +1,35 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Button } from 'renderer/components/Buttons/Button';
 import { IoMdAdd } from 'react-icons/io';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
+import { useRadio } from '@chakra-ui/react';
 import { Form } from './Form';
 import Users from './Users';
 import styles from './styles.module.sass';
 import { AddParticipantModal } from './AddParticipantModal';
 
+export interface IUsersSelected {
+  email: string;
+  type: 'admin' | 'participant';
+  added: boolean;
+}
 export function MainSafeBox() {
   const [tab, setTab] = useState<'form' | 'users'>('form');
+  const [usersSelected, setUsersSelected] = useState<IUsersSelected[]>([]);
+
   const [isOpenAddParticipantModal, setIsOpenParticipantModal] =
     useState<boolean>(false);
   const { theme } = useUserConfig();
-  const { addSafeBoxUsers, currentSafeBox } = useSafeBox();
+  const {
+    addSafeBoxUsers,
+    currentSafeBox,
+    safeBoxMode,
+    changeUsersAdmin,
+    changeUsersParticipant,
+    isSafeBoxParticipant,
+  } = useSafeBox();
   const { isParticipant } = useOrganization();
 
   function handleTabForm() {
@@ -28,7 +43,14 @@ export function MainSafeBox() {
     setIsOpenParticipantModal(false);
   }, []);
 
-  function addUsers(usersAdmin: string[], usersParticipant: string[]) {
+  const updateUsersSelected = useCallback(
+    (newUsersSelected: IUsersSelected[]) => {
+      setUsersSelected(newUsersSelected);
+    },
+    []
+  );
+
+  function inviteUsers(usersAdmin: string[], usersParticipant: string[]) {
     if (currentSafeBox) {
       addSafeBoxUsers({
         _id: currentSafeBox._id,
@@ -41,20 +63,41 @@ export function MainSafeBox() {
         tipo: currentSafeBox.tipo,
         usuarios_escrita: [
           ...JSON.parse(currentSafeBox.usuarios_escrita),
-          ...usersParticipant,
+          ...usersAdmin,
         ],
         usuarios_escrita_deletado: JSON.parse(
           currentSafeBox.usuarios_escrita_deletado
         ),
         usuarios_leitura: [
           ...JSON.parse(currentSafeBox.usuarios_leitura),
-          ...usersAdmin,
+          ...usersParticipant,
         ],
         usuarios_leitura_deletado: JSON.parse(
           currentSafeBox.usuarios_leitura_deletado
         ),
       });
+      const currentUsers = usersSelected.map((user) => {
+        return {
+          ...user,
+          added: false,
+        };
+      });
+      updateUsersSelected(currentUsers);
     }
+  }
+
+  function addUsers(usersAdmin: string[], usersParticipant: string[]) {
+    setIsOpenParticipantModal(false);
+    changeUsersAdmin(usersAdmin);
+    changeUsersParticipant(usersParticipant);
+
+    const currentUsers = usersSelected.map((user) => {
+      return {
+        ...user,
+        added: false,
+      };
+    });
+    updateUsersSelected(currentUsers);
   }
 
   return (
@@ -62,7 +105,9 @@ export function MainSafeBox() {
       <AddParticipantModal
         isOpen={isOpenAddParticipantModal}
         onRequestClose={closeModal}
-        callback={addUsers}
+        callback={safeBoxMode === 'create' ? addUsers : inviteUsers}
+        updateUsersSelected={updateUsersSelected}
+        usersSelected={usersSelected}
       />
       <div
         className={`${styles.mainSafeBox} ${
@@ -92,7 +137,7 @@ export function MainSafeBox() {
               Icon={<IoMdAdd />}
               theme={theme}
               onClick={() => setIsOpenParticipantModal(true)}
-              disabled={isParticipant}
+              disabled={isSafeBoxParticipant}
             />
           )}
         </div>

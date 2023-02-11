@@ -1,4 +1,5 @@
 export interface ICreatePrivateKeyData {
+  _id: string;
   email: string;
   fullName: string;
   privateKey: string;
@@ -6,6 +7,7 @@ export interface ICreatePrivateKeyData {
 }
 
 export interface ICreatePublicKeyData {
+  _id: string;
   email: string;
   fullName: string;
   publicKey: string;

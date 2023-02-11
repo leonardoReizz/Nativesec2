@@ -1,11 +1,13 @@
 import { useCallback, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Loading } from 'renderer/components/Loading';
+import { useIPCAuth } from 'renderer/hooks/useIPCAuth/useIPCAuth';
 import { useIpcOrganization } from 'renderer/hooks/useIPCOrganizations/useIpcOrganizations';
 import { useIPCSafeBox } from 'renderer/hooks/useIPCSafeBox/useIPCSafeBox';
 import { useRefresh } from 'renderer/hooks/useRefresh/useRefresh';
 import { useSession } from 'renderer/hooks/useSession/useSession';
-import { Auth } from 'renderer/pages/Auth';
+import { Auth, AuthStateType } from 'renderer/pages/Auth';
 import { CreateOrganization } from 'renderer/pages/CreateOrganization';
 import { Home } from 'renderer/pages/Home/index';
 import { UserSettings } from 'renderer/pages/UserSettings';
@@ -18,16 +20,24 @@ import { ProtectedRoutes } from './ProtectedRoutes';
 export type LoadingType = 'false' | 'true' | 'finalized';
 
 export function AppRoutes() {
-  useIpcOrganization();
-  useIPCSafeBox();
-  useRefresh();
-  useSession();
+  const [authState, setAuthState] = useState<AuthStateType>('login-step-one');
 
+  const handleAuthState = useCallback((state: AuthStateType) => {
+    toast.dismiss('resendToken');
+    setAuthState(state);
+  }, []);
   const [isLoading, setIsLoading] = useState<LoadingType>('false');
 
   const changeLoadingState = useCallback((state: LoadingType) => {
     setIsLoading(state);
   }, []);
+
+  useIpcOrganization();
+  useIPCSafeBox();
+  useRefresh();
+  useSession();
+
+  useIPCAuth({ changeAuthState: handleAuthState, changeLoadingState });
 
   return (
     <>
@@ -36,7 +46,13 @@ export function AppRoutes() {
       <Routes>
         <Route
           path="/"
-          element={<Auth changeLoadingState={changeLoadingState} />}
+          element={
+            <Auth
+              changeLoadingState={changeLoadingState}
+              handleAuthState={handleAuthState}
+              authState={authState}
+            />
+          }
         />
         <Route element={<ProtectedRoutes />}>
           <Route element={<LayoutsWithSidebar />}>

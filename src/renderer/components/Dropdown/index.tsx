@@ -40,7 +40,9 @@ export function Dropdown({
       } ${className || ''}`}
     >
       <div className={styles.input}>
-        <div className={styles.inputContainer}>
+        <div
+          className={`${styles.inputContainer} ${!text ? styles.noText : ''}`}
+        >
           <div
             className={`${styles.input}
             ${theme === 'dark' ? styles.dark : styles.light} ${
@@ -48,13 +50,15 @@ export function Dropdown({
             }`}
           >
             {text && <span>{text}</span>}
-            <input
-              type="text"
-              value={`${value} ${valueText || ''}`}
-              placeholder=" "
-              readOnly
-            />
-            <MdOutlineKeyboardArrowDown />
+            <div>
+              <input
+                type="text"
+                value={`${value} ${valueText || ''}`}
+                placeholder=" "
+                readOnly
+              />
+              <MdOutlineKeyboardArrowDown />
+            </div>
           </div>
         </div>
       </div>

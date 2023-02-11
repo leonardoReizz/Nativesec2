@@ -1,16 +1,15 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { IIPCResponse } from 'renderer/@types/types';
-import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { IUserConfig } from 'renderer/contexts/UserConfigContext/types';
 import { AuthStateType } from 'renderer/pages/Auth';
 import { LoadingType } from 'renderer/routes';
 import { toastOptions } from 'renderer/utils/options/Toastify';
 import { IPCResponse } from '../useIPCSafeBox/types';
 import { useLoading } from '../useLoading';
+import { useOrganization } from '../useOrganization/useOrganization';
 import { useUserConfig } from '../useUserConfig/useUserConfig';
 
 interface UseIPCAuthProps {
@@ -30,7 +29,7 @@ export function useIPCAuth({
     updateOrganizations,
     changeCurrentOrganization,
     organizations,
-  } = useContext(OrganizationsContext);
+  } = useOrganization();
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
@@ -147,18 +146,11 @@ export function useIPCAuth({
           });
         } else {
           toast.error('Falha Grave.', { ...toastOptions, toastId: 'error' });
+          changeLoadingState('false');
         }
       }
     );
   }, []);
-
-  // useEffect(() => {
-  //   window.electron.ipcRenderer.on(IPCTypes.UPDATE_DATABASE_RESPONSE, () => {
-  //     window.electron.ipcRenderer.sendMessage('useIPC', {
-  //       event: IPCTypes.GET_USER,
-  //     });
-  //   });
-  // }, []);
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
@@ -190,10 +182,9 @@ export function useIPCAuth({
   }, []);
 
   useEffect(() => {
-    window.electron.ipcRenderer.once(
+    window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
       (result: IPCResponse) => {
-        console.log(result, ' refresh organizations');
         if (result.message === 'ok') {
           updateOrganizationsIcons(window.electron.store.get('iconeAll'));
           updateOrganizations(window.electron.store.get('organizations'));
@@ -215,7 +206,6 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_SAFE_BOXES_RESPONSE,
       (result: IPCResponse) => {
-        console.log(result, ' refresh all safe boxes');
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.SET_USER_CONFIG,
@@ -234,7 +224,7 @@ export function useIPCAuth({
   }, []);
 
   useEffect(() => {
-    window.electron.ipcRenderer.once(
+    window.electron.ipcRenderer.on(
       IPCTypes.SET_USER_CONFIG_RESPONSE,
       (result: IPCResponse) => {
         if (result.message === 'ok') {
@@ -252,7 +242,6 @@ export function useIPCAuth({
             );
 
             if (filter.length > 0) {
-              console.log(userConfig.lastOrganizationId, ' last');
               window.electron.ipcRenderer.sendMessage('useIPC', {
                 event: IPCTypes.LIST_SAFE_BOXES,
                 data: {

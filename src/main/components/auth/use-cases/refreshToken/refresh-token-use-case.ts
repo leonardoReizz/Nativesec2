@@ -20,9 +20,12 @@ export class RefreshTokenUseCase {
       return { message: 'ok' };
     }
     if (token.status === 401) {
-      store.set('token', {});
-      store.set('initialData', {});
+      store.set('keys', {});
       store.set('user', {});
+      store.set('userConfig', {});
+      store.set('safebox', []);
+      store.set('organizations', []);
+      store.set('organizationInvites', []);
       return { message: 'authorizationError' };
     }
 

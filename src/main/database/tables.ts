@@ -7,12 +7,12 @@ const tables = [
   {
     name: 'private_keys',
     query:
-      'CREATE TABLE IF NOT EXISTS private_keys (email TEXT, full_name TEXT, private_key TEXT, workspaceId TEXT, type TEXT)',
+      'CREATE TABLE IF NOT EXISTS private_keys (_id TEXT, email TEXT, full_name TEXT, private_key TEXT, workspaceId TEXT, type TEXT)',
   },
   {
     name: 'public_keys',
     query:
-      'CREATE TABLE IF NOT EXISTS public_keys (email TEXT, full_name TEXT, public_key TEXT, workspaceId TEXT, type TEXT)',
+      'CREATE TABLE IF NOT EXISTS public_keys (_id TEXT, email TEXT, full_name TEXT, public_key TEXT, workspaceId TEXT, type TEXT)',
   },
   {
     name: 'user_config',
@@ -63,6 +63,8 @@ const tables = [
       tipo TEXT,
       usuarios_escrita TEXT,
       usuarios_leitura TEXT,
+      usuarios_escrita_deletado TEXT,
+      usuarios_leitura_deletado TEXT,
       _id TEXT
       )`,
   },

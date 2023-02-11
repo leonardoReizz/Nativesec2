@@ -29,7 +29,7 @@ export function Form() {
     position: '',
   });
   const { formikIndex, formikProps } = useContext(CreateSafeBoxContext);
-  const { decryptMessage, safeBoxMode } = useSafeBox();
+  const { decryptMessage, safeBoxMode, usersAdmin } = useSafeBox();
   const { theme } = useUserConfig();
 
   function handleDecryptMessage({
@@ -87,7 +87,6 @@ export function Form() {
       `${index}.crypto`,
       !formikProps.values[index].crypto
     );
-    console.log(formikProps.values);
   }
 
   useCreateSafeBox({ setDecryptedMessage });
@@ -99,6 +98,7 @@ export function Form() {
         title="Insira sua frase secreta"
         isOpen={isOpenVerifySafetyPhraseModal}
         onRequestClose={handleCloseVerifySafePhraseModal}
+        theme={theme}
       />
       <div className={styles.form}>
         <form>
@@ -164,6 +164,7 @@ export function Form() {
                   })
                 }
                 disabled={safeBoxMode === 'view' || safeBoxMode === 'decrypted'}
+                theme={theme}
               />
             ) : (
               ''

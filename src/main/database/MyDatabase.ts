@@ -34,13 +34,19 @@ export class Database {
       return db;
     }
     await this.createPATH(PATH);
+    const createDatabase = await this.createDatabase({ myEmail, PATH });
+    await this.init({ db: createDatabase, secret: safetyPhrase });
+    await this.createTables(createDatabase);
+
     const db = await this.createDatabase({ myEmail, PATH });
     await this.init({ db, secret: safetyPhrase });
-    await this.createTables(db);
-
     this.database = db;
 
     return db;
+  };
+
+  clear = async () => {
+    this.database = undefined;
   };
 
   init = async ({ db, secret }: IInit): Promise<sqlite3.Database | Error> => {

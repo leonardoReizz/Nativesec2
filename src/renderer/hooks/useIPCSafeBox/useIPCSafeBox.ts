@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
+import { SafeBoxDatabaseModel } from 'main/components/safe-box/model/SafeBox';
 import { useEffect, useContext } from 'react';
 import { toast } from 'react-toastify';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
@@ -13,7 +14,6 @@ import * as types from './types';
 export function useIPCSafeBox() {
   const {
     changeCurrentSafeBox,
-    currentSafeBox,
     updateSafeBoxes,
     changeSafeBoxesIsLoading,
     refreshSafeBoxes,
@@ -21,41 +21,20 @@ export function useIPCSafeBox() {
 
   const { changeSafeBoxMode } = useSafeBox();
   const { updateLoading } = useLoading();
-  // useEffect(() => {
-  //   window.electron.ipcRenderer.on(
-  //     IPCTypes.REFRESH_SAFEBOXES_RESPONSE,
-  //     (result: types.IGetAllSafeBoxResponse) => {
-  //       console.log(result, ' refresh');
-  //       if (result.safeBoxResponse) {
-  //         updateSafeBoxes(window.electron.store.get('safebox'));
-  //         if (currentSafeBox !== undefined) {
-  //           const safeBoxes = window.electron.store.get(
-  //             'safeBox'
-  //           ) as ISafeBox[];
-  //           const filter = safeBoxes.filter(
-  //             (safebox) => safebox._id === currentSafeBox._id
-  //           );
-  //           changeCurrentSafeBox(filter[0]);
-  //         }
-  //       }
-  //       // changeSafeBoxesIsLoading(false);
-  //     }
-  //   );
-  // }, []);
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.UPDATE_USERS_SAFE_BOX_RESPONSE,
       (result: types.IUpdateUsersSafeBoxResponse) => {
+        toast.dismiss('updateSafeBox');
         if (result.message === 'ok') {
-          toast.success('Usuario removido', {
+          toast.success('Usuario alterado', {
             ...toastOptions,
             toastId: 'userRemoved',
           });
           updateSafeBoxes(window.electron.store.get('safebox'));
 
           const safeBoxes = window.electron.store.get('safebox') as ISafeBox[];
-          console.log(safeBoxes, ' safeBoxes');
 
           const filter = safeBoxes.filter(
             (safebox) => safebox._id === result.data.safeBoxId
@@ -74,6 +53,17 @@ export function useIPCSafeBox() {
       (response: types.IPCResponse) => {
         if (response.message === 'ok') {
           updateSafeBoxes(window.electron.store.get('safebox'));
+
+          const safeboxes: SafeBoxDatabaseModel[] =
+            window.electron.store.get('safebox');
+
+          const newCurrentSafeBox = safeboxes.filter(
+            (safeBox) => safeBox._id === response.data.safeBoxId
+          );
+
+          if (newCurrentSafeBox[0]) {
+            changeCurrentSafeBox(newCurrentSafeBox[0]);
+          }
           return toast.success('Cofre criado com sucesso', {
             ...toastOptions,
             toastId: 'createdSucess',
@@ -140,10 +130,8 @@ export function useIPCSafeBox() {
     window.electron.ipcRenderer.on(
       IPCTypes.LIST_SAFE_BOXES_RESPONSE,
       (result: types.IPCResponse) => {
-        console.log(result, ' list safe box');
         changeSafeBoxesIsLoading(false);
         if (result.message === 'ok') {
-          console.log(window.electron.store.get('safebox'));
           return refreshSafeBoxes();
         }
 
@@ -161,7 +149,6 @@ export function useIPCSafeBox() {
       (response: types.IUpdateSafeBoxResponse) => {
         toast.dismiss('updateSafeBox');
 
-        console.log(response);
         if (response.message === 'ok') {
           toast.success('Cofre Atualizado', {
             ...toastOptions,
@@ -170,7 +157,6 @@ export function useIPCSafeBox() {
 
           refreshSafeBoxes();
           changeSafeBoxMode('view');
-
           const safeBoxes = window.electron.store.get('safebox') as ISafeBox[];
           const filter = safeBoxes.filter(
             (safebox) => safebox._id === response.data.safeBoxId
@@ -186,7 +172,6 @@ export function useIPCSafeBox() {
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_SAFE_BOXES_RESPONSE,
       (response: types.IPCResponse) => {
-        console.log(response, 'refreshSafeBox');
         if (response.message === 'ok') {
           if (response.data.safeBoxResponse) refreshSafeBoxes();
           return;

@@ -50,5 +50,5 @@ export interface IUpdateSafeBoxResponse {
   message: 'ok' | 'nok';
   data: {
     safeBoxId: string;
-  }
+  };
 }

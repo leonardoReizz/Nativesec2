@@ -16,6 +16,8 @@ const tables = [
   },
 ];
 
+// usuarios escrita deletado
+
 export async function update(db: sqlite3.Database) {
   await Promise.all(
     tables.map(async (table) => {

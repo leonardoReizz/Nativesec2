@@ -9,7 +9,6 @@ import { UserRepositoryAPI } from '../../repositories/user-repository-api';
 export class VerifyUserRegisteredUseCase {
   constructor(
     private keyRepositoryAPI: KeyRepositoryAPI,
-    private keyRepositoryDatabase: KeyRepositoryDatabase,
     private userRepositoryAPI: UserRepositoryAPI
   ) {}
 

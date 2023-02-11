@@ -114,6 +114,7 @@ export async function useIpcActions(
       return leaveOrganizationController.handle(arg.data);
     case IPCTypes.REFRESH_ALL_SAFE_BOXES:
       return refreshAllSafeBoxesController.handle();
+
     default:
       return {
         response: 'none',

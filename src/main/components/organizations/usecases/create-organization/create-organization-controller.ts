@@ -1,11 +1,11 @@
 import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
-import { ICreateOrganization } from '../../../../ipc/organizations/types';
+import { ICreateOrganizationRequestDTO } from './create-organization-request-dto';
 import { CreateOrganizationUseCase } from './create-organization-usecase';
 
 export class CreateOrganizationController {
   constructor(private createOrganizationUseCase: CreateOrganizationUseCase) {}
 
-  async handle(organization: ICreateOrganization) {
+  async handle(organization: ICreateOrganizationRequestDTO) {
     try {
       const create = await this.createOrganizationUseCase.execute(organization);
       return {

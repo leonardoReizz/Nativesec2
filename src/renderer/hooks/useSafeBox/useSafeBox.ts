@@ -1,6 +1,6 @@
 import { IUser } from 'main/types';
-import { useCallback, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
@@ -17,6 +17,22 @@ export function useSafeBox() {
   const safeBoxContext = useContext(SafeBoxesContext);
   const createSafeBox = useContext(CreateSafeBoxContext);
   const navigate = useNavigate();
+
+  const isSafeBoxParticipant =
+    JSON.parse(safeBoxContext.currentSafeBox?.usuarios_leitura || '[]').filter(
+      (user: string) => user === window.electron.store.get('user').myEmail
+    ).length > 0;
+
+  useEffect(() => {
+    if (
+      createSafeBox.changeUsersAdmin &&
+      createSafeBox.changeUsersParticipant &&
+      safeBoxContext.currentSafeBox === undefined
+    ) {
+      createSafeBox.changeUsersAdmin([]);
+      createSafeBox.changeUsersParticipant([]);
+    }
+  }, [safeBoxContext.safeBoxMode]);
 
   const filteredSafeBoxes = safeBoxContext.safeBoxes?.filter(
     (safebox) =>
@@ -99,6 +115,7 @@ export function useSafeBox() {
         (email) => email !== myEmail
       );
     }
+
     if (safeBoxContext.safeBoxMode === 'create') {
       window.electron.ipcRenderer.sendMessage('useIPC', {
         event: IPCTypes.CREATE_SAFE_BOX,
@@ -119,22 +136,6 @@ export function useSafeBox() {
         },
       });
     } else {
-      console.log({
-        id: safeBoxContext.currentSafeBox?._id,
-        usuarios_leitura: editUsersParticipant,
-        usuarios_escrita: editUsersAdmin,
-        usuarios_leitura_deletado: deletedUsersParticipant,
-        usuarios_escrita_deletado: deletedUsersAdmin,
-        tipo: formik[formikIndex].type,
-        criptografia: 'rsa',
-        nome: formikProps.values[0][`${formikProps.values[0].name}`],
-        descricao:
-          formikProps.values[size - 1][`${formikProps.values[size - 1].name}`],
-        conteudo: content,
-        organizacao: currentOrganizationId,
-        data_atualizacao: safeBoxContext.currentSafeBox?.data_atualizacao,
-        data_hora_create: safeBoxContext.currentSafeBox?.data_hora_create,
-      });
       window.electron.ipcRenderer.sendMessage('useIPC', {
         event: IPCTypes.UPDATE_SAFE_BOX,
         data: {
@@ -154,6 +155,52 @@ export function useSafeBox() {
           organizacao: currentOrganizationId,
           data_atualizacao: safeBoxContext.currentSafeBox?.data_atualizacao,
           data_hora_create: safeBoxContext.currentSafeBox?.data_hora_create,
+        },
+      });
+    }
+  }
+
+  function updateUsersSafeBox(email: string, newType: 'admin' | 'participant') {
+    toast.loading('Atualizando usuarios', {
+      ...toastOptions,
+      toastId: 'updateSafeBox',
+    });
+    const { currentSafeBox } = safeBoxContext;
+
+    if (currentSafeBox) {
+      let usersAdmin: string[] = JSON.parse(currentSafeBox.usuarios_escrita);
+      let usersParticipant: string[] = JSON.parse(
+        currentSafeBox.usuarios_leitura
+      );
+      if (newType === 'admin') {
+        usersParticipant = usersParticipant.filter((user) => user !== email);
+        usersAdmin = [...usersAdmin, email];
+      } else {
+        usersAdmin = usersAdmin.filter((user) => user !== email);
+        usersParticipant = [...usersParticipant, email];
+      }
+
+      window.electron.ipcRenderer.sendMessage('useIPC', {
+        event: IPCTypes.UPDATE_USERS_SAFE_BOX,
+        data: {
+          id: currentSafeBox._id,
+          usuarios_leitura: usersParticipant,
+          usuarios_escrita: usersAdmin,
+          usuarios_leitura_deletado: JSON.parse(
+            currentSafeBox.usuarios_leitura_deletado
+          ),
+          usuarios_escrita_deletado: JSON.parse(
+            currentSafeBox.usuarios_escrita_deletado
+          ),
+          tipo: currentSafeBox.tipo,
+          anexos: currentSafeBox.anexos,
+          criptografia: currentSafeBox.criptografia,
+          nome: currentSafeBox.nome,
+          descricao: currentSafeBox.descricao,
+          conteudo: currentSafeBox.conteudo,
+          organizacao: currentSafeBox.organizacao,
+          data_atualizacao: currentSafeBox.data_atualizacao,
+          data_hora_create: currentSafeBox.data_hora_create,
         },
       });
     }
@@ -336,6 +383,7 @@ export function useSafeBox() {
     ...createSafeBox,
     ...safeBoxContext,
     getSafeBoxes,
+    isSafeBoxParticipant,
     deleteSafeBox,
     submitSafeBox,
     decrypt,
@@ -347,5 +395,6 @@ export function useSafeBox() {
     addSafeBoxUsers,
     changeCurrentSafeBox,
     updateSafeBox,
+    updateUsersSafeBox,
   };
 }

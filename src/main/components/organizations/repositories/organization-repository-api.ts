@@ -1,16 +1,14 @@
 /* eslint-disable class-methods-use-this */
 import axios from 'axios';
-import { ICreateOrganization, IToken } from 'main/ipc/organizations/types';
-import { APIResponse } from '../../../types';
+import { APIResponse, IToken } from '../../../types';
 import { api } from '../../../util';
 import { store } from '../../../main';
-import APIOrganization from '../../../API/organizations';
 import { IOrganizationRepositoryAPI } from './organization-repository-api-interface';
 import * as types from './types';
 
 export class OrganizationRepositoryAPI implements IOrganizationRepositoryAPI {
   async create(
-    organization: ICreateOrganization,
+    organization: types.ICreateOrganizationData,
     authorization: string
   ): Promise<APIResponse> {
     return axios

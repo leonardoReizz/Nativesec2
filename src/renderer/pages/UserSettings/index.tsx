@@ -7,6 +7,7 @@ import Buffer from 'buffer';
 import { useIPCUserConfig } from 'renderer/hooks/useIPCUserConfig.ts';
 import { IKeys, IUser } from 'main/types';
 import { Button } from 'renderer/components/Buttons/Button';
+import { IPCTypes } from 'renderer/@types/IPCTypes';
 import styles from './styles.module.sass';
 
 interface IItem {
@@ -80,6 +81,12 @@ export function UserSettings() {
     updateSavePrivateKey(save);
   }
 
+  function handleCloseSession() {
+    window.electron.ipcRenderer.sendMessage('useIPC', {
+      event: IPCTypes.SESSION_EXPIRED,
+    });
+  }
+
   return (
     <div
       className={`${styles.userSettings} ${
@@ -93,6 +100,7 @@ export function UserSettings() {
           className={styles.leaveButton}
           theme={theme}
           color="red"
+          onClick={handleCloseSession}
         />
         <h3>Segurança</h3>
         <div className={styles.box} onClick={handleExportKey}>

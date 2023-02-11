@@ -68,11 +68,13 @@ export class KeyRepositoryDatabase implements KeyRepositoryDatabaseInterface {
     return new Promise((resolve, reject) => {
       return db.run(
         `INSERT INTO private_keys (
+          _id,
           email,
           full_name,
           private_key,
           type
           ) VALUES (
+            '${data._id}',
             '${data.email}',
             '${data.fullName}',
             '${data.privateKey}',
@@ -96,11 +98,13 @@ export class KeyRepositoryDatabase implements KeyRepositoryDatabaseInterface {
     return new Promise((resolve, reject) => {
       return db.run(
         `INSERT INTO public_keys (
+          _id,
           email,
           full_name,
           public_key,
           type
-        ) VALUES (
+        ) VALUES (]
+          '${data._id}',
           '${data.email}',
           '${data.fullName}',
           '${data.publicKey}',

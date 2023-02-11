@@ -21,7 +21,7 @@ export class UpdateUsersSafeBoxUseCase {
     );
 
     if (apiUpdate.status === 200 && apiUpdate.data.status === 'ok') {
-      this.safeBoxRepositoryDatabase.update({
+      await this.safeBoxRepositoryDatabase.update({
         _id: data.id,
         conteudo: apiUpdate.data.detail[0].conteudo,
         usuarios_escrita: JSON.stringify(

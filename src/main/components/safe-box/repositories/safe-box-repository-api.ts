@@ -2,22 +2,17 @@ import axios from 'axios';
 import { store } from '../../../main';
 import { APIResponse, IToken } from '../../../types';
 import { api } from '../../../util';
-import { SafeBoxAPIModel, SafeBoxDatabaseModel } from '../model/SafeBox';
+import { SafeBoxAPIModel } from '../model/SafeBox';
 import { SafeBoxRepositoryAPIInterface } from './safe-box-repository-api-interface';
 import { DeleteSafeBoxAPI } from './types';
 import * as types from './types';
 
 export class SafeBoxRepositoryAPI implements SafeBoxRepositoryAPIInterface {
-  listSafeBoxesDeleted(arg0: {
-    organizationId: string;
-    authorization: typeof import('../../auth/repositories/auth-repository-api').AuthRepositoryAPI;
-    date: number;
-  }) {
-    throw new Error('Method not implemented.');
-  }
-
   async create(
-    data: Omit<SafeBoxAPIModel, 'id'>,
+    data: Omit<
+      SafeBoxAPIModel,
+      '_id' | 'data_hora_create' | 'data_atualizacao'
+    >,
     authorization: string
   ): Promise<APIResponse> {
     const create = await axios

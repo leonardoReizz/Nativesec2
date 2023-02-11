@@ -3,7 +3,12 @@ export interface InviteParticipantData {
   email: string;
   authorization: string;
 }
-
+export interface ICreateOrganizationData {
+  name: string;
+  theme: string;
+  description: string;
+  icon: string;
+}
 export interface InviteAdminData {
   organizationId: string;
   email: string;

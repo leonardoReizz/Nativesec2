@@ -1,26 +1,27 @@
 @use '../../../../../styles/_util' as *
 
 
-.red
-  background-color: $red-100  !important
-  &:hover
-    background-color: $red-100-hover !important
-
-.green
-  background-color: $green-100  !important
-  &:hover
-    background-color: $green-100-hover !important
-
 .reactModalContent.dark
   background-color: $gray-800
   color: $white
 
   .users
     @include scroolbarDark()
+
+  .header
+    button
+      &:hover
+        background-color: $gray-700
     
 .reactModalContent.light
   background-color: $white
-  @include scroolbarLight()
+  .users
+    @include scroolbarLight()
+  
+  .header
+    button
+      &:hover
+        background-color: $gray-300
   
 
 .reactModalOverlay
@@ -95,7 +96,6 @@
 
       .dropdown
         max-width: 150px
-        border: 1px solid $gray-600
 
       .selected
         background-color: $green-100-op-50 
@@ -113,8 +113,7 @@
           height: 25px
           width: 25px
           transition: background-color 0.2s ease
-          &:hover
-            background-color: $gray-700
+
         svg
           font-size: 1.2rem
 

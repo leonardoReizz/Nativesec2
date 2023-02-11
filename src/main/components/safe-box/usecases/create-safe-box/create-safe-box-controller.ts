@@ -7,12 +7,10 @@ export class CreateSafeBoxController {
 
   async handle(data: CreateSafeBoxRequestDTO) {
     try {
-      await this.createSafeBoxUseCase.execute(data);
+      const message = await this.createSafeBoxUseCase.execute(data);
       return {
         response: IPCTypes.CREATE_SAFE_BOX_RESPONSE,
-        data: {
-          message: 'ok',
-        },
+        data: message,
       };
     } catch (error: any) {
       return {

@@ -12,7 +12,7 @@ export class RefreshSafeBoxesUseCase {
     private safeBoxRepositoryDatabase: SafeBoxRepositoryDatabase
   ) {}
 
-  async execute(data: IRefreshSafeBoxesRequestDTO) {
+  async execute(data: IRefreshSafeBoxesRequestDTO, lastDate?: number) {
     let lastDateUpdatedSafeBox = 1638290571;
     let safeBoxResponse = false;
     const { tokenType, accessToken } = store.get('token') as IToken;
@@ -35,6 +35,10 @@ export class RefreshSafeBoxesUseCase {
       if (!lastDateUpdatedSafeBox) {
         lastDateUpdatedSafeBox = 1638290571;
       }
+    }
+
+    if (lastDate) {
+      lastDateUpdatedSafeBox = lastDate;
     }
 
     const listAPISafeBox = await this.safeBoxRepositoryAPI.list({
@@ -173,10 +177,6 @@ export class RefreshSafeBoxesUseCase {
         })
       );
     }
-
-    console.log(filterListToCreate, ' create');
-    console.log(filterListToUpdate, ' update');
-    console.log(listToDelete, ' delete');
 
     if (listToDelete.length > 0) {
       safeBoxResponse = true;

@@ -46,7 +46,6 @@
     @include flex(flex-start, center, row)
     border-radius: $default-radius
     border-radius: $default-radius
-    height: 100%
     width: 100%
     
     .inputContainer
@@ -55,31 +54,35 @@
       height: 100%
       position: relative
 
+      .input
+        @include flex(flex-start, center, column)
+        height: 100%
+        padding: 0 8px
+
+        >div
+          @include flex(flex-start, flex-start, row)
+          width: 100%
+          min-height: 30px
+
       svg
-        position: absolute
-        margin-top: 15px
-        right: 5px 
+        margin-left: auto
         min-width: 25px
         min-height: 25px
         font-size: 3px !important
         color: $gray-500
         pointer-events: none
+        margin-top: -6px
         
 
       span
-        position: absolute
-        margin-top: 5px
-        height: 12px
-        left: 10px
-        top: 0
         color: $gray-500
 
       input
         width: 100%
         height: 100%
-        margin-top: 5px
-
-        padding: 0 10px
+        
+        position: absolute
+        bottom: -10px
         
         background: transparent
         transition: background-color 0.2s ease
@@ -88,7 +91,10 @@
 
     .noText
       svg
-        top: -7px
+        margin-top: 3px
+
+      input
+        bottom: 0
 
   .input:focus-within ~ .option
     opacity: 1

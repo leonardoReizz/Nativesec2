@@ -38,10 +38,6 @@ export function VerifyNameModal({
     callback(true);
   }
 
-  function handleCloseModal() {
-    onRequestClose();
-  }
-
   const verifyNameSchema = Yup.object().shape({
     name: Yup.string()
       .required('Nome não pode ficar em branco.')
@@ -107,8 +103,19 @@ export function VerifyNameModal({
             theme={theme}
           />
           <div className={styles.buttons}>
-            <Button text="Confirmar" isLoading={isLoading} type="submit" />
-            <Button text="Cancelar" type="button" className={styles.red} />
+            <Button
+              text="Confirmar"
+              isLoading={isLoading}
+              type="submit"
+              theme={theme}
+            />
+            <Button
+              text="Cancelar"
+              type="button"
+              color="red"
+              theme={theme}
+              onClick={onRequestClose}
+            />
           </div>
         </form>
       </ReactModal>
