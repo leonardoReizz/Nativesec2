@@ -1,10 +1,12 @@
 import { useCallback, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { ForceLoading } from 'renderer/components/ForceLoading';
 import { Loading } from 'renderer/components/Loading';
 import { useIPCAuth } from 'renderer/hooks/useIPCAuth/useIPCAuth';
 import { useIpcOrganization } from 'renderer/hooks/useIPCOrganizations/useIpcOrganizations';
 import { useIPCSafeBox } from 'renderer/hooks/useIPCSafeBox/useIPCSafeBox';
+import { useLoading } from 'renderer/hooks/useLoading';
 import { useRefresh } from 'renderer/hooks/useRefresh/useRefresh';
 import { useSession } from 'renderer/hooks/useSession/useSession';
 import { Auth, AuthStateType } from 'renderer/pages/Auth';
@@ -21,7 +23,7 @@ export type LoadingType = 'false' | 'true' | 'finalized';
 
 export function AppRoutes() {
   const [authState, setAuthState] = useState<AuthStateType>('login-step-one');
-
+  const { forceLoading } = useLoading();
   const handleAuthState = useCallback((state: AuthStateType) => {
     toast.dismiss('resendToken');
     setAuthState(state);
@@ -42,7 +44,7 @@ export function AppRoutes() {
   return (
     <>
       <Loading isLoading={isLoading} changeLoadingState={changeLoadingState} />
-
+      {forceLoading && <ForceLoading isLoading={forceLoading} />}
       <Routes>
         <Route
           path="/"

@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { ILeaveOrganizationRequestDTO } from './leave-organization-request-dto';
 import { LeaveOrganizationUseCase } from './leave-organization-use-case';
 

@@ -1,27 +1,44 @@
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
+import { newDatabase } from 'main/main';
 import PATH from 'path';
-import database from '../database';
 
 export async function getDatabaseVersion() {
-  const version = await database.all(`SELECT * FROM database_version`);
+  const db = newDatabase.getDatabase();
+  const version: any = new Promise((resolve, reject) => {
+    db.all(`SELECT * FROM database_version`, (error, rows) => {
+      if (error) reject(error);
+      resolve(rows);
+    });
+  });
   if (version.length === 0) {
-    await database.run(
-      'CREATE TABLE IF NOT EXISTS database_version (version TEXT)'
-    );
+    await db.run('CREATE TABLE IF NOT EXISTS database_version (version TEXT)');
     return undefined;
   }
   return version[0];
 }
 
 export async function insertVersion(version: string) {
-  return database.run(
-    `INSERT INTO database_version (version) VALUES ('${version}') `
-  );
+  const db = newDatabase.getDatabase();
+  return new Promise((resolve, reject) => {
+    db.run(
+      `INSERT INTO database_version (version) VALUES ('${version}')`,
+      (error) => {
+        if (error) reject(error);
+        resolve(true);
+      }
+    );
+  });
 }
 
 export async function updateVersion(version: string) {
-  return database.run(`UPDATE database_version SET version = '${version}'`);
+  const db = newDatabase.getDatabase();
+  return new Promise((resolve, reject) => {
+    db.run(`UPDATE database_version SET version = '${version}'`, (error) => {
+      if (error) reject(error);
+      resolve(true);
+    });
+  });
 }
 
 export async function updateDatabase(version: string) {

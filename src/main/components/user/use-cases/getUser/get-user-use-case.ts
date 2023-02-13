@@ -1,5 +1,5 @@
-import { store } from '../../../../main';
-import { IToken, IUser } from '../../../../types';
+import { store } from '@/main/main';
+import { IToken, IUser } from '@/main/types';
 import { UserRepositoryAPI } from '../../repositories/user-repository-api';
 
 export class GetUserUseCase {

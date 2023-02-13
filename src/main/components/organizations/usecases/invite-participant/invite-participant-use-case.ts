@@ -1,15 +1,17 @@
-import { IToken } from '../../../../types';
-import { store } from '../../../../main';
+import { store } from '@/main/main';
+import { IToken } from '@/main/types';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { OrganizationRepositoryDatabase } from '../../repositories/organization-repository-database';
 import { InviteParticipantRequestDTO } from './invite-participant-request-dto';
 import { OrganizationModelAPI } from '../../model/Organization';
 import { refreshOrganizations } from '../../electronstore/store';
+import { OrganizationIconRepositoryDatabase } from '../../repositories/organization-icon-database-repository';
 
 export class InviteParticipantUseCase {
   constructor(
     private organizationRepositoryAPI: OrganizationRepositoryAPI,
-    private organizationRepositoryDatabase: OrganizationRepositoryDatabase
+    private organizationRepositoryDatabase: OrganizationRepositoryDatabase,
+    private organizationIconRepositoryDatabase: OrganizationIconRepositoryDatabase
   ) {}
 
   async execute(data: InviteParticipantRequestDTO) {
@@ -52,7 +54,10 @@ export class InviteParticipantUseCase {
           `Error update organization in Invite Participant Use Case: ${updateDatabase}`
         );
       }
-      await refreshOrganizations();
+      await refreshOrganizations(
+        this.organizationRepositoryDatabase,
+        this.organizationIconRepositoryDatabase
+      );
       return {
         message: 'ok',
         data: { organizationId: organizationUpdated._id.$oid },

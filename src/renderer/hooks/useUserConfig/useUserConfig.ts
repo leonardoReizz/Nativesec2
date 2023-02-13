@@ -1,5 +1,5 @@
+import { IPCTypes } from '@/types/IPCTypes';
 import { useCallback, useContext } from 'react';
-import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { UserConfigContext } from 'renderer/contexts/UserConfigContext/UserConfigContext';
 
 interface UpdateDatabaseUserConfigProps {

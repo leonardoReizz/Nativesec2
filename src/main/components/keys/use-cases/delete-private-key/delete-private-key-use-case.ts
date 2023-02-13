@@ -1,8 +1,7 @@
-import { IToken } from '../../../../types';
-import { store } from '../../../../main';
+import { store } from '@/main/main';
+import { IToken } from '@/main/types';
 import { KeyRepositoryAPI } from '../../repositories/key-repository-api';
 import { DeletePrivateKeyRequestDTO } from './delete-private-key-request-dto';
-import { changeSavePrivateKey } from '../../electron-store/store';
 
 export class DeletePrivateKeyUseCase {
   constructor(private keyRepositoryAPI: KeyRepositoryAPI) {}

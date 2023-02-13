@@ -4,10 +4,11 @@ import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { BiExport } from 'react-icons/bi';
 import { Dropdown } from 'renderer/components/Dropdown';
 import Buffer from 'buffer';
-import { useIPCUserConfig } from 'renderer/hooks/useIPCUserConfig.ts';
+import { useIPCUserConfig } from '@/renderer/hooks/useIPCUserConfig.ts/useIPCUserConfig.ts';
 import { IKeys, IUser } from 'main/types';
 import { Button } from 'renderer/components/Buttons/Button';
-import { IPCTypes } from 'renderer/@types/IPCTypes';
+import { MdPassword } from 'react-icons/md';
+import { IPCTypes } from '@/types/IPCTypes';
 import styles from './styles.module.sass';
 
 interface IItem {
@@ -46,11 +47,8 @@ export function UserSettings() {
 
   useIPCUserConfig();
 
-  function handleTheme(newTheme: 'light' | 'dark') {
-    updateTheme(newTheme);
-  }
-
-  function saveFile(privateKey: string) {
+  function saveFile() {
+    const { privateKey } = window.electron.store.get('keys') as IKeys;
     const { myEmail } = window.electron.store.get('user') as IUser;
     const byteCharacters = Buffer.Buffer.from(privateKey, 'utf-8').toString(
       'base64'
@@ -65,11 +63,6 @@ export function UserSettings() {
     element.href = URL.createObjectURL(temp);
     element.download = myEmail;
     element.click();
-  }
-
-  function handleExportKey() {
-    const { privateKey } = window.electron.store.get('keys') as IKeys;
-    saveFile(privateKey);
   }
 
   function changeValue(item: IItem) {
@@ -103,7 +96,13 @@ export function UserSettings() {
           onClick={handleCloseSession}
         />
         <h3>Segurança</h3>
-        <div className={styles.box} onClick={handleExportKey}>
+        <div className={styles.box} onClick={saveFile}>
+          <div>
+            <MdPassword />
+            Alterar Senha
+          </div>
+        </div>
+        <div className={styles.box} onClick={saveFile}>
           <div>
             <BiExport />
             Exportar Chave de Segurança
@@ -120,7 +119,7 @@ export function UserSettings() {
           </div>
         </div>
         <h3>Aparencia</h3>
-        <div className={styles.box} onClick={() => handleTheme('light')}>
+        <div className={styles.box} onClick={() => updateTheme('light')}>
           <div>
             <span
               className={`${styles.checkBox} ${
@@ -130,7 +129,7 @@ export function UserSettings() {
             Tema Claro
           </div>
         </div>
-        <div className={styles.box} onClick={() => handleTheme('dark')}>
+        <div className={styles.box} onClick={() => updateTheme('dark')}>
           <div>
             <span
               className={`${styles.checkBox} ${

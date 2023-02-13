@@ -14,7 +14,7 @@ export class ListSafeBoxUseCase {
       throw new Error(`Error list safe box database ${listDB}`);
     }
 
-    refreshSafeBoxes(data.organizationId);
+    await refreshSafeBoxes(data.organizationId);
 
     return { message: 'ok' };
   }

@@ -1,5 +1,5 @@
-import { store } from '../../../../main';
-import { IToken } from '../../../../types';
+import { store } from '@/main/main';
+import { IToken } from '@/main/types';
 import { refreshOrganizations } from '../../electronstore/store';
 import { OrganizationIconRepositoryDatabase } from '../../repositories/organization-icon-database-repository';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';

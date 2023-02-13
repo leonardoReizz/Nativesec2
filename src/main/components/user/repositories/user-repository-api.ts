@@ -47,4 +47,6 @@ export class UserRepositoryAPI implements UserRepositoryApiInterface {
         };
       });
   }
+
+  async changeSafetyPhrase() {}
 }

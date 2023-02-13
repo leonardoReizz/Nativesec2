@@ -1,3 +1,6 @@
+import { IPCTypes } from '@/types/IPCTypes';
+import { updateDatabaseController } from '../components/database/use-cases/update-database';
+import { forceRefreshSafeBoxesController } from '../components/safe-box/usecases/force-refresh-safe-boxes';
 import { refreshAllSafeBoxesController } from '../components/safe-box/usecases/refresh-all-safe-boxes';
 import { refreshSafeBoxesController } from '../components/safe-box/usecases/refresh-safe-boxes';
 import { leaveOrganizationController } from '../components/organizations/usecases/leave-organization';
@@ -30,7 +33,6 @@ import { decryptController } from '../components/crypto/use-cases/decrypt';
 import { updateSafeBoxController } from '../components/safe-box/usecases/edit-safe-box';
 import { deleteSafeBoxController } from '../components/safe-box/usecases/delete-safe-box';
 import { createSafeBoxController } from '../components/safe-box/usecases/create-safe-box';
-import { IPCTypes } from '../../renderer/@types/IPCTypes';
 import { declineOrganizationInviteController } from '../components/organizations/usecases/decline-organization-invite';
 
 export interface UseIPCData {
@@ -114,6 +116,10 @@ export async function useIpcActions(
       return leaveOrganizationController.handle(arg.data);
     case IPCTypes.REFRESH_ALL_SAFE_BOXES:
       return refreshAllSafeBoxesController.handle();
+    case IPCTypes.FORCE_REFRESH_SAFE_BOXES:
+      return forceRefreshSafeBoxesController.handle(arg.data);
+    case IPCTypes.UPDATE_DATABASE:
+      return updateDatabaseController.handle();
 
     default:
       return {

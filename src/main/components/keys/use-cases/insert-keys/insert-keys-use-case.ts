@@ -1,6 +1,6 @@
-import { IKeys, IUser } from '../../../../types';
-import { DEFAULT_TYPE } from '../../../../database/types';
-import { store } from '../../../../main';
+import { DEFAULT_TYPE } from '@/main/crypto/types';
+import { store } from '@/main/main';
+import { IKeys, IUser } from '@/main/types';
 import { KeyRepositoryDatabase } from '../../repositories/key-repository-database';
 
 export class InsertKeysUseCase {

@@ -1,4 +1,4 @@
-import { store } from '../../../../main';
+import { store } from '@/main/main';
 import { UserRepositoryAPI } from '../../repositories/user-repository-api';
 import { ICreateUserRequestDTO } from './create-user-request-dto';
 

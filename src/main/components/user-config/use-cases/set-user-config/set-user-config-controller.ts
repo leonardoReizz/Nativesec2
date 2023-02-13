@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { SetUserConfigUseCase } from './set-user-config-use-case';
 
 export class SetUserConfigController {

@@ -1,6 +1,6 @@
-import { KeyRepositoryAPI } from '../../../keys/repositories/key-repository-api';
-import { store } from '../../../../main';
-import { IToken, IUser } from '../../../../types';
+import { KeyRepositoryAPI } from '@/main/components/keys/repositories/key-repository-api';
+import { store } from '@/main/main';
+import { IToken, IUser } from '@/main/types';
 import { UserConfigRepositoryDatabase } from '../../repositories/user-config-repository-database';
 
 export class SetUserConfigUseCase {

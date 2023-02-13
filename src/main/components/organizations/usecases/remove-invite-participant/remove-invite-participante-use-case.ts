@@ -1,15 +1,17 @@
-import { IToken } from '../../../../types';
-import { store } from '../../../../main';
+import { store } from '@/main/main';
+import { IToken } from '@/main/types';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { IRemoveInviteParticipantRequestDTO } from './remove-invite-participant-request-dto';
 import { OrganizationRepositoryDatabase } from '../../repositories/organization-repository-database';
 import { OrganizationModelAPI } from '../../model/Organization';
 import { refreshOrganizations } from '../../electronstore/store';
+import { OrganizationIconRepositoryDatabase } from '../../repositories/organization-icon-database-repository';
 
 export class RemoveInviteParticipantUseCase {
   constructor(
     private organizationRepositoryAPI: OrganizationRepositoryAPI,
-    private organizationRepositoryDatabase: OrganizationRepositoryDatabase
+    private organizationRepositoryDatabase: OrganizationRepositoryDatabase,
+    private organizationIconRepositoryDatabase: OrganizationIconRepositoryDatabase
   ) {}
 
   async execute(data: IRemoveInviteParticipantRequestDTO) {
@@ -48,7 +50,10 @@ export class RemoveInviteParticipantUseCase {
         participantes: JSON.stringify(organizationUpdated.participantes),
       });
 
-      await refreshOrganizations();
+      await refreshOrganizations(
+        this.organizationRepositoryDatabase,
+        this.organizationIconRepositoryDatabase
+      );
 
       return {
         message: 'ok',

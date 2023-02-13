@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { RefreshOrganizationsUseCase } from './refresh-organizations-use-case';
 
 export class RefreshOrganizationsController {

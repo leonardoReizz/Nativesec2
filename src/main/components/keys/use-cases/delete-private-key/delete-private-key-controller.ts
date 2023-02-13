@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { DeletePrivateKeyRequestDTO } from './delete-private-key-request-dto';
 import { DeletePrivateKeyUseCase } from './delete-private-key-use-case';
 

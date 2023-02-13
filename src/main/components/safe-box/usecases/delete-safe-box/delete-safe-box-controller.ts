@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { IDeleteSafeBoxRequestDTO } from './delete-safe-box-request-dto';
 import { DeleteSafeBoxUseCase } from './delete-safe-box-usecase';
 

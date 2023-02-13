@@ -1,21 +1,21 @@
 import axios from 'axios';
 import { APIResponse } from '../../../types';
 import { api } from '../../../util';
-import { IPrivateKeyApiModel, IPublicKeyApiModel } from '../model/Key';
+import { IPrivateKeyAPIModel, IPublicKeyAPIModel } from '../model/Key';
 import { KeyRepositoryAPIInterface } from './key-repository-api-interface';
 import * as types from './types';
 
 export class KeyRepositoryAPI implements KeyRepositoryAPIInterface {
   async createPrivateKey(
-    data: IPrivateKeyApiModel,
+    data: Omit<IPrivateKeyAPIModel, '_id' | 'email'>,
     authorization: string
   ): Promise<APIResponse> {
     return axios
       .post(
         `${api}/privatekey/`,
         {
-          chave: data.privateKey,
-          tipo: data.type,
+          chave: data.chave,
+          tipo: data.tipo,
         },
         {
           headers: {
@@ -39,15 +39,15 @@ export class KeyRepositoryAPI implements KeyRepositoryAPIInterface {
   }
 
   async createPublicKey(
-    data: IPublicKeyApiModel,
+    data: Omit<IPublicKeyAPIModel, '_id' | 'email'>,
     authorization: string
   ): Promise<APIResponse> {
     return axios
       .post(
         `${api}/pubkey/`,
         {
-          chave: data.publicKey,
-          tipo: data.type,
+          chave: data.chave,
+          tipo: data.tipo,
         },
         {
           headers: {

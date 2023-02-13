@@ -1,5 +1,5 @@
-import { IToken } from 'main/types';
-import { store } from '../../../../main';
+import { store } from '@/main/main';
+import { IToken } from '@/main/types';
 import { AuthRepositoryAPI } from '../../repositories/auth-repository-api';
 
 export class RefreshTokenUseCase {

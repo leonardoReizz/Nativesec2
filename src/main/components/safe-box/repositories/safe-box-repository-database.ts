@@ -127,4 +127,17 @@ export class SafeBoxRepositoryDatabase
 
     return sort;
   }
+
+  async deleteByOrganizationId(organizationId: string) {
+    const db = newDatabase.getDatabase();
+    return new Promise((resolve, reject) => {
+      db.run(
+        `DELETE FROM safebox WHERE organizacao = '${organizationId}'`,
+        (error) => {
+          if (error) reject(error);
+          resolve(true);
+        }
+      );
+    });
+  }
 }

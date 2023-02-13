@@ -1,13 +1,14 @@
+import { IPCTypes } from '@/types/IPCTypes';
 import { IUser } from 'main/types';
 import { useCallback, useContext, useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
 import formik from 'renderer/utils/Formik/formik';
 import { toastOptions } from 'renderer/utils/options/Toastify';
+import { useLoading } from '../useLoading';
 import { useOrganization } from '../useOrganization/useOrganization';
 import * as types from './types';
 
@@ -17,6 +18,7 @@ export function useSafeBox() {
   const safeBoxContext = useContext(SafeBoxesContext);
   const createSafeBox = useContext(CreateSafeBoxContext);
   const navigate = useNavigate();
+  const { updateForceLoading } = useLoading();
 
   const isSafeBoxParticipant =
     JSON.parse(safeBoxContext.currentSafeBox?.usuarios_leitura || '[]').filter(
@@ -374,6 +376,14 @@ export function useSafeBox() {
     });
   }
 
+  const forceRefreshSafeBoxes = useCallback((organizationId: string) => {
+    updateForceLoading(true);
+    window.electron.ipcRenderer.sendMessage('useIPC', {
+      event: IPCTypes.FORCE_REFRESH_SAFE_BOXES,
+      data: { organizationId },
+    });
+  }, []);
+
   function changeCurrentSafeBox(safebox: ISafeBox | undefined) {
     navigate(`/workspace/${currentOrganization?._id}`);
     safeBoxContext.changeCurrentSafeBox(safebox);
@@ -396,5 +406,6 @@ export function useSafeBox() {
     changeCurrentSafeBox,
     updateSafeBox,
     updateUsersSafeBox,
+    forceRefreshSafeBoxes,
   };
 }

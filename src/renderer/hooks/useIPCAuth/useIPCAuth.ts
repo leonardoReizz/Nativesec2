@@ -1,13 +1,11 @@
+import { IPCTypes } from '@/types/IPCTypes';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { IPCTypes } from 'renderer/@types/IPCTypes';
-import { IIPCResponse } from 'renderer/@types/types';
 import { IUserConfig } from 'renderer/contexts/UserConfigContext/types';
 import { AuthStateType } from 'renderer/pages/Auth';
 import { LoadingType } from 'renderer/routes';
 import { toastOptions } from 'renderer/utils/options/Toastify';
-import { IPCResponse } from '../useIPCSafeBox/types';
 import { useLoading } from '../useLoading';
 import { useOrganization } from '../useOrganization/useOrganization';
 import { useUserConfig } from '../useUserConfig/useUserConfig';
@@ -23,7 +21,7 @@ export function useIPCAuth({
 }: UseIPCAuthProps): void {
   const navigate = useNavigate();
   const { updateLoading } = useLoading();
-  const { updateUserConfig } = useUserConfig();
+  const { updateUserConfig, updateRefreshTime } = useUserConfig();
   const {
     updateOrganizationsIcons,
     updateOrganizations,
@@ -34,7 +32,7 @@ export function useIPCAuth({
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.AUTH_PASSWORD_RESPONSE,
-      (result: IPCResponse) => {
+      (result: IIPCResponse) => {
         if (result.message === 'ok') {
           toast.info('Um Token de acesso foi enviado para seu email', {
             ...toastOptions,
@@ -116,11 +114,14 @@ export function useIPCAuth({
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.GET_PRIVATE_KEY_RESPONSE,
-      (result: IPCResponse) => {
+      (result: IIPCResponse) => {
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
-            event: IPCTypes.GET_PUBLIC_KEY,
+            event: IPCTypes.UPDATE_DATABASE,
           });
+          // window.electron.ipcRenderer.sendMessage('useIPC', {
+          //   event: IPCTypes.GET_PUBLIC_KEY,
+          // });
         } else if (result.message === 'noKey') {
           changeAuthState('searchKey');
           changeLoadingState('false');
@@ -131,6 +132,25 @@ export function useIPCAuth({
             ...toastOptions,
             toastId: 'invalid-safety-phrase',
           });
+        }
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.UPDATE_DATABASE_RESPONSE,
+      (response: IIPCResponse) => {
+        if (response.message === 'ok') {
+          window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.GET_PUBLIC_KEY,
+          });
+        } else {
+          toast.error('Erro ao atualizar bando de dados', {
+            ...toastOptions,
+            toastId: 'errorMigration',
+          });
+          changeLoadingState('false');
         }
       }
     );
@@ -168,7 +188,7 @@ export function useIPCAuth({
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.INSERT_DATABASE_KEYS_RESPONSE,
-      (result: IPCResponse) => {
+      (result: IIPCResponse) => {
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.REFRESH_ALL_ORGANIZATIONS,
@@ -184,7 +204,7 @@ export function useIPCAuth({
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
-      (result: IPCResponse) => {
+      (result: IIPCResponse) => {
         if (result.message === 'ok') {
           updateOrganizationsIcons(window.electron.store.get('iconeAll'));
           updateOrganizations(window.electron.store.get('organizations'));
@@ -205,7 +225,7 @@ export function useIPCAuth({
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_SAFE_BOXES_RESPONSE,
-      (result: IPCResponse) => {
+      (result: IIPCResponse) => {
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.SET_USER_CONFIG,
@@ -226,14 +246,14 @@ export function useIPCAuth({
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.SET_USER_CONFIG_RESPONSE,
-      (result: IPCResponse) => {
+      (result: IIPCResponse) => {
         if (result.message === 'ok') {
           const userConfig = window.electron.store.get(
             'userConfig'
           ) as IUserConfig;
           updateUserConfig({ ...userConfig });
           changeLoadingState('finalized');
-          // handleRefreshTime(Number(userConfig.refreshTime));
+          updateRefreshTime(Number(userConfig.refreshTime));
           if (userConfig.lastOrganizationId === null) {
             navigate('/createOrganization');
           } else {
@@ -262,7 +282,7 @@ export function useIPCAuth({
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.CREATE_USER_RESPONSE,
-      (result: IPCResponse) => {
+      (result: IIPCResponse) => {
         if (result.message === 'ok') {
           changeAuthState('login-step-two');
           toast.info('Um Token de acesso foi enviado para seu email', {

@@ -11,7 +11,7 @@ const tables = [
     query: 'ALTER TABLE public_keys ADD _id type TEXT',
   },
   {
-    name: 'safeBoxParticipant',
+    name: 'privKey',
     query: 'ALTER TABLE private_keys ADD _id type TEXT',
   },
 ];
@@ -21,7 +21,7 @@ const tables = [
 export async function update(db: sqlite3.Database) {
   await Promise.all(
     tables.map(async (table) => {
-      await db.run(table.query);
+      db.run(table.query);
     })
   );
 }

@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { ListOrganizationsInvitesUseCase } from './list-organizations-invites-use-case';
 
 export class ListOrganizationsInvitesController {

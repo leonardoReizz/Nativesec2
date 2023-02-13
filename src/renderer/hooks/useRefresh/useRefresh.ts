@@ -1,5 +1,5 @@
+import { IPCTypes } from '@/types/IPCTypes';
 import { useEffect } from 'react';
-import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { useOrganization } from '../useOrganization/useOrganization';
 import { useUserConfig } from '../useUserConfig/useUserConfig';
 
@@ -30,20 +30,4 @@ export function useRefresh() {
 
     return () => clearInterval(interval);
   }, [refreshTime, currentOrganization]);
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     //     if (window.electron.store.get('initialData')?.updateAvaliable === true) {
-  //     //       // updateNotifications([{
-  //     //       //   type: 'updateNativeSec',
-  //     //       //   message: 'Nova versão do nativesec instalada.',
-  //     //       //   type: 'updateNativeSec' | 'inviteOrganization';
-  //     //       //   message: string;
-  //     //       //   organizationId?: string;
-  //     //       // }]);
-  //     //     }
-  //   }, refreshTime * 1000);
-
-  //   return () => clearInterval(interval);
-  // }, [refreshTime, currentOrganization]);
 }

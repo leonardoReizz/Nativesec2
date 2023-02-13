@@ -1,7 +1,8 @@
+import { store } from '@/main/main';
+import { IInitialData, IKeys, IToken, IUser } from '@/main/types';
 import fs from 'fs';
 import md5 from 'md5';
-import { store } from '../../../../main';
-import { IInitialData, IKeys, IToken, IUser } from '../../../../types';
+
 import { KeyRepositoryAPI } from '../../repositories/key-repository-api';
 import { KeyRepositoryDatabase } from '../../repositories/key-repository-database';
 

@@ -1,9 +1,8 @@
+import { IPCTypes } from '@/types/IPCTypes';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { toastOptions } from 'renderer/utils/options/Toastify';
-import { IPCResponse } from '../useIPCSafeBox/types';
 import { useLoading } from '../useLoading';
 import { useNotifications } from '../useNotifications/useNotifications';
 import { useOrganization } from '../useOrganization/useOrganization';
@@ -94,7 +93,7 @@ export function useIpcOrganization() {
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.ADD_NEW_PARTICIPANT_ORGANIZATION_RESPONSE,
-      async (result: IPCResponse) => {
+      async (result: IIPCResponse) => {
         toast.dismiss('organizationChangeUser');
         if (result.message === 'ok') {
           refreshOrganizations();
@@ -188,7 +187,7 @@ export function useIpcOrganization() {
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.LIST_MY_INVITES_RESPONSE,
-      async (result: IPCResponse) => {
+      async (result: IIPCResponse) => {
         if (result.message === 'ok') {
           const notifications = window.electron.store.get(
             'organizationInvites'
@@ -217,7 +216,7 @@ export function useIpcOrganization() {
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
-      (result: IPCResponse) => {
+      (result: IIPCResponse) => {
         if (result.message === 'ok') {
           updateOrganizationsIcons(window.electron.store.get('iconeAll'));
           updateOrganizations(window.electron.store.get('organizations'));
@@ -234,7 +233,7 @@ export function useIpcOrganization() {
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.ACCEPT_ORGANIZATION_INVITE_RESPONSE,
-      async (result: IPCResponse) => {
+      async (result: IIPCResponse) => {
         if (result.message === 'ok') {
           toast.success('Convite aceito', {
             ...toastOptions,
@@ -256,7 +255,7 @@ export function useIpcOrganization() {
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.LEAVE_ORGANIZATION_RESPONSE,
-      async (result: IPCResponse) => {
+      async (result: IIPCResponse) => {
         if (result.message === 'ok') {
           toast.success('Você saiu da organizaçao', {
             ...toastOptions,

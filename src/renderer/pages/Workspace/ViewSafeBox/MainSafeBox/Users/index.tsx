@@ -60,7 +60,6 @@ export default function Users() {
   const { theme } = useUserConfig();
 
   useEffect(() => {
-    console.log(currentSafeBox);
     changeUsersParticipant(
       currentSafeBox
         ? JSON.parse(currentSafeBox.usuarios_leitura)

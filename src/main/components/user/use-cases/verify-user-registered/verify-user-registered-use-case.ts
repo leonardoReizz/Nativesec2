@@ -1,10 +1,9 @@
-import { KeyRepositoryDatabase } from '../../../keys/repositories/key-repository-database';
-import openpgp from '../../../../crypto/openpgp';
-import { KeyRepositoryAPI } from '../../../keys/repositories/key-repository-api';
-import { store } from '../../../../main';
-import { IToken, IUser } from '../../../../types';
-import { IVerifyUserRegisteredRequestDTO } from './verify-user-registered-request-dto';
+import { store } from '@/main/main';
+import { KeyRepositoryAPI } from '@/main/components/keys/repositories/key-repository-api';
+import { IToken, IUser } from '@/main/types';
+import openpgp from '@/main/crypto/openpgp';
 import { UserRepositoryAPI } from '../../repositories/user-repository-api';
+import { IVerifyUserRegisteredRequestDTO } from './verify-user-registered-request-dto';
 
 export class VerifyUserRegisteredUseCase {
   constructor(
@@ -42,7 +41,7 @@ export class VerifyUserRegisteredUseCase {
         });
 
         const createPublic = await this.keyRepositoryAPI.createPublicKey(
-          { publicKey: keys.publicKey, type: 'rsa' },
+          { chave: keys.publicKey, tipo: 'rsa' },
           authorization
         );
 
@@ -54,7 +53,7 @@ export class VerifyUserRegisteredUseCase {
 
         if (data?.savePrivateKey) {
           await this.keyRepositoryAPI.createPrivateKey(
-            { privateKey: keys.privateKey, type: 'rsa' },
+            { chave: keys.privateKey, tipo: 'rsa' },
             authorization
           );
         }

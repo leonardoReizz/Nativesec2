@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { RefreshAllSafeBoxesUseCase } from './refresh-all-safe-boxes-use-case';
 
 export class RefreshAllSafeBoxesController {

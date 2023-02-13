@@ -1,5 +1,5 @@
-import { IToken } from '../../../../types';
-import { store } from '../../../../main';
+import { store } from '@/main/main';
+import { IToken } from '@/main/types';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { IUpdateOrganizationRequestDTO } from './update-organization-request-dto';
 import { OrganizationIconRepositoryDatabase } from '../../repositories/organization-icon-database-repository';
@@ -49,13 +49,16 @@ export class UpdateOrganizationUseCase {
 
       const updateIcon = await this.organizationIconRepositoryDatabase.update({
         organizationId: data.organizationId,
-        icon: data.icon
-    });
+        icon: data.icon,
+      });
 
       if (updateIcon !== true && updateOrganization !== true) {
         throw new Error('Error update organization icon in database');
       }
-      await refreshOrganizations(this.organizationRepositoryDatabase, this.organizationIconRepositoryDatabase);
+      await refreshOrganizations(
+        this.organizationRepositoryDatabase,
+        this.organizationIconRepositoryDatabase
+      );
       return { message: 'ok' };
     }
     throw new Error('Erro api update organization');

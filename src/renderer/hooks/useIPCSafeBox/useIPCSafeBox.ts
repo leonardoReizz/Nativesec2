@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
+import { IPCTypes } from '@/types/IPCTypes';
 import { SafeBoxDatabaseModel } from 'main/components/safe-box/model/SafeBox';
 import { useEffect, useContext } from 'react';
 import { toast } from 'react-toastify';
-import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
 import { toastOptions } from 'renderer/utils/options/Toastify';
@@ -20,7 +20,7 @@ export function useIPCSafeBox() {
   } = useContext(SafeBoxesContext);
 
   const { changeSafeBoxMode } = useSafeBox();
-  const { updateLoading } = useLoading();
+  const { updateLoading, updateForceLoading } = useLoading();
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
@@ -50,7 +50,7 @@ export function useIPCSafeBox() {
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.CREATE_SAFE_BOX_RESPONSE,
-      (response: types.IPCResponse) => {
+      (response: IIPCResponse) => {
         if (response.message === 'ok') {
           updateSafeBoxes(window.electron.store.get('safebox'));
 
@@ -80,7 +80,7 @@ export function useIPCSafeBox() {
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.DELETE_SAFE_BOX_RESPONSE,
-      (response: types.IPCResponse) => {
+      (response: IIPCResponse) => {
         updateLoading(false);
         if (response.message === 'ok') {
           updateSafeBoxes(window.electron.store.get('safebox'));
@@ -129,7 +129,7 @@ export function useIPCSafeBox() {
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.LIST_SAFE_BOXES_RESPONSE,
-      (result: types.IPCResponse) => {
+      (result: IIPCResponse) => {
         changeSafeBoxesIsLoading(false);
         if (result.message === 'ok') {
           return refreshSafeBoxes();
@@ -170,21 +170,32 @@ export function useIPCSafeBox() {
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
+      IPCTypes.FORCE_REFRESH_SAFE_BOXES_RESPONSE,
+      (response: IIPCResponse) => {
+        updateForceLoading(false);
+        if (response.message === 'ok') {
+          refreshSafeBoxes();
+          return toast.success('Cofres atualizados', {
+            ...toastOptions,
+            toastId: 'forceUpdateSuccess',
+          });
+        }
+        return toast.error('Erro ao atualizar cofres', {
+          ...toastOptions,
+          toastId: 'errorForceUpdate',
+        });
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_SAFE_BOXES_RESPONSE,
-      (response: types.IPCResponse) => {
+      (response: IIPCResponse) => {
         if (response.message === 'ok') {
           if (response.data.safeBoxResponse) refreshSafeBoxes();
           return;
         }
-
-        // if (currentSafeBox !== undefined) {
-        //   const safeBoxes = window.electron.store.get('safeBox') as ISafeBox[];
-        //   const filter = safeBoxes.filter(
-        //     (safebox) => safebox._id === currentSafeBox._id
-        //   );
-        //   changeCurrentSafeBox(filter[0]);
-        //   return;
-        // }
 
         toast.error('Erro ao atualizar cofres', {
           ...toastOptions,

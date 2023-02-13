@@ -1,9 +1,10 @@
-import openpgp from 'main/crypto/openpgp';
-import { DEFAULT_TYPE } from 'main/database/types';
-import { store } from 'main/main';
-import { IToken, IUser } from 'main/types';
+import openpgp from '@/main/crypto/openpgp';
+import { DEFAULT_TYPE } from '@/main/crypto/types';
+import { store } from '@/main/main';
+import { IToken, IUser } from '@/main/types';
 import { KeyRepositoryAPI } from '../../repositories/key-repository-api';
 import { KeyRepositoryDatabase } from '../../repositories/key-repository-database';
+import { IGenerateParKeysRequestDTO } from './generate-par-key-request-dto';
 
 export class GenerateParKeysUseCase {
   constructor(
@@ -13,7 +14,8 @@ export class GenerateParKeysUseCase {
 
   async execute(data: IGenerateParKeysRequestDTO) {
     const { accessToken, tokenType } = store.get('token') as IToken;
-    const { savePrivateKey } = data.savePrivateKey;
+    const authorization = `${tokenType} ${accessToken}`;
+    const { savePrivateKey } = data;
     const user = store.get('user') as IUser;
 
     store.set('userConfig', { savePrivateKey });
@@ -31,12 +33,14 @@ export class GenerateParKeysUseCase {
     if (privateKey.length === 0 && publicKey.length === 0) {
       if (keys?.privateKey && keys?.publicKey) {
         const p1 = await this.keyRepositoryDatabase.createPrivateKey({
+          _id: '',
           email: user.myEmail,
           fullName: user.myFullName,
           privateKey: keys.privateKey,
           defaultType: DEFAULT_TYPE,
         });
         const p2 = await this.keyRepositoryDatabase.createPublicKey({
+          _id: '',
           email: user.myEmail,
           fullName: user.myFullName,
           publicKey: keys.publicKey,
@@ -47,18 +51,24 @@ export class GenerateParKeysUseCase {
           publicKey: keys.publicKey,
         });
 
-        await this.keyRepositoryAPI.createPublicKey({
-          authorization: `${tokenType} ${accessToken}`,
-          publicKey: keys.publicKey,
-        });
+        await this.keyRepositoryAPI.createPublicKey(
+          {
+            chave: keys.publicKey,
+            tipo: 'rsa',
+          },
+          authorization
+        );
         if (savePrivateKey) {
-          await this.keyRepositoryAPI.createPrivateKey({
-            authorization: `${tokenType} ${accessToken}`,
-            privateKey: keys.privateKey,
-          });
+          await this.keyRepositoryAPI.createPrivateKey(
+            {
+              chave: keys.privateKey,
+              tipo: 'rsa',
+            },
+            authorization
+          );
         }
         return {
-          response: IPCTypes.GENERATE_PAR_KEYS_RESPONSE,
+          message: 'ok',
           data: {
             data: {
               createPrivate: p1,
@@ -68,8 +78,6 @@ export class GenerateParKeysUseCase {
         };
       }
     }
-    return {
-      response: IPCTypes.GENERATE_PAR_KEYS_RESPONSE,
-    };
+    return { message: 'nok' };
   }
 }

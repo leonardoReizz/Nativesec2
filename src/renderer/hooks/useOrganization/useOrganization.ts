@@ -1,5 +1,5 @@
+import { IPCTypes } from '@/types/IPCTypes';
 import { useCallback, useContext, useState } from 'react';
-import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import * as types from './types';
 

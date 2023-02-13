@@ -1,11 +1,12 @@
+import openpgp from '@/main/crypto/openpgp';
+import { DEFAULT_TYPE } from '@/main/crypto/types';
+import { newDatabase, store } from '@/main/main';
+import { IInitialData, IKeys, IToken, IUser } from '@/main/types';
 import fs from 'fs';
 import md5 from 'md5';
-import { DEFAULT_TYPE } from '../../../../database/types';
-import { IInitialData, IKeys, IToken, IUser } from '../../../../types';
-import { newDatabase, store } from '../../../../main';
+
 import { KeyRepositoryAPI } from '../../repositories/key-repository-api';
 import { KeyRepositoryDatabase } from '../../repositories/key-repository-database';
-import openpgp from '../../../../crypto/openpgp';
 
 export class GetPrivateKeyUseCase {
   constructor(
@@ -36,6 +37,7 @@ export class GetPrivateKeyUseCase {
           apiGetPrivateKey.data?.msg.length > 0
         ) {
           await this.keyRepositoryDatabase.createPrivateKey({
+            _id: '',
             email: myEmail,
             fullName: myFullName,
             privateKey: apiGetPrivateKey.data.msg[0].chave,

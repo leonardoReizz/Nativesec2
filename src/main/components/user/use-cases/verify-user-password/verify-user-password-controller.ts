@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { VerifyUserPasswordUseCase } from './verify-user-password-use-case';
 
 export class VerifyUserPasswordController {

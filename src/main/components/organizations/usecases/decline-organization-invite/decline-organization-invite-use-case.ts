@@ -1,5 +1,5 @@
-import { IToken } from '../../../../types';
-import { store } from '../../../../main';
+import { store } from '@/main/main';
+import { IToken } from '@/main/types';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { IDeclineOrganizationInviteRequestDTO } from './decline-organization-invite-request-DTO';
 

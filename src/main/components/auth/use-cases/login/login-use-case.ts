@@ -1,5 +1,5 @@
-import { IUser } from '../../../../types';
-import { store } from '../../../../main';
+import { store } from '@/main/main';
+import { IUser } from '@/main/types';
 import { AuthRepositoryAPI } from '../../repositories/auth-repository-api';
 import { ILoginRequestDTO } from './login-request-dto';
 

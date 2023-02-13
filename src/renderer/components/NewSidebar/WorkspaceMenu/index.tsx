@@ -25,9 +25,10 @@ export function WorkspaceMenu() {
     searchValue,
     changeCurrentSafeBox,
     changeSafeBoxMode,
+    forceRefreshSafeBoxes,
   } = useSafeBox();
 
-  const { isParticipant } = useOrganization();
+  const { isParticipant, currentOrganization } = useOrganization();
 
   function handleCreateSafeBox() {
     changeCurrentSafeBox(undefined);
@@ -48,6 +49,12 @@ export function WorkspaceMenu() {
       !menuCreateRef.current?.contains(e.target as Node)
     ) {
       setMenuCreateIsOpen(false);
+    }
+  }
+
+  function handleRefreshSafeBoxes() {
+    if (currentOrganization) {
+      forceRefreshSafeBoxes(currentOrganization._id);
     }
   }
 
@@ -92,7 +99,7 @@ export function WorkspaceMenu() {
             <IoMdAdd />
             Novo Cofre
           </button>
-          <button type="button" disabled={isParticipant}>
+          <button type="button" onClick={handleRefreshSafeBoxes}>
             <IoReloadOutline />
             Atualizar Cofres
           </button>

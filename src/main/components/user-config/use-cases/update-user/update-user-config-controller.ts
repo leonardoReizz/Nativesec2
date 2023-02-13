@@ -1,6 +1,6 @@
-import { IUser } from '../../../../types';
-import { store } from '../../../../main';
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { store } from '@/main/main';
+import { IUser } from '@/main/types';
+import { IPCTypes } from '@/types/IPCTypes';
 import { UpdateUserConfigRequestDTO } from './update-user-config-request-dto';
 import { UpdateUserConfigUseCase } from './update-user-config-use-case';
 

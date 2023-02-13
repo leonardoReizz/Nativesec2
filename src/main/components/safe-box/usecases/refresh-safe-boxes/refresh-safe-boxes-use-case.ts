@@ -1,5 +1,5 @@
-import { IToken } from '../../../../types';
-import { store } from '../../../../main';
+import { store } from '@/main/main';
+import { IToken } from '@/main/types';
 import { refreshSafeBoxes } from '../../electron-store/store';
 import { SafeBoxAPIModel, SafeBoxDatabaseModel } from '../../model/SafeBox';
 import { SafeBoxRepositoryAPI } from '../../repositories/safe-box-repository-api';

@@ -1,4 +1,4 @@
-import { IPCTypes } from 'renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import * as types from './types';
 
 export function useAuth() {

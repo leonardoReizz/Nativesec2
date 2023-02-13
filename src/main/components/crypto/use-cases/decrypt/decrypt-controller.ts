@@ -1,7 +1,7 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
-import { IUser } from '../../../../types';
-import openpgp from '../../../../crypto/openpgp';
-import { store } from '../../../../main';
+import openpgp from '@/main/crypto/openpgp';
+import { store } from '@/main/main';
+import { IUser } from '@/main/types';
+import { IPCTypes } from '@/types/IPCTypes';
 
 interface decrypt {
   message: string;

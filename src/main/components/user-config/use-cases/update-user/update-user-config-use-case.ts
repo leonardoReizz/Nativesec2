@@ -1,7 +1,7 @@
-import { IUserConfig } from '../../../../../renderer/contexts/UserConfigContext/types';
-import { IKeys, IToken } from '../../../../types';
-import { KeyRepositoryAPI } from '../../../keys/repositories/key-repository-api';
-import { store } from '../../../../main';
+import { KeyRepositoryAPI } from '@/main/components/keys/repositories/key-repository-api';
+import { store } from '@/main/main';
+import { IKeys, IToken } from '@/main/types';
+import { IUserConfig } from '@/renderer/contexts/UserConfigContext/types';
 import { UserConfigRepositoryDatabase } from '../../repositories/user-config-repository-database';
 import { UpdateUserConfigRequestDTO } from './update-user-config-request-dto';
 
@@ -30,7 +30,7 @@ export class UpdateUserConfigUseCase {
           throw new Error('ERRO DELETE PRIVATE KEY -> API');
       } else {
         const createKeyAPI = await this.keyRepositoryAPI.createPrivateKey(
-          { privateKey, type: 'rsa' },
+          { chave: privateKey, tipo: 'rsa' },
           authorization
         );
 

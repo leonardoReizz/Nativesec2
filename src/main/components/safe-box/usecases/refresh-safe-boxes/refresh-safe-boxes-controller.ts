@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { IRefreshSafeBoxesRequestDTO } from './refresh-safe-boxes-request-dto';
 import { RefreshSafeBoxesUseCase } from './refresh-safe-boxes-use-case';
 

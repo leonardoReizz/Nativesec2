@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { ICreateUserRequestDTO } from './create-user-request-dto';
 import { CreateUserUseCase } from './create-user-use-case';
 

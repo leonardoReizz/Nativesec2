@@ -1,6 +1,6 @@
+import { IPCTypes } from '@/types/IPCTypes';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { IPCTypes } from 'renderer/@types/IPCTypes';
 import { toastOptions } from 'renderer/utils/options/Toastify';
 import * as types from './types';
 

@@ -1,11 +1,11 @@
-import { KeyRepositoryAPI } from 'main/components/keys/repositories/key-repository-api';
-import { IToken, IUser } from '../../../../types';
-import { store } from '../../../../main';
-import openpgp from '../../../../crypto/openpgp';
+import { KeyRepositoryAPI } from '@/main/components/keys/repositories/key-repository-api';
+import openpgp from '@/main/crypto/openpgp';
+import { store } from '@/main/main';
+import { IToken, IUser } from '@/main/types';
+import { refreshSafeBoxes } from '../../electron-store/store';
 import { SafeBoxRepositoryAPI } from '../../repositories/safe-box-repository-api';
 import { SafeBoxRepositoryDatabase } from '../../repositories/safe-box-repository-database';
 import { IAddUsersRequestDTO } from './add-users-request-dto';
-import { refreshSafeBoxes } from '../../electron-store/store';
 
 export class AddUsersUseCase {
   constructor(

@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { IVerifyUserRegisteredRequestDTO } from './verify-user-registered-request-dto';
 import { VerifyUserRegisteredUseCase } from './verify-user-registered-use-case';
 

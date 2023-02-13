@@ -1,12 +1,12 @@
-import { store } from '../../../../main';
-import { IToken } from '../../../../types';
-import openpgp from '../../../../crypto/openpgp';
+import { KeyRepositoryAPI } from '@/main/components/keys/repositories/key-repository-api';
+import openpgp from '@/main/crypto/openpgp';
+import { store } from '@/main/main';
+import { IToken } from '@/main/types';
 import { refreshSafeBoxes } from '../../electron-store/store';
+import { SafeBoxAPIModel } from '../../model/SafeBox';
 import { SafeBoxRepositoryAPI } from '../../repositories/safe-box-repository-api';
 import { SafeBoxRepositoryDatabase } from '../../repositories/safe-box-repository-database';
 import { IUpdateSafeBoxRequestDTO } from './update-safe-box-request-dto';
-import { KeyRepositoryAPI } from '../../../keys/repositories/key-repository-api';
-import { SafeBoxAPIModel } from '../../model/SafeBox';
 
 export class UpdateSafeBoxUseCase {
   constructor(

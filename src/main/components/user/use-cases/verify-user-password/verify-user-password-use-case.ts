@@ -1,7 +1,7 @@
+import { store } from '@/main/main';
+import { IInitialData, IUser } from '@/main/types';
 import fs from 'fs';
 import md5 from 'md5';
-import { IInitialData, IUser } from '../../../../types';
-import { store } from '../../../../main';
 import { UserRepositoryDatabase } from '../../repositories/user-repository-database';
 
 export class VerifyUserPasswordUseCase {

@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { GetPrivateKeyUseCase } from './get-private-key-use-case';
 
 export class GetPrivateKeyController {

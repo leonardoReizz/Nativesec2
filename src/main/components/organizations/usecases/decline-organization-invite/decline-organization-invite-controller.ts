@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { IDeclineOrganizationInviteRequestDTO } from './decline-organization-invite-request-DTO';
 import { DeclineOrganizationInviteUseCase } from './decline-organization-invite-use-case';
 

@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { GetPublicKeyUseCase } from './get-public-key-use-case';
 
 export class GetPublicKeyController {
@@ -8,7 +8,6 @@ export class GetPublicKeyController {
     try {
       const message = await this.getPublicKeyUseCase.execute();
 
-      console.log(message);
       return {
         response: IPCTypes.GET_PUBLIC_KEY_RESPONSE,
         data: {

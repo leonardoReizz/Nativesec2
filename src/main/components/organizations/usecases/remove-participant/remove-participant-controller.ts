@@ -1,4 +1,4 @@
-import { IPCTypes } from '../../../../../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import { IRemoveParticipantRequestDTO } from './remove-participant-request-dto';
 import { RemoveParticipantUseCase } from './remove-participant-use-case';
 

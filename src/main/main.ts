@@ -10,7 +10,7 @@ import log from 'electron-log';
 import fs from 'fs';
 import os from 'os';
 import Store from 'electron-store';
-import { IPCTypes } from '../renderer/@types/IPCTypes';
+import { IPCTypes } from '@/types/IPCTypes';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -127,7 +127,6 @@ ipcMain.on(
     const tokenDate = (store.get('token') as any)?.createdAt;
     if (tokenDate) {
       if (tokenDate + 1200 < currentDate) {
-        console.log('refresh');
         const result = await refreshTokenController.handle();
 
         if (result.data.message === 'authorizationError') {
@@ -210,8 +209,6 @@ const createWindow = async () => {
         : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
   });
-
-  console.log(__dirname);
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 

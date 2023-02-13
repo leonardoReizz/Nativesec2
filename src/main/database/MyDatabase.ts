@@ -7,8 +7,10 @@ import md5 from 'md5';
 import { IInitialData, IUser } from '../types';
 import { store } from '../main';
 import tables, { ITables } from './tables';
-import { DEFAULT_TYPE, ICreateDatabase, IInit } from './types';
+import { ICreateDatabase, IInit } from './types';
 import { versions } from './migrations/versions';
+
+const { version: currentVersion } = require('../../../package.json');
 
 export class Database {
   private database: sqlite3.Database | undefined;
@@ -30,7 +32,6 @@ export class Database {
       }
 
       this.database = db;
-
       return db;
     }
     await this.createPATH(PATH);
@@ -195,24 +196,27 @@ export class Database {
   // };
 
   migration = async () => {
-    const version: any = await this.database.all(
-      `SELECT * FROM database_version`
-    );
+    const version: any = await new Promise((resolve, reject) => {
+      this.database.all(`SELECT * FROM database_version`, (error, rows) => {
+        if (error) reject(error);
+        resolve(rows[0]);
+      });
+    });
 
-    if (version[0] === undefined) {
+    if (version === undefined) {
       await this.database.run(
         `INSERT INTO database_version (version) VALUES ('${version}') `
       );
     } else if (version[0] !== null) {
-      if (version[0].version !== version) {
+      if (version.version !== currentVersion) {
         await this.database.run(
-          `UPDATE database_version SET version = '${version}'`
+          `UPDATE database_version SET version = '${currentVersion}'`
         );
       }
     }
 
     // Update Database
-    const currentVersionNumber = Number(version[0].version.replaceAll('.', ''));
+    const currentVersionNumber = Number(version.version.replaceAll('.', ''));
     const listToUpdate = versions
       .map((v) => {
         if (v.number > currentVersionNumber) {
@@ -224,8 +228,8 @@ export class Database {
 
     if (listToUpdate.length > 0) {
       listToUpdate.map(async (v) => {
-        const updateDatase = require(`./versions/${v?.version}.ts`);
-        await updateDatase.update();
+        const updateDatase = require(`./migrations/versions/${v?.version}.ts`);
+        await updateDatase.update(this.database);
       });
     }
   };
