@@ -9,10 +9,10 @@ export function useRefresh() {
 
   useEffect(() => {
     const interval = setInterval(() => {
+      window.electron.ipcRenderer.sendMessage('useIPC', {
+        event: IPCTypes.LIST_MY_INVITES,
+      });
       if (currentOrganization) {
-        window.electron.ipcRenderer.sendMessage('useIPC', {
-          event: IPCTypes.LIST_MY_INVITES,
-        });
         window.electron.ipcRenderer.sendMessage('useIPC', {
           event: IPCTypes.REFRESH_SAFE_BOXES,
           data: {
@@ -23,6 +23,7 @@ export function useRefresh() {
           event: IPCTypes.REFRESH_ALL_ORGANIZATIONS,
           data: {
             organizationId: currentOrganization._id,
+            type: 'refresh',
           },
         });
       }

@@ -193,15 +193,18 @@ export function useIpcOrganization() {
             'organizationInvites'
           ) as types.IInvite[];
 
-          const notificionsWithId: any[] = notifications.map((notification) => {
-            return {
-              type: 'inviteOrganization',
-              message: `Você recebeu um convite para se juntar a organização: ${notification.nome} `,
-              id: notification._id.$oid,
-            };
-          });
+          const notificationsWithId: any[] = notifications.map(
+            (notification) => {
+              return {
+                type: 'inviteOrganization',
+                message: `Você recebeu um convite para se juntar a organização: ${notification.nome} `,
+                id: notification._id.$oid,
+              };
+            }
+          );
 
-          updateNotifications(notificionsWithId);
+          console.log(notificationsWithId);
+          updateNotifications(notificationsWithId);
           return;
         }
 
@@ -215,7 +218,7 @@ export function useIpcOrganization() {
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
-      IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
+      IPCTypes.REFRESH_ALL_ORGANIZATIONS_REFRESH_RESPONSE,
       (result: IIPCResponse) => {
         if (result.message === 'ok') {
           updateOrganizationsIcons(window.electron.store.get('iconeAll'));

@@ -14,10 +14,10 @@ export function useUserConfig() {
 
   const updateDatabaseUserConfig = useCallback(
     (data: UpdateDatabaseUserConfigProps, type?: string) => {
-      window.electron.ipcRenderer.sendMessage('useIPC', {
-        event: IPCTypes.UPDATE_USER_CONFIG,
-        data: { ...data, type },
-      });
+      // window.electron.ipcRenderer.sendMessage('useIPC', {
+      //   event: IPCTypes.UPDATE_USER_CONFIG,
+      //   data: { ...data, type },
+      // });
     },
     [userConfig]
   );

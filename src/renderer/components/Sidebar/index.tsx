@@ -21,9 +21,6 @@ export function Sidebar() {
 
   const changeOrganization = useCallback(
     (organizationId: string) => {
-      if (currentOrganization?._id === organizationId) {
-        return null;
-      }
       updateSafeBoxes([]);
       changeCurrentSafeBox(undefined);
       changeCurrentOrganization(organizationId);

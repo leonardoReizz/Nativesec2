@@ -22,7 +22,6 @@ export class RefreshTokenUseCase {
     if (token.status === 401) {
       store.set('keys', {});
       store.set('user', {});
-      store.set('userConfig', {});
       store.set('safebox', []);
       store.set('organizations', []);
       store.set('organizationInvites', []);

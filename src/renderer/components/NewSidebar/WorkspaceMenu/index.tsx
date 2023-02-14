@@ -5,14 +5,17 @@ import { useRef, useState } from 'react';
 import { IoReloadOutline } from 'react-icons/io5';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { CiSearch } from 'react-icons/ci';
-import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import { IoMdAdd } from 'react-icons/io';
 import { SafeBoxInfo } from 'renderer/components/SafeBox';
 import { Tooltip } from '@chakra-ui/react';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import styles from './styles.module.sass';
 
-export function WorkspaceMenu() {
+interface WorkspaceMenuProps {
+  closeSidebar: () => void;
+}
+
+export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
   const [menuCreateIsOpen, setMenuCreateIsOpen] = useState<boolean>(false);
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -31,6 +34,7 @@ export function WorkspaceMenu() {
   const { isParticipant, currentOrganization } = useOrganization();
 
   function handleCreateSafeBox() {
+    closeSidebar();
     changeCurrentSafeBox(undefined);
     changeSafeBoxMode('create');
   }
@@ -99,24 +103,28 @@ export function WorkspaceMenu() {
             <IoMdAdd />
             Novo Cofre
           </button>
-          <button type="button" onClick={handleRefreshSafeBoxes}>
+          <button
+            type="button"
+            onClick={handleRefreshSafeBoxes}
+            disabled={!currentOrganization}
+          >
             <IoReloadOutline />
             Atualizar Cofres
           </button>
-          <span />
-          <h4>Grupos</h4>
+          {/* <span /> */}
+          {/* <h4>Grupos</h4>
           <button type="button" disabled={isParticipant}>
             <IoMdAdd />
             Novo Grupo de Cofres
-          </button>
+          </button> */}
         </div>
       </div>
       <div className={styles.safeBoxes}>
-        <div className={styles.safeBox}>
+        {/* <div className={styles.safeBox}>
           <div className={styles.title}>
             <span>Grupo de Cofres</span>
           </div>
-        </div>
+        </div> */}
         <div className={styles.safeBox}>
           <div className={styles.title}>
             <span>Cofres</span>

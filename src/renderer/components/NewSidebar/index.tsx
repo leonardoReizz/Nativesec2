@@ -1,6 +1,6 @@
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi';
 import { FiMenu } from 'react-icons/fi';
 import { useLocation } from 'react-router-dom';
@@ -20,6 +20,10 @@ export function NewSidebar() {
     currentOrganizationIcon && currentOrganizationIcon.icone !== 'null'
       ? currentOrganizationIcon.icone
       : logoNativeSec;
+
+  const closeSidebar = useCallback(() => {
+    setIsOpenSidebar(false);
+  }, []);
   return (
     <>
       <header
@@ -62,7 +66,7 @@ export function NewSidebar() {
             pathname.includes('organizationSettings') ? (
               <WorkspaceSettingsMenu />
             ) : (
-              <WorkspaceMenu />
+              <WorkspaceMenu closeSidebar={closeSidebar} />
             )}
           </div>
         </div>

@@ -116,7 +116,6 @@ ipcMain.on(
     if (arg.event === IPCTypes.SESSION_EXPIRED) {
       store.set('keys', {});
       store.set('user', {});
-      store.set('userConfig', {});
       store.set('safebox', []);
       store.set('organizations', []);
       store.set('organizationInvites', []);

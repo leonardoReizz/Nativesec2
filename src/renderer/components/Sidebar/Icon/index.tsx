@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-unresolved
-import { useParams } from 'react-router-dom';
+import { useOrganization } from '@/renderer/hooks/useOrganization/useOrganization';
 import { IOrganization } from 'renderer/contexts/OrganizationsContext/types';
 import styles from './styles.module.sass';
 
@@ -10,11 +10,11 @@ interface IconProps {
 }
 
 export function Icon({ organization, icon, changeOrganization }: IconProps) {
-  const { id } = useParams();
+  const { currentOrganization } = useOrganization();
   return (
     <div
       className={`${styles.icon} ${
-        id === organization._id ? styles.selected : ''
+        currentOrganization?._id === organization._id ? styles.selected : ''
       }`}
     >
       <button

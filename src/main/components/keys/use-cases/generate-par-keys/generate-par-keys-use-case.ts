@@ -18,7 +18,6 @@ export class GenerateParKeysUseCase {
     const { savePrivateKey } = data;
     const user = store.get('user') as IUser;
 
-    store.set('userConfig', { savePrivateKey });
     const keys = await openpgp.generateParKeys({
       myEmail: user.email,
       myFullName: user.fullName,

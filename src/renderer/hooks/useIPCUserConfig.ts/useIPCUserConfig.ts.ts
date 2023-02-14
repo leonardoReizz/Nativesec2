@@ -7,24 +7,24 @@ import * as types from './types';
 
 export function useIPCUserConfig() {
   const { updateLoading } = useLoading();
-  useEffect(() => {
-    window.electron.ipcRenderer.on(
-      IPCTypes.UPDATE_USER_CONFIG_RESPONSE,
-      (result: types.IUpdateUserConfigResponse) => {
-        if (result.message === 'ok') {
-          toast.success('Configuração alterada', {
-            ...toastOptions,
-            toastId: 'changedSettings',
-          });
-        } else if (result.message !== 'ok, not callback') {
-          toast.error('Erro ao alterar configuração', {
-            ...toastOptions,
-            toastId: 'errorChangeSettings',
-          });
-        }
-      }
-    );
-  }, []);
+  // useEffect(() => {
+  //   window.electron.ipcRenderer.on(
+  //     IPCTypes.UPDATE_USER_CONFIG_RESPONSE,
+  //     (result: types.IUpdateUserConfigResponse) => {
+  //       if (result.message === 'ok') {
+  //         toast.success('Configuração alterada', {
+  //           ...toastOptions,
+  //           toastId: 'changedSettings',
+  //         });
+  //       } else if (result.message !== 'ok, not callback') {
+  //         toast.error('Erro ao alterar configuração', {
+  //           ...toastOptions,
+  //           toastId: 'errorChangeSettings',
+  //         });
+  //       }
+  //     }
+  //   );
+  // }, []);
 
   useEffect(() => {
     window.electron.ipcRenderer.on(

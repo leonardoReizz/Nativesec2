@@ -21,20 +21,19 @@ import { generateTokenController } from '../components/auth/use-cases/generateTo
 import { refreshTokenController } from '../components/auth/use-cases/refreshToken';
 import { loginController } from '../components/auth/use-cases/login';
 import { getPublicKeyController } from '../components/keys/use-cases/get-public-key';
-import { setUserConfigController } from '../components/user-config/use-cases/set-user-config';
 import { getUserController } from '../components/user/use-cases/getUser';
 import { updateOrganizationController } from '../components/organizations/usecases/update-organization';
 import { inviteParticipantController } from '../components/organizations/usecases/invite-participant';
 import { deleteOrganizationController } from '../components/organizations/usecases/delete-organization';
 import { createOrganizationController } from '../components/organizations/usecases/create-organization';
 import { deletePrivateKeyController } from '../components/keys/use-cases/delete-private-key';
-import { updateUserConfigController } from '../components/user-config/use-cases/update-user';
 import { decryptController } from '../components/crypto/use-cases/decrypt';
 import { updateSafeBoxController } from '../components/safe-box/usecases/edit-safe-box';
 import { deleteSafeBoxController } from '../components/safe-box/usecases/delete-safe-box';
 import { createSafeBoxController } from '../components/safe-box/usecases/create-safe-box';
 import { declineOrganizationInviteController } from '../components/organizations/usecases/decline-organization-invite';
 import { changeSafetyPhraseController } from '../components/user/use-cases/change-safety-phrase';
+import { updateUserController } from '../components/user/use-cases/update-user';
 
 export interface UseIPCData {
   id: string;
@@ -66,11 +65,9 @@ export async function useIpcActions(
     case IPCTypes.GET_PRIVATE_KEY:
       return getPrivateKeyController.handle();
     case IPCTypes.REFRESH_ALL_ORGANIZATIONS:
-      return refreshOrganizationController.execute();
+      return refreshOrganizationController.execute(arg.data);
     case IPCTypes.GET_PUBLIC_KEY:
       return getPublicKeyController.handle();
-    case IPCTypes.SET_USER_CONFIG:
-      return setUserConfigController.handle();
     case IPCTypes.INSERT_DATABASE_KEYS:
       return insertKeysController.handle();
     case IPCTypes.GET_USER:
@@ -91,8 +88,8 @@ export async function useIpcActions(
       return decryptController.handle(arg.data);
     case IPCTypes.UPDATE_SAFE_BOX:
       return updateSafeBoxController.handle(arg.data);
-    case IPCTypes.UPDATE_USER_CONFIG:
-      return updateUserConfigController.handle(arg.data);
+    case IPCTypes.UPDATE_USER:
+      return updateUserController.handle(arg.data);
     case IPCTypes.DELETE_PRIVATE_KEY:
       return deletePrivateKeyController.handle(arg.data);
     case IPCTypes.DELETE_ORGANIZATION:
