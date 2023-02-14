@@ -1,12 +1,10 @@
 import { ReactNode } from 'react';
 
-export type ThemeType = 'light' | 'dark';
-
 export interface IUserConfig {
-  lastOrganizationId: string;
+  lastOrganizationId: string | null;
   refreshTime: number;
   theme: ThemeType;
-  savePrivateKey: string;
+  savePrivateKey: string | null;
   email: string;
 }
 

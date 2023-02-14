@@ -1,9 +1,8 @@
-@use '../../../styles/_util' as *
-
+@use '../../../../styles/_util' as *
 
 .reactModalContent.dark
   background-color: $gray-900
-  h2
+  h3
     color: $white
   .buttons
     button
@@ -17,7 +16,6 @@
 
 .reactModalContent.light
   background-color: $white
-  h2
   .buttons
     button
       background-color: $gray-100
@@ -47,42 +45,31 @@
   @include flex(center, center ,column)
   width: 100%
   height: 100%
-  max-height: 450px
+  max-height: 500px
   max-width: 450px
   padding: 3rem
   position: relative
   border-radius: .5rem
-  gap: 1rem
+
 
   h3
     font-weight: 600
     text-align: center
-    font-size: 1.3rem
-
-    &:nth-child(2)
-      margin-top: -1.5rem
-      text-transform: none
+    font-size: 1.1rem
+    margin-bottom: 2rem
 
   form
-    @include flex(center, center ,column)
-    gap: 2rem
+    @include flex(center, center, column)
+    width: 100%
+    gap: 30px
 
-    .buttons
+    .actions
       @include flex(center, center ,column)
       width: 100%
-      gap: .5rem
-      margin-top: 5rem
+      gap: 1rem
+      margin-top: 1rem
 
-      button
-        @include flex(center, center ,center)
-        font-weight: 500
-        width: 300px
-        height: 45px
-        border-radius: $default-radius
-        transition: background-color 0.2s ease
-
-        &:last-child
-          background-color: $red-100
-
-
-
+      span
+        height: 16px
+        margin-top: -1rem
+        color: $red-100

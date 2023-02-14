@@ -13,10 +13,13 @@ export interface IInitialData {
 }
 
 export interface IUser {
-  myEmail: string;
-  myFullName: string;
+  fullName: string;
+  savePrivateKey: string | null;
+  refreshTime: number;
+  theme: ThemeType;
+  lastOrganizationId: string | null;
+  email: string;
   safetyPhrase: string;
-  disabled: boolean;
 }
 
 export interface IToken {
@@ -59,7 +62,9 @@ export interface IGenerateParKeys {
 
 export interface IKeys {
   privateKey: string;
+  privateKeyId: string;
   publicKey: string;
+  publicKeyId: string;
   savePrivateKey: boolean;
 }
 

@@ -13,12 +13,12 @@ export class VerifyUserRegisteredUseCase {
 
   async execute(data: IVerifyUserRegisteredRequestDTO) {
     const { accessToken, tokenType } = store.get('token') as IToken;
-    const { myEmail, safetyPhrase } = store.get('user') as IUser;
+    const { email, safetyPhrase } = store.get('user') as IUser;
 
     const authorization = `${tokenType} ${accessToken}`;
 
     const apiGetPublicKey = await this.keyRepositoryAPI.getPublicKey(
-      myEmail,
+      email,
       authorization
     );
 
@@ -35,32 +35,47 @@ export class VerifyUserRegisteredUseCase {
       });
 
       if (keys) {
-        store.set('keys', {
-          privateKey: keys.privateKey,
-          publicKey: keys.publicKey,
-        });
-
         const createPublic = await this.keyRepositoryAPI.createPublicKey(
           { chave: keys.publicKey, tipo: 'rsa' },
           authorization
         );
 
-        if (createPublic.status !== 200 || createPublic.data.status !== 'ok') {
+        if (createPublic.status !== 200 && createPublic.data.status !== 'ok')
           throw new Error(
-            `Erro create public key api: ${JSON.stringify(createPublic)}`
+            ` ERROR API CREATE PUBLIC KEY ${JSON.stringify(createPublic)}`
           );
-        }
+
+        let privateKeyId = '';
 
         if (data?.savePrivateKey) {
-          await this.keyRepositoryAPI.createPrivateKey(
-            { chave: keys.privateKey, tipo: 'rsa' },
-            authorization
-          );
+          const apiCreatePrivateKey =
+            await this.keyRepositoryAPI.createPrivateKey(
+              { chave: keys.privateKey, tipo: 'rsa' },
+              authorization
+            );
+
+          if (
+            apiCreatePrivateKey.status !== 200 ||
+            apiCreatePrivateKey.data.status !== 'ok'
+          )
+            throw new Error(
+              ` ERROR API CREATE PUBLIC KEY ${JSON.stringify(
+                apiCreatePrivateKey
+              )}`
+            );
+          privateKeyId = apiCreatePrivateKey.data.detail[0]._id.$oid;
         }
+
+        store.set('keys', {
+          privateKey: keys.privateKey,
+          privateKeyId,
+          publicKeyId: createPublic.data.detail[0]._id.$oid,
+          publicKey: keys.publicKey,
+        });
 
         return 'ok';
       }
-      return 'nok';
+      throw new Error('ERROR OPENPGP GENERATE PAR KEYS');
     }
     return 'ok';
   }

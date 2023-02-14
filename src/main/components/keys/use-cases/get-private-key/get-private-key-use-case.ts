@@ -15,21 +15,22 @@ export class GetPrivateKeyUseCase {
   ) {}
 
   async execute() {
-    const { myEmail, safetyPhrase, myFullName } = store.get('user') as IUser;
+    const { email, safetyPhrase, fullName } = store.get('user') as IUser;
     const { accessToken, tokenType } = store.get('token') as IToken;
     const { PATH } = store.get('initialData') as IInitialData;
     const authorization = `${tokenType} ${accessToken}`;
     let checkKey = '';
+    let privateKeyId = '';
 
-    if (fs.existsSync(`${PATH}/database/default/${md5(myEmail)}.sqlite3`)) {
-      const privKey = await this.keyRepositoryDatabase.getPrivateKey(myEmail);
+    if (fs.existsSync(`${PATH}/database/default/${md5(email)}.sqlite3`)) {
+      const privKey = await this.keyRepositoryDatabase.getPrivateKey(email);
 
       if (privKey instanceof Error)
         throw new Error('Error get private key database');
 
       if (privKey.length === 0) {
         const apiGetPrivateKey = await this.keyRepositoryAPI.getPrivateKey(
-          myEmail,
+          email,
           authorization
         );
         if (
@@ -37,18 +38,20 @@ export class GetPrivateKeyUseCase {
           apiGetPrivateKey.data?.msg.length > 0
         ) {
           await this.keyRepositoryDatabase.createPrivateKey({
-            _id: '',
-            email: myEmail,
-            fullName: myFullName,
+            _id: apiGetPrivateKey.data.msg[0]._id.$oid,
+            email,
+            fullName,
             privateKey: apiGetPrivateKey.data.msg[0].chave,
             defaultType: DEFAULT_TYPE,
           });
           checkKey = apiGetPrivateKey.data.msg[0].chave;
+          privateKeyId = apiGetPrivateKey.data.msg[0]._id.$oid;
         } else {
           return 'noKey';
         }
       } else {
         checkKey = privKey[0].private_key;
+        privateKeyId = privKey[0]._id;
       }
     } else {
       const keys = store.get('keys') as IKeys;
@@ -56,7 +59,7 @@ export class GetPrivateKeyUseCase {
         checkKey = keys.privateKey;
       } else {
         const apiGetPrivateKey = await this.keyRepositoryAPI.getPrivateKey(
-          myEmail,
+          email,
           authorization
         );
         if (
@@ -64,6 +67,7 @@ export class GetPrivateKeyUseCase {
           apiGetPrivateKey.data?.msg.length > 0
         ) {
           checkKey = apiGetPrivateKey.data.msg[0].chave;
+          privateKeyId = apiGetPrivateKey.data.msg[0]._id.$oid;
         } else {
           return 'noKey';
         }
@@ -79,6 +83,7 @@ export class GetPrivateKeyUseCase {
       store.set('keys', {
         ...(store.get('keys') as IKeys),
         privateKey: checkKey,
+        privateKeyId,
       });
 
       await newDatabase.build();

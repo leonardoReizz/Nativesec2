@@ -1,5 +1,6 @@
 export interface KeyRepositoryDatabaseInterface {
-  delete(email: string): Promise<boolean | Error>;
+  deletePrivateKeyByEmail(email: string): Promise<boolean | Error>;
+  deletePublicKeyByEmail(email: string): Promise<boolean | Error>;
   getPublicKey(email: string): Promise<any[] | Error>;
   getPrivateKey(email: string): Promise<any[] | Error>;
 }

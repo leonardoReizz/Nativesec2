@@ -19,54 +19,78 @@ export class GenerateParKeysUseCase {
     const user = store.get('user') as IUser;
 
     store.set('userConfig', { savePrivateKey });
-    const keys = await openpgp.generateParKeys(user);
+    const keys = await openpgp.generateParKeys({
+      myEmail: user.email,
+      myFullName: user.fullName,
+      safetyPhrase: user.safetyPhrase,
+    });
 
     const privateKey = await this.keyRepositoryDatabase.getPrivateKey(
-      user.myEmail
+      user.email
     );
-    const publicKey = await this.keyRepositoryDatabase.getPublicKey(
-      user.myEmail
-    );
+    const publicKey = await this.keyRepositoryDatabase.getPublicKey(user.email);
 
     if (privateKey instanceof Error || publicKey instanceof Error)
       throw new Error('Erro get keys in database');
     if (privateKey.length === 0 && publicKey.length === 0) {
       if (keys?.privateKey && keys?.publicKey) {
-        const p1 = await this.keyRepositoryDatabase.createPrivateKey({
-          _id: '',
-          email: user.myEmail,
-          fullName: user.myFullName,
-          privateKey: keys.privateKey,
-          defaultType: DEFAULT_TYPE,
-        });
-        const p2 = await this.keyRepositoryDatabase.createPublicKey({
-          _id: '',
-          email: user.myEmail,
-          fullName: user.myFullName,
-          publicKey: keys.publicKey,
-          defaultType: DEFAULT_TYPE,
-        });
-        store.set('keys', {
-          privateKey: keys.privateKey,
-          publicKey: keys.publicKey,
-        });
-
-        await this.keyRepositoryAPI.createPublicKey(
+        const apiCreatePublicKey = await this.keyRepositoryAPI.createPublicKey(
           {
             chave: keys.publicKey,
             tipo: 'rsa',
           },
           authorization
         );
-        if (savePrivateKey) {
-          await this.keyRepositoryAPI.createPrivateKey(
-            {
-              chave: keys.privateKey,
-              tipo: 'rsa',
-            },
-            authorization
-          );
+
+        if (
+          apiCreatePublicKey.status !== 200 ||
+          apiCreatePublicKey.data.status !== 'ok'
+        ) {
+          throw new Error(`ERROR API CREATE PUBLIC KEY ${apiCreatePublicKey}`);
         }
+
+        const p2 = await this.keyRepositoryDatabase.createPublicKey({
+          _id: apiCreatePublicKey.data.detail[0]._id.$oid,
+          email: user.email,
+          fullName: user.fullName,
+          publicKey: keys.publicKey,
+          defaultType: DEFAULT_TYPE,
+        });
+        let privateKeyId = '';
+        if (savePrivateKey) {
+          const apiCreatePrivateKey =
+            await this.keyRepositoryAPI.createPrivateKey(
+              {
+                chave: keys.privateKey,
+                tipo: 'rsa',
+              },
+              authorization
+            );
+
+          if (
+            apiCreatePrivateKey.status !== 200 ||
+            apiCreatePrivateKey.data.status !== 'ok'
+          ) {
+            throw new Error(
+              `ERROR API CREATE PRIVATE KEY ${apiCreatePrivateKey}`
+            );
+          }
+          privateKeyId = apiCreatePrivateKey.data.detail[0]._id.$oid;
+        }
+
+        const p1 = await this.keyRepositoryDatabase.createPrivateKey({
+          _id: privateKeyId,
+          email: user.email,
+          fullName: user.fullName,
+          privateKey: keys.privateKey,
+          defaultType: DEFAULT_TYPE,
+        });
+
+        store.set('keys', {
+          privateKey: keys.privateKey,
+          publicKey: keys.publicKey,
+        });
+
         return {
           message: 'ok',
           data: {

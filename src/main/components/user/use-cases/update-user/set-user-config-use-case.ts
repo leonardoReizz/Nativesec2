@@ -12,9 +12,9 @@ export class SetUserConfigUseCase {
   async execute() {
     const { accessToken, tokenType } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
-    const { myEmail } = store.get('user') as IUser;
+    const { email } = store.get('user') as IUser;
     const userConfig = await this.userConfigRepositoryDatabase.getUserConfig(
-      myEmail
+      email
     );
 
     if (userConfig instanceof Error)
@@ -22,7 +22,7 @@ export class SetUserConfigUseCase {
 
     if (userConfig.length === 0) {
       const apiGetPrivateKey = await this.keyRepositoryApi.getPrivateKey(
-        myEmail,
+        email,
         authorization
       );
 
@@ -36,7 +36,7 @@ export class SetUserConfigUseCase {
           });
 
           this.userConfigRepositoryDatabase.create({
-            email: myEmail,
+            email,
             savePrivateKey: 'true',
             refreshTime: 30,
             lastOrganizationId: '',
@@ -52,7 +52,7 @@ export class SetUserConfigUseCase {
           lastOrganizationId: '',
         });
         this.userConfigRepositoryDatabase.create({
-          email: myEmail,
+          email,
           savePrivateKey: 'false',
           refreshTime: 30,
           lastOrganizationId: '',

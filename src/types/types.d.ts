@@ -3,3 +3,5 @@ interface IIPCResponse {
   message: 'ok' | 'nok' | 'noKey' | 'invalidSafetyPhrase' | 'accountExists';
   type?: string;
 }
+
+type ThemeType = 'light' | 'dark';

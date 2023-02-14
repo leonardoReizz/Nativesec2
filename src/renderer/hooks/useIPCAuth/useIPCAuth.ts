@@ -1,3 +1,4 @@
+import { IUser } from '@/main/types';
 import { IPCTypes } from '@/types/IPCTypes';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -94,7 +95,7 @@ export function useIPCAuth({
             event: IPCTypes.GET_PRIVATE_KEY,
           });
         } else {
-          if (result.type === 'invalidPassword') {
+          if (result.message === 'invalidSafetyPhrase') {
             toast.error('Senha Invalida', {
               ...toastOptions,
               toastId: 'safety-invalid',
@@ -119,9 +120,6 @@ export function useIPCAuth({
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.UPDATE_DATABASE,
           });
-          // window.electron.ipcRenderer.sendMessage('useIPC', {
-          //   event: IPCTypes.GET_PUBLIC_KEY,
-          // });
         } else if (result.message === 'noKey') {
           changeAuthState('searchKey');
           changeLoadingState('false');
@@ -141,6 +139,7 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.UPDATE_DATABASE_RESPONSE,
       (response: IIPCResponse) => {
+        console.log(response, ' database');
         if (response.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.GET_PUBLIC_KEY,
@@ -160,6 +159,7 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_PUBLIC_KEY_RESPONSE,
       (result: IIPCResponse) => {
+        console.log(result, ' get pub key  response');
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.GET_USER,
@@ -176,6 +176,7 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_USER_RESPONSE,
       (result: IIPCResponse) => {
+        console.log(result, ' get user response');
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.INSERT_DATABASE_KEYS,
@@ -189,6 +190,7 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.INSERT_DATABASE_KEYS_RESPONSE,
       (result: IIPCResponse) => {
+        console.log(result, ' insert database keys response');
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.REFRESH_ALL_ORGANIZATIONS,
@@ -227,10 +229,30 @@ export function useIPCAuth({
       IPCTypes.REFRESH_ALL_SAFE_BOXES_RESPONSE,
       (result: IIPCResponse) => {
         if (result.message === 'ok') {
-          window.electron.ipcRenderer.sendMessage('useIPC', {
-            event: IPCTypes.SET_USER_CONFIG,
-          });
+          const user = window.electron.store.get('user') as IUser;
+          updateUserConfig({ ...user });
+          changeLoadingState('finalized');
+          updateRefreshTime(Number(user.refreshTime));
+          if (user.lastOrganizationId === null) {
+            navigate('/createOrganization');
+          } else {
+            const filter = organizations?.filter(
+              (org) => org._id === user.lastOrganizationId
+            );
 
+            if (filter.length > 0) {
+              window.electron.ipcRenderer.sendMessage('useIPC', {
+                event: IPCTypes.LIST_SAFE_BOXES,
+                data: {
+                  organizationId: user.lastOrganizationId,
+                },
+              });
+              changeCurrentOrganization(user.lastOrganizationId);
+              navigate(`/workspace/${user.lastOrganizationId}`);
+            } else {
+              navigate('/createOrganization');
+            }
+          }
           return;
         }
 
@@ -239,42 +261,6 @@ export function useIPCAuth({
           ...toastOptions,
           toastId: 'errorUpdateAllSafeBoxes',
         });
-      }
-    );
-  }, []);
-
-  useEffect(() => {
-    window.electron.ipcRenderer.on(
-      IPCTypes.SET_USER_CONFIG_RESPONSE,
-      (result: IIPCResponse) => {
-        if (result.message === 'ok') {
-          const userConfig = window.electron.store.get(
-            'userConfig'
-          ) as IUserConfig;
-          updateUserConfig({ ...userConfig });
-          changeLoadingState('finalized');
-          updateRefreshTime(Number(userConfig.refreshTime));
-          if (userConfig.lastOrganizationId === null) {
-            navigate('/createOrganization');
-          } else {
-            const filter = organizations?.filter(
-              (org) => org._id === userConfig.lastOrganizationId
-            );
-
-            if (filter.length > 0) {
-              window.electron.ipcRenderer.sendMessage('useIPC', {
-                event: IPCTypes.LIST_SAFE_BOXES,
-                data: {
-                  organizationId: userConfig.lastOrganizationId,
-                },
-              });
-              changeCurrentOrganization(userConfig.lastOrganizationId);
-              navigate(`/workspace/${userConfig.lastOrganizationId}`);
-            } else {
-              navigate('/createOrganization');
-            }
-          }
-        }
       }
     );
   }, [organizations]);

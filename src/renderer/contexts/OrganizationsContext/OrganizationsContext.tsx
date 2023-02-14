@@ -60,9 +60,9 @@ export function OrganizationsContextProvider({
 
   useEffect(() => {
     if (currentOrganization) {
-      const { myEmail } = window.electron.store.get('user');
+      const { email } = window.electron.store.get('user');
       const filter = JSON.parse(currentOrganization.participantes).filter(
-        (email: string) => email === myEmail
+        (user: string) => user === email
       );
 
       if (filter.length > 0) {

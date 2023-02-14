@@ -1,3 +1,4 @@
+/* eslint-disable no-new */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable global-require */
 import sqlite3 from '@journeyapps/sqlcipher';
@@ -20,11 +21,11 @@ export class Database {
   }
 
   build = async () => {
-    const { myEmail, safetyPhrase } = store.get('user') as IUser;
+    const { email, safetyPhrase } = store.get('user') as IUser;
     const { PATH } = store.get('initialData') as IInitialData;
 
-    if (fs.existsSync(`${PATH}/database/default/${md5(myEmail)}.sqlite3`)) {
-      const db = await this.createDatabase({ myEmail, PATH });
+    if (fs.existsSync(`${PATH}/database/default/${md5(email)}.sqlite3`)) {
+      const db = await this.createDatabase({ myEmail: email, PATH });
       const DB = await this.init({ db, secret: safetyPhrase });
 
       if (DB instanceof Error) {
@@ -35,11 +36,11 @@ export class Database {
       return db;
     }
     await this.createPATH(PATH);
-    const createDatabase = await this.createDatabase({ myEmail, PATH });
+    const createDatabase = await this.createDatabase({ myEmail: email, PATH });
     await this.init({ db: createDatabase, secret: safetyPhrase });
     await this.createTables(createDatabase);
 
-    const db = await this.createDatabase({ myEmail, PATH });
+    const db = await this.createDatabase({ myEmail: email, PATH });
     await this.init({ db, secret: safetyPhrase });
     this.database = db;
 
@@ -125,75 +126,14 @@ export class Database {
     );
   };
 
-  // ChangeSafetyPhrase = async ({ newSafetyPhrase, db }: IChangeSafetyPhrase) => {
-  //   try {
-  //     const { myEmail, myFullName, safetyPhrase } = store.get('user') as IUser;
-  //     const { privateKey } = store.get('keys') as IKeys;
-  //     const { tokenType, accessToken } = store.get('token') as IToken;
-  //     const privateKeyDecrypt = await openpgp.decryptKey({
-  //       privateKey: await openpgp.readPrivateKey({ armoredKey: privateKey }),
-  //       passphrase: safetyPhrase,
-  //     });
-
-  //     const newKey = await openpgp.reformatKey({
-  //       privateKey: privateKeyDecrypt,
-  //       userIDs: [{ email: myEmail.toLowerCase(), name: myFullName }],
-  //       passphrase: newSafetyPhrase,
-  //     });
-
-  //     const userConfig = store.get('userConfig') as IUserConfig;
-  //     if (Boolean(userConfig.savePrivateKey) === true) {
-  //       const result = await axios
-  //         .delete(`${api}/privatekey/`, {
-  //           data: {
-  //             chave: privateKey,
-  //             tipo: 'rsa',
-  //           },
-  //           headers: {
-  //             Authorization: `${tokenType} ${accessToken}`,
-  //           },
-  //         })
-  //         .then(async (result) => {
-  //           return true;
-  //         })
-  //         .catch((err) => {
-  //           return false;
-  //         });
-  //       if (result === true) {
-  //         axios
-  //           .post(
-  //             `${api}/privatekey/`,
-  //             {
-  //               chave: newKey.privateKey,
-  //               tipo: DEFAULT_TYPE,
-  //             },
-  //             {
-  //               headers: {
-  //                 Authorization: `${tokenType} ${accessToken}`,
-  //               },
-  //             }
-  //           )
-  //           .catch((err) => {
-  //             console.log('APIPrivateKeyError: ', err);
-  //             throw new Error('APIPrivateKeyError');
-  //           });
-  //       }
-  //     }
-  //     store.set('keys', {
-  //       ...(store.get('keys') as IKeys),
-  //       privateKey: newKey.privateKey,
-  //     });
-
-  //     db.all(
-  //       `UPDATE private_keys SET private_key ='${newKey.privateKey}' WHERE email = '${myEmail}'`
-  //     );
-
-  //     return true;
-  //   } catch (err) {
-  //     console.log(err);
-  //     return false;
-  //   }
-  // };
+  changeSafetyPhrase = async (newSafetyPhrase: string) => {
+    return new Promise((resolve, reject) => {
+      this.database.run(`PRAGMA rekey = '${newSafetyPhrase}'`, (error) => {
+        if (error) reject(error);
+        resolve(true);
+      });
+    });
+  };
 
   migration = async () => {
     const version: any = await new Promise((resolve, reject) => {
@@ -203,20 +143,40 @@ export class Database {
       });
     });
 
+    console.log(currentVersion);
+
     if (version === undefined) {
-      await this.database.run(
-        `INSERT INTO database_version (version) VALUES ('${version}') `
-      );
+      const insertVersion = new Promise((resolve, reject) => {
+        this.database.run(
+          `INSERT INTO database_version (version) VALUES ('${currentVersion}') `,
+          (error) => {
+            if (error) reject(error);
+            resolve(true);
+          }
+        );
+      });
+
+      if (insertVersion instanceof Error)
+        throw new Error('ERROR INSERT DATABASE VERSION');
     } else if (version[0] !== null) {
       if (version.version !== currentVersion) {
-        await this.database.run(
-          `UPDATE database_version SET version = '${currentVersion}'`
-        );
+        const updateDatabase = new Promise((resolve, reject) => {
+          this.database.run(
+            `UPDATE database_version SET version = '${currentVersion}'`,
+            (error) => {
+              if (error) reject(error);
+              resolve(true);
+            }
+          );
+        });
+
+        if (updateDatabase instanceof Error)
+          throw new Error('ERROR UPDATE DATABASE VERSION');
       }
     }
 
     // Update Database
-    const currentVersionNumber = Number(version.version.replaceAll('.', ''));
+    const currentVersionNumber = Number(currentVersion.replaceAll('.', ''));
     const listToUpdate = versions
       .map((v) => {
         if (v.number > currentVersionNumber) {
@@ -226,6 +186,7 @@ export class Database {
       })
       .filter((v) => v !== undefined);
 
+    console.log();
     if (listToUpdate.length > 0) {
       listToUpdate.map(async (v) => {
         const updateDatase = require(`./migrations/versions/${v?.version}.ts`);

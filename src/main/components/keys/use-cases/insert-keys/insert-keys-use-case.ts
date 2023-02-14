@@ -7,13 +7,14 @@ export class InsertKeysUseCase {
   constructor(private keyRepositoryDatabase: KeyRepositoryDatabase) {}
 
   async execute() {
-    const { myEmail, myFullName } = store.get('user') as IUser;
-    const { privateKey, publicKey } = store.get('keys') as IKeys;
+    const { email, fullName } = store.get('user') as IUser;
+    const { privateKey, privateKeyId, publicKeyId, publicKey } = store.get(
+      'keys'
+    ) as IKeys;
 
-    const dbPrivateKey = await this.keyRepositoryDatabase.getPrivateKey(
-      myEmail
-    );
-    const dbPublicKey = await this.keyRepositoryDatabase.getPublicKey(myEmail);
+    const dbPrivateKey = await this.keyRepositoryDatabase.getPrivateKey(email);
+
+    const dbPublicKey = await this.keyRepositoryDatabase.getPublicKey(email);
 
     if (dbPrivateKey instanceof Error)
       throw new Error('Error get private key in database');
@@ -22,21 +23,24 @@ export class InsertKeysUseCase {
 
     if (dbPrivateKey.length === 0 && dbPublicKey.length === 0) {
       const createPrivKey = await this.keyRepositoryDatabase.createPrivateKey({
-        _id: '',
-        email: myEmail.toLowerCase(),
-        fullName: myFullName,
+        _id: privateKeyId,
+        email: email.toLowerCase(),
+        fullName,
         privateKey,
         defaultType: DEFAULT_TYPE,
       });
 
+      console.log(publicKeyId, ' pub key');
+
       const createPubKey = await this.keyRepositoryDatabase.createPublicKey({
-        _id: '',
-        email: myEmail.toLowerCase(),
-        fullName: myFullName,
+        _id: publicKeyId,
+        email: email.toLowerCase(),
+        fullName,
         publicKey,
         defaultType: DEFAULT_TYPE,
       });
 
+      console.log(createPrivKey, createPubKey);
       if (createPrivKey === true && createPubKey === true) {
         return 'ok';
       }

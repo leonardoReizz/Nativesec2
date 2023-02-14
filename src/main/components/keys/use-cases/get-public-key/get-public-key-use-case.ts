@@ -13,45 +13,45 @@ export class GetPublicKeyUseCase {
   ) {}
 
   async execute() {
-    const { myEmail } = store.get('user') as IUser;
+    const { email } = store.get('user') as IUser;
     const { accessToken, tokenType } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
     const { PATH } = store.get('initialData') as IInitialData;
 
-    if (fs.existsSync(`${PATH}/database/default/${md5(myEmail)}.sqlite3`)) {
+    if (fs.existsSync(`${PATH}/database/default/${md5(email)}.sqlite3`)) {
       const getPublicKeyInDatabase =
-        await this.keyRepositoryDatabase.getPublicKey(myEmail);
+        await this.keyRepositoryDatabase.getPublicKey(email);
 
       if (getPublicKeyInDatabase instanceof Error)
         throw new Error('Error get public key in database');
 
       if (!getPublicKeyInDatabase[0]) {
         const apiGetPublicKey = await this.keyRepositoryAPI.getPublicKey(
-          myEmail,
+          email,
           authorization
         );
-        console.log(apiGetPublicKey);
         if (
           apiGetPublicKey.status === 200 &&
           apiGetPublicKey.data?.msg.length > 0
         ) {
           store.set('keys', {
             ...(store.get('keys') as IKeys),
-            publicKey: apiGetPublicKey.data?.msg[0].chave,
+            publicKey: apiGetPublicKey.data.msg[0].chave,
+            publicKeyId: apiGetPublicKey.data.msg[0]._id.$oid,
           });
           return 'ok';
         }
-        throw new Error('API error get public key');
       }
       store.set('keys', {
         ...(store.get('keys') as IKeys),
         publicKey: getPublicKeyInDatabase[0].public_key,
+        publicKeyId: getPublicKeyInDatabase[0]._id,
       });
       return 'ok';
     }
 
     const apiGetPublicKey = await this.keyRepositoryAPI.getPublicKey(
-      myEmail,
+      email,
       authorization
     );
 
@@ -61,10 +61,12 @@ export class GetPublicKeyUseCase {
     ) {
       store.set('keys', {
         ...(store.get('keys') as IKeys),
-        publicKey: apiGetPublicKey.data?.msg[0].chave,
+        publicKey: apiGetPublicKey.data.msg[0].chave,
+        publicKeyId: apiGetPublicKey.data.msg[0]._id.$oid,
       });
       return 'ok';
     }
-    throw new Error('API error get public key');
+
+    return 'nok';
   }
 }

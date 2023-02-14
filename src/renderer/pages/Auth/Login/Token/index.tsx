@@ -33,8 +33,8 @@ export function Token({ changeLoadingState }: TokenProps) {
   }
 
   function handleResendToken() {
-    const { myEmail } = window.electron.store.get('user');
-    AuthPassword({ email: myEmail });
+    const { email } = window.electron.store.get('user') as IUser;
+    AuthPassword({ email });
   }
 
   const formikProps = useFormik({

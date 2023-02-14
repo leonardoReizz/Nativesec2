@@ -13,3 +13,7 @@ export interface ICreatePublicKeyData {
   publicKey: string;
   defaultType: string;
 }
+
+export interface IDeletePrivateKeyData {
+  privateKeyId: string;
+}

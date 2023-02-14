@@ -12,7 +12,7 @@ export class GenerateTokenUseCase {
     if (result.status === 200 && result.data.status === 'ok') {
       store.set('user', {
         ...(store.get('user') as IUser),
-        myEmail: data.email,
+        email: data.email,
       });
       return 'ok';
     }

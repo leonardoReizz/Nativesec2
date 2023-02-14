@@ -40,7 +40,7 @@ export function WorkspaceSettings() {
 
   const { currentOrganization, currentOrganizationIcon, isParticipant } =
     useOrganization();
-  const { myEmail } = window.electron.store.get('user') as IUser;
+  const { email } = window.electron.store.get('user') as IUser;
   const { loading } = useLoading();
   const { theme } = useUserConfig();
 
@@ -196,7 +196,7 @@ export function WorkspaceSettings() {
               <Button
                 text="Sair do Workspace"
                 Icon={<IoExit />}
-                disabled={currentOrganization?.dono === myEmail}
+                disabled={currentOrganization?.dono === email}
                 theme={theme}
                 onClick={openVerifyModalLeave}
                 color="red"

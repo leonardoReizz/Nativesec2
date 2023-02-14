@@ -7,9 +7,9 @@ export class LoginUseCase {
   constructor(private authRepository: AuthRepositoryAPI) {}
 
   async execute(data: ILoginRequestDTO) {
-    const { myEmail } = store.get('user') as IUser;
+    const { email } = store.get('user') as IUser;
 
-    const result = await this.authRepository.login({ ...data, email: myEmail });
+    const result = await this.authRepository.login({ ...data, email });
 
     if (result.status === 200) {
       const currentDate = Math.floor(Date.now() / 1000);

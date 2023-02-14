@@ -3,7 +3,7 @@ import { APIResponse } from '../../../types';
 import { api } from '../../../util';
 import { IPrivateKeyAPIModel, IPublicKeyAPIModel } from '../model/Key';
 import { KeyRepositoryAPIInterface } from './key-repository-api-interface';
-import * as types from './types';
+import { IDeletePrivateKeyData } from './types';
 
 export class KeyRepositoryAPI implements KeyRepositoryAPIInterface {
   async createPrivateKey(
@@ -70,15 +70,17 @@ export class KeyRepositoryAPI implements KeyRepositoryAPIInterface {
       });
   }
 
-  async delete(data: KeyAPI, authorization: string): Promise<APIResponse> {
+  async delete(
+    data: IDeletePrivateKeyData,
+    authorization: string
+  ): Promise<APIResponse> {
     return axios
       .delete(`${api}/privatekey/`, {
-        data: {
-          chave: data.privateKey,
-          tipo: data.type,
-        },
         headers: {
           Authorization: authorization,
+        },
+        params: {
+          id: data.privateKeyId,
         },
       })
       .then((result) => {

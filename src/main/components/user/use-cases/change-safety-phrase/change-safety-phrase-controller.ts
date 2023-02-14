@@ -6,7 +6,7 @@ export class ChangeSafetyPhraseController {
   constructor(private changeSafetyPhraseUseCase: ChangeSafetyPhraseUseCase) {}
 
   async handle(data: IChangeSafetyPhraseRequestDTO) {
-    const message = await this.changeSafetyPhraseUseCase.execute();
+    const message = await this.changeSafetyPhraseUseCase.execute(data);
     try {
       return {
         response: IPCTypes.CHANGE_SAFETY_PHRASE_RESPONSE,

@@ -8,7 +8,6 @@ import * as Yup from 'yup';
 import ReactModal from 'react-modal';
 import { verirySafetyPhraseValues } from 'renderer/utils/Formik/VerifySafetyPhrase/verifySafetyPhrase';
 import { Button } from 'renderer/components/Buttons/Button';
-import { ThemeType } from 'renderer/contexts/UserConfigContext/types';
 import { Input } from '../../Inputs/Input';
 
 import styles from './styles.module.sass';

@@ -22,7 +22,7 @@ export function useSafeBox() {
 
   const isSafeBoxParticipant =
     JSON.parse(safeBoxContext.currentSafeBox?.usuarios_leitura || '[]').filter(
-      (user: string) => user === window.electron.store.get('user').myEmail
+      (user: string) => user === window.electron.store.get('user').email
     ).length > 0;
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export function useSafeBox() {
     formikIndex,
     currentOrganizationId,
   }: types.ICreateSafeBox) {
-    const { myEmail } = window.electron.store.get('user') as IUser;
+    const { email } = window.electron.store.get('user') as IUser;
     const size = formikProps.values.length;
     const content = [];
     for (let i = 1; i < size - 1; i += 1) {
@@ -64,9 +64,9 @@ export function useSafeBox() {
     let editUsersAdmin = usersAdmin;
     let editUsersParticipant = usersParticipant;
 
-    const filterUsersAdmin = usersAdmin.filter((user) => user === myEmail);
+    const filterUsersAdmin = usersAdmin.filter((user) => user === email);
     const filterUsersParticipant = usersParticipant.filter(
-      (user) => user === myEmail
+      (user) => user === email
     );
 
     let deletedUsersAdmin: string[] = JSON.parse(
@@ -111,10 +111,10 @@ export function useSafeBox() {
       filterUsersParticipant.length === 0 &&
       editUsersAdmin.length === 0
     ) {
-      deletedUsersAdmin = deletedUsersAdmin.filter((user) => user !== myEmail);
-      editUsersAdmin = [...editUsersAdmin, myEmail];
+      deletedUsersAdmin = deletedUsersAdmin.filter((user) => user !== email);
+      editUsersAdmin = [...editUsersAdmin, email];
       editUsersParticipant = editUsersParticipant.filter(
-        (email) => email !== myEmail
+        (user) => user !== email
       );
     }
 
@@ -206,29 +206,6 @@ export function useSafeBox() {
         },
       });
     }
-  }
-
-  function updateSafeBox(safeBox: types.IUpdateSafeBoxData) {
-    toast.loading('Atualizando Cofre', {
-      ...toastOptions,
-      toastId: 'updateSafeBox',
-    });
-    // window.electron.ipcRenderer.sendMessage('useIPC', {
-    //   event: IPCTypes.UPDATE_SAFE_BOX,
-    //   data: {
-    //     id: safeBox._id,
-    //     usuarios_leitura: safeBox.usuarios_leitura,
-    //     usuarios_escrita: safeBox.usuarios_escrita,
-    //     usuarios_leitura_deletado: safeBox.usuarios_leitura_deletado,
-    //     usuarios_escrita_deletado: safeBox.usuarios_escrita_deletado,
-    //     tipo: safeBox.tipo,
-    //     criptografia: 'rsa',
-    //     nome: safeBox.nome,
-    //     descricao: safeBox.descricao,
-    //     conteudo: safeBox.conteudo,
-    //     organizacao: safeBox.organizacao,
-    //   },
-    // });
   }
 
   function addSafeBoxUsers(safeBox: types.IUpdateSafeBoxData) {
@@ -404,7 +381,6 @@ export function useSafeBox() {
     filteredSafeBoxes,
     addSafeBoxUsers,
     changeCurrentSafeBox,
-    updateSafeBox,
     updateUsersSafeBox,
     forceRefreshSafeBoxes,
   };

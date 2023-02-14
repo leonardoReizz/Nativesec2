@@ -34,6 +34,7 @@ import { updateSafeBoxController } from '../components/safe-box/usecases/edit-sa
 import { deleteSafeBoxController } from '../components/safe-box/usecases/delete-safe-box';
 import { createSafeBoxController } from '../components/safe-box/usecases/create-safe-box';
 import { declineOrganizationInviteController } from '../components/organizations/usecases/decline-organization-invite';
+import { changeSafetyPhraseController } from '../components/user/use-cases/change-safety-phrase';
 
 export interface UseIPCData {
   id: string;
@@ -120,7 +121,8 @@ export async function useIpcActions(
       return forceRefreshSafeBoxesController.handle(arg.data);
     case IPCTypes.UPDATE_DATABASE:
       return updateDatabaseController.handle();
-
+    case IPCTypes.CHANGE_SAFETY_PHRASE:
+      return changeSafetyPhraseController.handle(arg.data);
     default:
       return {
         response: 'none',

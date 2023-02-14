@@ -3,12 +3,25 @@ import { KeyRepositoryDatabaseInterface } from './key-repository-database-interf
 import * as types from './types';
 
 export class KeyRepositoryDatabase implements KeyRepositoryDatabaseInterface {
-  async delete(email: string): Promise<boolean | Error> {
+  async deletePrivateKeyByEmail(email: string): Promise<boolean | Error> {
     const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
       db.run(`DELETE FROM private_keys WHERE email = '${email}'`, (error) => {
         if (error) {
-          console.log(error, ' ERRO DATABASE DELETE ORGANIZATION');
+          console.log(error, ' ERRO DATABASE DELETE PRIVATE KEY');
+          reject(error);
+        }
+        resolve(true);
+      });
+    });
+  }
+
+  async deletePublicKeyByEmail(email: string): Promise<boolean | Error> {
+    const db = newDatabase.getDatabase();
+    return new Promise((resolve, reject) => {
+      db.run(`DELETE FROM public_keys WHERE email = '${email}'`, (error) => {
+        if (error) {
+          console.log(error, ' ERRO DATABASE DELETE PUBLIC KEY');
           reject(error);
         }
         resolve(true);
@@ -103,7 +116,7 @@ export class KeyRepositoryDatabase implements KeyRepositoryDatabaseInterface {
           full_name,
           public_key,
           type
-        ) VALUES (]
+        ) VALUES (
           '${data._id}',
           '${data.email}',
           '${data.fullName}',

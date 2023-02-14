@@ -1,5 +1,5 @@
 import { store } from '@/main/main';
-import { IToken, IUser } from '@/main/types';
+import { IToken } from '@/main/types';
 import { UserRepositoryAPI } from '../../repositories/user-repository-api';
 
 export class GetUserUseCase {
@@ -13,8 +13,12 @@ export class GetUserUseCase {
 
     if (getUser.status === 200) {
       store.set('user', {
-        ...(store.get('user') as IUser),
-        myFullName: getUser.data?.full_name,
+        fullName: getUser.data.full_name,
+        savePrivateKey: getUser.data.savePrivateKey,
+        refreshTime: getUser.data.refreshTime,
+        theme: getUser.data.theme,
+        lastOrganizationId: getUser.data.lastOrganizationId,
+        email: getUser.data.email,
       });
 
       return 'ok';

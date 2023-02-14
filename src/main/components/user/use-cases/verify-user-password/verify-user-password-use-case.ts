@@ -8,14 +8,14 @@ export class VerifyUserPasswordUseCase {
   constructor(private userRepositoryDatabase: UserRepositoryDatabase) {}
 
   async execute() {
-    const { myEmail, safetyPhrase } = store.get('user') as IUser;
+    const { email, safetyPhrase } = store.get('user') as IUser;
     const { PATH } = store.get('initialData') as IInitialData;
 
-    if (fs.existsSync(`${PATH}/database/default/${md5(myEmail)}.sqlite3`)) {
+    if (fs.existsSync(`${PATH}/database/default/${md5(email)}.sqlite3`)) {
       const verify: any =
         await this.userRepositoryDatabase.verifyDatabasePassword({
           PATH,
-          myEmail,
+          myEmail: email,
           safetyPhrase,
         });
 
