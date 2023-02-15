@@ -194,6 +194,20 @@ export function useIPCSafeBox() {
       (response: IIPCResponse) => {
         if (response.message === 'ok') {
           if (response.data.safeBoxResponse) refreshSafeBoxes();
+
+          if (response.data.safeBoxId) {
+            const safeBoxes = window.electron.store.get(
+              'safebox'
+            ) as ISafeBox[];
+
+            const filter = safeBoxes.filter(
+              (safeBox) => safeBox._id === response.data.safeBoxId
+            );
+            console.log(filter[0], ' safe');
+            if (filter.length > 0) {
+              changeCurrentSafeBox(filter[0]);
+            }
+          }
           return;
         }
 

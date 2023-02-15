@@ -69,7 +69,7 @@ export function Form() {
 
   const setDecryptedMessage = useCallback((result: IDecryptResponse) => {
     if (result.copy) {
-      toast.success('Copiado', {
+      toast.info('Copiado', {
         ...toastOptions,
         toastId: 'copied',
         autoClose: 2000,

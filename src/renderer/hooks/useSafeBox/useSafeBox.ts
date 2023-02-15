@@ -162,6 +162,8 @@ export function useSafeBox() {
     }
   }
 
+  console.log(safeBoxContext.safeBoxMode);
+
   function updateUsersSafeBox(email: string, newType: 'admin' | 'participant') {
     toast.loading('Atualizando usuarios', {
       ...toastOptions,

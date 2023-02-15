@@ -15,7 +15,7 @@ export class RefreshOrganizationsController {
         response: data?.type
           ? IPCTypes.REFRESH_ALL_ORGANIZATIONS_REFRESH_RESPONSE
           : IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
-        data: message,
+        data: { ...message, data: { organizationId: data?.organizationId } },
       };
     } catch (error) {
       return {

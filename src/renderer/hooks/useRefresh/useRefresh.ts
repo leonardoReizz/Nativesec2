@@ -2,15 +2,17 @@ import { IToken } from '@/main/types';
 import { IPCTypes } from '@/types/IPCTypes';
 import { useEffect } from 'react';
 import { useOrganization } from '../useOrganization/useOrganization';
+import { useSafeBox } from '../useSafeBox/useSafeBox';
 import { useUserConfig } from '../useUserConfig/useUserConfig';
 
 export function useRefresh() {
   const { currentOrganization } = useOrganization();
+  const { currentSafeBox } = useSafeBox();
   const { refreshTime } = useUserConfig();
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if ((window.electron.store.get('token') as IToken).tokenType) {
+      if ((window.electron.store.get('token') as IToken)?.tokenType) {
         window.electron.ipcRenderer.sendMessage('useIPC', {
           event: IPCTypes.LIST_MY_INVITES,
         });
@@ -27,6 +29,7 @@ export function useRefresh() {
           event: IPCTypes.REFRESH_SAFE_BOXES,
           data: {
             organizationId: currentOrganization._id,
+            safeBoxId: currentSafeBox?._id,
           },
         });
       }

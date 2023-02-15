@@ -1,5 +1,7 @@
+import { toastOptions } from '@/renderer/utils/options/Toastify';
 import { IPCTypes } from '@/types/IPCTypes';
 import { useCallback, useContext, useState } from 'react';
+import { toast } from 'react-toastify';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { useLoading } from '../useLoading';
 import * as types from './types';
@@ -51,6 +53,7 @@ export function useOrganization() {
 
   const addNewParticipant = useCallback(
     (data: types.IAddNewParticipantData) => {
+      updateLoading(true);
       window.electron.ipcRenderer.sendMessage('useIPC', {
         event: IPCTypes.ADD_NEW_PARTICIPANT_ORGANIZATION,
         data,
@@ -61,6 +64,7 @@ export function useOrganization() {
 
   const updateOrganization = useCallback(
     (data: types.IUpdateOrganizationData) => {
+      updateLoading(true);
       window.electron.ipcRenderer.sendMessage('useIPC', {
         event: IPCTypes.UPDATE_ORGANIZATION,
         data,
@@ -84,6 +88,10 @@ export function useOrganization() {
   }, []);
 
   const acceptOrganizationInvite = useCallback((organizationId: any) => {
+    toast.loading('Aguarde', {
+      ...toastOptions,
+      toastId: 'acceptOrganizationInvite',
+    });
     window.electron.ipcRenderer.sendMessage('useIPC', {
       event: IPCTypes.ACCEPT_ORGANIZATION_INVITE,
       data: {

@@ -169,6 +169,7 @@ export function WorkspaceMembers() {
         isOpen={isOpenFieldModal}
         onRequestClose={handleCloseFieldModal}
         options={options}
+        loading={loading}
       />
       <div
         className={`${styles.members} ${
@@ -225,6 +226,7 @@ export function WorkspaceMembers() {
                         handleDropDown(option, 'participant', user)
                       }
                       className={styles.dropDown}
+                      disabled={isParticipant}
                     />
                   </div>
                 ))}

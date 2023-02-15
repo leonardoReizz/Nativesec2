@@ -5,6 +5,7 @@ import { OrganizationModelAPI } from '../../model/Organization';
 import { OrganizationIconRepositoryDatabase } from '../../repositories/organization-icon-database-repository';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { OrganizationRepositoryDatabase } from '../../repositories/organization-repository-database';
+import { IInvite } from '../list-organizations-invites/types';
 import { IAcceptOrganizationInviteRequestDTO } from './accept-organization-invite-request-dto';
 
 export class AcceptOrganizationInviteUseCase {
@@ -69,7 +70,7 @@ export class AcceptOrganizationInviteUseCase {
 
       store.set('organizationInvites', filterNotifications);
 
-      return { message: 'ok' };
+      return { message: 'ok', data: { organizationId: data.organizationId } };
     }
 
     throw new Error(

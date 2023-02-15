@@ -26,9 +26,7 @@ export function VerifyModal({
   }
 
   useEffect(() => {
-    if (!isLoading) {
-      onRequestClose();
-    }
+    if (!isLoading) onRequestClose();
   }, [isLoading]);
 
   return (

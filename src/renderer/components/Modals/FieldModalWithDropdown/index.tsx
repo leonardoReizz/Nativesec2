@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
 import { useFormik } from 'formik';
@@ -16,6 +17,7 @@ interface FieldModalWithDropdownProps {
   onRequestClose: () => void;
   callback: (user: any) => void;
   options: any;
+  loading?: boolean;
 }
 
 export function FieldModalWithDropdown({
@@ -25,6 +27,7 @@ export function FieldModalWithDropdown({
   callback,
   onRequestClose,
   options,
+  loading = false,
 }: FieldModalWithDropdownProps) {
   const { theme } = useUserConfig();
 
@@ -58,6 +61,10 @@ export function FieldModalWithDropdown({
     formikProps.resetForm();
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!loading) onRequestClose();
+  }, [loading]);
+
   return (
     <>
       <ReactModal
@@ -89,7 +96,12 @@ export function FieldModalWithDropdown({
             messageError={formikProps.errors.email}
           />
           <div className={styles.buttons}>
-            <Button text="Confirmar" type="submit" theme={theme} />
+            <Button
+              text="Confirmar"
+              type="submit"
+              theme={theme}
+              isLoading={loading}
+            />
             <Button
               text="Cancelar"
               type="submit"

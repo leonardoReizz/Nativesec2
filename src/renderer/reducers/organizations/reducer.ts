@@ -1,9 +1,10 @@
-import { produce } from 'immer';
 import {
   IOrganization,
   IOrganizationIcon,
   IOrganizationInvite,
-} from 'renderer/contexts/organizationsContext/types';
+} from '@/renderer/contexts/OrganizationsContext/types';
+import { produce } from 'immer';
+
 import { ActionType } from './actions';
 
 interface OrganizationsState {

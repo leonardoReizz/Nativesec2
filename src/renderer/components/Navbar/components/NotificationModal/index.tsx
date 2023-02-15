@@ -32,6 +32,7 @@ export function NotificationModal({
   function handleAcceptInvite(organizationId: string | undefined) {
     if (organizationId) {
       acceptOrganizationInvite(organizationId);
+      onRequestClose();
       setSelectedOrganizationId(undefined);
     }
   }

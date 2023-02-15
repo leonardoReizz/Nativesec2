@@ -1,5 +1,5 @@
+import { IOrganization } from '@/renderer/contexts/OrganizationsContext/types';
 import { IPCTypes } from '@/types/IPCTypes';
-import { windowsStore } from 'process';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -16,28 +16,25 @@ export function useIpcOrganization() {
     changeCurrentOrganization,
     currentOrganization,
     addNewParticipant,
-    updateOrganizationsIcons,
-    updateOrganizations,
   } = useOrganization();
   const { updateLoading } = useLoading();
-  const { refreshNotifications, notifications } = useNotifications();
+  const { refreshNotifications } = useNotifications();
   const navigate = useNavigate();
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
       IPCTypes.CREATE_ORGANIZATION_RESPONSE,
       async (result: types.CreateOrganizationResponse) => {
+        updateLoading(false);
         if (result.message === 'ok') {
           refreshOrganizations();
           navigate(`/workspace/${result.organization._id}`);
           changeCurrentOrganization(result.organization._id);
-          updateLoading(false);
           return toast.success('Organizacão Criado com Sucesso', {
             ...toastOptions,
             toastId: 'workspace-created',
           });
         }
-        updateLoading(false);
         return toast.error('Erro ao criar Workspace', {
           ...toastOptions,
           toastId: 'workspace-error',
@@ -74,6 +71,7 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.UPDATE_ORGANIZATION_RESPONSE,
       async (result: types.CreateOrganizationResponse) => {
+        updateLoading(false);
         if (result.message === 'ok') {
           refreshOrganizations();
           changeCurrentOrganization(currentOrganization?._id);
@@ -119,6 +117,7 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.REMOVE_INVITE_PARTICIPANT_RESPONSE,
       async (result: types.IRemoveParticipantResponse) => {
+        updateLoading(false);
         if (result.message === 'ok') {
           if (result.data.changeUser) {
             addNewParticipant({
@@ -132,9 +131,7 @@ export function useIpcOrganization() {
             return;
           }
           refreshOrganizations();
-          changeCurrentOrganization(undefined);
           changeCurrentOrganization(result.data.organizationId);
-          updateLoading(false);
           toast.success('Convite removido.', {
             ...toastOptions,
             toastId: 'removed-invite',
@@ -144,7 +141,6 @@ export function useIpcOrganization() {
             ...toastOptions,
             toastId: 'remove-invite-participant-error',
           });
-          updateLoading(false);
         }
       }
     );
@@ -230,8 +226,23 @@ export function useIpcOrganization() {
       (result: IIPCResponse) => {
         console.log(result, ' refresh orgs');
         if (result.message === 'ok') {
-          updateOrganizationsIcons(window.electron.store.get('iconeAll'));
-          updateOrganizations(window.electron.store.get('organizations'));
+          refreshOrganizations();
+
+          if (result.data.organizationId) {
+            const organizations = window.electron.store.get(
+              'organizations'
+            ) as IOrganization[];
+
+            const filter = organizations.filter(
+              (organization) => organization._id === result.data.organizationId
+            ).length;
+            if (!filter) {
+              changeCurrentOrganization(undefined);
+              navigate('/createOrganization');
+            } else {
+              changeCurrentOrganization(result.data.organizationId);
+            }
+          }
           return;
         }
         toast.error('Error ao atualizar as organizações', {
@@ -246,10 +257,12 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.ACCEPT_ORGANIZATION_INVITE_RESPONSE,
       async (result: IIPCResponse) => {
+        toast.dismiss('acceptOrganizationInvite');
         if (result.message === 'ok') {
           refreshOrganizations();
           updateLoading(false);
           refreshNotifications();
+          changeCurrentOrganization(result.data.organizationId);
           return toast.success('Convite aceito', {
             ...toastOptions,
             toastId: 'acceptedInvite',

@@ -189,6 +189,9 @@ export class RefreshSafeBoxesUseCase {
 
     await refreshSafeBoxes(data.organizationId);
 
-    return { message: 'ok', data: { safeBoxResponse } };
+    return {
+      message: 'ok',
+      data: { safeBoxResponse, safeBoxId: data.safeBoxId },
+    };
   }
 }

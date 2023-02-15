@@ -65,6 +65,7 @@ export function WorkspaceSettings() {
         onRequestClose={closeVerifyModal}
         theme={theme}
         callback={verifyRemoveImage}
+        isLoading={loading}
       />
 
       <VerifyModal

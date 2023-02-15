@@ -16,14 +16,10 @@ export function NewSidebar() {
   const [isOpenSidebar, setIsOpenSidebar] = useState<boolean>(true);
   const { currentOrganization, currentOrganizationIcon } = useOrganization();
 
-  const organizationIcon =
-    currentOrganizationIcon && currentOrganizationIcon.icone !== 'null'
-      ? currentOrganizationIcon.icone
-      : logoNativeSec;
-
   const closeSidebar = useCallback(() => {
     setIsOpenSidebar(false);
   }, []);
+
   return (
     <>
       <header
@@ -31,16 +27,28 @@ export function NewSidebar() {
           theme === 'dark' ? styles.dark : styles.light
         }`}
       >
-        {isOpenSidebar && (
+        {isOpenSidebar && currentOrganization && (
           <div className={styles.organization}>
-            <img src={organizationIcon} alt="" />
+            <img
+              src={
+                currentOrganizationIcon &&
+                currentOrganizationIcon.icone !== 'null'
+                  ? currentOrganizationIcon.icone
+                  : logoNativeSec
+              }
+              alt=""
+            />
             <h5>{currentOrganization?.nome}</h5>
           </div>
         )}
         <button
-          className={`${styles.openButton} ${isOpenSidebar ? styles.open : ''}`}
+          className={`${styles.openButton} ${
+            isOpenSidebar && currentOrganization ? styles.open : ''
+          }`}
           type="button"
-          onClick={() => setIsOpenSidebar((state) => !state)}
+          onClick={() =>
+            currentOrganization && setIsOpenSidebar((state) => !state)
+          }
         >
           {!isOpenSidebar && (
             <>
@@ -58,7 +66,7 @@ export function NewSidebar() {
       <div
         className={`${styles.newSidebar} ${
           theme === 'dark' ? styles.dark : styles.light
-        } ${isOpenSidebar ? styles.open : ''}`}
+        } ${isOpenSidebar && currentOrganization ? styles.open : ''}`}
       >
         <div className={styles.newSidebarContainer}>
           <div className={`${styles.safeBoxesContainer}`}>
