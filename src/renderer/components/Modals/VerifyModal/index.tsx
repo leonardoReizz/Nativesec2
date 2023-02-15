@@ -2,7 +2,6 @@
 import { useEffect } from 'react';
 import ReactModal from 'react-modal';
 import { Button } from 'renderer/components/Buttons/Button';
-import { ThemeType } from 'renderer/contexts/UserConfigContext/types';
 import styles from './styles.module.sass';
 
 interface VerifyModalProps {

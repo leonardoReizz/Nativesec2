@@ -49,7 +49,10 @@ export function Navbar() {
   return (
     <>
       <div className={styles.modal} ref={menuRef}>
-        <NotificationModal isOpen={isOpenNotificationModal} />
+        <NotificationModal
+          isOpen={isOpenNotificationModal}
+          onRequestClose={() => setIsOpenNotificationModal(false)}
+        />
       </div>
       <div
         className={`${styles.navbar} ${

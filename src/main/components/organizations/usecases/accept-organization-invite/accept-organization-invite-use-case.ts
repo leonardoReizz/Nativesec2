@@ -23,8 +23,8 @@ export class AcceptOrganizationInviteUseCase {
     });
 
     if (accept.status === 200 && accept.data.status === 'ok') {
-      const organization = accept.data.msg.detail[0] as OrganizationModelAPI;
-      await this.organizationRepositoryDatabase.update({
+      const organization = accept.data.detail[0] as OrganizationModelAPI;
+      await this.organizationRepositoryDatabase.create({
         ...organization,
         _id: organization._id.$oid,
         data_atualizacao: organization.data_atualizacao.$date,
@@ -36,6 +36,26 @@ export class AcceptOrganizationInviteUseCase {
         ),
         participantes: JSON.stringify(organization.participantes),
         administradores: JSON.stringify(organization.administradores),
+        data_criacao: organization.data_criacao.$date,
+      });
+
+      const organizationIcon = await this.organizationRepositoryAPI.getIcon(
+        organization._id.$oid,
+        authorization
+      );
+
+      if (
+        organizationIcon.status !== 200 ||
+        organizationIcon.data.status !== 'ok'
+      ) {
+        throw new Error(
+          `ERROR API GET ORGANIZATION ICON ${JSON.stringify(organizationIcon)}`
+        );
+      }
+
+      await this.organizationIconRepositoryDatabase.create({
+        organizationId: organization._id.$oid,
+        icon: organizationIcon.data.msg[0].icone,
       });
 
       await refreshOrganizations(
@@ -43,9 +63,17 @@ export class AcceptOrganizationInviteUseCase {
         this.organizationIconRepositoryDatabase
       );
 
+      const filterNotifications = (
+        store.get('organizationInvites') as IInvite[]
+      ).filter((notification) => notification._id.$oid !== data.organizationId);
+
+      store.set('organizationInvites', filterNotifications);
+
       return { message: 'ok' };
     }
 
-    throw new Error(`ERROR API ACCEPT ORGANIZATION INVITE: ${accept}`);
+    throw new Error(
+      `ERROR API ACCEPT ORGANIZATION INVITE: ${JSON.stringify(accept)}`
+    );
   }
 }

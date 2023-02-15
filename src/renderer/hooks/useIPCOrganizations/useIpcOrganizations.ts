@@ -1,4 +1,5 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import { windowsStore } from 'process';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -19,7 +20,7 @@ export function useIpcOrganization() {
     updateOrganizations,
   } = useOrganization();
   const { updateLoading } = useLoading();
-  const { updateNotifications } = useNotifications();
+  const { refreshNotifications, notifications } = useNotifications();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -151,6 +152,28 @@ export function useIpcOrganization() {
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
+      IPCTypes.DECLINE_ORGANIZATION_INVITE_RESPONSE,
+      async (result: IIPCResponse) => {
+        updateLoading(false);
+        console.log(result);
+        if (result.message === 'ok') {
+          refreshNotifications();
+
+          toast.success('Convite rejeitado.', {
+            ...toastOptions,
+            toastId: 'rejectInvite',
+          });
+        } else {
+          toast.error('Erro ao rejeitar convite.', {
+            ...toastOptions,
+            toastId: 'errorRejectInvite',
+          });
+        }
+      }
+    );
+  }, []);
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
       IPCTypes.REMOVE_PARTICIPANT_ORGANIZATION_RESPONSE,
       async (result: types.IRemoveParticipantResponse) => {
         if (result.message === 'ok') {
@@ -189,22 +212,7 @@ export function useIpcOrganization() {
       IPCTypes.LIST_MY_INVITES_RESPONSE,
       async (result: IIPCResponse) => {
         if (result.message === 'ok') {
-          const notifications = window.electron.store.get(
-            'organizationInvites'
-          ) as types.IInvite[];
-
-          const notificationsWithId: any[] = notifications.map(
-            (notification) => {
-              return {
-                type: 'inviteOrganization',
-                message: `Você recebeu um convite para se juntar a organização: ${notification.nome} `,
-                id: notification._id.$oid,
-              };
-            }
-          );
-
-          console.log(notificationsWithId);
-          updateNotifications(notificationsWithId);
+          refreshNotifications();
           return;
         }
 
@@ -238,16 +246,16 @@ export function useIpcOrganization() {
       IPCTypes.ACCEPT_ORGANIZATION_INVITE_RESPONSE,
       async (result: IIPCResponse) => {
         if (result.message === 'ok') {
-          toast.success('Convite aceito', {
+          refreshOrganizations();
+          updateLoading(false);
+          refreshNotifications();
+          return toast.success('Convite aceito', {
             ...toastOptions,
             toastId: 'acceptedInvite',
           });
-          updateLoading(false);
-          refreshOrganizations();
-          return;
         }
 
-        toast.error('Erro ao aceitar convite', {
+        return toast.error('Erro ao aceitar convite', {
           ...toastOptions,
           toastId: 'errorAcceptInvite',
         });

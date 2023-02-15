@@ -112,6 +112,30 @@ export class OrganizationRepositoryAPI implements IOrganizationRepositoryAPI {
       });
   }
 
+  async getIcon(organizationId: string, authorization: string) {
+    return axios
+      .get(`${api}/organizacao/icone`, {
+        headers: {
+          Authorization: authorization,
+        },
+        params: {
+          id: organizationId,
+        },
+      })
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        return {
+          status: error.response?.status,
+          data: error.response.statusText,
+        };
+      });
+  }
+
   async inviteAdmin(data: types.InviteAdminData): Promise<APIResponse> {
     return axios
       .post(

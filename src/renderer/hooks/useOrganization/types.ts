@@ -38,3 +38,7 @@ export interface IRemoveInvite {
 export interface ILeaveOrganizationData {
   organizationId: string;
 }
+
+export interface IDeclineInviteData {
+  organizationId: string;
+}

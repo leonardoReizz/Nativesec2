@@ -4,45 +4,68 @@ import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { IoMdClose, IoMdCheckmark } from 'react-icons/io';
 import { useNotifications } from 'renderer/hooks/useNotifications/useNotifications';
 import { VerifyModal } from 'renderer/components/Modals/VerifyModal';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { Tooltip } from '@chakra-ui/react';
+import { useLoading } from '@/renderer/hooks/useLoading';
 import styles from './styles.module.sass';
 
 interface NotificationModalProps {
   isOpen: boolean;
+  onRequestClose: () => void;
 }
 
-export function NotificationModal({ isOpen }: NotificationModalProps) {
+export function NotificationModal({
+  isOpen,
+  onRequestClose,
+}: NotificationModalProps) {
+  const { loading } = useLoading();
   const [isOpenVerifyModal, setIsOpenVerifyModal] = useState<boolean>(false);
+  const [selectedOrganizationId, setSelectedOrganizationId] =
+    useState<string>();
   const { theme } = useUserConfig();
   const { notifications } = useNotifications();
-  const { acceptOrganizationInvite } = useOrganization();
+  const { acceptOrganizationInvite, declineInvite } = useOrganization();
 
   function handleRestart() {}
 
   function handleAcceptInvite(organizationId: string | undefined) {
     if (organizationId) {
       acceptOrganizationInvite(organizationId);
+      setSelectedOrganizationId(undefined);
     }
   }
 
-  function handleDeclineInvite() {
-    setIsOpenVerifyModal(true);
+  function handleDeclineInvite(organizationId: string | undefined) {
+    if (organizationId) {
+      setSelectedOrganizationId(organizationId);
+      setIsOpenVerifyModal(true);
+    }
   }
 
   const closeVerifyModal = useCallback(() => {
     setIsOpenVerifyModal(false);
   }, []);
 
-  function declineInvite() {}
+  const callback = useCallback(() => {
+    if (selectedOrganizationId) {
+      declineInvite({ organizationId: selectedOrganizationId });
+      setSelectedOrganizationId(undefined);
+    }
+  }, [selectedOrganizationId]);
+
+  useEffect(() => {
+    if (!loading) onRequestClose();
+  }, [loading]);
+
   return (
     <>
       <VerifyModal
         isOpen={isOpenVerifyModal}
         onRequestClose={closeVerifyModal}
-        callback={declineInvite}
+        callback={callback}
         theme={theme}
+        isLoading={loading}
         title="Tem certeza que deseja recusar este convite?"
       />
       <div
@@ -76,7 +99,7 @@ export function NotificationModal({ isOpen }: NotificationModalProps) {
                           theme={theme}
                           color="red"
                           Icon={<IoMdClose />}
-                          onClick={handleDeclineInvite}
+                          onClick={() => handleDeclineInvite(notification.id)}
                         />
                       </div>
                     </Tooltip>

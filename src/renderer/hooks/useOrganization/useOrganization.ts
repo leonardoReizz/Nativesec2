@@ -1,12 +1,13 @@
 import { IPCTypes } from '@/types/IPCTypes';
 import { useCallback, useContext, useState } from 'react';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
+import { useLoading } from '../useLoading';
 import * as types from './types';
 
 export function useOrganization() {
   const [input, setInput] = useState<string>('');
   const organizationContext = useContext(OrganizationsContext);
-
+  const { updateLoading } = useLoading();
   const filteredGuestAdmin = JSON.parse(
     organizationContext.currentOrganization?.convidados_administradores || '[]'
   ).filter((user: string) => user.toLowerCase().includes(input));
@@ -91,10 +92,13 @@ export function useOrganization() {
     });
   }, []);
 
-  const declineInvite = useCallback((data: any) => {
+  const declineInvite = useCallback((data: types.IDeclineInviteData) => {
+    updateLoading(true);
     window.electron.ipcRenderer.sendMessage('useIPC', {
       event: IPCTypes.DECLINE_ORGANIZATION_INVITE,
-      data,
+      data: {
+        organizationId: data.organizationId,
+      },
     });
   }, []);
 
@@ -125,6 +129,7 @@ export function useOrganization() {
     filteredGuestParticipant,
     filteredAdmin,
     filteredParticipant,
+    declineInvite,
     input,
   };
 }
