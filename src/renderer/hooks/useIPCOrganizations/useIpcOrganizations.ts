@@ -228,6 +228,7 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_ORGANIZATIONS_REFRESH_RESPONSE,
       (result: IIPCResponse) => {
+        console.log(result, ' refresh orgs');
         if (result.message === 'ok') {
           updateOrganizationsIcons(window.electron.store.get('iconeAll'));
           updateOrganizations(window.electron.store.get('organizations'));
