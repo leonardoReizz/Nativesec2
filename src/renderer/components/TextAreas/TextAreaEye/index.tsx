@@ -3,14 +3,16 @@
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { GiPadlock, GiPadlockOpen } from 'react-icons/gi';
 import { SafeBoxModeType } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
-import { ThemeType } from 'renderer/contexts/UserConfigContext/types';
+import { Tooltip } from '@chakra-ui/react';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
+import { MdContentCopy } from 'react-icons/md';
 import styles from './styles.module.sass';
 
 interface InputProps {
   type?: React.HTMLInputTypeAttribute;
   text?: string;
   theme?: ThemeType;
+  copy?: () => void;
   placeholder?: string;
   autoComplete?: string;
   changeFormikDecrypt?: () => void;
@@ -43,6 +45,7 @@ export function TextAreaEye({
   encrypted,
   decrypt,
   value,
+  copy,
   changeFormikDecrypt,
   ...props
 }: InputProps) {
@@ -59,20 +62,49 @@ export function TextAreaEye({
 
       {viewEye && (
         <div className={styles.eye}>
-          {(mode === 'view' || mode === 'decrypted') && (
-            <button type="button" onClick={decrypt}>
-              {encrypted &&
-                (value?.startsWith('*****') ? (
+          {(mode === 'view' || mode === 'decrypted') &&
+            encrypted &&
+            (value?.startsWith('*****') ? (
+              <Tooltip hasArrow label="Visualizar" aria-label="A tooltip">
+                <button type="button" onClick={decrypt}>
                   <AiFillEye />
-                ) : (
+                </button>
+              </Tooltip>
+            ) : (
+              <Tooltip hasArrow label="Esconder" aria-label="A tooltip">
+                <button type="button" onClick={decrypt}>
                   <AiFillEyeInvisible />
-                ))}
-            </button>
-          )}
-          {mode === 'edit' && (
-            <button type="button" onClick={changeFormikDecrypt}>
-              {encrypted ? <GiPadlock /> : <GiPadlockOpen />}
-            </button>
+                </button>
+              </Tooltip>
+            ))}
+          {(mode === 'edit' || mode === 'create') &&
+            (encrypted ? (
+              <Tooltip hasArrow label="Descriptografar" aria-label="A tooltip">
+                <button
+                  type="button"
+                  onClick={changeFormikDecrypt}
+                  className={`${!encrypted ? styles.red : styles.green}`}
+                >
+                  <GiPadlock />
+                </button>
+              </Tooltip>
+            ) : (
+              <Tooltip hasArrow label="Criptografar" aria-label="A tooltip">
+                <button
+                  type="button"
+                  onClick={changeFormikDecrypt}
+                  className={`${!encrypted ? styles.red : ''}`}
+                >
+                  <GiPadlockOpen />
+                </button>
+              </Tooltip>
+            ))}
+          {mode === 'view' && (
+            <Tooltip hasArrow label="Copiar" aria-label="A tooltip">
+              <button type="button" onClick={copy}>
+                <MdContentCopy />
+              </button>
+            </Tooltip>
           )}
         </div>
       )}

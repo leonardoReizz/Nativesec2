@@ -36,5 +36,5 @@ export function useRefresh() {
     }, refreshTime * 1000);
 
     return () => clearInterval(interval);
-  }, [refreshTime, currentOrganization]);
+  }, [refreshTime, currentOrganization, currentSafeBox]);
 }

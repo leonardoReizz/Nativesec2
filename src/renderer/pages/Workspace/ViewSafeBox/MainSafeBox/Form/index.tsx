@@ -153,6 +153,14 @@ export function Form() {
                 text={item.text}
                 value={formikProps.values[index][`${item.name}`]}
                 viewEye
+                copy={() =>
+                  handleDecryptMessage({
+                    text: formikProps.values[index][`${item.name}`],
+                    itemName: String(item.name),
+                    position: `${index}.${item.name}`,
+                    copy: true,
+                  })
+                }
                 mode={safeBoxMode}
                 encrypted={formikProps.values[index].crypto}
                 changeFormikDecrypt={() => changeFormikDecrypt({ index })}

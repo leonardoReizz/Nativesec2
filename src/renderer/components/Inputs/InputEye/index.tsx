@@ -5,7 +5,6 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { GiPadlock, GiPadlockOpen } from 'react-icons/gi';
 import { MdContentCopy } from 'react-icons/md';
 import { SafeBoxModeType } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
-import { ThemeType } from 'renderer/contexts/UserConfigContext/types';
 import styles from './styles.module.sass';
 
 interface InputEyeProps {

@@ -1,4 +1,4 @@
 export interface IRefreshSafeBoxesRequestDTO {
   organizationId: string;
-  safeBoxId: string;
+  safeBoxId?: string;
 }

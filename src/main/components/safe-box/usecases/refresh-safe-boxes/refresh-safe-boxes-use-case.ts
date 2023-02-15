@@ -17,6 +17,7 @@ export class RefreshSafeBoxesUseCase {
     let safeBoxResponse = false;
     const { tokenType, accessToken } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
+    let listToDelete: SafeBoxAPIModel[] = [];
 
     const listDBSafeBox = await this.safeBoxRepositoryDatabase.list(
       data.organizationId
@@ -96,8 +97,7 @@ export class RefreshSafeBoxesUseCase {
         }
       );
     });
-
-    let listToDelete: SafeBoxAPIModel[] = [];
+    console.log(listAPISafeBoxesDeleted.data?.msg, ' api list');
 
     if (listAPISafeBoxesDeleted.data?.msg.length > 0) {
       listToDelete = listAPISafeBoxesDeleted?.data?.msg.filter(
@@ -177,6 +177,8 @@ export class RefreshSafeBoxesUseCase {
         })
       );
     }
+
+    console.log(listToDelete, ' list to delete');
 
     if (listToDelete.length > 0) {
       safeBoxResponse = true;

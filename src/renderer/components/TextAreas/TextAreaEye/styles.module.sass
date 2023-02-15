@@ -13,6 +13,10 @@
   textarea
     background-color: $gray-700
     color: $white
+  .eye
+    button
+      &:hover
+        background-color: $gray-800
 
 .textArea.light
   background-color: $gray-100
@@ -21,7 +25,18 @@
   textarea
     background-color: $gray-100
     color: $black
+  .eye
+    button
+      &:hover
+        background-color: $gray-400
 
+.red
+  svg
+    color: $red-100 !important
+
+.green
+  svg
+    color: $green-100 !important
 // --------------------------------------------------------------
 // -------------------------- SETTINGS --------------------------
 // --------------------------------------------------------------
@@ -53,13 +68,25 @@
     outline: none
     resize: none
 
+  
+
   .eye
+    @include flex(center, center, row)
+    gap: 8px
     position: absolute
     right: 20px
 
     button
+      @include flex(center, center, row)
       font-size: 1.3rem
       margin-top: 5px
+      height: 35px
+      width: 35px
+      border-radius: 100px
+
+      font-size: 1.1rem
+
+      transition: background-color 0.2s ease
 
 .notValid
   span
