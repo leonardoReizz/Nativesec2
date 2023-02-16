@@ -32,47 +32,52 @@ export class RemoveParticipantUseCase {
       });
     }
 
-    if (response.status === 200 && response.data.status === 'ok') {
-      const organizationUpdated = response.data
-        .detail[0] as OrganizationModelAPI;
-
-      const updateDatabase = await this.organizationRepositoryDatabase.update({
-        ...organizationUpdated,
-        _id: organizationUpdated._id.$oid,
-        data_atualizacao: organizationUpdated.data_atualizacao.$date,
-        convidados_administradores: JSON.stringify(
-          organizationUpdated.convidados_administradores
-        ),
-        convidados_participantes: JSON.stringify(
-          organizationUpdated.convidados_participantes
-        ),
-        participantes: JSON.stringify(organizationUpdated.participantes),
-        administradores: JSON.stringify(organizationUpdated.administradores),
-      });
-
-      if (updateDatabase instanceof Error) {
-        throw new Error(
-          `Error update organization in Remove Participant Use Case: ${updateDatabase}`
-        );
-      }
-
-      await refreshOrganizations(
-        this.organizationRepositoryDatabase,
-        this.organizationIconRepositoryDatabase
+    if (response.status !== 200 || response.data.status !== 'ok') {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API remove organization participant, ${JSON.stringify(
+          response
+        )}`
       );
-
-      return {
-        message: 'ok',
-        data: {
-          organizationId: organizationUpdated._id.$oid,
-          changeUser: data.changeUser,
-          email: data.email,
-          type: data.type,
-        },
-      };
     }
-    throw new Error(
-      `Error Remove Participant ${data.type} in API: ${response}`
+    const organizationUpdated = response.data.detail[0] as OrganizationModelAPI;
+
+    const updateDatabase = await this.organizationRepositoryDatabase.update({
+      ...organizationUpdated,
+      _id: organizationUpdated._id.$oid,
+      data_atualizacao: organizationUpdated.data_atualizacao.$date,
+      convidados_administradores: JSON.stringify(
+        organizationUpdated.convidados_administradores
+      ),
+      convidados_participantes: JSON.stringify(
+        organizationUpdated.convidados_participantes
+      ),
+      participantes: JSON.stringify(organizationUpdated.participantes),
+      administradores: JSON.stringify(organizationUpdated.administradores),
+    });
+
+    if (updateDatabase instanceof Error) {
+      throw new Error(
+        ` ${
+          (store.get('user') as any)?.email
+        }: Error update organization in Remove Participant Use Case: ${updateDatabase}`
+      );
+    }
+
+    await refreshOrganizations(
+      this.organizationRepositoryDatabase,
+      this.organizationIconRepositoryDatabase
     );
+
+    return {
+      message: 'ok',
+      data: {
+        organizationId: organizationUpdated._id.$oid,
+        changeUser: data.changeUser,
+        email: data.email,
+        type: data.type,
+      },
+    };
   }
 }

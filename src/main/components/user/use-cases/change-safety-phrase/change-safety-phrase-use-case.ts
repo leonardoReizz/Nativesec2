@@ -32,7 +32,14 @@ export class ChangeSafetyPhraseUseCase {
       privateKeyArmored: privateKey,
     });
 
-    if (!newPrivateKey) throw new Error('ERROR GENERATE NEW PRIVATE KEY');
+    if (!newPrivateKey)
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error OPENPGP generate new private key, ${JSON.stringify(
+          newPrivateKey
+        )}`
+      );
 
     if (Boolean(userConfig.savePrivateKey) === true) {
       /* Delete old private key in API */
@@ -43,7 +50,9 @@ export class ChangeSafetyPhraseUseCase {
 
       if (deleteKey.status !== 200 || deleteKey.data.status !== 'ok') {
         throw new Error(
-          `ERROR API SAVE PRIVATE KEY ${JSON.stringify(deleteKey)} `
+          `${
+            (store.get('user') as any)?.email
+          }: Error API delete private key, ${JSON.stringify(deleteKey)}`
         );
       }
 
@@ -58,7 +67,9 @@ export class ChangeSafetyPhraseUseCase {
 
       if (apiUpdateKey.status !== 200 || apiUpdateKey.data.status !== 'ok') {
         throw new Error(
-          `ERROR API SAVE PRIVATE KEY ${JSON.stringify(apiUpdateKey)} `
+          `${
+            (store.get('user') as any)?.email
+          }: Error API save private key, ${JSON.stringify(apiUpdateKey)}`
         );
       }
 
@@ -88,7 +99,11 @@ export class ChangeSafetyPhraseUseCase {
     const db = newDatabase.changeSafetyPhrase(data.newSecret);
 
     if (db instanceof Error)
-      throw new Error('ERROR CHANGE SAFETY PHRASE IN DATABASE');
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error DATABASE change safety phrase, ${JSON.stringify(db)}`
+      );
 
     return { message: 'ok' };
   }

@@ -1,5 +1,7 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
 import { DeleteOrganizationUseCase } from './delete-organization-use-case';
+import '@sentry/tracing';
 
 export class DeleteOrganizationController {
   constructor(private deleteOrganizationUseCase: DeleteOrganizationUseCase) {}
@@ -14,7 +16,7 @@ export class DeleteOrganizationController {
         data: message,
       };
     } catch (error) {
-      console.log(error);
+      Sentry.captureException(error);
       return {
         response: IPCTypes.DELETE_ORGANIZATION_RESPONSE,
         data: {

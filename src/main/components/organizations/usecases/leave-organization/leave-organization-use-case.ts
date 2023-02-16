@@ -22,18 +22,21 @@ export class LeaveOrganizationUseCase {
       authorization,
     });
 
-    if (leave.status === 200 && leave.data.status === 'ok') {
-      this.organizationRepositoryDatabase.delete(data.organizationId);
-      this.organizationIconRepositoryDatabase.delete(data.organizationId);
-
-      await refreshOrganizations(
-        this.organizationRepositoryDatabase,
-        this.organizationIconRepositoryDatabase
+    if (leave.status !== 200 || leave.data.status !== 'ok') {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API user leave organization, ${JSON.stringify(leave)}`
       );
-
-      return { message: 'ok' };
     }
+    this.organizationRepositoryDatabase.delete(data.organizationId);
+    this.organizationIconRepositoryDatabase.delete(data.organizationId);
 
-    throw new Error(`ERROR API USER LEAVE ORGANIZATION ${leave}`);
+    await refreshOrganizations(
+      this.organizationRepositoryDatabase,
+      this.organizationIconRepositoryDatabase
+    );
+
+    return { message: 'ok' };
   }
 }

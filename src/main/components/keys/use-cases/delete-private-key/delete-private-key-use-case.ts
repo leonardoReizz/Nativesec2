@@ -10,12 +10,16 @@ export class DeletePrivateKeyUseCase {
     const { accessToken, tokenType } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
     const deleteKeyAPI = await this.keyRepositoryAPI.delete(
-      data,
+      { privateKeyId: data.privateKeyId },
       authorization
     );
 
-    if (deleteKeyAPI.status !== 200 && deleteKeyAPI.data.status !== 'ok') {
-      throw new Error('Erro delete private key -> API');
+    if (deleteKeyAPI.status !== 200 || deleteKeyAPI.data.status !== 'ok') {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API delete private key, ${JSON.stringify(deleteKeyAPI)}`
+      );
     }
 
     return deleteKeyAPI;

@@ -1,3 +1,4 @@
+import { store } from '@/main/main';
 import { refreshOrganizations } from '../../electronstore/store';
 import { OrganizationIconRepositoryDatabase } from '../../repositories/organization-icon-database-repository';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
@@ -15,19 +16,22 @@ export class DeleteOrganizationUseCase {
       organizationId
     );
 
-    if (apiDelete.status === 200 && apiDelete.data.status === 'ok') {
-      await this.organizationRepositoryDatabase.delete(organizationId);
-
-      await this.organizationIconRepositoryDatabase.delete(organizationId);
-
-      await refreshOrganizations(
-        this.organizationRepositoryDatabase,
-        this.organizationIconRepositoryDatabase
+    if (apiDelete.status !== 200 || apiDelete.data.status !== 'ok') {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API delete organization, ${JSON.stringify(apiDelete)}`
       );
-
-      return { message: 'ok' };
     }
+    await this.organizationRepositoryDatabase.delete(organizationId);
 
-    throw new Error('Error delete organization -> API ERROR');
+    await this.organizationIconRepositoryDatabase.delete(organizationId);
+
+    await refreshOrganizations(
+      this.organizationRepositoryDatabase,
+      this.organizationIconRepositoryDatabase
+    );
+
+    return { message: 'ok' };
   }
 }

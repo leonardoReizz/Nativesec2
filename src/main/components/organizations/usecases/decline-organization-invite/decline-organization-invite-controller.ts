@@ -1,6 +1,8 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
 import { IDeclineOrganizationInviteRequestDTO } from './decline-organization-invite-request-DTO';
 import { DeclineOrganizationInviteUseCase } from './decline-organization-invite-use-case';
+import '@sentry/tracing';
 
 export class DeclineOrganizationInviteController {
   constructor(
@@ -15,6 +17,8 @@ export class DeclineOrganizationInviteController {
         data: message,
       };
     } catch (error) {
+      Sentry.captureException(error);
+
       return {
         response: IPCTypes.DECLINE_ORGANIZATION_INVITE_RESPONSE,
         data: {

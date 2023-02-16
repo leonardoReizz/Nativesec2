@@ -15,16 +15,19 @@ export class DeclineOrganizationInviteUseCase {
       authorization,
     });
 
-    if (decline.status === 200 && decline.data.status === 'ok') {
-      const filterNotifications = (
-        store.get('organizationInvites') as IInvite[]
-      ).filter((notification) => notification._id.$oid !== data.organizationId);
-
-      store.set('organizationInvites', filterNotifications);
-
-      return { message: 'ok' };
+    if (decline.status !== 200 || decline.data.status !== 'ok') {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API decline organization invite, ${JSON.stringify(decline)}`
+      );
     }
+    const filterNotifications = (
+      store.get('organizationInvites') as IInvite[]
+    ).filter((notification) => notification._id.$oid !== data.organizationId);
 
-    throw new Error(`ERROR API DECLINE ORGANIZATION INVITE ${decline}`);
+    store.set('organizationInvites', filterNotifications);
+
+    return { message: 'ok' };
   }
 }

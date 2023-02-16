@@ -18,31 +18,38 @@ export class RefreshAllSafeBoxesUseCase {
     );
 
     if (
-      listOrganizations.status === 200 &&
-      listOrganizations.data.status === 'ok'
+      listOrganizations.status !== 200 ||
+      listOrganizations.data.status !== 'ok'
     ) {
-      const organizations = listOrganizations.data
-        .msg as OrganizationModelAPI[];
-
-      await Promise.all(
-        organizations.map(async (organization) => {
-          const response = await this.refreshSafeBoxesUseCase.execute(
-            {
-              organizationId: organization._id.$oid,
-            },
-            1
-          );
-
-          if (response.message !== 'ok')
-            throw new Error('ERRO REFRESH SAFE BOX USE CASE');
-        })
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API list my organizations -> refresh all safe boxes, ${JSON.stringify(
+          listOrganizations
+        )}`
       );
-
-      return { message: 'ok' };
     }
 
-    throw new Error(
-      'ERROR API LIST MY ORGANIZATIONS -> REFRESH ALL SAFE BOXES '
+    const organizations = listOrganizations.data.msg as OrganizationModelAPI[];
+
+    await Promise.all(
+      organizations.map(async (organization) => {
+        const response = await this.refreshSafeBoxesUseCase.execute(
+          {
+            organizationId: organization._id.$oid,
+          },
+          1
+        );
+
+        if (response.message !== 'ok')
+          throw new Error(
+            `${
+              (store.get('user') as any)?.email
+            }: Error refresh safe box use case , ${JSON.stringify(response)}`
+          );
+      })
     );
+
+    return { message: 'ok' };
   }
 }

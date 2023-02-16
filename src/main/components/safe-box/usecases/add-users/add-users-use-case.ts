@@ -104,31 +104,34 @@ export class AddUsersUseCase {
       authorization
     );
 
-    if (apiUpdate.status === 200 && apiUpdate.data.status === 'ok') {
-      await this.safeBoxRepositoryDatabase.update({
-        ...data,
-        _id: apiUpdate.data.detail[0]._id.$oid,
-        conteudo: JSON.stringify(newContent),
-        data_atualizacao: apiUpdate.data.detail[0].data_atualizacao.$date,
-        usuarios_escrita: JSON.stringify(
-          apiUpdate.data.detail[0].usuarios_escrita
-        ),
-        usuarios_leitura: JSON.stringify(
-          apiUpdate.data.detail[0].usuarios_leitura
-        ),
-        usuarios_escrita_deletado: JSON.stringify(
-          apiUpdate.data.detail[0].usuarios_escrita_deletado
-        ),
-        usuarios_leitura_deletado: JSON.stringify(
-          apiUpdate.data.detail[0].usuarios_leitura_deletado
-        ),
-        anexos: JSON.stringify([]),
-      });
-      await refreshSafeBoxes(data.organizacao);
-
-      return { message: 'ok', data: { safeBoxId: data._id } };
+    if (apiUpdate.status !== 200 || apiUpdate.data.status !== 'ok') {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API update safe box, ${JSON.stringify(apiUpdate)}`
+      );
     }
+    await this.safeBoxRepositoryDatabase.update({
+      ...data,
+      _id: apiUpdate.data.detail[0]._id.$oid,
+      conteudo: JSON.stringify(newContent),
+      data_atualizacao: apiUpdate.data.detail[0].data_atualizacao.$date,
+      usuarios_escrita: JSON.stringify(
+        apiUpdate.data.detail[0].usuarios_escrita
+      ),
+      usuarios_leitura: JSON.stringify(
+        apiUpdate.data.detail[0].usuarios_leitura
+      ),
+      usuarios_escrita_deletado: JSON.stringify(
+        apiUpdate.data.detail[0].usuarios_escrita_deletado
+      ),
+      usuarios_leitura_deletado: JSON.stringify(
+        apiUpdate.data.detail[0].usuarios_leitura_deletado
+      ),
+      anexos: JSON.stringify([]),
+    });
+    await refreshSafeBoxes(data.organizacao);
 
-    throw new Error('nok');
+    return { message: 'ok', data: { safeBoxId: data._id } };
   }
 }

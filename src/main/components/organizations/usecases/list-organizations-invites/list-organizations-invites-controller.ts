@@ -1,5 +1,7 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
 import { ListOrganizationsInvitesUseCase } from './list-organizations-invites-use-case';
+import '@sentry/tracing';
 
 export class ListOrganizationsInvitesController {
   constructor(
@@ -15,7 +17,7 @@ export class ListOrganizationsInvitesController {
         data: message,
       };
     } catch (error) {
-      console.log(error);
+      Sentry.captureException(error);
       return {
         response: IPCTypes.LIST_MY_INVITES_RESPONSE,
         data: {

@@ -29,8 +29,19 @@ export class GenerateParKeysUseCase {
     );
     const publicKey = await this.keyRepositoryDatabase.getPublicKey(user.email);
 
-    if (privateKey instanceof Error || publicKey instanceof Error)
-      throw new Error('Erro get keys in database');
+    if (privateKey instanceof Error)
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error DATABASE get private key, ${JSON.stringify(privateKey)}`
+      );
+    if (publicKey instanceof Error)
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error DATABASE get public Key, ${JSON.stringify(publicKey)}`
+      );
+
     if (privateKey.length === 0 && publicKey.length === 0) {
       if (keys?.privateKey && keys?.publicKey) {
         const apiCreatePublicKey = await this.keyRepositoryAPI.createPublicKey(
@@ -45,7 +56,13 @@ export class GenerateParKeysUseCase {
           apiCreatePublicKey.status !== 200 ||
           apiCreatePublicKey.data.status !== 'ok'
         ) {
-          throw new Error(`ERROR API CREATE PUBLIC KEY ${apiCreatePublicKey}`);
+          throw new Error(
+            `${
+              (store.get('user') as any)?.email
+            }: Error API create public key safebox, ${JSON.stringify(
+              apiCreatePublicKey
+            )}`
+          );
         }
 
         const p2 = await this.keyRepositoryDatabase.createPublicKey({
@@ -71,7 +88,11 @@ export class GenerateParKeysUseCase {
             apiCreatePrivateKey.data.status !== 'ok'
           ) {
             throw new Error(
-              `ERROR API CREATE PRIVATE KEY ${apiCreatePrivateKey}`
+              `${
+                (store.get('user') as any)?.email
+              }: Error API create private key, ${JSON.stringify(
+                apiCreatePrivateKey
+              )}`
             );
           }
           privateKeyId = apiCreatePrivateKey.data.detail[0]._id.$oid;

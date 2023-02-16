@@ -37,14 +37,14 @@ export function useSafeBox() {
     }
   }, [safeBoxContext.safeBoxMode]);
 
-  useEffect(() => {
-    if (
-      safeBoxContext.safeBoxMode === 'create' &&
-      !safeBoxContext.currentSafeBox
-    ) {
-      safeBoxContext.changeSafeBoxMode('view');
-    }
-  }, [currentOrganization]);
+  // useEffect(() => {
+  //   if (
+  //     safeBoxContext.safeBoxMode === 'create' &&
+  //     !safeBoxContext.currentSafeBox
+  //   ) {
+  //     safeBoxContext.changeSafeBoxMode('view');
+  //   }
+  // }, [currentOrganization]);
 
   const filteredSafeBoxes = safeBoxContext.safeBoxes?.filter(
     (safebox) =>

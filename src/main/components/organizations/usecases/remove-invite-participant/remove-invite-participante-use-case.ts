@@ -32,40 +32,43 @@ export class RemoveInviteParticipantUseCase {
       });
     }
 
-    if (response.status === 200 && response.data.status === 'ok') {
-      const organizationUpdated = response.data
-        .detail[0] as OrganizationModelAPI;
-
-      await this.organizationRepositoryDatabase.update({
-        ...organizationUpdated,
-        _id: organizationUpdated._id.$oid,
-        convidados_administradores: JSON.stringify(
-          organizationUpdated.convidados_administradores
-        ),
-        convidados_participantes: JSON.stringify(
-          organizationUpdated.convidados_participantes
-        ),
-        administradores: JSON.stringify(organizationUpdated.administradores),
-        data_atualizacao: organizationUpdated.data_atualizacao.$date,
-        participantes: JSON.stringify(organizationUpdated.participantes),
-      });
-
-      await refreshOrganizations(
-        this.organizationRepositoryDatabase,
-        this.organizationIconRepositoryDatabase
+    if (response.status !== 200 || response.data.status !== 'ok') {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API delete organization invite, ${JSON.stringify(response)}`
       );
-
-      return {
-        message: 'ok',
-        data: {
-          organizationId: data.organizationId,
-          email: data.email,
-          type: data.type,
-          changeUser: data.changeUser,
-        },
-      };
     }
 
-    throw new Error(`Error api delete invite ${data.type} ${response}`);
+    const organizationUpdated = response.data.detail[0] as OrganizationModelAPI;
+
+    await this.organizationRepositoryDatabase.update({
+      ...organizationUpdated,
+      _id: organizationUpdated._id.$oid,
+      convidados_administradores: JSON.stringify(
+        organizationUpdated.convidados_administradores
+      ),
+      convidados_participantes: JSON.stringify(
+        organizationUpdated.convidados_participantes
+      ),
+      administradores: JSON.stringify(organizationUpdated.administradores),
+      data_atualizacao: organizationUpdated.data_atualizacao.$date,
+      participantes: JSON.stringify(organizationUpdated.participantes),
+    });
+
+    await refreshOrganizations(
+      this.organizationRepositoryDatabase,
+      this.organizationIconRepositoryDatabase
+    );
+
+    return {
+      message: 'ok',
+      data: {
+        organizationId: data.organizationId,
+        email: data.email,
+        type: data.type,
+        changeUser: data.changeUser,
+      },
+    };
   }
 }

@@ -1,5 +1,7 @@
+import * as Sentry from '@sentry/node';
 import { IPCTypes } from '@/types/IPCTypes';
 import { GetPrivateKeyUseCase } from './get-private-key-use-case';
+import '@sentry/tracing';
 
 export class GetPrivateKeyController {
   constructor(private getPrivateKeyUseCase: GetPrivateKeyUseCase) {}
@@ -14,6 +16,7 @@ export class GetPrivateKeyController {
         },
       };
     } catch (error) {
+      Sentry.captureException(error);
       return {
         response: IPCTypes.GET_PRIVATE_KEY_RESPONSE,
         data: {

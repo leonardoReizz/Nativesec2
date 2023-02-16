@@ -40,9 +40,11 @@ export class VerifyUserRegisteredUseCase {
           authorization
         );
 
-        if (createPublic.status !== 200 && createPublic.data.status !== 'ok')
+        if (createPublic.status !== 200 || createPublic.data.status !== 'ok')
           throw new Error(
-            ` ERROR API CREATE PUBLIC KEY ${JSON.stringify(createPublic)}`
+            `${
+              (store.get('user') as any)?.email
+            }: Error API create public key, ${JSON.stringify(createPublic)}`
           );
 
         let privateKeyId = '';
@@ -75,7 +77,11 @@ export class VerifyUserRegisteredUseCase {
 
         return 'ok';
       }
-      throw new Error('ERROR OPENPGP GENERATE PAR KEYS');
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error open pgg generate par keys, ${JSON.stringify(keys)}`
+      );
     }
     return 'ok';
   }

@@ -1,6 +1,8 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
 import { ILeaveOrganizationRequestDTO } from './leave-organization-request-dto';
 import { LeaveOrganizationUseCase } from './leave-organization-use-case';
+import '@sentry/tracing';
 
 export class LeaveOrganizationController {
   constructor(private leaveOrganizationUseCase: LeaveOrganizationUseCase) {}
@@ -13,6 +15,7 @@ export class LeaveOrganizationController {
         data: message,
       };
     } catch (error) {
+      Sentry.captureException(error);
       return {
         response: IPCTypes.LEAVE_ORGANIZATION_RESPONSE,
         data: {

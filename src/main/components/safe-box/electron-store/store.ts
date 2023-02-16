@@ -18,7 +18,11 @@ export async function refreshSafeBoxes(organizationId: string) {
   );
 
   if (select instanceof Error) {
-    throw new Error('Erro database refresh safeboxes');
+    throw new Error(
+      `${
+        (store.get('user') as any)?.email
+      }: Error database refresh safe boxes, ${JSON.stringify(select)}`
+    );
   }
 
   const sort = select.sort((x, y) => {

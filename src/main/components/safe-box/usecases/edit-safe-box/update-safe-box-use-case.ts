@@ -34,11 +34,16 @@ export class UpdateSafeBoxUseCase {
           ) {
             return apiGetPubKey.data.msg[0].chave as string;
           }
-          return undefined;
-        } catch (error) {
-          console.log(error);
           throw new Error(
-            `Error api get public key in update safe box ${error}`
+            `${
+              (store.get('user') as any)?.email
+            }: Error API get public key, ${JSON.stringify(apiGetPubKey)}`
+          );
+        } catch (error) {
+          throw new Error(
+            `${
+              (store.get('user') as any)?.email
+            }: Error API get public key, ${JSON.stringify(error)}`
           );
         }
       })
@@ -74,37 +79,40 @@ export class UpdateSafeBoxUseCase {
       authorization
     );
 
-    if (apiUpdate.status === 200 && apiUpdate.data.status === 'ok') {
-      const updatedSafeBox: SafeBoxAPIModel = apiUpdate.data.detail[0];
-      await this.safeBoxRepositoryDatabase.update({
-        _id: updatedSafeBox._id.$oid,
-        conteudo: updatedSafeBox.conteudo,
-        usuarios_escrita: JSON.stringify(updatedSafeBox.usuarios_escrita),
-        usuarios_leitura: JSON.stringify(updatedSafeBox.usuarios_leitura),
-        usuarios_escrita_deletado: JSON.stringify(
-          updatedSafeBox.usuarios_escrita_deletado
-        ),
-        usuarios_leitura_deletado: JSON.stringify(
-          updatedSafeBox.usuarios_leitura_deletado
-        ),
-        data_atualizacao: updatedSafeBox.data_atualizacao.$date,
-        anexos: JSON.stringify(updatedSafeBox.anexos),
-        criptografia: updatedSafeBox.criptografia,
-        descricao: updatedSafeBox.descricao,
-        nome: updatedSafeBox.nome,
-        organizacao: updatedSafeBox.organizacao,
-        tipo: updatedSafeBox.tipo,
-      });
-
-      await refreshSafeBoxes(data.organizacao);
-      return {
-        message: 'ok',
-        data: {
-          safeBoxId: data.id,
-        },
-      };
+    if (apiUpdate.status !== 200 || apiUpdate.data.status !== 'ok') {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API update safe box, ${JSON.stringify(apiUpdate)}`
+      );
     }
+    const updatedSafeBox: SafeBoxAPIModel = apiUpdate.data.detail[0];
+    await this.safeBoxRepositoryDatabase.update({
+      _id: updatedSafeBox._id.$oid,
+      conteudo: updatedSafeBox.conteudo,
+      usuarios_escrita: JSON.stringify(updatedSafeBox.usuarios_escrita),
+      usuarios_leitura: JSON.stringify(updatedSafeBox.usuarios_leitura),
+      usuarios_escrita_deletado: JSON.stringify(
+        updatedSafeBox.usuarios_escrita_deletado
+      ),
+      usuarios_leitura_deletado: JSON.stringify(
+        updatedSafeBox.usuarios_leitura_deletado
+      ),
+      data_atualizacao: updatedSafeBox.data_atualizacao.$date,
+      anexos: JSON.stringify(updatedSafeBox.anexos),
+      criptografia: updatedSafeBox.criptografia,
+      descricao: updatedSafeBox.descricao,
+      nome: updatedSafeBox.nome,
+      organizacao: updatedSafeBox.organizacao,
+      tipo: updatedSafeBox.tipo,
+    });
 
-    throw new Error('nok');
+    await refreshSafeBoxes(data.organizacao);
+    return {
+      message: 'ok',
+      data: {
+        safeBoxId: data.id,
+      },
+    };
   }
 }

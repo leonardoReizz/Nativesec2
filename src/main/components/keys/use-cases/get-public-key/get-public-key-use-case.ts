@@ -23,7 +23,13 @@ export class GetPublicKeyUseCase {
         await this.keyRepositoryDatabase.getPublicKey(email);
 
       if (getPublicKeyInDatabase instanceof Error)
-        throw new Error('Error get public key in database');
+        throw new Error(
+          `${
+            (store.get('user') as any)?.email
+          }: Error DATABASE get public key , ${JSON.stringify(
+            getPublicKeyInDatabase
+          )}`
+        );
 
       if (!getPublicKeyInDatabase[0]) {
         const apiGetPublicKey = await this.keyRepositoryAPI.getPublicKey(

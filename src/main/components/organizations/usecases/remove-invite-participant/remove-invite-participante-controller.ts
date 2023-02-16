@@ -1,6 +1,8 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
 import { IRemoveInviteParticipantRequestDTO } from './remove-invite-participant-request-dto';
 import { RemoveInviteParticipantUseCase } from './remove-invite-participante-use-case';
+import '@sentry/tracing';
 
 export class RemoveInviteParticipantController {
   constructor(
@@ -22,7 +24,7 @@ export class RemoveInviteParticipantController {
       };
     } catch (error) {
       const errorMessage = (error as Error).message;
-
+      Sentry.captureException(error);
       return {
         response: IPCTypes.REMOVE_INVITE_PARTICIPANT_RESPONSE,
         message: errorMessage,

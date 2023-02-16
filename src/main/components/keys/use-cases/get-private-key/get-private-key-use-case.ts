@@ -26,7 +26,11 @@ export class GetPrivateKeyUseCase {
       const privKey = await this.keyRepositoryDatabase.getPrivateKey(email);
 
       if (privKey instanceof Error)
-        throw new Error('Error get private key database');
+        throw new Error(
+          `${
+            (store.get('user') as any)?.email
+          }: Error DATABASE get private key, ${JSON.stringify(privKey)}`
+        );
 
       if (privKey.length === 0) {
         const apiGetPrivateKey = await this.keyRepositoryAPI.getPrivateKey(

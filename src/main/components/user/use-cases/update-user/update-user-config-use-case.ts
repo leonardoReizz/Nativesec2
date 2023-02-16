@@ -1,9 +1,8 @@
 import { KeyRepositoryAPI } from '@/main/components/keys/repositories/key-repository-api';
+import { UserConfigRepositoryDatabase } from '@/main/components/user-config/repositories/user-config-repository-database';
 import { store } from '@/main/main';
 import { IKeys, IToken } from '@/main/types';
 import { IUserConfig } from '@/renderer/contexts/UserConfigContext/types';
-import { UserConfigRepositoryDatabase } from '../../repositories/user-config-repository-database';
-import { UpdateUserConfigRequestDTO } from './update-user-config-request-dto';
 
 export class UpdateUserConfigUseCase {
   constructor(
@@ -11,7 +10,7 @@ export class UpdateUserConfigUseCase {
     private keyRepositoryAPI: KeyRepositoryAPI
   ) {}
 
-  async execute(data: UpdateUserConfigRequestDTO) {
+  async execute(data: any) {
     const userConfig = store.get('userConfig') as IUserConfig;
     const { privateKey } = store.get('keys') as IKeys;
     const { accessToken, tokenType } = store.get('token') as IToken;
@@ -27,7 +26,11 @@ export class UpdateUserConfigUseCase {
         );
 
         if (deleteKeyAPI.status !== 200)
-          throw new Error('ERRO DELETE PRIVATE KEY -> API');
+          throw new Error(
+            `${
+              (store.get('user') as any)?.email
+            }: Error API delete private key, ${JSON.stringify(deleteKeyAPI)}`
+          );
       } else {
         const createKeyAPI = await this.keyRepositoryAPI.createPrivateKey(
           { chave: privateKey, tipo: 'rsa' },
@@ -35,7 +38,11 @@ export class UpdateUserConfigUseCase {
         );
 
         if (createKeyAPI.status !== 200)
-          throw new Error('ERRO CREATE PRIVATE KEY -> API');
+          throw new Error(
+            `${
+              (store.get('user') as any)?.email
+            }: Error API create private key, ${JSON.stringify(createKeyAPI)}`
+          );
       }
     }
 

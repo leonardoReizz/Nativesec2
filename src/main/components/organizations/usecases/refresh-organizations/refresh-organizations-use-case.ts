@@ -22,55 +22,73 @@ export class RefreshOrganizationsUseCase {
 
     const listAPI = await this.organizationRepositoryAPI.list(authorization);
 
-    if (listAPI.status === 200 && listAPI.data.status === 'ok') {
-      const apiOrganizations: OrganizationModelAPI[] = listAPI.data.msg;
-
-      const organizationInfo: OrganizationModelAPI[] = await Promise.all(
-        apiOrganizations.map(async (org: OrganizationModelAPI) => {
-          const APIGetOrganization =
-            await this.organizationRepositoryAPI.getOrganization(
-              org._id.$oid,
-              authorization
-            );
-
-          return APIGetOrganization?.data?.msg[0];
-        })
+    if (listAPI.status !== 200 || listAPI.data.status !== 'ok') {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API list organizations, ${JSON.stringify(listAPI)}`
       );
-
-      if (organizationInfo.length > 0) {
-        const APIListOrganizationIcons =
-          await this.organizationRepositoryAPI.listIcons(authorization);
-        if (
-          APIListOrganizationIcons.status === 200 &&
-          APIListOrganizationIcons.data.status === 'ok'
-        ) {
-          organizationsResponse = true;
-          organizationsResponse = await organizationComparator({
-            organizations: organizationInfo,
-            organizationRepositoryDatabase: this.organizationRepositoryDatabase,
-            icons: APIListOrganizationIcons.data.msg,
-            organizationIconRepositoryDatabase:
-              this.organizationIconRepositoryDatabase,
-          });
-
-          await refreshOrganizations(
-            this.organizationRepositoryDatabase,
-            this.organizationIconRepositoryDatabase
-          );
-
-          return {
-            message: 'ok',
-            data: {
-              organizationsResponse,
-            },
-          };
-        }
-        throw new Error('Erro API List Icons');
-      }
-
-      throw new Error('ERRO API GET ORGANIZATIONS ICONS');
     }
 
-    throw new Error('ERRO API GET ORGANIZATIONS');
+    const apiOrganizations: OrganizationModelAPI[] = listAPI.data.msg;
+
+    const organizationInfo: OrganizationModelAPI[] = await Promise.all(
+      apiOrganizations.map(async (org: OrganizationModelAPI) => {
+        const APIGetOrganization =
+          await this.organizationRepositoryAPI.getOrganization(
+            org._id.$oid,
+            authorization
+          );
+
+        if (
+          APIGetOrganization.status !== 200 ||
+          APIGetOrganization.data.status !== 'ok'
+        ) {
+          throw new Error(
+            `${
+              (store.get('user') as any)?.email
+            }: Error API get organization, ${JSON.stringify(
+              APIGetOrganization
+            )}`
+          );
+        }
+
+        return APIGetOrganization?.data?.msg[0];
+      })
+    );
+
+    const APIListOrganizationIcons =
+      await this.organizationRepositoryAPI.listIcons(authorization);
+    if (
+      APIListOrganizationIcons.status !== 200 ||
+      APIListOrganizationIcons.data.status !== 'ok'
+    ) {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API list icons, ${JSON.stringify(APIListOrganizationIcons)}`
+      );
+    }
+
+    organizationsResponse = true;
+    organizationsResponse = await organizationComparator({
+      organizations: organizationInfo,
+      organizationRepositoryDatabase: this.organizationRepositoryDatabase,
+      icons: APIListOrganizationIcons.data.msg,
+      organizationIconRepositoryDatabase:
+        this.organizationIconRepositoryDatabase,
+    });
+
+    await refreshOrganizations(
+      this.organizationRepositoryDatabase,
+      this.organizationIconRepositoryDatabase
+    );
+
+    return {
+      message: 'ok',
+      data: {
+        organizationsResponse,
+      },
+    };
   }
 }

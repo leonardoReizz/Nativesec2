@@ -29,13 +29,18 @@ export class CreateSafeBoxUseCase {
             email,
             authorization
           );
+
           if (
-            apiGetPubKey.status === 200 &&
-            apiGetPubKey.data?.status === 'ok'
+            apiGetPubKey.status !== 200 ||
+            apiGetPubKey.data.status !== 'ok'
           ) {
-            return apiGetPubKey.data.msg[0].chave as string;
+            throw new Error(
+              `${
+                (store.get('user') as any)?.email
+              }: Error API get public key, ${JSON.stringify(apiGetPubKey)}`
+            );
           }
-          return undefined;
+          return apiGetPubKey.data.msg[0].chave as string;
         } catch (error) {
           console.log(error);
           return undefined;
@@ -77,33 +82,34 @@ export class CreateSafeBoxUseCase {
       authorization
     );
 
-    if (apiCreate.status === 200 && apiCreate.data.status === 'ok') {
-      this.safeBoxRepositoryDatabase.create({
-        ...data,
-        _id: apiCreate.data?.detail[0]._id.$oid,
-        conteudo: JSON.stringify(content),
-        data_hora_create: apiCreate.data.detail[0].data_hora_create.$date,
-        data_atualizacao: apiCreate.data.detail[0].data_atualizacao.$date,
-        usuarios_escrita: JSON.stringify(data.usuarios_escrita),
-        usuarios_leitura: JSON.stringify(data.usuarios_leitura),
-        usuarios_escrita_deletado: JSON.stringify(
-          data.usuarios_escrita_deletado
-        ),
-        usuarios_leitura_deletado: JSON.stringify(
-          data.usuarios_leitura_deletado
-        ),
-        anexos: JSON.stringify([]),
-      });
-      await refreshSafeBoxes(data.organizacao);
-
-      return {
-        message: 'ok',
-        data: {
-          safeBoxId: apiCreate.data?.detail[0]._id.$oid,
-        },
-      };
+    if (apiCreate.status !== 200 || apiCreate.data.status !== 'ok') {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API create safe box, ${JSON.stringify(apiCreate)}`
+      );
     }
 
-    throw new Error('nok');
+    await this.safeBoxRepositoryDatabase.create({
+      ...data,
+      _id: apiCreate.data?.detail[0]._id.$oid,
+      conteudo: JSON.stringify(content),
+      data_hora_create: apiCreate.data.detail[0].data_hora_create.$date,
+      data_atualizacao: apiCreate.data.detail[0].data_atualizacao.$date,
+      usuarios_escrita: JSON.stringify(data.usuarios_escrita),
+      usuarios_leitura: JSON.stringify(data.usuarios_leitura),
+      usuarios_escrita_deletado: JSON.stringify(data.usuarios_escrita_deletado),
+      usuarios_leitura_deletado: JSON.stringify(data.usuarios_leitura_deletado),
+      anexos: JSON.stringify([]),
+    });
+
+    await refreshSafeBoxes(data.organizacao);
+
+    return {
+      message: 'ok',
+      data: {
+        safeBoxId: apiCreate.data?.detail[0]._id.$oid,
+      },
+    };
   }
 }

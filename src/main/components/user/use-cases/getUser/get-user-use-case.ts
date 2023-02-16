@@ -11,20 +11,24 @@ export class GetUserUseCase {
 
     const getUser = await this.userRepository.getUser(authorization);
 
-    if (getUser.status === 200) {
-      store.set('user', {
-        ...(store.get('user') as IUser),
-        fullName: getUser.data.full_name,
-        savePrivateKey: getUser.data.savePrivateKey,
-        refreshTime: getUser.data.refreshTime,
-        theme: getUser.data.theme,
-        lastOrganizationId: getUser.data.lastOrganizationId,
-        email: getUser.data.email,
-      });
-
-      return 'ok';
+    if (getUser.status !== 200) {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API get user, ${JSON.stringify(getUser)}`
+      );
     }
 
-    throw new Error('Error get user api');
+    store.set('user', {
+      ...(store.get('user') as IUser),
+      fullName: getUser.data.full_name,
+      savePrivateKey: getUser.data.savePrivateKey,
+      refreshTime: getUser.data.refreshTime,
+      theme: getUser.data.theme,
+      lastOrganizationId: getUser.data.lastOrganizationId,
+      email: getUser.data.email,
+    });
+
+    return 'ok';
   }
 }

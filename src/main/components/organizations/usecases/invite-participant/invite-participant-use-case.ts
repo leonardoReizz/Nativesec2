@@ -51,7 +51,11 @@ export class InviteParticipantUseCase {
 
       if (updateDatabase instanceof Error) {
         throw new Error(
-          `Error update organization in Invite Participant Use Case: ${updateDatabase}`
+          `${
+            (store.get('user') as any)?.email
+          }: Error DATABASE update organization, ${JSON.stringify(
+            updateDatabase
+          )}`
         );
       }
       await refreshOrganizations(

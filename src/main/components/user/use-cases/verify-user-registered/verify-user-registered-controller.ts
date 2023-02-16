@@ -1,6 +1,8 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
 import { IVerifyUserRegisteredRequestDTO } from './verify-user-registered-request-dto';
 import { VerifyUserRegisteredUseCase } from './verify-user-registered-use-case';
+import '@sentry/tracing';
 
 export class VerifyUserRegisteredController {
   constructor(
@@ -18,7 +20,7 @@ export class VerifyUserRegisteredController {
         },
       };
     } catch (error) {
-      console.log(error);
+      Sentry.captureException(error);
       const errorMessage = (error as Error).message;
 
       return {

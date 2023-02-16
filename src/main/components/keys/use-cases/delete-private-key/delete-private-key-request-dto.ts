@@ -1,5 +1,5 @@
 export interface DeletePrivateKeyRequestDTO {
-  privateKey: string;
+  privateKeyId: string;
   email: string;
   type: string;
 }

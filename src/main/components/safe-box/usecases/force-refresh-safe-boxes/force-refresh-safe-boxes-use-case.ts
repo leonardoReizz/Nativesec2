@@ -19,7 +19,11 @@ export class ForceRefreshSafeBoxesUseCase {
       );
 
     if (deleteSafeBoxes instanceof Error)
-      throw new Error('ERROR DATABASE DELETE SAFEBOXES -> FORCE REFRESH');
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error DATABASE delete safeboxes -> force refresh ${deleteSafeBoxes}`
+      );
 
     const lastDateUpdatedSafeBox = 1;
     const { tokenType, accessToken } = store.get('token') as IToken;
@@ -35,7 +39,7 @@ export class ForceRefreshSafeBoxesUseCase {
       throw new Error(
         `${
           (store.get('user') as any)?.email
-        } Error api list safe box  -> ${JSON.stringify(listAPISafeBox)}`
+        } Error API list safe box  -> ${JSON.stringify(listAPISafeBox)}`
       );
 
     const listAPISafeBoxesDeleted = await this.safeBoxRepositoryAPI.listDeleted(
@@ -53,7 +57,7 @@ export class ForceRefreshSafeBoxesUseCase {
       throw new Error(
         `${
           (store.get('user') as any)?.email
-        }: Error list deleted safe box  -> ${JSON.stringify(
+        }: Error API list deleted safe box  -> ${JSON.stringify(
           listAPISafeBoxesDeleted
         )}`
       );

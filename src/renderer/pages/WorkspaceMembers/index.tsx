@@ -200,6 +200,26 @@ export function WorkspaceMembers() {
                   <span>Usuario</span>
                   <span>Nivel de Acesso</span>
                 </div>
+                <div
+                  className={styles.participant}
+                  key={currentOrganization?.dono}
+                >
+                  <h4>{currentOrganization?.dono}</h4>
+                  <Dropdown
+                    theme={theme}
+                    options={[{ id: 1, label: 'Dono', value: 'Dono' }]}
+                    value="Dono"
+                    onChange={(option) =>
+                      handleDropDown(
+                        option,
+                        'admin',
+                        String(currentOrganization?.dono)
+                      )
+                    }
+                    className={styles.dropDown}
+                    disabled
+                  />
+                </div>
                 {filteredAdmin.map((user: string) => (
                   <div className={styles.participant} key={user}>
                     <h4>{user}</h4>

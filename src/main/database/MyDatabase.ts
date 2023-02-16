@@ -157,7 +157,13 @@ export class Database {
       });
 
       if (insertVersion instanceof Error)
-        throw new Error('ERROR INSERT DATABASE VERSION');
+        throw new Error(
+          `${
+            (store.get('user') as any)?.email
+          }: Error DATABASE insert database version, ${JSON.stringify(
+            insertVersion
+          )}`
+        );
     } else if (version[0] !== null) {
       if (version.version !== currentVersion) {
         const updateDatabase = new Promise((resolve, reject) => {
@@ -171,7 +177,13 @@ export class Database {
         });
 
         if (updateDatabase instanceof Error)
-          throw new Error('ERROR UPDATE DATABASE VERSION');
+          throw new Error(
+            `${
+              (store.get('user') as any)?.email
+            }: Error DATABASE update database version, ${JSON.stringify(
+              updateDatabase
+            )}`
+          );
       }
     }
 
@@ -186,7 +198,6 @@ export class Database {
       })
       .filter((v) => v !== undefined);
 
-    console.log();
     if (listToUpdate.length > 0) {
       listToUpdate.map(async (v) => {
         const updateDatase = require(`./migrations/versions/${v?.version}.ts`);

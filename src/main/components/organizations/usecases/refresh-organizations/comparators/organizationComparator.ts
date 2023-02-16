@@ -1,3 +1,4 @@
+import { store } from '@/main/main';
 import { OrganizationIconRepositoryDatabase } from '../../../repositories/organization-icon-database-repository';
 import { OrganizationRepositoryDatabase } from '../../../repositories/organization-repository-database';
 import {
@@ -23,7 +24,11 @@ export async function organizationComparator({
 
   if (queryOrganizations instanceof Error) {
     throw new Error(
-      'Erro database list organization -> organization comparator'
+      `${
+        (store.get('user') as any)?.email
+      }: Error DATABASE list organizations, ${JSON.stringify(
+        queryOrganizations
+      )}`
     );
   }
 

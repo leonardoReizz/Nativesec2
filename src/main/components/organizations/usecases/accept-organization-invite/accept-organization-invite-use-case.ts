@@ -23,58 +23,63 @@ export class AcceptOrganizationInviteUseCase {
       authorization,
     });
 
-    if (accept.status === 200 && accept.data.status === 'ok') {
-      const organization = accept.data.detail[0] as OrganizationModelAPI;
-      await this.organizationRepositoryDatabase.create({
-        ...organization,
-        _id: organization._id.$oid,
-        data_atualizacao: organization.data_atualizacao.$date,
-        convidados_administradores: JSON.stringify(
-          organization.convidados_administradores
-        ),
-        convidados_participantes: JSON.stringify(
-          organization.convidados_participantes
-        ),
-        participantes: JSON.stringify(organization.participantes),
-        administradores: JSON.stringify(organization.administradores),
-        data_criacao: organization.data_criacao.$date,
-      });
-
-      const organizationIcon = await this.organizationRepositoryAPI.getIcon(
-        organization._id.$oid,
-        authorization
+    if (accept.status !== 200 || accept.data.status !== 'ok') {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API accept organization invite, ${JSON.stringify(accept)}`
       );
+    }
+    const organization = accept.data.detail[0] as OrganizationModelAPI;
+    await this.organizationRepositoryDatabase.create({
+      ...organization,
+      _id: organization._id.$oid,
+      data_atualizacao: organization.data_atualizacao.$date,
+      convidados_administradores: JSON.stringify(
+        organization.convidados_administradores
+      ),
+      convidados_participantes: JSON.stringify(
+        organization.convidados_participantes
+      ),
+      participantes: JSON.stringify(organization.participantes),
+      administradores: JSON.stringify(organization.administradores),
+      data_criacao: organization.data_criacao.$date,
+    });
 
-      if (
-        organizationIcon.status !== 200 ||
-        organizationIcon.data.status !== 'ok'
-      ) {
-        throw new Error(
-          `ERROR API GET ORGANIZATION ICON ${JSON.stringify(organizationIcon)}`
-        );
-      }
+    const organizationIcon = await this.organizationRepositoryAPI.getIcon(
+      organization._id.$oid,
+      authorization
+    );
 
-      await this.organizationIconRepositoryDatabase.create({
-        organizationId: organization._id.$oid,
-        icon: organizationIcon.data.msg[0].icone,
-      });
-
-      await refreshOrganizations(
-        this.organizationRepositoryDatabase,
-        this.organizationIconRepositoryDatabase
+    if (
+      organizationIcon.status !== 200 ||
+      organizationIcon.data.status !== 'ok'
+    ) {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error API get organization icon , ${JSON.stringify(
+          organizationIcon
+        )}`
       );
-
-      const filterNotifications = (
-        store.get('organizationInvites') as IInvite[]
-      ).filter((notification) => notification._id.$oid !== data.organizationId);
-
-      store.set('organizationInvites', filterNotifications);
-
-      return { message: 'ok', data: { organizationId: data.organizationId } };
     }
 
-    throw new Error(
-      `ERROR API ACCEPT ORGANIZATION INVITE: ${JSON.stringify(accept)}`
+    await this.organizationIconRepositoryDatabase.create({
+      organizationId: organization._id.$oid,
+      icon: organizationIcon.data.msg[0].icone,
+    });
+
+    await refreshOrganizations(
+      this.organizationRepositoryDatabase,
+      this.organizationIconRepositoryDatabase
     );
+
+    const filterNotifications = (
+      store.get('organizationInvites') as IInvite[]
+    ).filter((notification) => notification._id.$oid !== data.organizationId);
+
+    store.set('organizationInvites', filterNotifications);
+
+    return { message: 'ok', data: { organizationId: data.organizationId } };
   }
 }

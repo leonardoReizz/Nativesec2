@@ -1,7 +1,7 @@
 import { KeyRepositoryAPI } from '@/main/components/keys/repositories/key-repository-api';
+import { UserConfigRepositoryDatabase } from '@/main/components/user-config/repositories/user-config-repository-database';
 import { store } from '@/main/main';
 import { IToken, IUser } from '@/main/types';
-import { UserConfigRepositoryDatabase } from '../../repositories/user-config-repository-database';
 
 export class SetUserConfigUseCase {
   constructor(
@@ -18,7 +18,11 @@ export class SetUserConfigUseCase {
     );
 
     if (userConfig instanceof Error)
-      throw new Error('Error get user config api');
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error DATABASE get user config, ${JSON.stringify(userConfig)}`
+      );
 
     if (userConfig.length === 0) {
       const apiGetPrivateKey = await this.keyRepositoryApi.getPrivateKey(
@@ -26,34 +30,25 @@ export class SetUserConfigUseCase {
         authorization
       );
 
-      if (apiGetPrivateKey.data.status === 'ok') {
-        if (apiGetPrivateKey.data.msg.length > 0) {
-          store.set('userConfig', {
-            savePrivateKey: 'true',
-            refreshTime: 30,
-            lastOrganizationId: '',
-            theme: 'light',
-          });
+      if (apiGetPrivateKey.data.status !== 'ok') {
+        throw new Error(
+          `${
+            (store.get('user') as any)?.email
+          }: Error API get private key, ${JSON.stringify(apiGetPrivateKey)}`
+        );
+      }
 
-          this.userConfigRepositoryDatabase.create({
-            email,
-            savePrivateKey: 'true',
-            refreshTime: 30,
-            lastOrganizationId: '',
-            theme: 'light',
-          });
-
-          return 'ok';
-        }
+      if (apiGetPrivateKey.data.msg.length > 0) {
         store.set('userConfig', {
+          savePrivateKey: 'true',
           refreshTime: 30,
-          theme: 'light',
-          savePrivateKey: 'false',
           lastOrganizationId: '',
+          theme: 'light',
         });
+
         this.userConfigRepositoryDatabase.create({
           email,
-          savePrivateKey: 'false',
+          savePrivateKey: 'true',
           refreshTime: 30,
           lastOrganizationId: '',
           theme: 'light',
@@ -61,7 +56,21 @@ export class SetUserConfigUseCase {
 
         return 'ok';
       }
-      throw new Error('Api error get private key');
+      store.set('userConfig', {
+        refreshTime: 30,
+        theme: 'light',
+        savePrivateKey: 'false',
+        lastOrganizationId: '',
+      });
+      this.userConfigRepositoryDatabase.create({
+        email,
+        savePrivateKey: 'false',
+        refreshTime: 30,
+        lastOrganizationId: '',
+        theme: 'light',
+      });
+
+      return 'ok';
     }
 
     store.set('userConfig', {

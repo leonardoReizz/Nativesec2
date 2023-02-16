@@ -28,6 +28,10 @@ export class RefreshTokenUseCase {
       return { message: 'authorizationError' };
     }
 
-    throw new Error('ERROR REFRESH TOKEN');
+    throw new Error(
+      `${
+        (store.get('user') as any)?.email
+      }: Error API refresh token, ${JSON.stringify(token)}`
+    );
   }
 }

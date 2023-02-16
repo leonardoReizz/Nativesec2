@@ -1,6 +1,8 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
 import { ICreateUserRequestDTO } from './create-user-request-dto';
 import { CreateUserUseCase } from './create-user-use-case';
+import '@sentry/tracing';
 
 export class CreateUserController {
   constructor(private createUserUseCase: CreateUserUseCase) {}
@@ -16,7 +18,7 @@ export class CreateUserController {
         },
       };
     } catch (error) {
-      console.log(error);
+      Sentry.captureException(error);
 
       const messageError = (error as Error).message;
       return {

@@ -1,6 +1,8 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
 import { IAcceptOrganizationInviteRequestDTO } from './accept-organization-invite-request-dto';
 import { AcceptOrganizationInviteUseCase } from './accept-organization-invite-use-case';
+import '@sentry/tracing';
 
 export class AcceptOrganizationInviteController {
   constructor(private acceptInviteUseCase: AcceptOrganizationInviteUseCase) {}
@@ -13,7 +15,7 @@ export class AcceptOrganizationInviteController {
         data: message,
       };
     } catch (error) {
-      console.log(error);
+      Sentry.captureException(error);
       return {
         response: IPCTypes.ACCEPT_ORGANIZATION_INVITE_RESPONSE,
         data: {

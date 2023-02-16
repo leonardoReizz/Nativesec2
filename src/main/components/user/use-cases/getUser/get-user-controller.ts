@@ -1,5 +1,7 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
 import { GetUserUseCase } from './get-user-use-case';
+import '@sentry/tracing';
 
 export class GetUserController {
   constructor(private getUserUseCase: GetUserUseCase) {}
@@ -17,7 +19,7 @@ export class GetUserController {
         },
       };
     } catch (error) {
-      console.log(error);
+      Sentry.captureException(error);
       return {
         response: IPCTypes.GET_USER_RESPONSE,
         data: {

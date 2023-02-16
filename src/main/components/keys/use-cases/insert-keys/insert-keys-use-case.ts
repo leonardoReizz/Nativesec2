@@ -17,9 +17,17 @@ export class InsertKeysUseCase {
     const dbPublicKey = await this.keyRepositoryDatabase.getPublicKey(email);
 
     if (dbPrivateKey instanceof Error)
-      throw new Error('Error get private key in database');
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error DATABASE get private key, ${JSON.stringify(dbPrivateKey)}`
+      );
     if (dbPublicKey instanceof Error)
-      throw new Error('Error get public key in database');
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error DATABASE get public key, ${JSON.stringify(dbPublicKey)}`
+      );
 
     if (dbPrivateKey.length === 0 && dbPublicKey.length === 0) {
       const createPrivKey = await this.keyRepositoryDatabase.createPrivateKey({
@@ -29,8 +37,6 @@ export class InsertKeysUseCase {
         privateKey,
         defaultType: DEFAULT_TYPE,
       });
-
-      console.log(publicKeyId, ' pub key');
 
       const createPubKey = await this.keyRepositoryDatabase.createPublicKey({
         _id: publicKeyId,

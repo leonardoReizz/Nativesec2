@@ -195,7 +195,7 @@ export function WorkspaceSettings() {
                 </span>
               </div>
               <Button
-                text="Sair do Workspace"
+                text="Sair da Organização"
                 Icon={<IoExit />}
                 disabled={currentOrganization?.dono === email}
                 theme={theme}

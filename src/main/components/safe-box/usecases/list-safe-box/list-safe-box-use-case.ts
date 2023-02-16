@@ -1,3 +1,4 @@
+import { store } from '@/main/main';
 import { refreshSafeBoxes } from '../../electron-store/store';
 import { SafeBoxRepositoryDatabase } from '../../repositories/safe-box-repository-database';
 import { IListSafeBoxRequestDTO } from './IListSafeBoxRequestDTO';
@@ -11,7 +12,11 @@ export class ListSafeBoxUseCase {
     );
 
     if (listDB instanceof Error) {
-      throw new Error(`Error list safe box database ${listDB}`);
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error DATABASE list safe box, ${JSON.stringify(listDB)}`
+      );
     }
 
     await refreshSafeBoxes(data.organizationId);

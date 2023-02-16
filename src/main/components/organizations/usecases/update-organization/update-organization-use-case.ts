@@ -29,38 +29,51 @@ export class UpdateOrganizationUseCase {
       authorization
     );
 
-    if (update.status === 200 && update.data.status === 'ok') {
-      const organizationUpdated: OrganizationModelAPI = update.data.detail[0];
-
-      const updateOrganization =
-        await this.organizationRepositoryDatabase.update({
-          ...organizationUpdated,
-          _id: organizationUpdated._id.$oid,
-          data_atualizacao: organizationUpdated.data_atualizacao.$date,
-          participantes: JSON.stringify(organizationUpdated.participantes),
-          administradores: JSON.stringify(organizationUpdated.administradores),
-          convidados_administradores: JSON.stringify(
-            organizationUpdated.convidados_administradores
-          ),
-          convidados_participantes: JSON.stringify(
-            organizationUpdated.convidados_participantes
-          ),
-        });
-
-      const updateIcon = await this.organizationIconRepositoryDatabase.update({
-        organizationId: data.organizationId,
-        icon: data.icon,
-      });
-
-      if (updateIcon !== true && updateOrganization !== true) {
-        throw new Error('Error update organization icon in database');
-      }
-      await refreshOrganizations(
-        this.organizationRepositoryDatabase,
-        this.organizationIconRepositoryDatabase
+    if (update.status !== 200 || update.data.status !== 'ok') {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error api update organization, ${JSON.stringify(update)}`
       );
-      return { message: 'ok' };
     }
-    throw new Error('Erro api update organization');
+
+    const organizationUpdated: OrganizationModelAPI = update.data.detail[0];
+
+    const updateOrganization = await this.organizationRepositoryDatabase.update(
+      {
+        ...organizationUpdated,
+        _id: organizationUpdated._id.$oid,
+        data_atualizacao: organizationUpdated.data_atualizacao.$date,
+        participantes: JSON.stringify(organizationUpdated.participantes),
+        administradores: JSON.stringify(organizationUpdated.administradores),
+        convidados_administradores: JSON.stringify(
+          organizationUpdated.convidados_administradores
+        ),
+        convidados_participantes: JSON.stringify(
+          organizationUpdated.convidados_participantes
+        ),
+      }
+    );
+
+    const updateIcon = await this.organizationIconRepositoryDatabase.update({
+      organizationId: data.organizationId,
+      icon: data.icon,
+    });
+
+    if (updateIcon !== true && updateOrganization !== true) {
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error database update organizations, ${JSON.stringify(
+          updateIcon
+        )} ${JSON.stringify(updateOrganization)}`
+      );
+    }
+
+    await refreshOrganizations(
+      this.organizationRepositoryDatabase,
+      this.organizationIconRepositoryDatabase
+    );
+    return { message: 'ok' };
   }
 }
