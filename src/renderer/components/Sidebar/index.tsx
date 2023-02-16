@@ -11,7 +11,12 @@ import styles from './styles.module.sass';
 export function Sidebar() {
   const navigate = useNavigate();
   const { theme, updateLastOrganizationId } = useUserConfig();
-  const { updateSafeBoxes, changeCurrentSafeBox, getSafeBoxes } = useSafeBox();
+  const {
+    updateSafeBoxes,
+    changeCurrentSafeBox,
+    getSafeBoxes,
+    changeSafeBoxMode,
+  } = useSafeBox();
   const {
     organizations,
     organizationsIcons,
@@ -23,6 +28,7 @@ export function Sidebar() {
     (organizationId: string) => {
       updateSafeBoxes([]);
       changeCurrentSafeBox(undefined);
+      changeSafeBoxMode('view');
       changeCurrentOrganization(organizationId);
       updateLastOrganizationId(organizationId);
       getSafeBoxes(organizationId);

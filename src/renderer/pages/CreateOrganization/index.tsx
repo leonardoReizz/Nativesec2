@@ -122,7 +122,7 @@ export function CreateOrganization() {
                 <Button
                   text={
                     step === 1
-                      ? 'Vamos Criar nosso Workspace'
+                      ? 'Vamos Criar nosso Organização'
                       : step === 2
                       ? 'Proximo'
                       : step === 3

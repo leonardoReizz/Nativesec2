@@ -85,7 +85,9 @@ export function InputEye({
                 (encrypted ? (
                   <Tooltip
                     hasArrow
-                    label="Descriptografar"
+                    label={
+                      mode === 'create' ? 'Criptografado' : 'Descriptografar'
+                    }
                     aria-label="A tooltip"
                   >
                     <button
@@ -97,7 +99,13 @@ export function InputEye({
                     </button>
                   </Tooltip>
                 ) : (
-                  <Tooltip hasArrow label="Criptografar" aria-label="A tooltip">
+                  <Tooltip
+                    hasArrow
+                    label={
+                      mode === 'create' ? 'Descriptografado' : 'Criptografar'
+                    }
+                    aria-label="A tooltip"
+                  >
                     <button
                       type="button"
                       onClick={changeFormikDecrypt}

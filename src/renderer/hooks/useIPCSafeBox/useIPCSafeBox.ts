@@ -148,7 +148,7 @@ export function useIPCSafeBox() {
       IPCTypes.UPDATE_SAFE_BOX_RESPONSE,
       (response: types.IUpdateSafeBoxResponse) => {
         toast.dismiss('updateSafeBox');
-
+        console.log(response);
         if (response.message === 'ok') {
           toast.success('Cofre Atualizado', {
             ...toastOptions,
@@ -195,18 +195,18 @@ export function useIPCSafeBox() {
         if (response.message === 'ok') {
           if (response.data.safeBoxResponse) refreshSafeBoxes();
 
-          // if (response.data.safeBoxId) {
-          //   const safeBoxes = window.electron.store.get(
-          //     'safebox'
-          //   ) as ISafeBox[];
+          if (response.data.safeBoxId) {
+            const safeBoxes = window.electron.store.get(
+              'safebox'
+            ) as ISafeBox[];
 
-          //   const filter = safeBoxes.filter(
-          //     (safeBox) => safeBox._id === response.data.safeBoxId
-          //   );
-          //   if (filter.length > 0) {
-          //     changeCurrentSafeBox(filter[0]);
-          //   }
-          // }
+            const filter = safeBoxes.filter(
+              (safeBox) => safeBox._id === response.data.safeBoxId
+            );
+            if (filter.length === 0) {
+              changeCurrentSafeBox(undefined);
+            }
+          }
 
           return null;
         }

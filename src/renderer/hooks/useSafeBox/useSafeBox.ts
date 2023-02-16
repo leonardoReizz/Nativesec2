@@ -37,14 +37,16 @@ export function useSafeBox() {
     }
   }, [safeBoxContext.safeBoxMode]);
 
-  // useEffect(() => {
-  //   if (
-  //     safeBoxContext.safeBoxMode === 'create' &&
-  //     !safeBoxContext.currentSafeBox
-  //   ) {
-  //     safeBoxContext.changeSafeBoxMode('view');
-  //   }
-  // }, [currentOrganization]);
+  useEffect(() => {
+    if (
+      safeBoxContext?.currentSafeBox === undefined &&
+      createSafeBox.changeUsersParticipant &&
+      createSafeBox.changeUsersAdmin
+    ) {
+      createSafeBox.changeUsersParticipant([]);
+      createSafeBox.changeUsersAdmin([]);
+    }
+  }, [safeBoxContext.currentSafeBox]);
 
   const filteredSafeBoxes = safeBoxContext.safeBoxes?.filter(
     (safebox) =>
@@ -133,7 +135,7 @@ export function useSafeBox() {
         event: IPCTypes.CREATE_SAFE_BOX,
         data: {
           usuarios_leitura: editUsersParticipant,
-          usuarios_escrita: [...editUsersAdmin, email],
+          usuarios_escrita: editUsersAdmin,
           tipo: formik[formikIndex].type,
           usuarios_leitura_deletado: [],
           usuarios_escrita_deletado: [],

@@ -114,7 +114,7 @@ export default function Users() {
         onRequestClose={closeVerifyNameModal}
         callback={handleRemoveUser}
         nameToVerify={currentUserDelete?.email}
-        inputText="Confirmar"
+        inputText="Confirme o email do usuario"
         title="Deseja remover"
         isLoading={loading}
       />

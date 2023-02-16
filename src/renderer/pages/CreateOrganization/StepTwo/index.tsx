@@ -78,7 +78,7 @@ export function StepTwo({
         <img src={values.icon ? values.icon : logoNativeSec} alt="" />
         <div className={styles.title}>
           <h3>Adicione uma imagem para sua organizacao</h3>
-          <p>Tamanho maximo 512 x 512 </p>
+          <p>Tamanho maximo 512 x 512, png, jpg ou jpeg. </p>
           {messageError !== undefined && (
             <p className={styles.error_file}>{messageError}</p>
           )}
