@@ -1,6 +1,8 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
 import { CreateSafeBoxRequestDTO } from './create-safe-box-request-dto';
 import { CreateSafeBoxUseCase } from './create-safe-box-usecase';
+import '@sentry/tracing';
 
 export class CreateSafeBoxController {
   constructor(private createSafeBoxUseCase: CreateSafeBoxUseCase) {}
@@ -12,7 +14,8 @@ export class CreateSafeBoxController {
         response: IPCTypes.CREATE_SAFE_BOX_RESPONSE,
         data: message,
       };
-    } catch (error: any) {
+    } catch (error) {
+      Sentry.captureException(error);
       return {
         response: IPCTypes.CREATE_SAFE_BOX_RESPONSE,
         data: {

@@ -1,6 +1,8 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
 import { IAddUsersRequestDTO } from './add-users-request-dto';
 import { AddUsersUseCase } from './add-users-use-case';
+import '@sentry/tracing';
 
 export class AddUsersController {
   constructor(private addUsersUseCase: AddUsersUseCase) {}
@@ -13,6 +15,7 @@ export class AddUsersController {
         data: message,
       };
     } catch (error) {
+      Sentry.captureException(error);
       return {
         response: IPCTypes.ADD_SAFE_BOX_USERS_RESPONSE,
         data: {

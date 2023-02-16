@@ -29,12 +29,22 @@ export function useSafeBox() {
     if (
       createSafeBox.changeUsersAdmin &&
       createSafeBox.changeUsersParticipant &&
-      safeBoxContext.currentSafeBox === undefined
+      safeBoxContext.currentSafeBox === undefined &&
+      safeBoxContext.safeBoxMode !== 'create'
     ) {
       createSafeBox.changeUsersAdmin([]);
       createSafeBox.changeUsersParticipant([]);
     }
   }, [safeBoxContext.safeBoxMode]);
+
+  useEffect(() => {
+    if (
+      safeBoxContext.safeBoxMode === 'create' &&
+      !safeBoxContext.currentSafeBox
+    ) {
+      safeBoxContext.changeSafeBoxMode('view');
+    }
+  }, [currentOrganization]);
 
   const filteredSafeBoxes = safeBoxContext.safeBoxes?.filter(
     (safebox) =>
@@ -123,7 +133,7 @@ export function useSafeBox() {
         event: IPCTypes.CREATE_SAFE_BOX,
         data: {
           usuarios_leitura: editUsersParticipant,
-          usuarios_escrita: editUsersAdmin,
+          usuarios_escrita: [...editUsersAdmin, email],
           tipo: formik[formikIndex].type,
           usuarios_leitura_deletado: [],
           usuarios_escrita_deletado: [],
@@ -161,8 +171,6 @@ export function useSafeBox() {
       });
     }
   }
-
-  console.log(safeBoxContext.safeBoxMode);
 
   function updateUsersSafeBox(email: string, newType: 'admin' | 'participant') {
     toast.loading('Atualizando usuarios', {

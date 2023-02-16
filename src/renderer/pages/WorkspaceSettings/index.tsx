@@ -178,7 +178,7 @@ export function WorkspaceSettings() {
                 </span>
               </div>
               <Button
-                text="Deletar Workspace"
+                text="Deletar Organização"
                 Icon={<BsFillTrashFill />}
                 onClick={openVerifyNameModal}
                 theme={theme}

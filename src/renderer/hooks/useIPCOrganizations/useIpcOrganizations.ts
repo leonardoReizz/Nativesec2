@@ -52,7 +52,7 @@ export function useIpcOrganization() {
           navigate('/createOrganization');
           changeCurrentOrganization(undefined);
           updateLoading(false);
-          toast.success('Organizacão Criado com Sucesso', {
+          toast.success('Organizacão deletada com sucesso.', {
             ...toastOptions,
             toastId: 'workspace-created',
           });

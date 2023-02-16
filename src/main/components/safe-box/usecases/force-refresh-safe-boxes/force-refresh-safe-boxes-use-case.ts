@@ -31,6 +31,13 @@ export class ForceRefreshSafeBoxesUseCase {
       date: lastDateUpdatedSafeBox + 1,
     });
 
+    if (listAPISafeBox.status !== 200 || listAPISafeBox.data.status !== 'ok')
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        } Error api list safe box  -> ${JSON.stringify(listAPISafeBox)}`
+      );
+
     const listAPISafeBoxesDeleted = await this.safeBoxRepositoryAPI.listDeleted(
       {
         organizationId: data.organizationId,
@@ -38,6 +45,18 @@ export class ForceRefreshSafeBoxesUseCase {
         date: lastDateUpdatedSafeBox - 604800,
       }
     );
+
+    if (
+      listAPISafeBoxesDeleted.status !== 200 ||
+      listAPISafeBox.data.status !== 'ok'
+    )
+      throw new Error(
+        `${
+          (store.get('user') as any)?.email
+        }: Error list deleted safe box  -> ${JSON.stringify(
+          listAPISafeBoxesDeleted
+        )}`
+      );
 
     const filterListAPISafeBox = (listAPISafeBox?.data as any)?.msg.filter(
       (dbSafeBox: SafeBoxAPIModel) => {

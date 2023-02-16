@@ -1,5 +1,7 @@
+import * as Sentry from '@sentry/node';
 import { IPCTypes } from '@/types/IPCTypes';
 import { RefreshAllSafeBoxesUseCase } from './refresh-all-safe-boxes-use-case';
+import '@sentry/tracing';
 
 export class RefreshAllSafeBoxesController {
   constructor(private refreshAllSafeBoxesUseCase: RefreshAllSafeBoxesUseCase) {}
@@ -12,6 +14,7 @@ export class RefreshAllSafeBoxesController {
         data: message,
       };
     } catch (error) {
+      Sentry.captureException(error);
       return {
         response: IPCTypes.REFRESH_ALL_SAFE_BOXES_RESPONSE,
         data: {

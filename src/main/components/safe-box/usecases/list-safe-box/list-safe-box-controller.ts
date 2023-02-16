@@ -1,6 +1,8 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
 import { IListSafeBoxRequestDTO } from './IListSafeBoxRequestDTO';
 import { ListSafeBoxUseCase } from './list-safe-box-use-case';
+import '@sentry/tracing';
 
 export class ListSafeBoxController {
   constructor(private listSafeBoxUseCase: ListSafeBoxUseCase) {}
@@ -13,6 +15,7 @@ export class ListSafeBoxController {
         data: message,
       };
     } catch (error) {
+      Sentry.captureException(error);
       return {
         response: IPCTypes.LIST_SAFE_BOXES_RESPONSE,
         data: {

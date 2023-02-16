@@ -1,9 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react/jsx-no-bind */
-import { useCallback, useState } from 'react';
 import { ButtonOutlined } from 'renderer/components/Buttons/ButtonOutlined';
-import { useIPCAuth } from 'renderer/hooks/useIPCAuth/useIPCAuth';
-import { toast } from 'react-toastify';
 import { LoadingType } from 'renderer/routes';
 import { Login } from './Login';
 import { Register } from './Register';
@@ -56,16 +53,12 @@ export function Auth({
 
       <div className={styles.text}>
         <div className={styles.registerText}>
-          <h1>Entre</h1>
+          <h1>Crie sua conta</h1>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat,
-            porro nam, magnam facilis sint ad doloremque nulla expedita minus
-            praesentium illum. Dolor sunt autem consequatur animi eos, tempore
-            quis. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Repellat, porro nam, magnam facilis sint ad doloremque nulla
-            expedita minus praesentium illum. Dolor sunt autem consequatur animi
-            eos, tempore quis.
+            Segurança para suas senhas e dados sensíveis. Armazene e compartilhe
+            de forma segura. Crie sua conta agora mesmo!
           </p>
+          <span>Ja possui uma conta?</span>
           <ButtonOutlined
             type="button"
             text="Entrar"
@@ -74,19 +67,12 @@ export function Auth({
           <img src={vault} className={styles.firstImage} />
         </div>
         <div className={styles.loginText}>
-          <h1>Registre-se Agora Mesmo</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat,
-            porro nam, magnam facilis sint ad doloremque nulla expedita minus
-            praesentium illum. Dolor sunt autem consequatur animi eos, tempore
-            quis. Distinctio. Lorem ipsum dolor sit amet consectetur adipisicing
-            elit. Repellat, porro nam, magnam facilis sint ad doloremque nulla
-            expedita minus praesentium illum. Dolor sunt autem consequatur animi
-            eos, tempore quis. Distinctio.
-          </p>
+          <h1>Bem Vindo</h1>
+          <p>Seja bem vindo de volta! Acesse suas senhas e dados sensíveis. </p>
+          <span>Ainda nao possui uma conta?</span>
           <ButtonOutlined
             type="button"
-            text="Registrar"
+            text="Registre-se"
             onClick={() => handleAuthState('register-step-one')}
           />
           <img src={securityImage} className={styles.secondImage} />

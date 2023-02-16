@@ -117,6 +117,7 @@ export function useIPCAuth({
       IPCTypes.GET_PRIVATE_KEY_RESPONSE,
       (result: IIPCResponse) => {
         if (result.message === 'ok') {
+          window.electron.store.set('logged', true);
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.UPDATE_DATABASE,
           });
@@ -271,7 +272,7 @@ export function useIPCAuth({
       (result: IIPCResponse) => {
         if (result.message === 'ok') {
           changeAuthState('login-step-two');
-          toast.info('Um Token de acesso foi enviado para seu email', {
+          toast.info('Usuario criado com sucesso', {
             ...toastOptions,
             toastId: 'sendToken',
           });

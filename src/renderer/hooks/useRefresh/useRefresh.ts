@@ -10,9 +10,10 @@ export function useRefresh() {
   const { currentSafeBox } = useSafeBox();
   const { refreshTime } = useUserConfig();
 
+  console.log(window.electron.store.get('logged'));
   useEffect(() => {
     const interval = setInterval(() => {
-      if ((window.electron.store.get('token') as IToken)?.tokenType) {
+      if (window.electron.store.get('logged') as boolean) {
         window.electron.ipcRenderer.sendMessage('useIPC', {
           event: IPCTypes.LIST_MY_INVITES,
         });

@@ -11,6 +11,8 @@ import fs from 'fs';
 import os from 'os';
 import Store from 'electron-store';
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
+import '@sentry/tracing';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -22,9 +24,18 @@ import { refreshTokenController } from './components/auth/use-cases/refreshToken
 export const store = new Store();
 export const newDatabase = new Database();
 
+Sentry.init({
+  dsn: 'https://e6de462192cb45669faf6bb33ed50e64@o4504689765187584.ingest.sentry.io/4504689781768192',
+
+  // We recommend adjusting this value in production, or using tracesSampler
+  // for finer control
+  tracesSampleRate: 1.0,
+});
+
 store.clear();
 store.set('initialData', {});
 store.set('organizationInvites', []);
+store.set('logged', false);
 const VERSIONNPM = process.env.npm_package_version;
 const isDevelopment =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
@@ -116,6 +127,7 @@ ipcMain.on(
     if (arg.event === IPCTypes.SESSION_EXPIRED) {
       store.set('keys', {});
       store.set('user', {});
+      store.set('logged', false);
       store.set('safebox', []);
       store.set('organizations', []);
       store.set('organizationInvites', []);

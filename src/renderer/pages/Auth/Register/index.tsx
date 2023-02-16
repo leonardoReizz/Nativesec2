@@ -7,8 +7,6 @@ import {
 } from 'renderer/utils/Formik/Register/Register';
 import { useFormik } from 'formik';
 import { FormMessageError } from 'renderer/components/Forms/FormMessageError';
-import { toast } from 'react-toastify';
-import { toastOptions } from 'renderer/utils/options/Toastify';
 import { useAuth } from 'renderer/hooks/useAuth/useAuth';
 import { AuthStateType } from '..';
 import styles from './styles.module.sass';

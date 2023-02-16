@@ -30,7 +30,6 @@ export function useIPCUserConfig() {
     window.electron.ipcRenderer.on(
       IPCTypes.CHANGE_SAFETY_PHRASE_RESPONSE,
       (result: types.IUpdateUserConfigResponse) => {
-        console.log(result, ' change safety phrase');
         if (result.message === 'ok') {
           toast.success('Senha Alterada', {
             ...toastOptions,

@@ -1,6 +1,8 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
 import { IGenerateTokenRequestDTO } from './generate-token-request-dto';
 import { GenerateTokenUseCase } from './generate-token-use-case';
+import '@sentry/tracing';
 
 export class GenerateTokenController {
   constructor(private generateTokenUseCase: GenerateTokenUseCase) {}
@@ -8,7 +10,6 @@ export class GenerateTokenController {
   async handle(data: IGenerateTokenRequestDTO) {
     try {
       const message = await this.generateTokenUseCase.execute(data);
-
       return {
         response: IPCTypes.AUTH_PASSWORD_RESPONSE,
         data: {
@@ -16,7 +17,7 @@ export class GenerateTokenController {
         },
       };
     } catch (error) {
-      console.log(error);
+      Sentry.captureException(error);
       return {
         response: IPCTypes.AUTH_PASSWORD_RESPONSE,
         data: {

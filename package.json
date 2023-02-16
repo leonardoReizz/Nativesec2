@@ -126,6 +126,8 @@
     "@emotion/styled": "^11.10.5",
     "@journeyapps/sqlcipher": "^5.3.1",
     "@reduxjs/toolkit": "^1.9.0",
+    "@sentry/node": "^7.37.2",
+    "@sentry/tracing": "^7.37.2",
     "axios": "^1.2.3",
     "browser-image-size": "^1.1.0",
     "compare-versions": "^4.1.3",

@@ -15,7 +15,6 @@ import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { TextAreaEye } from 'renderer/components/TextAreas/TextAreaEye';
 import { toast } from 'react-toastify';
 import { toastOptions } from 'renderer/utils/options/Toastify';
-import { FormikProvider } from 'formik';
 import formik from '../../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 import * as types from './types';
@@ -29,7 +28,7 @@ export function Form() {
     position: '',
   });
   const { formikIndex, formikProps } = useContext(CreateSafeBoxContext);
-  const { decryptMessage, safeBoxMode, usersAdmin } = useSafeBox();
+  const { decryptMessage, safeBoxMode } = useSafeBox();
   const { theme } = useUserConfig();
 
   function handleDecryptMessage({

@@ -1,6 +1,8 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import * as Sentry from '@sentry/node';
 import { ForceRefreshSafeBoxesUseCase } from './force-refresh-safe-boxes-use-case';
 import { IForceRefreshSafeBoxesRequestDTO } from './IForceRefreshSafeBoxesRequestDTO';
+import '@sentry/tracing';
 
 export class ForceRefreshSafeBoxesController {
   constructor(
@@ -15,6 +17,7 @@ export class ForceRefreshSafeBoxesController {
         data: message,
       };
     } catch (error) {
+      Sentry.captureException(error);
       return {
         response: IPCTypes.FORCE_REFRESH_SAFE_BOXES_RESPONSE,
         data: {

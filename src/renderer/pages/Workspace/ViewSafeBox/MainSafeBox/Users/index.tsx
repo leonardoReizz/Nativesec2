@@ -6,7 +6,6 @@ import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Dropdown } from 'renderer/components/Dropdown';
 import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
-import { IUser } from 'main/types';
 import { useLoading } from 'renderer/hooks/useLoading';
 import styles from './styles.module.sass';
 
