@@ -51,6 +51,7 @@ export function useIPCSafeBox() {
     window.electron.ipcRenderer.on(
       IPCTypes.CREATE_SAFE_BOX_RESPONSE,
       (response: IIPCResponse) => {
+        toast.dismiss('saveSafeBox');
         if (response.message === 'ok') {
           updateSafeBoxes(window.electron.store.get('safebox'));
 
@@ -83,7 +84,7 @@ export function useIPCSafeBox() {
       (response: IIPCResponse) => {
         updateLoading(false);
         if (response.message === 'ok') {
-          updateSafeBoxes(window.electron.store.get('safebox'));
+          refreshSafeBoxes();
           return toast.success('Cofre deletado.', {
             ...toastOptions,
             toastId: 'deletedSafeBox',
@@ -103,8 +104,7 @@ export function useIPCSafeBox() {
       (response: types.IAddSafeBoxUsersResponse) => {
         toast.dismiss('updateSafeBox');
         if (response.message === 'ok') {
-          updateSafeBoxes(window.electron.store.get('safebox'));
-
+          refreshSafeBoxes();
           const safeBoxes = window.electron.store.get('safebox') as ISafeBox[];
           const filter = safeBoxes.filter(
             (safebox) => safebox._id === response.data.safeBoxId
@@ -147,8 +147,7 @@ export function useIPCSafeBox() {
     window.electron.ipcRenderer.on(
       IPCTypes.UPDATE_SAFE_BOX_RESPONSE,
       (response: types.IUpdateSafeBoxResponse) => {
-        toast.dismiss('updateSafeBox');
-        console.log(response);
+        toast.dismiss('saveSafeBox');
         if (response.message === 'ok') {
           toast.success('Cofre Atualizado', {
             ...toastOptions,

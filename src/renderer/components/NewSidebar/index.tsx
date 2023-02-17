@@ -1,6 +1,4 @@
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
-
-import { useCallback, useState } from 'react';
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi';
 import { FiMenu } from 'react-icons/fi';
 import { useLocation } from 'react-router-dom';
@@ -10,15 +8,20 @@ import { WorkspaceMenu } from './WorkspaceMenu';
 import { WorkspaceSettingsMenu } from './WorkspaceSettingsMenu';
 import logoNativeSec from '../../../../assets/logoNativesec/512.png';
 
-export function NewSidebar() {
+interface NewSidebarProps {
+  openSidebar: () => void;
+  closeSidebar: () => void;
+  isOpenSidebar: boolean;
+}
+
+export function NewSidebar({
+  openSidebar,
+  closeSidebar,
+  isOpenSidebar,
+}: NewSidebarProps) {
   const { pathname } = useLocation();
   const { theme } = useUserConfig();
-  const [isOpenSidebar, setIsOpenSidebar] = useState<boolean>(true);
   const { currentOrganization, currentOrganizationIcon } = useOrganization();
-
-  const closeSidebar = useCallback(() => {
-    setIsOpenSidebar(false);
-  }, []);
 
   return (
     <>
@@ -47,7 +50,8 @@ export function NewSidebar() {
           }`}
           type="button"
           onClick={() =>
-            currentOrganization && setIsOpenSidebar((state) => !state)
+            currentOrganization &&
+            (isOpenSidebar ? closeSidebar() : openSidebar())
           }
         >
           {!isOpenSidebar && (

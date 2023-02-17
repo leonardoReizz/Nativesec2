@@ -140,7 +140,6 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.UPDATE_DATABASE_RESPONSE,
       (response: IIPCResponse) => {
-        console.log(response, ' database');
         if (response.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.GET_PUBLIC_KEY,
@@ -160,7 +159,6 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_PUBLIC_KEY_RESPONSE,
       (result: IIPCResponse) => {
-        console.log(result, ' get pub key  response');
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.GET_USER,
@@ -177,7 +175,6 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_USER_RESPONSE,
       (result: IIPCResponse) => {
-        console.log(result, ' get user response');
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.INSERT_DATABASE_KEYS,
@@ -191,7 +188,6 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.INSERT_DATABASE_KEYS_RESPONSE,
       (result: IIPCResponse) => {
-        console.log(result, ' insert database keys response');
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.REFRESH_ALL_ORGANIZATIONS,

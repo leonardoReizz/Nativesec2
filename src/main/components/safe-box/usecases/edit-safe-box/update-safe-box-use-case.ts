@@ -113,6 +113,6 @@ export class UpdateSafeBoxUseCase {
       data: {
         safeBoxId: data.id,
       },
-    };
+    }; 
   }
 }

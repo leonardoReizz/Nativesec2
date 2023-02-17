@@ -143,8 +143,6 @@ export class Database {
       });
     });
 
-    console.log(currentVersion);
-
     if (version === undefined) {
       const insertVersion = new Promise((resolve, reject) => {
         this.database.run(

@@ -21,8 +21,6 @@ export class ChangeSafetyPhraseUseCase {
 
     let newPrivateKeyId = '';
 
-    console.log('1');
-
     /* Generate new private key  */
     const newPrivateKey = await openpgp.changePassphrase({
       email,

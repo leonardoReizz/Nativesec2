@@ -97,7 +97,6 @@ export class RefreshSafeBoxesUseCase {
         }
       );
     });
-    console.log(listAPISafeBoxesDeleted.data?.msg, ' api list');
 
     if (listAPISafeBoxesDeleted.data?.msg.length > 0) {
       listToDelete = listAPISafeBoxesDeleted?.data?.msg.filter(
@@ -177,8 +176,6 @@ export class RefreshSafeBoxesUseCase {
         })
       );
     }
-
-    console.log(listToDelete, ' list to delete');
 
     if (listToDelete.length > 0) {
       safeBoxResponse = true;

@@ -9,7 +9,11 @@ import { useNotifications } from 'renderer/hooks/useNotifications/useNotificatio
 import styles from './styles.module.sass';
 import { NotificationModal } from './components/NotificationModal';
 
-export function Navbar() {
+interface NavbarProps {
+  openSidebar: () => void;
+}
+
+export function Navbar({ openSidebar }: NavbarProps) {
   const { theme } = useUserConfig();
   const { notifications } = useNotifications();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -27,6 +31,7 @@ export function Navbar() {
   }
 
   function handleOpenWorkspaceSettings() {
+    openSidebar();
     navigate('/organizationMembers');
   }
 

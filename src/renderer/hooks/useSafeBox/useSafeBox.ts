@@ -61,6 +61,7 @@ export function useSafeBox() {
     formikIndex,
     currentOrganizationId,
   }: types.ICreateSafeBox) {
+    toast.loading('Salvando...', { ...toastOptions, toastId: 'saveSafeBox' });
     const { email } = window.electron.store.get('user') as IUser;
     const size = formikProps.values.length;
     const content = [];

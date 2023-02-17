@@ -151,7 +151,6 @@ export function useIpcOrganization() {
       IPCTypes.DECLINE_ORGANIZATION_INVITE_RESPONSE,
       async (result: IIPCResponse) => {
         updateLoading(false);
-        console.log(result);
         if (result.message === 'ok') {
           refreshNotifications();
 
@@ -224,7 +223,6 @@ export function useIpcOrganization() {
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_ORGANIZATIONS_REFRESH_RESPONSE,
       (result: IIPCResponse) => {
-        console.log(result, ' refresh orgs');
         if (result.message === 'ok') {
           refreshOrganizations();
 

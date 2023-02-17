@@ -1,4 +1,3 @@
-import { IToken } from '@/main/types';
 import { IPCTypes } from '@/types/IPCTypes';
 import { useEffect } from 'react';
 import { useOrganization } from '../useOrganization/useOrganization';
@@ -10,7 +9,6 @@ export function useRefresh() {
   const { currentSafeBox } = useSafeBox();
   const { refreshTime } = useUserConfig();
 
-  console.log(window.electron.store.get('logged'));
   useEffect(() => {
     const interval = setInterval(() => {
       if (window.electron.store.get('logged') as boolean) {
