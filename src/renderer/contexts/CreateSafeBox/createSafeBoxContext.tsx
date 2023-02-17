@@ -3,6 +3,7 @@ import { FormikContextType, useFormik } from 'formik';
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -20,6 +21,8 @@ interface CreateSafeBoxContextType {
   usersParticipant: string[];
   selectOptions: string[];
   formikIndex: number;
+  usersSelected: IUsersSelected[];
+  updateUsersSelected: (newSelected: IUsersSelected[]) => void;
   changeFormikIndex: (index: number) => void;
   changeSelectOptions: (users: string[]) => void;
   changeUsersAdmin: (users: string[]) => void;
@@ -29,6 +32,12 @@ interface CreateSafeBoxContextType {
 
 interface CreateSafeBoxContextProviderProps {
   children: ReactNode;
+}
+
+export interface IUsersSelected {
+  email: string;
+  type: 'admin' | 'participant';
+  added: boolean;
 }
 
 export const CreateSafeBoxContext = createContext(
@@ -41,7 +50,7 @@ export function CreateSafeBoxContextProvider({
   const { currentSafeBox } = useContext(SafeBoxesContext);
   const { currentOrganization } = useContext(OrganizationsContext);
   const { submitSafeBox } = useSafeBox();
-
+  const [usersSelected, setUsersSelected] = useState<IUsersSelected[]>([]);
   const [formikIndex, setFormikIndex] = useState<number>(0);
   const [usersParticipant, setUsersParticipant] = useState<string[]>([]);
   const [usersAdmin, setUsersAdmin] = useState<string[]>([]);
@@ -95,6 +104,13 @@ export function CreateSafeBoxContextProvider({
 
   function handleSubmit() {
     if (currentOrganization) {
+      const currentUsers = usersSelected.map((user) => {
+        return {
+          ...user,
+          added: false,
+        };
+      });
+      updateUsersSelected(currentUsers);
       submitSafeBox({
         formikProps: formikProps as unknown as FormikContextType<
           types.IFormikItem[]
@@ -135,6 +151,10 @@ export function CreateSafeBoxContextProvider({
     setSelectOptions(users);
   }
 
+  const updateUsersSelected = useCallback((newSelected: IUsersSelected[]) => {
+    setUsersSelected(newSelected);
+  }, []);
+
   return (
     <CreateSafeBoxContext.Provider
       value={{
@@ -145,8 +165,10 @@ export function CreateSafeBoxContextProvider({
         changeFormikIndex,
         initialValues,
         usersAdmin,
+        updateUsersSelected,
         usersParticipant,
         changeUsersAdmin,
+        usersSelected,
         changeUsersParticipant,
         changeSelectOptions,
         selectOptions,

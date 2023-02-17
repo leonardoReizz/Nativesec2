@@ -9,7 +9,7 @@ import styles from './styles.module.sass';
 
 export function LayoutsWithSidebar() {
   const { theme } = useUserConfig();
-  const [isOpenSidebar, setIsOpenSidebar] = useState<boolean>(true);
+  const [isOpenSidebar, setIsOpenSidebar] = useState<boolean>(false);
 
   const openSidebar = useCallback(() => {
     setIsOpenSidebar(true);
@@ -24,7 +24,7 @@ export function LayoutsWithSidebar() {
       <div
         className={`${styles.flexApp} ${theme === 'dark' ? styles.dark : ''}`}
       >
-        <Sidebar />
+        <Sidebar openSidebar={openSidebar} />
         <NewSidebar
           openSidebar={openSidebar}
           closeSidebar={closeSidebar}

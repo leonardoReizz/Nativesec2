@@ -1,7 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from 'react';
-import { IoMdAdd } from 'react-icons/io';
-import { Input } from 'renderer/components/Inputs/Input';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Dropdown } from 'renderer/components/Dropdown';
@@ -36,10 +34,6 @@ export default function Users() {
   const [isOpenVerifyNameModal, setIsOpenVerifyNameModal] =
     useState<boolean>(false);
   const { loading, updateLoading } = useLoading();
-  const [typeUserAdd, setTypeUserAdd] = useState<'admin' | 'participant'>(
-    'participant'
-  );
-  const [email, setEmail] = useState<string>('');
   const [currentUserDelete, setCurrentUserDelete] = useState<
     IUserDelete | undefined
   >();
@@ -68,21 +62,6 @@ export default function Users() {
       currentSafeBox ? JSON.parse(currentSafeBox.usuarios_escrita) : usersAdmin
     );
   }, [currentSafeBox]);
-
-  function handleAddParticipant() {
-    const findAdmin = usersAdmin.filter((user) => user === email);
-    const findUser = usersParticipant.filter((user) => user === email);
-
-    if (findAdmin.length > 0 || findUser.length > 0) {
-      return;
-    }
-
-    if (typeUserAdd === 'participant') {
-      changeUsersParticipant([...usersParticipant, email]);
-    } else {
-      changeUsersAdmin([...usersAdmin, email]);
-    }
-  }
 
   const closeVerifyNameModal = useCallback(() => {
     setIsOpenVerifyNameModal(false);
@@ -123,35 +102,6 @@ export default function Users() {
           theme === 'dark' ? styles.dark : styles.light
         }`}
       >
-        {safeBoxMode === 'edit' && (
-          <div className={styles.create}>
-            <div>
-              <Input text="email" onChange={(e) => setEmail(e.target.value)} />
-              <div className={styles.options}>
-                <div>
-                  <input
-                    type="checkbox"
-                    checked={typeUserAdd === 'participant'}
-                    onClick={() => setTypeUserAdd('participant')}
-                  />
-                  <span>Leitura</span>
-                </div>
-                <div>
-                  <input
-                    type="checkbox"
-                    checked={typeUserAdd === 'admin'}
-                    onClick={() => setTypeUserAdd('admin')}
-                  />
-                  <span>Leitura e Escrita</span>
-                </div>
-              </div>
-            </div>
-
-            <button type="button" onClick={handleAddParticipant}>
-              <IoMdAdd />
-            </button>
-          </div>
-        )}
         <div className={styles.participantContainer}>
           <div className={styles.participants}>
             <div className={styles.title}>

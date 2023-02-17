@@ -5,10 +5,15 @@ import { IoMdAdd } from 'react-icons/io';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { Tooltip } from '@chakra-ui/react';
 import { Icon } from './Icon';
 import styles from './styles.module.sass';
 
-export function Sidebar() {
+interface SidebarProps {
+  openSidebar: () => void;
+}
+
+export function Sidebar({ openSidebar }: SidebarProps) {
   const navigate = useNavigate();
   const { theme, updateLastOrganizationId } = useUserConfig();
   const {
@@ -26,6 +31,7 @@ export function Sidebar() {
 
   const changeOrganization = useCallback(
     (organizationId: string) => {
+      openSidebar();
       updateSafeBoxes([]);
       changeCurrentSafeBox(undefined);
       changeSafeBoxMode('view');
@@ -37,6 +43,11 @@ export function Sidebar() {
     [currentOrganization]
   );
 
+  function handleCreateOrganization() {
+    changeCurrentOrganization(undefined);
+    navigate('/createOrganization');
+  }
+
   return (
     <div
       className={`${styles.sidebar} ${
@@ -45,22 +56,37 @@ export function Sidebar() {
     >
       <div className={styles.icons}>
         {organizations.map((organization) => (
-          <Icon
-            organization={organization}
-            icon={
-              organizationsIcons?.filter(
-                (icon) => icon._id === organization?._id
-              )[0]?.icone
-            }
-            changeOrganization={changeOrganization}
-            key={organization._id}
-          />
+          <Tooltip
+            hasArrow
+            label={organization.nome}
+            aria-label="A tooltip"
+            placement="auto"
+          >
+            <span key={organization._id}>
+              <Icon
+                organization={organization}
+                icon={
+                  organizationsIcons?.filter(
+                    (icon) => icon._id === organization?._id
+                  )[0]?.icone
+                }
+                changeOrganization={changeOrganization}
+              />
+            </span>
+          </Tooltip>
         ))}
       </div>
       <div className={styles.createIcon}>
-        <button type="button" onClick={() => navigate('/createOrganization')}>
-          <IoMdAdd />
-        </button>
+        <Tooltip
+          hasArrow
+          label="Nova Organização"
+          aria-label="A tooltip"
+          placement="auto"
+        >
+          <button type="button" onClick={handleCreateOrganization}>
+            <IoMdAdd />
+          </button>
+        </Tooltip>
       </div>
     </div>
   );

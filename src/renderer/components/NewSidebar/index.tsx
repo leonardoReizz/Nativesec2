@@ -54,7 +54,7 @@ export function NewSidebar({
             (isOpenSidebar ? closeSidebar() : openSidebar())
           }
         >
-          {!isOpenSidebar && (
+          {(!isOpenSidebar || !currentOrganization) && (
             <>
               <div className={styles.burguer}>
                 <FiMenu />

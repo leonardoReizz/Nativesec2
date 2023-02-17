@@ -52,6 +52,7 @@ export function useIPCSafeBox() {
       IPCTypes.CREATE_SAFE_BOX_RESPONSE,
       (response: IIPCResponse) => {
         toast.dismiss('saveSafeBox');
+        updateLoading(false);
         if (response.message === 'ok') {
           updateSafeBoxes(window.electron.store.get('safebox'));
 
@@ -84,6 +85,7 @@ export function useIPCSafeBox() {
       (response: IIPCResponse) => {
         updateLoading(false);
         if (response.message === 'ok') {
+          changeCurrentSafeBox(undefined);
           refreshSafeBoxes();
           return toast.success('Cofre deletado.', {
             ...toastOptions,

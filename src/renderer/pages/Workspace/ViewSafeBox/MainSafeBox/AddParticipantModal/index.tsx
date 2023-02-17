@@ -2,16 +2,15 @@
 import { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
 import { Tooltip } from '@chakra-ui/react';
-import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
+import { BiChevronUp } from 'react-icons/bi';
 import { IoMdAdd, IoMdRemove } from 'react-icons/io';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Button } from 'renderer/components/Buttons/Button';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { Dropdown } from 'renderer/components/Dropdown';
 import { useLoading } from 'renderer/hooks/useLoading';
-
+import { IUsersSelected } from '@/renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import styles from './styles.module.sass';
-import { IUsersSelected } from '..';
 
 interface AddParticipantModalProps {
   isOpen: boolean;
@@ -43,19 +42,36 @@ export function AddParticipantModal({
 }: AddParticipantModalProps) {
   const { theme } = useUserConfig();
   const { loading, updateLoading } = useLoading();
-  const { filteredAdmin, filteredParticipant } = useOrganization();
+  const { filteredAdmin, filteredParticipant, currentOrganization } =
+    useOrganization();
   const [open, setOpen] = useState<boolean[]>([]);
 
   useEffect(() => {
-    const usersAdmin: IUsersSelected[] = filteredAdmin.map((email: string) => {
-      return { email, type: 'admin', added: false };
-    });
-    const usersParticipant: IUsersSelected[] = filteredParticipant.map(
-      (email: string) => {
-        return { email, type: 'participant', added: false };
-      }
-    );
-    updateUsersSelected([...usersAdmin, ...usersParticipant]);
+    if (currentOrganization) {
+      const email = window.electron.store.get('user')?.email;
+      const usersAdmin: IUsersSelected[] = filteredAdmin.map(
+        (userEmail: string) => {
+          return { email: userEmail, type: 'admin', added: false };
+        }
+      );
+      const usersParticipant: IUsersSelected[] = filteredParticipant.map(
+        (userEmail: string) => {
+          return { email: userEmail, type: 'participant', added: false };
+        }
+      );
+
+      const users = [
+        ...usersAdmin,
+        ...usersParticipant,
+        { email: currentOrganization.dono, type: 'admin', added: false },
+      ];
+
+      const filterUsers = users.filter(
+        (user) => user.email !== email
+      ) as IUsersSelected[];
+
+      updateUsersSelected(filterUsers);
+    }
   }, []);
 
   function save() {
@@ -116,6 +132,8 @@ export function AddParticipantModal({
       onRequestClose();
     }
   }, [loading]);
+
+  console.log(usersSelected);
 
   return (
     <>

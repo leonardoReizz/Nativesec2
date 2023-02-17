@@ -15,11 +15,11 @@ import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/Org
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
-import { FormikContextType } from 'formik';
 import { IFormikItem } from 'renderer/contexts/CreateSafeBox/types';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Button } from 'renderer/components/Buttons/Button';
 import { useLoading } from 'renderer/hooks/useLoading';
+import { FormikContextType } from 'formik';
 import formik from '../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 

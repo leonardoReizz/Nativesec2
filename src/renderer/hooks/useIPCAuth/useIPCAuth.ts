@@ -3,7 +3,6 @@ import { IPCTypes } from '@/types/IPCTypes';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { IUserConfig } from 'renderer/contexts/UserConfigContext/types';
 import { AuthStateType } from 'renderer/pages/Auth';
 import { LoadingType } from 'renderer/routes';
 import { toastOptions } from 'renderer/utils/options/Toastify';
@@ -270,7 +269,7 @@ export function useIPCAuth({
           changeAuthState('login-step-two');
           toast.info('Usuario criado com sucesso', {
             ...toastOptions,
-            toastId: 'sendToken',
+            toastId: 'createdUserSucess',
           });
         } else if (result.message === 'accountExists') {
           toast.error('Este email já esta cadastrado', {

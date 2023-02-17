@@ -1,27 +1,25 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useContext } from 'react';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Button } from 'renderer/components/Buttons/Button';
 import { IoMdAdd } from 'react-icons/io';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
-import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
-import { useRadio } from '@chakra-ui/react';
+import { CreateSafeBoxContext } from '@/renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { Form } from './Form';
 import Users from './Users';
 import styles from './styles.module.sass';
 import { AddParticipantModal } from './AddParticipantModal';
 
-export interface IUsersSelected {
-  email: string;
-  type: 'admin' | 'participant';
-  added: boolean;
-}
 export function MainSafeBox() {
   const [tab, setTab] = useState<'form' | 'users'>('form');
-  const [usersSelected, setUsersSelected] = useState<IUsersSelected[]>([]);
 
   const [isOpenAddParticipantModal, setIsOpenParticipantModal] =
     useState<boolean>(false);
+
+  const { updateUsersSelected, usersSelected } =
+    useContext(CreateSafeBoxContext);
+
   const { theme } = useUserConfig();
+
   const {
     addSafeBoxUsers,
     currentSafeBox,
@@ -30,7 +28,6 @@ export function MainSafeBox() {
     changeUsersParticipant,
     isSafeBoxParticipant,
   } = useSafeBox();
-  const { isParticipant } = useOrganization();
 
   function handleTabForm() {
     setTab('form');
@@ -42,13 +39,6 @@ export function MainSafeBox() {
   const closeModal = useCallback(() => {
     setIsOpenParticipantModal(false);
   }, []);
-
-  const updateUsersSelected = useCallback(
-    (newUsersSelected: IUsersSelected[]) => {
-      setUsersSelected(newUsersSelected);
-    },
-    []
-  );
 
   function inviteUsers(usersAdmin: string[], usersParticipant: string[]) {
     if (currentSafeBox) {
@@ -90,14 +80,6 @@ export function MainSafeBox() {
     setIsOpenParticipantModal(false);
     changeUsersAdmin(usersAdmin);
     changeUsersParticipant(usersParticipant);
-
-    const currentUsers = usersSelected.map((user) => {
-      return {
-        ...user,
-        added: false,
-      };
-    });
-    updateUsersSelected(currentUsers);
   }
 
   return (
@@ -141,7 +123,19 @@ export function MainSafeBox() {
             />
           )}
         </div>
-        {tab === 'form' ? <Form /> : <Users />}
+        <div
+          className={`${styles.form} ${tab === 'form' ? styles.formOpen : ''}`}
+        >
+          <Form />
+        </div>
+        <div
+          className={`${styles.form} ${
+            tab === 'users' ? styles.usersOpen : ''
+          }`}
+        >
+          <Users />
+        </div>
+        {/* {tab === 'form' ? <Form /> : <Users />} */}
       </div>
     </>
   );

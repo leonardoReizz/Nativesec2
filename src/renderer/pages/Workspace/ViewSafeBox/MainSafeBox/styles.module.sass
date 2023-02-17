@@ -23,14 +23,15 @@
     gap: 1rem
     min-height: 50px
     margin-bottom: 1rem
-    
+
     button
       @include flex(center, center, row)
       position: relative
       font-weight: 500
-      
+
       &:nth-child(2)
         min-width: 130px
+
       &::before
         content: ''
         position: absolute
@@ -58,3 +59,22 @@
         width: 100%
         height: 1px
         bottom: 0
+
+  .form
+    visibility: hidden
+    height: 0
+    width: 0
+    opacity: 0
+
+  .formOpen
+    visibility: visible
+    width: 100%
+    opacity: 1
+
+  .usersOpen
+    visibility: visible
+    width: 100%
+    opacity: 1
+
+
+
