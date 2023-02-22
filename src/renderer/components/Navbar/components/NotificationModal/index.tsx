@@ -8,6 +8,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { Tooltip } from '@chakra-ui/react';
 import { useLoading } from '@/renderer/hooks/useLoading';
+import { MdNotificationsOff } from 'react-icons/md';
 import styles from './styles.module.sass';
 
 interface NotificationModalProps {
@@ -117,6 +118,12 @@ export function NotificationModal({
               </div>
             </div>
           ))}
+          {notifications.length === 0 && (
+            <div className={styles.notNotification}>
+              <MdNotificationsOff />
+              <h4>Nenhuma notificacão por aqui</h4>
+            </div>
+          )}
         </div>
       </div>
     </>

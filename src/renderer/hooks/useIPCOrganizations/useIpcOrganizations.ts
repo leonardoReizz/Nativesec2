@@ -7,6 +7,8 @@ import { toastOptions } from 'renderer/utils/options/Toastify';
 import { useLoading } from '../useLoading';
 import { useNotifications } from '../useNotifications/useNotifications';
 import { useOrganization } from '../useOrganization/useOrganization';
+import { useSafeBox } from '../useSafeBox/useSafeBox';
+import { useUserConfig } from '../useUserConfig/useUserConfig';
 
 import * as types from './types';
 
@@ -17,6 +19,8 @@ export function useIpcOrganization() {
     currentOrganization,
     addNewParticipant,
   } = useOrganization();
+  const { updateLastOrganizationId } = useUserConfig();
+  const { changeCurrentSafeBox, getSafeBoxes } = useSafeBox();
   const { updateLoading } = useLoading();
   const { refreshNotifications } = useNotifications();
   const navigate = useNavigate();
@@ -29,7 +33,10 @@ export function useIpcOrganization() {
         if (result.message === 'ok') {
           refreshOrganizations();
           navigate(`/workspace/${result.organization._id}`);
+          changeCurrentSafeBox(undefined);
+          updateLastOrganizationId(result.organization._id);
           changeCurrentOrganization(result.organization._id);
+          getSafeBoxes(result.organization._id);
           return toast.success('Organizacão Criado com Sucesso', {
             ...toastOptions,
             toastId: 'workspace-created',

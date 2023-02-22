@@ -39,6 +39,7 @@ export function CreateOrganization() {
   const [step, setStep] = useState<number>(1);
   const [users, setUsers] = useState<IUsers[]>([]);
   const { loading, updateLoading } = useLoading();
+
   const handleNextStep = () => {
     const next = step === 3 ? 1 : step + 1;
     setStep(next);
