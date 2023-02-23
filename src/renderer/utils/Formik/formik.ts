@@ -122,7 +122,7 @@ const formikData = [
       {
         name: 'address',
         text: 'Endereço da fatura',
-        element: 'input',
+        element: 'textArea',
         address: '',
         crypto: false,
       },
@@ -326,14 +326,14 @@ const formikData = [
       {
         name: 'sshKeyPrivate',
         text: 'SSH Key Private',
-        element: 'input',
+        element: 'textArea',
         sshKeyPrivate: '',
         crypto: true,
       },
       {
         name: 'sshKeyPublic',
         text: 'SSH Key Public',
-        element: 'input',
+        element: 'textArea',
         sshKeyPublic: '',
         crypto: false,
       },
