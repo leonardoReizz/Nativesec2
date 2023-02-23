@@ -13,11 +13,10 @@ export class RefreshSafeBoxesUseCase {
   ) {}
 
   async execute(data: IRefreshSafeBoxesRequestDTO, lastDate?: number) {
-    let lastDateUpdatedSafeBox = 1638290571;
-    let safeBoxResponse = false;
     const { tokenType, accessToken } = store.get('token') as IToken;
     const authorization = `${tokenType} ${accessToken}`;
-    let listToDelete: SafeBoxAPIModel[] = [];
+    let lastDateUpdatedSafeBox = 1638290571;
+    let safeBoxResponse = false;
 
     const listDBSafeBox = await this.safeBoxRepositoryDatabase.list(
       data.organizationId
@@ -56,135 +55,62 @@ export class RefreshSafeBoxesUseCase {
       }
     );
 
-    const filterListAPISafeBox = (listAPISafeBox?.data as any)?.msg.filter(
-      (dbSafeBox: SafeBoxAPIModel) => {
-        return !listAPISafeBoxesDeleted?.data?.msg.some(
-          (deletedSafeBox: SafeBoxAPIModel) => {
-            return dbSafeBox._id.$oid == deletedSafeBox._id.$oid;
-          }
-        );
-      }
-    );
+    let apiSafeBoxesDeleted = listAPISafeBoxesDeleted.data.msg as SafeBoxAPIModel[];
+    let apiSafeBoxes = [...listAPISafeBox.data.msg] as SafeBoxAPIModel[];
 
-    const listToCreate = filterListAPISafeBox.filter(
-      (safebox: SafeBoxAPIModel) => {
-        return !listDBSafeBox.some((dbSafeBox: SafeBoxDatabaseModel) => {
-          return dbSafeBox._id === safebox._id.$oid;
-        });
-      }
-    );
 
-    const filterListToCreate = listToCreate.filter(
-      (safebox: SafeBoxAPIModel) => {
-        return listAPISafeBoxesDeleted?.data?.msg.filter(
-          (safeBoxDeleted: SafeBoxAPIModel) => {
-            return safeBoxDeleted._id.$oid === safebox._id.$oid;
-          }
-        );
-      }
-    );
-
-    const listToUpdate = listDBSafeBox.filter((dbSafeBox) => {
-      return filterListAPISafeBox.some((safebox: SafeBoxAPIModel) => {
-        return dbSafeBox._id === safebox._id.$oid;
-      });
-    });
-
-    const filterListToUpdate = listToUpdate.filter((dbSafeBox) => {
-      return listAPISafeBoxesDeleted?.data?.msg.filter(
-        (safeBoxDeleted: SafeBoxAPIModel) => {
-          return dbSafeBox._id === safeBoxDeleted._id.$oid;
+    await Promise.all(
+      apiSafeBoxesDeleted.map(async (safebox) => {
+        if(listDBSafeBox.filter((safeboxDB) => safeboxDB._id === safebox._id.$oid).length) {
+          await this.safeBoxRepositoryDatabase.delete(safebox._id.$oid);
+          apiSafeBoxes = apiSafeBoxes.filter((safeboxAPI) => safeboxAPI._id.$oid !== safebox._id.$oid)
         }
-      );
-    });
-
-    if (listAPISafeBoxesDeleted.data?.msg.length > 0) {
-      listToDelete = listAPISafeBoxesDeleted?.data?.msg.filter(
-        (safebox: SafeBoxAPIModel) => {
-          return listDBSafeBox.filter((dbSafeBox) => {
-            return dbSafeBox._id === safebox._id.$oid;
-          });
-        }
-      );
-    }
-
-    if (filterListToUpdate.length > 0) {
-      safeBoxResponse = true;
-      const safeBoxInfo: SafeBoxAPIModel[] = await Promise.all(
-        filterListToUpdate.map(async (safebox) => {
-          const APIGetSafeBox = await this.safeBoxRepositoryAPI.getSafeBoxById({
-            authorization,
-            safeBoxId: safebox._id,
-            organizationId: data.organizationId,
-          });
-
-          return APIGetSafeBox?.data?.msg[0];
-        })
-      );
-
-      await Promise.all(
-        safeBoxInfo.map(async (safebox: SafeBoxAPIModel) => {
+      })
+    )
+    
+    await Promise.all(
+      listDBSafeBox.map(async (safeboxDB) => {
+        const safeboxFilter = apiSafeBoxes.filter((safeboxAPI) => safeboxAPI._id.$oid === safeboxDB._id);
+        if(safeboxFilter.length) {
           await this.safeBoxRepositoryDatabase.update({
-            ...safebox,
-            anexos: JSON.stringify(safebox.anexos),
-            data_atualizacao: safebox.data_atualizacao.$date,
+            ...safeboxFilter[0],
+            anexos: JSON.stringify(safeboxFilter[0].anexos),
+            data_atualizacao: safeboxFilter[0].data_atualizacao.$date,
             usuarios_escrita_deletado: JSON.stringify(
-              safebox.usuarios_escrita_deletado
+              safeboxFilter[0].usuarios_escrita_deletado
             ),
             usuarios_leitura_deletado: JSON.stringify(
-              safebox.usuarios_leitura_deletado
+              safeboxFilter[0].usuarios_leitura_deletado
             ),
-            usuarios_escrita: JSON.stringify(safebox.usuarios_escrita),
-            usuarios_leitura: JSON.stringify(safebox.usuarios_leitura),
-            _id: safebox._id.$oid,
-          });
-        })
-      );
-    }
-
-    if (filterListToCreate.length > 0) {
-      safeBoxResponse = true;
-      const safeBoxInfo: SafeBoxAPIModel[] = await Promise.all(
-        filterListToCreate.map(async (safebox: SafeBoxAPIModel) => {
-          const APIGetSafeBox = await this.safeBoxRepositoryAPI.getSafeBoxById({
-            authorization,
-            safeBoxId: safebox._id.$oid,
-            organizationId: data.organizationId,
+            usuarios_escrita: JSON.stringify(safeboxFilter[0].usuarios_escrita),
+            usuarios_leitura: JSON.stringify(safeboxFilter[0].usuarios_leitura),
+            _id: safeboxFilter[0]._id.$oid,
           });
 
-          return APIGetSafeBox?.data?.msg[0];
-        })
-      );
+          apiSafeBoxes = apiSafeBoxes.filter((safeboxAPI) => safeboxAPI._id.$oid !== safeboxDB._id)
+        }
+      })
+    )
 
-      await Promise.all(
-        safeBoxInfo.map(async (safebox: SafeBoxAPIModel) => {
+    await Promise.all(
+      apiSafeBoxes.map(async (safeboxAPI) => {
           await this.safeBoxRepositoryDatabase.create({
-            ...safebox,
-            anexos: JSON.stringify(safebox.anexos),
-            data_hora_create: safebox.data_hora_create.$date,
-            data_atualizacao: safebox.data_atualizacao.$date,
+            ...safeboxAPI,
+            anexos: JSON.stringify(safeboxAPI.anexos),
+            data_hora_create: safeboxAPI.data_hora_create.$date,
+            data_atualizacao: safeboxAPI.data_atualizacao.$date,
             usuarios_escrita_deletado: JSON.stringify(
-              safebox.usuarios_escrita_deletado
+              safeboxAPI.usuarios_escrita_deletado
             ),
             usuarios_leitura_deletado: JSON.stringify(
-              safebox.usuarios_leitura_deletado
+              safeboxAPI.usuarios_leitura_deletado
             ),
-            usuarios_escrita: JSON.stringify(safebox.usuarios_escrita),
-            usuarios_leitura: JSON.stringify(safebox.usuarios_leitura),
-            _id: safebox._id.$oid,
+            usuarios_escrita: JSON.stringify(safeboxAPI.usuarios_escrita),
+            usuarios_leitura: JSON.stringify(safeboxAPI.usuarios_leitura),
+            _id: safeboxAPI._id.$oid,
           });
-        })
-      );
-    }
-
-    if (listToDelete.length > 0) {
-      safeBoxResponse = true;
-      await Promise.all(
-        listToDelete.map(async (safeBoxDelete: SafeBoxAPIModel) => {
-          await this.safeBoxRepositoryDatabase.delete(safeBoxDelete._id.$oid);
-        })
-      );
-    }
+      })
+    )
 
     await refreshSafeBoxes(data.organizationId);
 

@@ -1,8 +1,10 @@
 import { IPCTypes } from '@/types/IPCTypes';
+import { toast } from 'react-toastify';
 import * as types from './types';
 
 export function useAuth() {
   function AuthPassword({ email }: types.IAuthPasswordData) {
+    toast.dismiss('createdUserSucess');
     window.electron.ipcRenderer.sendMessage('useIPC', {
       event: IPCTypes.AUTH_PASSWORD,
       data: {

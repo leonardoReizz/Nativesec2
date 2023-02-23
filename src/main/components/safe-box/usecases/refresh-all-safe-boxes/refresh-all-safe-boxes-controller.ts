@@ -9,11 +9,13 @@ export class RefreshAllSafeBoxesController {
   async handle() {
     try {
       const message = await this.refreshAllSafeBoxesUseCase.execute();
+      console.log(message)
       return {
         response: IPCTypes.REFRESH_ALL_SAFE_BOXES_RESPONSE,
         data: message,
       };
     } catch (error) {
+      console.log(error)
       Sentry.captureException(error);
       return {
         response: IPCTypes.REFRESH_ALL_SAFE_BOXES_RESPONSE,

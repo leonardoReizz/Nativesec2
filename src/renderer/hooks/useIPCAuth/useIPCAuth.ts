@@ -174,6 +174,7 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_USER_RESPONSE,
       (result: IIPCResponse) => {
+        console.log(result, 'get user response')
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.INSERT_DATABASE_KEYS,
@@ -203,6 +204,8 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
       (result: IIPCResponse) => {
+
+        console.log(result, 'refresh all organization')
         if (result.message === 'ok') {
           updateOrganizationsIcons(window.electron.store.get('iconeAll'));
           updateOrganizations(window.electron.store.get('organizations'));
@@ -225,10 +228,12 @@ export function useIPCAuth({
       IPCTypes.REFRESH_ALL_SAFE_BOXES_RESPONSE,
       (result: IIPCResponse) => {
         if (result.message === 'ok') {
+          console.log(result, 'refresh all safe boxes')
           const user = window.electron.store.get('user') as IUser;
           updateUserConfig({ ...user });
           changeLoadingState('finalized');
           updateRefreshTime(Number(user.refreshTime));
+          console.log({...user}, ' user')
           if (user.lastOrganizationId === null) {
             navigate('/createOrganization');
           } else {

@@ -21,12 +21,13 @@ export function Navbar({ openSidebar }: NavbarProps) {
   const [isOpenNotificationModal, setIsOpenNotificationModal] =
     useState<boolean>(false);
 
-  const { currentOrganization } = useOrganization();
+  const { currentOrganization, changeCurrentOrganization } = useOrganization();
   const navigate = useNavigate();
 
   const { pathname } = useLocation();
 
   function handleOpenUserSettings() {
+    changeCurrentOrganization(undefined);
     navigate('/userSettings');
   }
 

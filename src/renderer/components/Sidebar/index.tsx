@@ -61,8 +61,9 @@ export function Sidebar({ openSidebar }: SidebarProps) {
             label={organization.nome}
             aria-label="A tooltip"
             placement="auto"
+            key={organization._id}
           >
-            <span key={organization._id}>
+            <span>
               <Icon
                 organization={organization}
                 icon={
