@@ -1,8 +1,18 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
+type StoreGetType =
+  | 'organizations'
+  | 'user'
+  | 'safebox'
+  | 'safeboxGroup'
+  | 'logged'
+  | 'token'
+  | 'keys'
+  | 'iconeAll';
+
 contextBridge.exposeInMainWorld('electron', {
   store: {
-    get(val: any) {
+    get(val: StoreGetType) {
       return ipcRenderer.sendSync('electron-store-get', val);
     },
     set(property: any, val: any) {

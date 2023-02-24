@@ -1,7 +1,6 @@
 import { OrganizationModelAPI } from '@/main/components/organizations/model/Organization';
 import { OrganizationRepositoryAPI } from '@/main/components/organizations/repositories/organization-repository-api';
 import { store } from '@/main/main';
-import { IToken } from '@/main/types';
 import { RefreshSafeBoxesUseCase } from '../refresh-safe-boxes/refresh-safe-boxes-use-case';
 
 export class RefreshAllSafeBoxesUseCase {

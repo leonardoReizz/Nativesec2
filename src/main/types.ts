@@ -12,21 +12,6 @@ export interface IInitialData {
   };
 }
 
-export interface IUser {
-  fullName: string;
-  savePrivateKey: string | null;
-  refreshTime: number;
-  theme: ThemeType;
-  lastOrganizationId: string | null;
-  email: string;
-  safetyPhrase: string;
-}
-
-export interface IToken {
-  accessToken: string;
-  tokenType: string;
-}
-
 export interface UseIPCData {
   id?: string;
   event: string;
@@ -58,19 +43,6 @@ export interface IGenerateParKeys {
   myEmail: string;
   myFullName: string;
   safetyPhrase: string;
-}
-
-export interface IKeys {
-  privateKey: string;
-  privateKeyId: string;
-  publicKey: string;
-  publicKeyId: string;
-  savePrivateKey: boolean;
-}
-
-export interface APIResponse {
-  data: any;
-  status: number;
 }
 
 export type DatabaseType = sqlite3.Database;

@@ -120,11 +120,11 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
         </div>
       </div>
       <div className={styles.safeBoxes}>
-        {/* <div className={styles.safeBox}>
+        <div className={styles.safeBox}>
           <div className={styles.title}>
             <span>Grupo de Cofres</span>
           </div>
-        </div> */}
+        </div>
         <div className={styles.safeBox}>
           <div className={styles.title}>
             <span>Cofres</span>

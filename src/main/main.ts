@@ -156,7 +156,7 @@ ipcMain.on(
     };
 
     const result = await useIpcActions(newQueue);
-    console.log(result)
+    console.log(result);
     return newQueue.ipcEvent.reply(result?.response, result.data);
   }
 );

@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { store } from '../../../main';
-import { APIResponse, IToken } from '../../../types';
 import { api } from '../../../util';
 import { SafeBoxAPIModel } from '../model/SafeBox';
 import { SafeBoxRepositoryAPIInterface } from './safe-box-repository-api-interface';

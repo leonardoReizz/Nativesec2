@@ -14,9 +14,20 @@ const tables = [
     name: 'privKey',
     query: 'ALTER TABLE private_keys ADD _id type TEXT',
   },
+  {
+    name: 'safeboxGroup',
+    query: `CREATE TABLE IF NOT EXISTS safeboxGroup (
+      _id TEXT,
+      cofres TEXT,
+      data_hora_create INTEGER,
+      data_atualizacao INTEGER,
+      descricao TEXT,
+      nome TEXT,
+      organizacao TEXT,
+      dono TEXT,
+    )`,
+  },
 ];
-
-// usuarios escrita deletado
 
 export async function update(db: sqlite3.Database) {
   await Promise.all(

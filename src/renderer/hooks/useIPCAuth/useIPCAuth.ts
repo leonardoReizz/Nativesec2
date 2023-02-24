@@ -1,4 +1,3 @@
-import { IUser } from '@/main/types';
 import { IPCTypes } from '@/types/IPCTypes';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -174,7 +173,7 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_USER_RESPONSE,
       (result: IIPCResponse) => {
-        console.log(result, 'get user response')
+        console.log(result, 'get user response');
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.INSERT_DATABASE_KEYS,
@@ -204,13 +203,12 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_ORGANIZATIONS_RESPONSE,
       (result: IIPCResponse) => {
-
-        console.log(result, 'refresh all organization')
+        console.log(result, 'refresh all organization');
         if (result.message === 'ok') {
           updateOrganizationsIcons(window.electron.store.get('iconeAll'));
           updateOrganizations(window.electron.store.get('organizations'));
           window.electron.ipcRenderer.sendMessage('useIPC', {
-            event: IPCTypes.REFRESH_ALL_SAFE_BOXES,
+            event: IPCTypes.REFRESH_ALL_SAFE_BOX_GROUP,
           });
           return;
         }
@@ -225,15 +223,33 @@ export function useIPCAuth({
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
+      IPCTypes.REFRESH_ALL_SAFE_BOX_GROUP_RESPONSE,
+      (result: IIPCResponse) => {
+        if (result.message === 'ok') {
+          window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.REFRESH_ALL_SAFE_BOXES,
+          });
+        }
+        changeLoadingState('false');
+        toast.error('Error ao atualizar grupo de cofres', {
+          ...toastOptions,
+          toastId: 'errorUpdateAllSafeBoxGroup',
+        });
+      }
+    );
+  }, [organizations]);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
       IPCTypes.REFRESH_ALL_SAFE_BOXES_RESPONSE,
       (result: IIPCResponse) => {
         if (result.message === 'ok') {
-          console.log(result, 'refresh all safe boxes')
+          console.log(result, 'refresh all safe boxes');
           const user = window.electron.store.get('user') as IUser;
           updateUserConfig({ ...user });
           changeLoadingState('finalized');
           updateRefreshTime(Number(user.refreshTime));
-          console.log({...user}, ' user')
+          console.log({ ...user }, ' user');
           if (user.lastOrganizationId === null) {
             navigate('/createOrganization');
           } else {

@@ -1,3 +1,13 @@
+type StoreGetType =
+  | 'organizations'
+  | 'user'
+  | 'safebox'
+  | 'safeboxGroup'
+  | 'logged'
+  | 'token'
+  | 'keys'
+  | 'iconeAll';
+
 declare global {
   interface Window {
     electron: {
@@ -10,7 +20,7 @@ declare global {
         once(channel: string, func: (...args: any[]) => void): void;
       };
       store: {
-        get: (key: string) => any;
+        get: (key: StoreGetType) => any;
         set: (key: string, val: any) => void;
         // any other methods you've defined...
       };

@@ -68,6 +68,19 @@ const tables = [
       _id TEXT
       )`,
   },
+  {
+    name: 'safeboxGroup',
+    query: `CREATE TABLE IF NOT EXISTS safeboxGroup (
+      _id TEXT,
+      cofres TEXT,
+      data_hora_create INTEGER,
+      data_atualizacao INTEGER,
+      descricao TEXT,
+      nome TEXT,
+      organizacao TEXT,
+      dono TEXT,
+      )`,
+  },
 ];
 
 export default tables;
