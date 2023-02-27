@@ -4,7 +4,7 @@ type StoreGetType =
   | 'organizations'
   | 'user'
   | 'safebox'
-  | 'safeboxGroup'
+  | 'safeBoxGroup'
   | 'logged'
   | 'token'
   | 'keys'

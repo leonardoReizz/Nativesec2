@@ -16,7 +16,7 @@ const tables = [
   },
   {
     name: 'safeboxGroup',
-    query: `CREATE TABLE IF NOT EXISTS safeboxGroup (
+    query: `CREATE TABLE IF NOT EXISTS safeBoxGroup (
       _id TEXT,
       cofres TEXT,
       data_hora_create INTEGER,

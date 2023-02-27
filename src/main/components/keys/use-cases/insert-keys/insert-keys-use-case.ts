@@ -1,6 +1,5 @@
 import { DEFAULT_TYPE } from '@/main/crypto/types';
 import { store } from '@/main/main';
-import { IKeys, IUser } from '@/main/types';
 import { KeyRepositoryDatabase } from '../../repositories/key-repository-database';
 
 export class InsertKeysUseCase {
@@ -46,12 +45,11 @@ export class InsertKeysUseCase {
         defaultType: DEFAULT_TYPE,
       });
 
-      console.log(createPrivKey, createPubKey);
       if (createPrivKey === true && createPubKey === true) {
-        return 'ok';
+        return { message: 'ok' };
       }
-      return 'nok';
+      return { message: 'nok' };
     }
-    return 'ok';
+    return { message: 'ok' };
   }
 }

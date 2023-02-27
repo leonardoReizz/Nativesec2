@@ -12,9 +12,7 @@ export class InsertKeysController {
 
       return {
         response: IPCTypes.INSERT_DATABASE_KEYS_RESPONSE,
-        data: {
-          message,
-        },
+        data: message,
       };
     } catch (error) {
       Sentry.captureException(error);

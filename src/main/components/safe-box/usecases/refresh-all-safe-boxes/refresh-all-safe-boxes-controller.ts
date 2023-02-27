@@ -7,6 +7,7 @@ export class RefreshAllSafeBoxesController {
   constructor(private refreshAllSafeBoxesUseCase: RefreshAllSafeBoxesUseCase) {}
 
   async handle() {
+    console.log('refresh all safe boxes');
     try {
       const message = await this.refreshAllSafeBoxesUseCase.execute();
       console.log(message);

@@ -1,5 +1,4 @@
-import { store } from '../../../../main';
-import { IToken } from '../../../../types';
+import { store } from '@/main/main';
 import { IInvite } from './types';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 

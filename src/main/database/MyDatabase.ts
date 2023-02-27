@@ -5,7 +5,7 @@ import sqlite3 from '@journeyapps/sqlcipher';
 import fs from 'fs';
 import path from 'path';
 import md5 from 'md5';
-import { IInitialData, IUser } from '../types';
+import { IInitialData } from '../types';
 import { store } from '../main';
 import tables, { ITables } from './tables';
 import { ICreateDatabase, IInit } from './types';
@@ -56,7 +56,7 @@ export class Database {
       db.serialize(() => {
         db.run('PRAGMA cipher_compatibility = 4');
         db.run(`PRAGMA key = '${secret}'`);
-        db.run(`PRAGMA SQLITE_THREADSAFE=2`);
+        db.run(`PRAGMA SQLITE_THREADSAFE = 10`);
         db.run('SELECT count(*) FROM sqlite_master;', async (err) => {
           if (err) {
             console.log(err, ' Init database error');

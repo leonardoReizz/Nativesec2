@@ -11,6 +11,7 @@ export class RefreshOrganizationsController {
 
   async execute(data: IRefreshOrganizationRequestDTO) {
     try {
+      console.log('refresh orgs');
       const message = await this.refreshOrganizationsUseCase.execute();
 
       return {

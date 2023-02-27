@@ -191,9 +191,9 @@ export function useIPCAuth({
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.REFRESH_ALL_ORGANIZATIONS,
           });
-          window.electron.ipcRenderer.sendMessage('useIPC', {
-            event: IPCTypes.LIST_MY_INVITES,
-          });
+          // window.electron.ipcRenderer.sendMessage('useIPC', {
+          //   event: IPCTypes.LIST_MY_INVITES,
+          // });
         }
       }
     );
@@ -229,6 +229,7 @@ export function useIPCAuth({
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.REFRESH_ALL_SAFE_BOXES,
           });
+          return;
         }
         changeLoadingState('false');
         toast.error('Error ao atualizar grupo de cofres', {
@@ -260,6 +261,12 @@ export function useIPCAuth({
             if (filter.length > 0) {
               window.electron.ipcRenderer.sendMessage('useIPC', {
                 event: IPCTypes.LIST_SAFE_BOXES,
+                data: {
+                  organizationId: user.lastOrganizationId,
+                },
+              });
+              window.electron.ipcRenderer.sendMessage('useIPC', {
+                event: IPCTypes.LIST_SAFE_BOX_GROUP,
                 data: {
                   organizationId: user.lastOrganizationId,
                 },

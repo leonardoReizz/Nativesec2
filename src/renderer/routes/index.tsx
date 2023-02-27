@@ -16,6 +16,7 @@ import { UserSettings } from 'renderer/pages/UserSettings';
 import { Workspace } from 'renderer/pages/Workspace';
 import { WorkspaceMembers } from 'renderer/pages/WorkspaceMembers';
 import { WorkspaceSettings } from 'renderer/pages/WorkspaceSettings';
+import { useIPCSafeBoxGroup } from '../hooks/useIPCSafeBoxGroup/useIPCSafeBoxGroup';
 import { LayoutsWithSidebar } from './LayoutsWithSidebar';
 import { ProtectedRoutes } from './ProtectedRoutes';
 
@@ -35,6 +36,7 @@ export function AppRoutes() {
   }, []);
 
   useIpcOrganization();
+  useIPCSafeBoxGroup();
   useIPCSafeBox();
   useRefresh();
   useSession();

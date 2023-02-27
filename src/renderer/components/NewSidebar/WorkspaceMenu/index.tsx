@@ -9,6 +9,7 @@ import { IoMdAdd } from 'react-icons/io';
 import { SafeBoxInfo } from 'renderer/components/SafeBox';
 import { Tooltip } from '@chakra-ui/react';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
+import { useSafeBoxGroup } from '@/renderer/hooks/useSafeBoxGroup/useSafeBoxGroup';
 import styles from './styles.module.sass';
 
 interface WorkspaceMenuProps {
@@ -30,9 +31,11 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
     changeSafeBoxMode,
     forceRefreshSafeBoxes,
   } = useSafeBox();
+  const { safeBoxGroup } = useSafeBoxGroup();
 
   const { isParticipant, currentOrganization } = useOrganization();
 
+  console.log(safeBoxGroup);
   function handleCreateSafeBox() {
     closeSidebar();
     changeCurrentSafeBox(undefined);

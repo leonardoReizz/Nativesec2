@@ -16,10 +16,11 @@ export class ListSafeBoxGroupUseCase {
 
     IPCError({
       object: listSafeBoxGroupDatabase,
-      message: 'ERRO API LIST SAFE BOX GROUP',
+      message: 'ERRO DATABASE LIST SAFE BOX GROUP',
+      type: 'database',
     });
 
-    store.set('safeboxGroup', listSafeBoxGroupDatabase);
+    store.set('safeBoxGroup', listSafeBoxGroupDatabase);
 
     return {
       message: 'ok',

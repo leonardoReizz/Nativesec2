@@ -9,6 +9,7 @@ export class RefreshAllSafeBoxGroupController {
   ) {}
 
   async handle() {
+    console.log('refresh group all');
     try {
       const message = await this.refreshAllSafeBoxGroupUseCase.execute();
       return {

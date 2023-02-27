@@ -12,7 +12,7 @@ export class SafeBoxGroupRepositoryDatabase
 
     return new Promise((resolve, reject) => {
       db.all(
-        `SELECT * FROM safeboxGroup WHERE organizacao = '${organizationId}'`,
+        `SELECT * FROM safeBoxGroup WHERE organizacao = '${organizationId}'`,
         (error, rows) => {
           if (error) reject(error);
           resolve(rows);
@@ -25,7 +25,7 @@ export class SafeBoxGroupRepositoryDatabase
     const db = newDatabase.getDatabase();
 
     return new Promise((resolve, reject) => {
-      db.all(`SELECT * FROM safeboxGroup `, (error, rows) => {
+      db.all(`SELECT * FROM safeBoxGroup`, (error, rows) => {
         if (error) reject(error);
         resolve(rows);
       });
@@ -34,5 +34,73 @@ export class SafeBoxGroupRepositoryDatabase
 
   async create(
     safeBoxGroup: ISafeBoxGroupModelDatabase
-  ): Promise<true | Error> {}
+  ): Promise<true | Error> {
+    const db = newDatabase.getDatabase();
+    return new Promise((resolve, reject) => {
+      db.run(
+        `INSERT INTO safeBoxGroup (
+          _id,
+          cofres,
+          data_hora_create,
+          data_atualizacao,
+          descricao,
+          nome,
+          organizacao,
+          dono
+        ) VALUES (
+          '${safeBoxGroup._id}',
+          '${safeBoxGroup.cofres}',
+          '${safeBoxGroup.data_hora_create}',
+          '${safeBoxGroup.data_atualizacao}',
+          '${safeBoxGroup.descricao}',
+          '${safeBoxGroup.nome}',
+          '${safeBoxGroup.organizacao}',
+          '${safeBoxGroup.dono}'
+        )`,
+        (error) => {
+          if (error) reject(error);
+          resolve(true);
+        }
+      );
+    });
+  }
+
+  async deleteById(safeBoxGroupId: string): Promise<true | Error> {
+    const db = newDatabase.getDatabase();
+
+    return new Promise((resolve, reject) => {
+      db.run(
+        `DELETE FROM safeBoxGroup where _id = '${safeBoxGroupId}'`,
+        (error) => {
+          if (error) reject(error);
+          resolve(true);
+        }
+      );
+    });
+  }
+
+  async update(
+    safeBoxGroup: Omit<
+      ISafeBoxGroupModelDatabase,
+      'dono' | 'organizacao' | 'data_hora_create'
+    >
+  ): Promise<true | Error> {
+    const db = newDatabase.getDatabase();
+
+    return new Promise((resolve, reject) => {
+      return db.run(
+        `UPDATE safeBoxGroup SET
+        cofres = '${safeBoxGroup.cofres}',
+        data_atualizacao = ${safeBoxGroup.data_atualizacao},
+        descricao = '${safeBoxGroup.descricao}',
+        nome = '${safeBoxGroup.nome}'
+        WHERE _id = '${safeBoxGroup._id}'
+        `,
+        (error) => {
+          if (error) reject(error);
+          resolve(true);
+        }
+      );
+    });
+  }
 }

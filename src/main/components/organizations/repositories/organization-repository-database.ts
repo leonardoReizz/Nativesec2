@@ -101,10 +101,7 @@ export class OrganizationRepositoryDatabase
     const select: OrganizationModelDatabase[] = await new Promise(
       (resolve, reject) => {
         db.all(`SELECT * FROM organizations`, async (error, rows) => {
-          if (error) {
-            console.log(error, ' ERROR DATABASE LIST ORGANIZATIONS');
-            reject(error);
-          }
+          if (error) reject(error);
           resolve(rows);
         });
       }

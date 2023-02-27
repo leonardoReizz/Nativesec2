@@ -1,7 +1,10 @@
 import { store } from '@/main/main';
-import { IToken } from '@/main/types';
+import { IPCError } from '@/main/utils/IPCError';
 import { refreshOrganizations } from '../../electronstore/store';
-import { OrganizationModelAPI } from '../../model/Organization';
+import {
+  OrganizationModelAPI,
+  OrganizationModelDatabase,
+} from '../../model/Organization';
 import { OrganizationIconRepositoryDatabase } from '../../repositories/organization-icon-database-repository';
 import { OrganizationRepositoryAPI } from '../../repositories/organization-repository-api';
 import { OrganizationRepositoryDatabase } from '../../repositories/organization-repository-database';
@@ -22,13 +25,11 @@ export class RefreshOrganizationsUseCase {
 
     const listAPI = await this.organizationRepositoryAPI.list(authorization);
 
-    if (listAPI.status !== 200 || listAPI.data.status !== 'ok') {
-      throw new Error(
-        `${
-          (store.get('user') as any)?.email
-        }: Error API list organizations, ${JSON.stringify(listAPI)}`
-      );
-    }
+    IPCError({
+      object: listAPI,
+      message: 'ERROR API LIST ORGANIZATIONS',
+      type: 'api',
+    });
 
     const apiOrganizations: OrganizationModelAPI[] = listAPI.data.msg;
 
@@ -40,18 +41,11 @@ export class RefreshOrganizationsUseCase {
             authorization
           );
 
-        if (
-          APIGetOrganization.status !== 200 ||
-          APIGetOrganization.data.status !== 'ok'
-        ) {
-          throw new Error(
-            `${
-              (store.get('user') as any)?.email
-            }: Error API get organization, ${JSON.stringify(
-              APIGetOrganization
-            )}`
-          );
-        }
+        IPCError({
+          object: APIGetOrganization,
+          message: 'ERROR API GET ORGANIZATION INFO',
+          type: 'api',
+        });
 
         return APIGetOrganization?.data?.msg[0];
       })
@@ -59,26 +53,37 @@ export class RefreshOrganizationsUseCase {
 
     const APIListOrganizationIcons =
       await this.organizationRepositoryAPI.listIcons(authorization);
-    if (
-      APIListOrganizationIcons.status !== 200 ||
-      APIListOrganizationIcons.data.status !== 'ok'
-    ) {
-      throw new Error(
-        `${
-          (store.get('user') as any)?.email
-        }: Error API list icons, ${JSON.stringify(APIListOrganizationIcons)}`
-      );
-    }
+
+    IPCError({
+      object: APIListOrganizationIcons,
+      message: 'ERROR API GET LIST ORGANIZATION ICONS',
+      type: 'api',
+    });
 
     organizationsResponse = true;
+
+    console.log(' organization database list');
+    const organizationsDatabase =
+      (await this.organizationRepositoryDatabase.list()) as unknown as OrganizationModelDatabase[];
+
+    IPCError({
+      object: organizationsDatabase,
+      message: 'ERROR DATABASE LIST ORGANIZATIONS',
+      type: 'database',
+    });
+
+    console.log('comparator');
+
     organizationsResponse = await organizationComparator({
-      organizations: organizationInfo,
+      organizationsAPI: organizationInfo,
+      organizationsDatabase,
       organizationRepositoryDatabase: this.organizationRepositoryDatabase,
       icons: APIListOrganizationIcons.data.msg,
       organizationIconRepositoryDatabase:
         this.organizationIconRepositoryDatabase,
     });
 
+    console.log(' sai comparator');
     await refreshOrganizations(
       this.organizationRepositoryDatabase,
       this.organizationIconRepositoryDatabase

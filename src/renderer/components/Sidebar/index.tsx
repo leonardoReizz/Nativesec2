@@ -6,6 +6,7 @@ import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { Tooltip } from '@chakra-ui/react';
+import { useSafeBoxGroup } from '@/renderer/hooks/useSafeBoxGroup/useSafeBoxGroup';
 import { Icon } from './Icon';
 import styles from './styles.module.sass';
 
@@ -29,6 +30,8 @@ export function Sidebar({ openSidebar }: SidebarProps) {
     changeCurrentOrganization,
   } = useOrganization();
 
+  const { updateSafeBoxGroup } = useSafeBoxGroup();
+
   const changeOrganization = useCallback(
     (organizationId: string) => {
       openSidebar();
@@ -36,6 +39,7 @@ export function Sidebar({ openSidebar }: SidebarProps) {
       changeCurrentSafeBox(undefined);
       changeSafeBoxMode('view');
       changeCurrentOrganization(organizationId);
+      updateSafeBoxGroup(organizationId);
       updateLastOrganizationId(organizationId);
       getSafeBoxes(organizationId);
       return navigate(`/workspace/${organizationId}`);

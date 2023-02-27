@@ -12,7 +12,7 @@ export class OrganizationIconRepositoryDatabase
   ): Promise<boolean | Error> {
     const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
-      return db.run(
+      db.run(
         `INSERT INTO organizationsIcons (_id, icone ) VALUES ('${data.organizationId}','${data.icon}')`,
         (error) => {
           if (error) {
@@ -28,7 +28,7 @@ export class OrganizationIconRepositoryDatabase
   async delete(organizationId: string): Promise<boolean | Error> {
     const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
-      return db.run(
+      db.run(
         `DELETE FROM organizationsIcons WHERE _id = '${organizationId}'`,
         (error) => {
           if (error) {
@@ -46,7 +46,7 @@ export class OrganizationIconRepositoryDatabase
     return new Promise((resolve, reject) => {
       db.all(`SELECT * FROM organizationsIcons`, (error, rows) => {
         if (error) {
-          console.log(error, 'ERROR  DATABASE SELECT ORGANIZTION ICONS');
+          console.log(error, 'ERROR  DATABASE  LIST MY INVITES');
           reject(error);
         }
 
@@ -68,7 +68,10 @@ export class OrganizationIconRepositoryDatabase
          WHERE _id = '${organizationId}'
        `,
         (error) => {
-          if (error) reject(error);
+          if (error) {
+            console.log(error);
+            reject(error);
+          }
           resolve(true);
         }
       );

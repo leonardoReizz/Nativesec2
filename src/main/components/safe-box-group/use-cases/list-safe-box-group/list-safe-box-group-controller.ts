@@ -9,7 +9,7 @@ export class ListSafeBoxGroupController {
 
   async handle(data: IListSafeBoxRequestDTO) {
     try {
-      const message = this.listSafeBoxGroupUseCase.execute(data);
+      const message = await this.listSafeBoxGroupUseCase.execute(data);
 
       return {
         response: IPCTypes.LIST_SAFE_BOX_GROUP_RESPONSE,
