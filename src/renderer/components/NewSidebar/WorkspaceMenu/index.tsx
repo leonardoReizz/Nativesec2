@@ -35,7 +35,8 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
 
   const { isParticipant, currentOrganization } = useOrganization();
 
-  console.log(safeBoxGroup);
+  console.log(safeBoxGroup, 'group');
+  console.log(window.electron.store.get('safebox'), 'group');
   function handleCreateSafeBox() {
     closeSidebar();
     changeCurrentSafeBox(undefined);

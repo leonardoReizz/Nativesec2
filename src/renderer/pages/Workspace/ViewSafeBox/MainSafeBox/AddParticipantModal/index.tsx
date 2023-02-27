@@ -133,8 +133,6 @@ export function AddParticipantModal({
     }
   }, [loading]);
 
-  console.log(usersSelected);
-
   return (
     <>
       <ReactModal

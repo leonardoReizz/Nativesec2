@@ -10,7 +10,6 @@ export class RefreshAllSafeBoxesController {
     console.log('refresh all safe boxes');
     try {
       const message = await this.refreshAllSafeBoxesUseCase.execute();
-      console.log(message);
       return {
         response: IPCTypes.REFRESH_ALL_SAFE_BOXES_RESPONSE,
         data: message,

@@ -22,7 +22,6 @@ export function NewSidebar({
   const { pathname } = useLocation();
   const { theme } = useUserConfig();
   const { currentOrganization, currentOrganizationIcon } = useOrganization();
-  console.log(isOpenSidebar);
   return (
     <>
       <header

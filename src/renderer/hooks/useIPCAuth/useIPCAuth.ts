@@ -173,7 +173,6 @@ export function useIPCAuth({
     window.electron.ipcRenderer.on(
       IPCTypes.GET_USER_RESPONSE,
       (result: IIPCResponse) => {
-        console.log(result, 'get user response');
         if (result.message === 'ok') {
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.INSERT_DATABASE_KEYS,
@@ -250,7 +249,6 @@ export function useIPCAuth({
           updateUserConfig({ ...user });
           changeLoadingState('finalized');
           updateRefreshTime(Number(user.refreshTime));
-          console.log({ ...user }, ' user');
           if (user.lastOrganizationId === null) {
             navigate('/createOrganization');
           } else {

@@ -2,6 +2,7 @@ import { store } from '@/main/main';
 import { IPCError } from '@/main/utils/IPCError';
 import { refreshOrganizations } from '../../electronstore/store';
 import {
+  OrganizationIconModelAPI,
   OrganizationModelAPI,
   OrganizationModelDatabase,
 } from '../../model/Organization';
@@ -62,28 +63,141 @@ export class RefreshOrganizationsUseCase {
 
     organizationsResponse = true;
 
-    console.log(' organization database list');
-    const organizationsDatabase =
+    let organizationsDatabaseList =
       (await this.organizationRepositoryDatabase.list()) as unknown as OrganizationModelDatabase[];
 
     IPCError({
-      object: organizationsDatabase,
+      object: organizationsDatabaseList,
       message: 'ERROR DATABASE LIST ORGANIZATIONS',
       type: 'database',
     });
 
-    console.log('comparator');
+    const icons = APIListOrganizationIcons.data
+      .msg as OrganizationIconModelAPI[];
 
-    organizationsResponse = await organizationComparator({
-      organizationsAPI: organizationInfo,
-      organizationsDatabase,
-      organizationRepositoryDatabase: this.organizationRepositoryDatabase,
-      icons: APIListOrganizationIcons.data.msg,
-      organizationIconRepositoryDatabase:
-        this.organizationIconRepositoryDatabase,
+    // organizationsResponse = await organizationComparator({
+    //   organizationsAPI: organizationInfo,
+    //   organizationsDatabase,
+    //   organizationRepositoryDatabase: this.organizationRepositoryDatabase,
+    //   icons: APIListOrganizationIcons.data.msg,
+    //   organizationIconRepositoryDatabase:
+    //     this.organizationIconRepositoryDatabase,
+    // });
+
+    await Promise.all(
+      organizationInfo.map(async (orgAPI) => {
+        const filter = organizationsDatabaseList.filter(
+          (orgDatabase) => orgDatabase._id === orgAPI._id.$oid
+        );
+
+        if (filter.length) {
+          if (filter[0].data_atualizacao !== orgAPI.data_atualizacao.$date) {
+            organizationsResponse = true;
+            const responseOrganization =
+              await this.organizationRepositoryDatabase.update({
+                ...orgAPI,
+                _id: orgAPI._id.$oid,
+                data_atualizacao: orgAPI.data_atualizacao.$date,
+                convidados_participantes: JSON.stringify(
+                  orgAPI.convidados_participantes
+                ),
+                convidados_administradores: JSON.stringify(
+                  orgAPI.convidados_administradores
+                ),
+                participantes: JSON.stringify(orgAPI.participantes),
+                administradores: JSON.stringify(orgAPI.administradores),
+              });
+
+            const filterIcons = icons.filter(
+              (icon) => icon._id.$oid === orgAPI._id.$oid
+            );
+            const responseIcon =
+              await this.organizationIconRepositoryDatabase.update({
+                icon: filterIcons[0].icone,
+                organizationId: filterIcons[0]._id.$oid,
+              });
+
+            IPCError({
+              object: responseOrganization,
+              type: 'database',
+              message: 'ERROR DATABASE UPDATE ORGANIZATION',
+            });
+
+            IPCError({
+              object: responseIcon,
+              type: 'database',
+              message: 'ERROR DATABASE UPDATE ORGANIZATION ICON',
+            });
+          }
+        } else {
+          organizationsResponse = true;
+          const responseOrganization =
+            await this.organizationRepositoryDatabase.create({
+              ...orgAPI,
+              _id: orgAPI._id.$oid,
+              data_atualizacao: orgAPI.data_atualizacao.$date,
+              data_criacao: orgAPI.data_criacao.$date,
+              convidados_administradores: JSON.stringify(
+                orgAPI.convidados_administradores
+              ),
+              convidados_participantes: JSON.stringify(
+                orgAPI.convidados_participantes
+              ),
+              participantes: JSON.stringify(orgAPI.participantes),
+              administradores: JSON.stringify(orgAPI.administradores),
+            });
+
+          const filterIcons = icons.filter(
+            (icon) => icon._id.$oid === orgAPI._id.$oid
+          );
+
+          const responseIcon =
+            await this.organizationIconRepositoryDatabase.create({
+              icon: filterIcons[0].icone,
+              organizationId: filterIcons[0]._id.$oid,
+            });
+
+          IPCError({
+            object: responseOrganization,
+            type: 'database',
+            message: 'ERROR DATABASE CREATE ORGANIZATION',
+          });
+
+          IPCError({
+            object: responseIcon,
+            type: 'database',
+            message: 'ERROR DATABASE CREATE ORGANIZATION ICON',
+          });
+        }
+
+        organizationsDatabaseList = organizationsDatabaseList.filter(
+          (orgDatabase) => orgDatabase._id !== orgAPI._id.$oid
+        );
+      })
+    );
+
+    organizationsDatabaseList.map(async (orgDatabase) => {
+      organizationsResponse = true;
+      const responseOrganization =
+        await this.organizationRepositoryDatabase.delete(orgDatabase._id);
+
+      const responseIcon = await this.organizationIconRepositoryDatabase.delete(
+        orgDatabase._id
+      );
+
+      IPCError({
+        object: responseOrganization,
+        type: 'database',
+        message: 'ERROR DATABASE DELETE ORGANIZATION',
+      });
+
+      IPCError({
+        object: responseIcon,
+        type: 'database',
+        message: 'ERROR DATABASE DELETE ORGANIZATION ICON',
+      });
     });
 
-    console.log(' sai comparator');
     await refreshOrganizations(
       this.organizationRepositoryDatabase,
       this.organizationIconRepositoryDatabase

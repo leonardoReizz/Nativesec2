@@ -36,10 +36,10 @@ export function AppRoutes() {
   }, []);
 
   useIpcOrganization();
-  useIPCSafeBoxGroup();
   useIPCSafeBox();
   useRefresh();
   useSession();
+  useIPCSafeBoxGroup();
 
   useIPCAuth({ changeAuthState: handleAuthState, changeLoadingState });
 
