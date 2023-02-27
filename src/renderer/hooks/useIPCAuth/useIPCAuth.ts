@@ -190,9 +190,9 @@ export function useIPCAuth({
           window.electron.ipcRenderer.sendMessage('useIPC', {
             event: IPCTypes.REFRESH_ALL_ORGANIZATIONS,
           });
-          // window.electron.ipcRenderer.sendMessage('useIPC', {
-          //   event: IPCTypes.LIST_MY_INVITES,
-          // });
+          window.electron.ipcRenderer.sendMessage('useIPC', {
+            event: IPCTypes.LIST_MY_INVITES,
+          });
         }
       }
     );
@@ -237,7 +237,7 @@ export function useIPCAuth({
         });
       }
     );
-  }, [organizations]);
+  }, []);
 
   useEffect(() => {
     window.electron.ipcRenderer.on(

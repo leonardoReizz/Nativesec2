@@ -20,7 +20,7 @@ export class RefreshAllSafeBoxesController {
       return {
         response: IPCTypes.REFRESH_ALL_SAFE_BOXES_RESPONSE,
         data: {
-          message: 'ok',
+          message: 'nok',
         },
       };
     }

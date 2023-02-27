@@ -1,7 +1,6 @@
 import { OrganizationModelDatabase } from '@/main/components/organizations/model/Organization';
 import { store } from '@/main/main';
 import { IPCError } from '@/main/utils/IPCError';
-import { refreshSafeBoxGroup } from '../../electron-store/store';
 import {
   ISafeBoxGroupModelAPI,
   ISafeBoxGroupModelDatabase,
@@ -76,6 +75,7 @@ export class RefreshAllSafeBoxGroupUseCase {
                 await this.safeBoxGroupRepositoryDatabase.create({
                   ...filter[0],
                 });
+
               IPCError({
                 object: createSafeBoxGroup,
                 message: 'ERROR DATABASE DELETE SAFE BOX GROUP',
