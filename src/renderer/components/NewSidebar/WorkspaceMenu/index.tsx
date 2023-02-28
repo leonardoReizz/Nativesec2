@@ -11,6 +11,7 @@ import { Tooltip } from '@chakra-ui/react';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useSafeBoxGroup } from '@/renderer/hooks/useSafeBoxGroup/useSafeBoxGroup';
 import styles from './styles.module.sass';
+import { SafeBoxGroup } from './components/SafeBoxGroup';
 
 interface WorkspaceMenuProps {
   closeSidebar: () => void;
@@ -35,8 +36,6 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
 
   const { isParticipant, currentOrganization } = useOrganization();
 
-  console.log(safeBoxGroup, 'group');
-  console.log(window.electron.store.get('safebox'), 'group');
   function handleCreateSafeBox() {
     closeSidebar();
     changeCurrentSafeBox(undefined);
@@ -59,6 +58,8 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
       setMenuCreateIsOpen(false);
     }
   }
+
+  console.log(safeBoxGroup);
 
   function handleRefreshSafeBoxes() {
     if (currentOrganization) {
@@ -115,12 +116,12 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
             <IoReloadOutline />
             Atualizar Cofres
           </button>
-          {/* <span /> */}
-          {/* <h4>Grupos</h4>
+          <span />
+          <h4>Grupos</h4>
           <button type="button" disabled={isParticipant}>
             <IoMdAdd />
             Novo Grupo de Cofres
-          </button> */}
+          </button>
         </div>
       </div>
       <div className={styles.safeBoxes}>
@@ -128,6 +129,9 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
           <div className={styles.title}>
             <span>Grupo de Cofres</span>
           </div>
+          {safeBoxGroup.map((group) => {
+            return <SafeBoxGroup safeBoxGroup={group} theme={theme} />;
+          })}
         </div>
         <div className={styles.safeBox}>
           <div className={styles.title}>

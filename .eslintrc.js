@@ -24,6 +24,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'off',
     'no-plusplus': 'off',
     'react/jsx-no-bind': 'off',
+    'react/require-default-props': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

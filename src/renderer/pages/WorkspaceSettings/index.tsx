@@ -1,20 +1,13 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useDropzone } from 'react-dropzone';
 import { FaCamera } from 'react-icons/fa';
 import { BsFillTrashFill } from 'react-icons/bs';
 import { IoExit } from 'react-icons/io5';
-
 import { Button } from 'renderer/components/Buttons/Button';
 import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
-import { useLoading } from 'renderer/hooks/useLoading';
-import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
-import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { VerifyModal } from 'renderer/components/Modals/VerifyModal';
 import { Input } from 'renderer/components/Inputs/Input';
 import { TextArea } from 'renderer/components/TextAreas/TextArea';
 import { useWorkspaceSettings } from 'renderer/hooks/useWorkspaceSettings/useWorkspaceSettings';
-
-import { IUser } from 'main/types';
 import logoNativeSec from '../../../../assets/logoNativesec/512.png';
 
 import styles from './styles.module.sass';
@@ -30,23 +23,19 @@ export function WorkspaceSettings() {
     openVerifyNameModal,
     verifyRemoveImage,
     closeVerifyModal,
-    onDrop,
     discard,
     verifyOrganizationLeave,
     closeOpenVerifyModalLeave,
     isOpenVerifyModalLeave,
     openVerifyModalLeave,
+    theme,
+    currentOrganization,
+    currentOrganizationIcon,
+    isParticipant,
+    email,
+    loading,
+    getRootProps,
   } = useWorkspaceSettings();
-
-  const { currentOrganization, currentOrganizationIcon, isParticipant } =
-    useOrganization();
-  const { email } = window.electron.store.get('user') as IUser;
-  const { loading } = useLoading();
-  const { theme } = useUserConfig();
-
-  const { getRootProps } = useDropzone({
-    onDrop,
-  });
 
   return (
     <>

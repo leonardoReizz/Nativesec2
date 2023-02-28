@@ -1,5 +1,4 @@
 import { IPCTypes } from '@/types/IPCTypes';
-import { IUser } from 'main/types';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';

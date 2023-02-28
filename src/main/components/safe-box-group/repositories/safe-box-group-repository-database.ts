@@ -7,7 +7,7 @@ export class SafeBoxGroupRepositoryDatabase
 {
   async listByOrganizationId(
     organizationId: string
-  ): Promise<ISafeBoxGroupModelDatabase[] | Error> {
+  ): Promise<ISafeBoxGroupModelDatabase[]> {
     const db = newDatabase.getDatabase();
 
     return new Promise((resolve, reject) => {

@@ -62,8 +62,12 @@ export class RefreshAllSafeBoxGroupUseCase {
               ) {
                 const updateSafeBoxGroup =
                   await this.safeBoxGroupRepositoryDatabase.update({
-                    ...filter[0],
+                    ...safeboxGroupAPI,
+                    _id: safeboxGroupAPI._id.$oid,
+                    data_atualizacao: safeboxGroupAPI.data_atualizacao.$date,
+                    cofres: JSON.stringify(safeboxGroupAPI.cofres),
                   });
+
                 IPCError({
                   object: updateSafeBoxGroup,
                   message: 'ERROR DATABASE DELETE SAFE BOX GROUP',
@@ -73,7 +77,11 @@ export class RefreshAllSafeBoxGroupUseCase {
             } else {
               const createSafeBoxGroup =
                 await this.safeBoxGroupRepositoryDatabase.create({
-                  ...filter[0],
+                  ...safeboxGroupAPI,
+                  _id: safeboxGroupAPI._id.$oid,
+                  data_atualizacao: safeboxGroupAPI.data_atualizacao.$date,
+                  data_hora_create: safeboxGroupAPI.data_hora_create.$date,
+                  cofres: JSON.stringify(safeboxGroupAPI.cofres),
                 });
 
               IPCError({
@@ -108,6 +116,7 @@ export class RefreshAllSafeBoxGroupUseCase {
         );
       })
     );
+
     return {
       message: 'ok',
     };

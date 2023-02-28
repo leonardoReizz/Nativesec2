@@ -1,155 +1,36 @@
-import { useCallback, useState, useEffect } from 'react';
 import { IoMdAdd } from 'react-icons/io';
 import { Dropdown } from 'renderer/components/Dropdown';
 import { FieldModalWithDropdown } from 'renderer/components/Modals/FieldModalWithDropdown';
 import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
-import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
-import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Badge } from '@chakra-ui/react';
-import { useLoading } from 'renderer/hooks/useLoading';
 import { Input } from 'renderer/components/Inputs/Input';
-import { toast } from 'react-toastify';
-import { toastOptions } from 'renderer/utils/options/Toastify';
 import { Button } from 'renderer/components/Buttons/Button';
+import { useWorkspaceMembers } from '@/renderer/hooks/useWorkspaceMembers';
 import styles from './styles.module.sass';
 
-interface IAddUserData {
-  email: string;
-  type: {
-    id: number;
-    label: string;
-    value: 'guestParticipant' | 'guestAdmin';
-  };
-}
-
-interface ICurrentUserDelete {
-  email: string;
-  type: 'admin' | 'participant' | 'guestParticipant' | 'guestAdmin';
-}
-
-const options = [
-  { id: 1, value: 'guestParticipant', label: 'Participante' },
-  { id: 2, value: 'guestAdmin', label: 'Administrador' },
-];
-
-const userOptions = [
-  { id: 1, value: 'participant', label: 'Apenas Leitura' },
-  {
-    id: 2,
-    value: 'admin',
-    label: 'Leitura e Escrita',
-  },
-  {
-    id: 3,
-    value: 'remove',
-    label: 'Remover',
-  },
-];
-
 export function WorkspaceMembers() {
-  const { loading, updateLoading } = useLoading();
-
   const {
+    handleDropDown,
+    remove,
+    currentUserDelete,
+    addUser,
+    isOpenVerifyNameModal,
+    isOpenFieldModal,
+    handleAddParticipant,
+    handleCloseVerifyNameModal,
+    handleCloseFieldModal,
+    options,
+    userOptions,
     currentOrganization,
-    addNewParticipant,
-    removeUser,
-    removeInvite,
     filteredAdmin,
     filteredGuestAdmin,
     filteredGuestParticipant,
     filteredParticipant,
     changeInput,
     isParticipant,
-  } = useOrganization();
-  const { theme } = useUserConfig();
-
-  const [currentUserDelete, setCurrentUserDelete] = useState<
-    ICurrentUserDelete | undefined
-  >();
-
-  const [isOpenVerifyNameModal, setIsOpenVerifyNameModal] =
-    useState<boolean>(false);
-  const [isOpenFieldModal, setIsOpenFieldModal] = useState<boolean>(false);
-
-  const handleCloseVerifyNameModal = useCallback(() => {
-    setIsOpenVerifyNameModal(false);
-  }, []);
-
-  const handleCloseFieldModal = useCallback(() => {
-    setIsOpenFieldModal(false);
-  }, []);
-
-  function handleAddParticipant() {
-    setIsOpenFieldModal(true);
-  }
-
-  function addUser(user: IAddUserData) {
-    if (currentOrganization) {
-      addNewParticipant({
-        type: user.type.value,
-        email: user.email,
-        organizationId: currentOrganization?._id,
-      });
-    }
-  }
-
-  function remove(verified: boolean) {
-    if (verified && currentOrganization && currentUserDelete) {
-      updateLoading(true);
-      if (
-        currentUserDelete.type === 'admin' ||
-        currentUserDelete.type === 'participant'
-      ) {
-        removeUser({
-          organizationId: currentOrganization._id,
-          email: currentUserDelete?.email,
-          type: currentUserDelete?.type,
-        });
-      } else {
-        removeInvite({
-          organizationId: currentOrganization._id,
-          email: currentUserDelete?.email,
-          type: currentUserDelete?.type,
-        });
-      }
-    }
-  }
-
-  useEffect(() => {
-    if (!loading) {
-      setCurrentUserDelete(undefined);
-      setIsOpenFieldModal(false);
-      setIsOpenVerifyNameModal(false);
-    }
-  }, [loading]);
-
-  function handleDropDown(user: any, type: any, email: string) {
-    if (user.id === 3) {
-      setCurrentUserDelete({ email, type });
-      setIsOpenVerifyNameModal(true);
-    } else if (currentOrganization) {
-      toast.loading('Alterando usuario', {
-        ...toastOptions,
-        toastId: 'organizationChangeUser',
-      });
-
-      if (type === 'admin' || type === 'participant') {
-        removeUser({
-          email,
-          organizationId: currentOrganization._id,
-          type,
-          changeUser: true,
-        });
-      } else {
-        removeInvite({
-          email,
-          organizationId: currentOrganization?._id,
-          type,
-          changeUser: true,
-        });
-      }
-    }
-  }
+    theme,
+    loading,
+  } = useWorkspaceMembers();
 
   return (
     <>

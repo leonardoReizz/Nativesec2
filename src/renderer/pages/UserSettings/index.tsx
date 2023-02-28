@@ -5,7 +5,6 @@ import { BiExport } from 'react-icons/bi';
 import { Dropdown } from 'renderer/components/Dropdown';
 import Buffer from 'buffer';
 import { useIPCUserConfig } from '@/renderer/hooks/useIPCUserConfig.ts/useIPCUserConfig.ts';
-import { IKeys, IUser } from 'main/types';
 import { Button } from 'renderer/components/Buttons/Button';
 import { MdPassword } from 'react-icons/md';
 import { IPCTypes } from '@/types/IPCTypes';

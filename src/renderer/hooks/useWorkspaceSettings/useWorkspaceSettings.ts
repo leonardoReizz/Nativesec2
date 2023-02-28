@@ -4,19 +4,25 @@ import { toast } from 'react-toastify';
 import browserImageSize from 'browser-image-size';
 
 import { toastOptions } from 'renderer/utils/options/Toastify';
+import { useDropzone } from 'react-dropzone';
 import settingsSchema from '../../utils/Formik/SettingsOrganizations/settingsOrganization';
 import { useLoading } from '../useLoading';
 import { useOrganization } from '../useOrganization/useOrganization';
+import { useUserConfig } from '../useUserConfig/useUserConfig';
 
 export function useWorkspaceSettings() {
+  const { theme } = useUserConfig();
+  const { email } = window.electron.store.get('user') as IUser;
+
   const {
     currentOrganization,
     currentOrganizationIcon,
+    isParticipant,
     deleteOrganization,
     updateOrganization,
     leaveOrganization,
   } = useOrganization();
-  const { updateLoading } = useLoading();
+  const { updateLoading, loading } = useLoading();
   const [isOpenVerifyModal, setIsOpenVerifyModal] = useState<boolean>(false);
   const [isOpenVerifyModalLeave, setIsOpenVerifyModalLeave] =
     useState<boolean>(false);
@@ -87,6 +93,10 @@ export function useWorkspaceSettings() {
       });
     }
   }, []);
+
+  const { getRootProps } = useDropzone({
+    onDrop,
+  });
 
   const verifyDeleteOrganization = useCallback(
     (verified: boolean) => {
@@ -171,8 +181,14 @@ export function useWorkspaceSettings() {
     verifyRemoveImage,
     closeVerifyModal,
     closeOpenVerifyModalLeave,
-    onDrop,
     discard,
     verifyOrganizationLeave,
+    theme,
+    currentOrganization,
+    currentOrganizationIcon,
+    isParticipant,
+    email,
+    loading,
+    getRootProps,
   };
 }
