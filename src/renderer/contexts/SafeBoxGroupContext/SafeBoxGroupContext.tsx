@@ -1,4 +1,7 @@
-import { updateSafeBoxGroupAction } from '@/renderer/reducers/safeBoxGroup/actions';
+import {
+  updateCurrentSafeBoxGroupAction,
+  updateSafeBoxGroupAction,
+} from '@/renderer/reducers/safeBoxGroup/actions';
 import { safeBoxGroupReducer } from '@/renderer/reducers/safeBoxGroup/reducer';
 import { ReactNode, createContext, useReducer, useCallback } from 'react';
 
@@ -15,6 +18,11 @@ export interface ISafeBoxGroup {
 
 interface SafeBoxGroupContextType {
   safeBoxGroup: ISafeBoxGroup[];
+
+  currentSafeBoxGroup: ISafeBoxGroup | null;
+  updateCurrentSafeBoxGroup: (
+    newCurrentSafeBoxGroup: ISafeBoxGroup | null
+  ) => void;
   updateSafeBoxGroup: (newSafeBoxGroup: ISafeBoxGroup[]) => void;
 }
 
@@ -29,16 +37,31 @@ export function SafeBoxGroupContextProvider({
 }: SafeBoxGroupContextProviderProps) {
   const [config, dispath] = useReducer(safeBoxGroupReducer, {
     safeBoxGroup: [],
+    currentSafeBoxGroup: null,
   });
 
-  const { safeBoxGroup } = config;
+  const { safeBoxGroup, currentSafeBoxGroup } = config;
 
   const updateSafeBoxGroup = useCallback((newSafeBoxGroup: ISafeBoxGroup[]) => {
     dispath(updateSafeBoxGroupAction(newSafeBoxGroup));
   }, []);
 
+  const updateCurrentSafeBoxGroup = useCallback(
+    (newSafeBoxGroup: ISafeBoxGroup | null) => {
+      dispath(updateCurrentSafeBoxGroupAction(newSafeBoxGroup));
+    },
+    []
+  );
+
   return (
-    <SafeBoxGroupContext.Provider value={{ safeBoxGroup, updateSafeBoxGroup }}>
+    <SafeBoxGroupContext.Provider
+      value={{
+        safeBoxGroup,
+        updateSafeBoxGroup,
+        currentSafeBoxGroup,
+        updateCurrentSafeBoxGroup,
+      }}
+    >
       {children}
     </SafeBoxGroupContext.Provider>
   );

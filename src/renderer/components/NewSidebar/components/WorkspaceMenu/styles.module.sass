@@ -1,4 +1,4 @@
-@use '../../../styles/_util' as *
+@use '../../../../styles/_util' as *
 
 .workspaceMenu.dark
   .search
@@ -40,7 +40,7 @@
   .menu
     .organizations
       @include scroolbarDark()
-      
+
 .workspaceMenu.light
   .search
     background-color: $gray-100
@@ -130,7 +130,7 @@
       opacity: 0
 
       background-color: $gray-750
-      
+
       width: 200px
       z-index: 2003
       top: 60px
@@ -165,7 +165,7 @@
   height: calc( 100vh - 67px )
   overflow-y: auto
   overflow-x: hidden
-  
+
 
   scroll-behavior: smooth
 
@@ -194,10 +194,9 @@
         position: relative
         margin-left: .5rem
 
-.menu.open  
+.menu.open
   opacity: 1
   visibility: visible
   height: 100%
 
 
-  

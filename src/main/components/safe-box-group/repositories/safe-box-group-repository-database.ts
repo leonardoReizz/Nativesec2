@@ -21,7 +21,7 @@ export class SafeBoxGroupRepositoryDatabase
     });
   }
 
-  async list(): Promise<ISafeBoxGroupModelDatabase[] | Error> {
+  async list(): Promise<ISafeBoxGroupModelDatabase[]> {
     const db = newDatabase.getDatabase();
 
     return new Promise((resolve, reject) => {

@@ -5,7 +5,7 @@ import { Button } from 'renderer/components/Buttons/Button';
 import { MdOutlineExitToApp } from 'react-icons/md';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
-import logoNativeSec from '../../../../../assets/logoNativesec/512.png';
+import logoNativeSec from '../../../../../../assets/logoNativesec/512.png';
 import styles from './styles.module.sass';
 
 export function WorkspaceSettingsMenu() {

@@ -5,7 +5,7 @@ import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
 import { Badge } from '@chakra-ui/react';
 import { Input } from 'renderer/components/Inputs/Input';
 import { Button } from 'renderer/components/Buttons/Button';
-import { useWorkspaceMembers } from '@/renderer/hooks/useWorkspaceMembers';
+import { useWorkspaceMembers } from '@/renderer/hooks/useWorkspaceMembers/useWorkspaceMembers';
 import styles from './styles.module.sass';
 
 export function WorkspaceMembers() {

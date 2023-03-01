@@ -2,16 +2,16 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { useRef, useState } from 'react';
-import { IoReloadOutline } from 'react-icons/io5';
 import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
 import { CiSearch } from 'react-icons/ci';
 import { IoMdAdd } from 'react-icons/io';
 import { SafeBoxInfo } from 'renderer/components/SafeBox';
-import { Tooltip } from '@chakra-ui/react';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useSafeBoxGroup } from '@/renderer/hooks/useSafeBoxGroup/useSafeBoxGroup';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import styles from './styles.module.sass';
-import { SafeBoxGroup } from './components/SafeBoxGroup';
+import { SafeBoxGroup } from '../SafeBoxGroup';
+import { Dropdown } from '../Dropdown';
 
 interface WorkspaceMenuProps {
   closeSidebar: () => void;
@@ -85,16 +85,20 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
             value={searchValue}
           />
         </div>
-        <Tooltip hasArrow label="Novo Cofre" aria-label="A tooltip">
-          <button
-            type="button"
-            ref={menuCreateRef}
-            onClick={handleOpenMenuIsCreate}
-          >
-            <IoMdAdd />
-          </button>
-        </Tooltip>
-        <div
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <button
+              type="button"
+              ref={menuCreateRef}
+              onClick={handleOpenMenuIsCreate}
+            >
+              <IoMdAdd />
+            </button>
+          </DropdownMenu.Trigger>
+          <Dropdown />
+        </DropdownMenu.Root>
+
+        {/* <div
           className={`${styles.menuCreate} ${
             menuCreateIsOpen ? styles.open : styles.close
           }`}
@@ -122,7 +126,7 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
             <IoMdAdd />
             Novo Grupo de Cofres
           </button>
-        </div>
+        </div> */}
       </div>
       <div className={styles.safeBoxes}>
         <div className={styles.safeBox}>
@@ -130,7 +134,12 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
             <span>Grupo de Cofres</span>
           </div>
           {safeBoxGroup.map((group) => {
-            return <SafeBoxGroup safeBoxGroup={group} theme={theme} />;
+            return (
+              <>
+                <SafeBoxGroup safeBoxGroup={group} theme={theme} />
+                <SafeBoxGroup safeBoxGroup={group} theme={theme} />
+              </>
+            );
           })}
         </div>
         <div className={styles.safeBox}>

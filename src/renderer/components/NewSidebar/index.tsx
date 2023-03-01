@@ -4,9 +4,9 @@ import { FiMenu } from 'react-icons/fi';
 import { useLocation } from 'react-router-dom';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import styles from './styles.module.sass';
-import { WorkspaceMenu } from './WorkspaceMenu';
-import { WorkspaceSettingsMenu } from './WorkspaceSettingsMenu';
 import logoNativeSec from '../../../../assets/logoNativesec/512.png';
+import { WorkspaceSettingsMenu } from './components/WorkspaceSettingsMenu';
+import { WorkspaceMenu } from './components/WorkspaceMenu';
 
 interface NewSidebarProps {
   openSidebar: () => void;

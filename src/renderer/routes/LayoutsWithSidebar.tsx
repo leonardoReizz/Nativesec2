@@ -32,7 +32,9 @@ export function LayoutsWithSidebar() {
         />
         <div className={styles.app}>
           <Navbar openSidebar={openSidebar} />
-          <Outlet />
+          <div className={styles.fullCenter}>
+            <Outlet />
+          </div>
         </div>
       </div>
     </>

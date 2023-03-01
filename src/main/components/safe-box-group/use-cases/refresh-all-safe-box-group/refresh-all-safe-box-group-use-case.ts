@@ -21,15 +21,6 @@ export class RefreshAllSafeBoxGroupUseCase {
       'organizations'
     ) as OrganizationModelDatabase[];
 
-    let listSafeBoxGroupDatabase =
-      await this.safeBoxGroupRepositoryDatabase.list();
-
-    IPCError({
-      object: listSafeBoxGroupDatabase,
-      message: 'ERROR DATABASE LIST SAFE BOX GROUP',
-      type: 'database',
-    });
-
     await Promise.all(
       organizations.map(async (organization) => {
         let listSafeBoxGroupAPI: any =
@@ -46,62 +37,70 @@ export class RefreshAllSafeBoxGroupUseCase {
 
         listSafeBoxGroupAPI = listSafeBoxGroupAPI.data.msg;
 
-        listSafeBoxGroupAPI.map(
-          async (safeboxGroupAPI: ISafeBoxGroupModelAPI) => {
-            const filter = (<ISafeBoxGroupModelDatabase[]>(
-              listSafeBoxGroupDatabase
-            )).filter(
-              (safeboxGroupDB) =>
-                safeboxGroupDB._id === safeboxGroupAPI._id.$oid
-            );
+        let listSafeBoxGroupDatabase =
+          await this.safeBoxGroupRepositoryDatabase.listByOrganizationId(
+            organization._id
+          );
+        IPCError({
+          object: listSafeBoxGroupDatabase,
+          message: 'ERROR DATABASE LIST SAFE BOX GROUP',
+          type: 'database',
+        });
 
-            if (filter.length) {
-              if (
-                filter[0].data_atualizacao !==
-                safeboxGroupAPI.data_atualizacao.$date
-              ) {
-                const updateSafeBoxGroup =
-                  await this.safeBoxGroupRepositoryDatabase.update({
+        await Promise.all(
+          listSafeBoxGroupAPI.map(
+            async (safeboxGroupAPI: ISafeBoxGroupModelAPI) => {
+              const filter = listSafeBoxGroupDatabase.filter(
+                (safeboxGroupDB) =>
+                  safeboxGroupDB._id === safeboxGroupAPI._id.$oid
+              );
+
+              if (filter[0]) {
+                if (
+                  filter[0].data_atualizacao !==
+                  safeboxGroupAPI.data_atualizacao.$date
+                ) {
+                  const updateSafeBoxGroup =
+                    await this.safeBoxGroupRepositoryDatabase.update({
+                      ...safeboxGroupAPI,
+                      _id: safeboxGroupAPI._id.$oid,
+                      data_atualizacao: safeboxGroupAPI.data_atualizacao.$date,
+                      cofres: JSON.stringify(safeboxGroupAPI.cofres),
+                    });
+
+                  IPCError({
+                    object: updateSafeBoxGroup,
+                    message: 'ERROR DATABASE DELETE SAFE BOX GROUP',
+                    type: 'database',
+                  });
+                }
+              } else {
+                const createSafeBoxGroup =
+                  await this.safeBoxGroupRepositoryDatabase.create({
                     ...safeboxGroupAPI,
                     _id: safeboxGroupAPI._id.$oid,
                     data_atualizacao: safeboxGroupAPI.data_atualizacao.$date,
+                    data_hora_create: safeboxGroupAPI.data_hora_create.$date,
                     cofres: JSON.stringify(safeboxGroupAPI.cofres),
                   });
 
                 IPCError({
-                  object: updateSafeBoxGroup,
+                  object: createSafeBoxGroup,
                   message: 'ERROR DATABASE DELETE SAFE BOX GROUP',
                   type: 'database',
                 });
               }
-            } else {
-              const createSafeBoxGroup =
-                await this.safeBoxGroupRepositoryDatabase.create({
-                  ...safeboxGroupAPI,
-                  _id: safeboxGroupAPI._id.$oid,
-                  data_atualizacao: safeboxGroupAPI.data_atualizacao.$date,
-                  data_hora_create: safeboxGroupAPI.data_hora_create.$date,
-                  cofres: JSON.stringify(safeboxGroupAPI.cofres),
-                });
 
-              IPCError({
-                object: createSafeBoxGroup,
-                message: 'ERROR DATABASE DELETE SAFE BOX GROUP',
-                type: 'database',
-              });
+              listSafeBoxGroupDatabase = listSafeBoxGroupDatabase.filter(
+                (safeboxGroupDB) =>
+                  safeboxGroupDB._id !== safeboxGroupAPI._id.$oid
+              );
             }
-
-            listSafeBoxGroupDatabase = (<ISafeBoxGroupModelDatabase[]>(
-              listSafeBoxGroupDatabase
-            )).filter(
-              (safeboxGroupDB) =>
-                safeboxGroupDB._id !== safeboxGroupAPI._id.$oid
-            );
-          }
+          )
         );
 
-        (<ISafeBoxGroupModelDatabase[]>listSafeBoxGroupDatabase).map(
-          async (safeboxGroupDatabase) => {
+        await Promise.all(
+          listSafeBoxGroupDatabase.map(async (safeboxGroupDatabase) => {
             const deleteSafeBoxGroup =
               await this.safeBoxGroupRepositoryDatabase.deleteById(
                 safeboxGroupDatabase._id
@@ -112,7 +111,7 @@ export class RefreshAllSafeBoxGroupUseCase {
               message: 'ERROR DATABASE DELETE SAFE BOX GROUP',
               type: 'database',
             });
-          }
+          })
         );
       })
     );

@@ -378,8 +378,10 @@ export function useSafeBox() {
   }, []);
 
   function changeCurrentSafeBox(safebox: ISafeBox | undefined) {
-    navigate(`/workspace/${currentOrganization?._id}`);
     safeBoxContext.changeCurrentSafeBox(safebox);
+    if (safebox) {
+      navigate(`/workspace/${currentOrganization?._id}`);
+    }
   }
 
   return {

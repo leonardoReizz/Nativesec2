@@ -17,6 +17,7 @@ import { Workspace } from 'renderer/pages/Workspace';
 import { WorkspaceMembers } from 'renderer/pages/WorkspaceMembers';
 import { WorkspaceSettings } from 'renderer/pages/WorkspaceSettings';
 import { useIPCSafeBoxGroup } from '../hooks/useIPCSafeBoxGroup/useIPCSafeBoxGroup';
+import { SafeBoxGroup } from '../pages/SafeBoxGroup';
 import { LayoutsWithSidebar } from './LayoutsWithSidebar';
 import { ProtectedRoutes } from './ProtectedRoutes';
 
@@ -71,6 +72,10 @@ export function AppRoutes() {
             <Route
               path="/organizationSettings"
               element={<WorkspaceSettings />}
+            />
+            <Route
+              path="/safeBoxGroup/:safeBoxGroupId"
+              element={<SafeBoxGroup />}
             />
           </Route>
         </Route>

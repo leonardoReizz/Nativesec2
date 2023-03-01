@@ -13,8 +13,8 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "declaration": true,
-    "declarationDir": "./src/@types",
     "allowJs": true,
+    "declarationDir": "./src/@types",
     "outDir": ".erb/dll",
     "paths": {
       "@/*": ["./*"],
