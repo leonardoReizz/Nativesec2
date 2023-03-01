@@ -5,13 +5,19 @@ import styles from '@/renderer/styles/dropdown.module.sass';
 
 interface DropdownProps {
   deleteSafeBoxGroup: () => void;
+  theme?: ThemeType;
 }
 
-export function Dropdown({ deleteSafeBoxGroup }: DropdownProps) {
+export function Dropdown({
+  deleteSafeBoxGroup,
+  theme = 'light',
+}: DropdownProps) {
   return (
     <DropdownMenu.Portal>
       <DropdownMenu.Content
-        className={styles.DropdownMenuContent}
+        className={`${styles.DropdownMenuContent} ${
+          theme === 'dark' ? styles.dark : styles.light
+        }`}
         sideOffset={5}
       >
         <DropdownMenu.Item className={styles.DropdownMenuItem}>
@@ -21,6 +27,7 @@ export function Dropdown({ deleteSafeBoxGroup }: DropdownProps) {
         <DropdownMenu.Item className={styles.DropdownMenuItem}>
           <FontRomanIcon /> Renomear
         </DropdownMenu.Item>
+        <DropdownMenu.Separator className={`${styles.DropdownMenuSeparator}`} />
         <DropdownMenu.Item
           className={`${styles.DropdownMenuItem} ${styles.red}`}
           onClick={deleteSafeBoxGroup}

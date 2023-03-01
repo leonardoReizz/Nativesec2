@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from 'react';
-import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Dropdown } from 'renderer/components/Dropdown';
 import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';

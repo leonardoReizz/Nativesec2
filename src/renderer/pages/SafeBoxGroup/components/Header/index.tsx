@@ -3,7 +3,7 @@
 /* eslint-disable react/jsx-no-bind */
 import { useState, useCallback } from 'react';
 import { ImMakeGroup } from 'react-icons/im';
-import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { ISafeBoxGroup } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
 import { VerifyNameModal } from '@/renderer/components/Modals/VerifyNameModal';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
@@ -63,7 +63,10 @@ export function Header({ theme = 'light', safeBoxGroup }: HeaderProps) {
                 <BiDotsVerticalRounded />
               </button>
             </DropdownMenu.Trigger>
-            <Dropdown deleteSafeBoxGroup={handleOpenVerifyNameModal} />
+            <Dropdown
+              deleteSafeBoxGroup={handleOpenVerifyNameModal}
+              theme={theme}
+            />
           </DropdownMenu.Root>
         </div>
       </header>

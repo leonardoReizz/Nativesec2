@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { IoMdAdd } from 'react-icons/io';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
-import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { Tooltip } from '@chakra-ui/react';
 import { useSafeBoxGroup } from '@/renderer/hooks/useSafeBoxGroup/useSafeBoxGroup';
 import { listSafeBoxGroupIPC } from '@/renderer/ipc/SafeBoxGroup';

@@ -1,14 +1,55 @@
+import { OrganizationsContext } from '@/renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { SafeBoxesContext } from '@/renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { ISafeBox } from '@/renderer/contexts/SafeBoxesContext/types';
 import { SafeBoxGroupContext } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
-import { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { UserConfigContext } from '@/renderer/contexts/UserConfigContext/UserConfigContext';
+import { deleteSafeBox } from '@/renderer/ipc/SafeBox';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function useSafeBoxGroup() {
-  const { safeBoxes } = useContext(SafeBoxesContext);
+  const { safeBoxes, changeSafeBoxesIsLoading } = useContext(SafeBoxesContext);
+  const { currentOrganization } = useContext(OrganizationsContext);
+  const { theme } = useContext(UserConfigContext);
+  const navigate = useNavigate();
   const [groupSafeBoxes, setGroupSafeBoxes] = useState<ISafeBox[]>([]);
+  const [selectedSafeBox, setSelectedSafeBox] = useState<ISafeBox | null>(null);
   const safeBoxGroupContext = useContext(SafeBoxGroupContext);
   const params = useParams();
+
+  const [isOpenVerifyNameModal, setIsOpenVerifyNameModal] =
+    useState<boolean>(false);
+
+  const openVerifyNameModal = useCallback(() => {
+    setIsOpenVerifyNameModal(true);
+  }, []);
+
+  const closeVerifyNameModal = useCallback(() => {
+    setIsOpenVerifyNameModal(false);
+  }, []);
+
+  const changeSelectedSafeBox = useCallback(
+    (newSelectedSafeBox: ISafeBox | null) => {
+      setSelectedSafeBox(newSelectedSafeBox);
+    },
+    []
+  );
+
+  const viewSafeBox = useCallback(() => {
+    if (selectedSafeBox) {
+      navigate(`/workspace/${selectedSafeBox._id}/view`);
+    }
+  }, [selectedSafeBox]);
+
+  const deleteSafeBoxCallback = useCallback(() => {
+    if (safeBoxGroupContext.currentSafeBoxGroup && currentOrganization) {
+      changeSafeBoxesIsLoading(true);
+      deleteSafeBox({
+        organizationId: currentOrganization._id,
+        safeBoxId: safeBoxGroupContext.currentSafeBoxGroup._id,
+      });
+    }
+  }, [safeBoxGroupContext.currentSafeBoxGroup, currentOrganization]);
 
   useEffect(() => {
     if (safeBoxGroupContext.currentSafeBoxGroup) {
@@ -43,5 +84,18 @@ export function useSafeBoxGroup() {
   }, [params]);
 
   console.log(safeBoxGroupContext.currentSafeBoxGroup, 'aa');
-  return { ...safeBoxGroupContext, groupSafeBoxes };
+  return {
+    ...safeBoxGroupContext,
+    groupSafeBoxes,
+    selectedSafeBox,
+    changeSelectedSafeBox,
+    theme,
+    navigate,
+    currentOrganization,
+    closeVerifyNameModal,
+    openVerifyNameModal,
+    isOpenVerifyNameModal,
+    deleteSafeBoxCallback,
+    viewSafeBox,
+  };
 }

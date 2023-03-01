@@ -1,11 +1,11 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+import { UserConfigContext } from '@/renderer/contexts/UserConfigContext/UserConfigContext';
+import { useContext } from 'react';
 import { CreateSafeBoxContextProvider } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
-import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
-import styles from './styles.module.sass';
 import { ViewSafeBox } from './ViewSafeBox';
+import styles from './styles.module.sass';
 
 export function Workspace() {
-  const { theme } = useUserConfig();
+  const { theme } = useContext(UserConfigContext);
 
   return (
     <div

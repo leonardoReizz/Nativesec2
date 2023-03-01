@@ -4,7 +4,7 @@ import { Input } from 'renderer/components/Inputs/Input';
 import { TextArea } from 'renderer/components/TextAreas/TextArea';
 import { IFormikItem } from 'renderer/contexts/CreateSafeBox/types';
 import { InputEye } from 'renderer/components/Inputs/InputEye';
-import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { VerifySafetyPhraseModal } from 'renderer/components/Modals/VerifySafetyPhraseModal';
 import {
@@ -27,6 +27,7 @@ export function Form() {
     itemName: '',
     position: '',
   });
+
   const { formikIndex, formikProps } = useContext(CreateSafeBoxContext);
   const { decryptMessage, safeBoxMode } = useSafeBox();
   const { theme } = useUserConfig();

@@ -2,7 +2,7 @@
 import { useEffect, useContext } from 'react';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
-import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import formik from '../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 import { MainSafeBox } from './MainSafeBox';

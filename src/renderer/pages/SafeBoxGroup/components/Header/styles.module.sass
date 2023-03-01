@@ -1,6 +1,11 @@
 @use '../../../../styles/_util' as *
 
 .dark
+  .iconButton
+    svg
+      color: $white
+    &:hover
+      background-color: $gray-700
   .title
     color: $white
     &::before
@@ -8,12 +13,11 @@
 
 .light
   .iconButton
-    background-color: $gray-200
     &:hover
       background-color: $gray-400
   .title
     &::before
-        background-color: $gray-400
+      background-color: $gray-400
 
 header
   @include flex(center, center, column)

@@ -12,7 +12,7 @@ import { VerifySafetyPhraseModal } from 'renderer/components/Modals/VerifySafety
 import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
 import { SafeBoxIcon, SafeBoxIconType } from 'renderer/components/SafeBoxIcon';
 import { OrganizationsContext } from 'renderer/contexts/OrganizationsContext/OrganizationsContext';
-import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { CreateSafeBoxContext } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { IFormikItem } from 'renderer/contexts/CreateSafeBox/types';

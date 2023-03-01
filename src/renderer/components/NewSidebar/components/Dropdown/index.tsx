@@ -3,15 +3,17 @@ import { TrashIcon, PlusIcon, FontRomanIcon } from '@radix-ui/react-icons';
 
 import styles from '@/renderer/styles/dropdown.module.sass';
 
-// interface DropdownProps {
-//   deleteSafeBoxGroup: () => void;
-// }
+interface DropdownProps {
+  theme: ThemeType;
+}
 
-export function Dropdown() {
+export function Dropdown({ theme = 'light' }: DropdownProps) {
   return (
     <DropdownMenu.Portal>
       <DropdownMenu.Content
-        className={styles.DropdownMenuContent}
+        className={`${styles.DropdownMenuContent} ${
+          theme === 'dark' ? styles.dark : styles.light
+        }`}
         sideOffset={5}
       >
         <DropdownMenu.Label className={styles.DropdownMenuLabel}>
@@ -24,6 +26,7 @@ export function Dropdown() {
         <DropdownMenu.Item className={styles.DropdownMenuItem}>
           <FontRomanIcon /> Atualizar Cofres
         </DropdownMenu.Item>
+        <DropdownMenu.Separator className={`${styles.DropdownMenuSeparator}`} />
         <DropdownMenu.Label className={styles.DropdownMenuLabel}>
           Grupo de Cofres
         </DropdownMenu.Label>

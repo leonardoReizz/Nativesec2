@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
-import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import styles from './styles.module.sass';
 import { SafeBoxIcon, SafeBoxIconType } from '../SafeBoxIcon';
 

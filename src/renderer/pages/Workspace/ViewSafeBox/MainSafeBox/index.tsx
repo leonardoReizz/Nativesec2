@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, useContext } from 'react';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Button } from 'renderer/components/Buttons/Button';
 import { IoMdAdd } from 'react-icons/io';
-import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { CreateSafeBoxContext } from '@/renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { Form } from './Form';
 import Users from './Users';

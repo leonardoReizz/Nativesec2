@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { useRef, useState } from 'react';
-import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { CiSearch } from 'react-icons/ci';
 import { IoMdAdd } from 'react-icons/io';
 import { SafeBoxInfo } from 'renderer/components/SafeBox';
@@ -95,7 +95,7 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
               <IoMdAdd />
             </button>
           </DropdownMenu.Trigger>
-          <Dropdown />
+          <Dropdown theme={theme} />
         </DropdownMenu.Root>
 
         {/* <div

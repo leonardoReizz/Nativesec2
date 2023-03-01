@@ -8,7 +8,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useSafeBox } from 'renderer/hooks/useSafeBox/useSafeBox';
+import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import formik from '../../utils/Formik/formik';
 import { OrganizationsContext } from '../OrganizationsContext/OrganizationsContext';
 import { SafeBoxesContext } from '../SafeBoxesContext/safeBoxesContext';
