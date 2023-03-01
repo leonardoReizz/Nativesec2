@@ -17,7 +17,6 @@ export function useSafeBox() {
   const safeBoxContext = useContext(SafeBoxesContext);
   const createSafeBox = useContext(CreateSafeBoxContext);
   const navigate = useNavigate();
-  const { updateForceLoading } = useLoading();
 
   const isSafeBoxParticipant =
     JSON.parse(safeBoxContext.currentSafeBox?.usuarios_leitura || '[]').filter(
@@ -305,26 +304,26 @@ export function useSafeBox() {
     [safeBoxContext.currentSafeBox]
   );
 
-  function getSafeBoxes(organizationId: string) {
-    safeBoxContext.changeSafeBoxesIsLoading(true);
-    window.electron.ipcRenderer.sendMessage('useIPC', {
-      event: IPCTypes.LIST_SAFE_BOXES,
-      data: {
-        organizationId,
-      },
-    });
-  }
+  // function getSafeBoxes(organizationId: string) {
+  //   safeBoxContext.changeSafeBoxesIsLoading(true);
+  //   window.electron.ipcRenderer.sendMessage('useIPC', {
+  //     event: IPCTypes.LIST_SAFE_BOXES,
+  //     data: {
+  //       organizationId,
+  //     },
+  //   });
+  // }
 
-  function deleteSafeBox({ organizationId, safeBoxId }: types.IDeleteSafeBox) {
-    safeBoxContext.changeSafeBoxesIsLoading(true);
-    window.electron.ipcRenderer.sendMessage('useIPC', {
-      event: IPCTypes.DELETE_SAFE_BOX,
-      data: {
-        organizationId,
-        safeBoxId,
-      },
-    });
-  }
+  // function deleteSafeBox({ organizationId, safeBoxId }: types.IDeleteSafeBox) {
+  //   safeBoxContext.changeSafeBoxesIsLoading(true);
+  //   window.electron.ipcRenderer.sendMessage('useIPC', {
+  //     event: IPCTypes.DELETE_SAFE_BOX,
+  //     data: {
+  //       organizationId,
+  //       safeBoxId,
+  //     },
+  //   });
+  // }
 
   function decryptMessage({ text, itemName, position, copy }: types.IDecrypt) {
     if (
@@ -369,13 +368,12 @@ export function useSafeBox() {
     });
   }
 
-  const forceRefreshSafeBoxes = useCallback((organizationId: string) => {
-    updateForceLoading(true);
-    window.electron.ipcRenderer.sendMessage('useIPC', {
-      event: IPCTypes.FORCE_REFRESH_SAFE_BOXES,
-      data: { organizationId },
-    });
-  }, []);
+  // const forceRefreshSafeBoxes = useCallback((organizationId: string) => {
+  //   window.electron.ipcRenderer.sendMessage('useIPC', {
+  //     event: IPCTypes.FORCE_REFRESH_SAFE_BOXES,
+  //     data: { organizationId },
+  //   });
+  // }, []);
 
   function changeCurrentSafeBox(safebox: ISafeBox | undefined) {
     safeBoxContext.changeCurrentSafeBox(safebox);
@@ -387,9 +385,9 @@ export function useSafeBox() {
   return {
     ...createSafeBox,
     ...safeBoxContext,
-    getSafeBoxes,
+    // getSafeBoxes,
     isSafeBoxParticipant,
-    deleteSafeBox,
+    // deleteSafeBox,
     submitSafeBox,
     decrypt,
     decryptMessage,
@@ -400,6 +398,6 @@ export function useSafeBox() {
     addSafeBoxUsers,
     changeCurrentSafeBox,
     updateUsersSafeBox,
-    forceRefreshSafeBoxes,
+    // forceRefreshSafeBoxes,
   };
 }

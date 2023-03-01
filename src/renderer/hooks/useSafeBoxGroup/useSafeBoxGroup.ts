@@ -3,12 +3,13 @@ import { SafeBoxesContext } from '@/renderer/contexts/SafeBoxesContext/safeBoxes
 import { ISafeBox } from '@/renderer/contexts/SafeBoxesContext/types';
 import { SafeBoxGroupContext } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
 import { UserConfigContext } from '@/renderer/contexts/UserConfigContext/UserConfigContext';
-import { deleteSafeBox } from '@/renderer/ipc/SafeBox';
+import { deleteSafeBox } from '@/renderer/services/ipc/SafeBox';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export function useSafeBoxGroup() {
-  const { safeBoxes, changeSafeBoxesIsLoading } = useContext(SafeBoxesContext);
+  const { safeBoxes, changeSafeBoxesIsLoading, changeCurrentSafeBox } =
+    useContext(SafeBoxesContext);
   const { currentOrganization } = useContext(OrganizationsContext);
   const { theme } = useContext(UserConfigContext);
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ export function useSafeBoxGroup() {
 
   const viewSafeBox = useCallback(() => {
     if (selectedSafeBox) {
+      changeCurrentSafeBox(selectedSafeBox);
       navigate(`/workspace/${selectedSafeBox._id}/view`);
     }
   }, [selectedSafeBox]);

@@ -68,6 +68,7 @@ export function SafeBoxGroup() {
                 <ContextMenuComponent
                   viewSafeBox={viewSafeBox}
                   openVerifyNameModal={openVerifyNameModal}
+                  theme={theme}
                 />
               </ContextMenu.Root>
             );

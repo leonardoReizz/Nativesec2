@@ -63,6 +63,7 @@ export function AppRoutes() {
           <Route element={<LayoutsWithSidebar />}>
             <Route path="/home" element={<Home />} />
             <Route path="/workspace/:id/:mode" element={<Workspace />} />
+            <Route path="/workspace/:id" element={<Workspace />} />
             <Route path="/userSettings" element={<UserSettings />} />
             <Route
               path="/createOrganization"

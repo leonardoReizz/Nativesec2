@@ -1,4 +1,5 @@
 import { IOrganization } from '@/renderer/contexts/OrganizationsContext/types';
+import { getSafeBoxes } from '@/renderer/services/ipc/SafeBox';
 import { IPCTypes } from '@/types/IPCTypes';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +21,7 @@ export function useIpcOrganization() {
     addNewParticipant,
   } = useOrganization();
   const { updateLastOrganizationId } = useUserConfig();
-  const { changeCurrentSafeBox, getSafeBoxes } = useSafeBox();
+  const { changeCurrentSafeBox, changeSafeBoxesIsLoading } = useSafeBox();
   const { updateLoading } = useLoading();
   const { refreshNotifications } = useNotifications();
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ export function useIpcOrganization() {
           changeCurrentSafeBox(undefined);
           updateLastOrganizationId(result.organization._id);
           changeCurrentOrganization(result.organization._id);
+          changeSafeBoxesIsLoading(true);
           getSafeBoxes(result.organization._id);
           return toast.success('Organizacão Criado com Sucesso', {
             ...toastOptions,

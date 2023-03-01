@@ -1,4 +1,10 @@
 import * as ContextMenu from '@radix-ui/react-context-menu';
+import {
+  BsFillEyeFill,
+  BsFillTrashFill,
+  BsShieldLockFill,
+} from 'react-icons/bs';
+import { TbEdit } from 'react-icons/tb';
 import styles from './styles.module.sass';
 
 interface ContextMenuComponentProps {
@@ -23,21 +29,21 @@ export function ContextMenuComponent({
           className={styles.ContextMenuItem}
           onClick={viewSafeBox}
         >
-          Ver
+          <BsFillEyeFill /> Visualizar
         </ContextMenu.Item>
         <ContextMenu.Item className={styles.ContextMenuItem}>
-          Descriptografar
+          <BsShieldLockFill /> Descriptografar
         </ContextMenu.Item>
         <ContextMenu.Separator className={styles.ContextMenuSeparator} />
         <ContextMenu.Item className={styles.ContextMenuItem}>
-          Editar
+          <TbEdit /> Editar
         </ContextMenu.Item>
         <ContextMenu.Separator className={styles.ContextMenuSeparator} />
         <ContextMenu.Item
           className={styles.ContextMenuItem}
           onClick={openVerifyNameModal}
         >
-          Excluir
+          <BsFillTrashFill /> Excluir
         </ContextMenu.Item>
         {/* <ContextMenu.Sub>
           <ContextMenu.SubTrigger className={styles.ContextMenuSubTrigger}>

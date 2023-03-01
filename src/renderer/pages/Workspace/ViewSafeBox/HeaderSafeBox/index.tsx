@@ -20,12 +20,14 @@ import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { Button } from 'renderer/components/Buttons/Button';
 import { useLoading } from 'renderer/hooks/useLoading';
 import { FormikContextType } from 'formik';
+import { deleteSafeBox } from '@/renderer/services/ipc/SafeBox';
 import formik from '../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 
 export function HeaderSafeBox() {
   const { theme } = useUserConfig();
-  const { currentSafeBox } = useContext(SafeBoxesContext);
+  const { currentSafeBox, changeSafeBoxesIsLoading } =
+    useContext(SafeBoxesContext);
   const { formikIndex, changeFormikIndex } = useContext(CreateSafeBoxContext);
   const [verifySafetyPhraseType, setVerifySafetyPhraseType] = useState('');
   const { currentOrganization } = useContext(OrganizationsContext);
@@ -34,7 +36,6 @@ export function HeaderSafeBox() {
   const [verifyNameModalIsOpen, setVerifyNameModalIsOpen] =
     useState<boolean>(false);
   const {
-    deleteSafeBox,
     submitSafeBox,
     formikProps,
     decrypt,
@@ -96,6 +97,7 @@ export function HeaderSafeBox() {
     (isVerified: boolean) => {
       if (isVerified && currentOrganization && currentSafeBox) {
         updateLoading(true);
+        changeSafeBoxesIsLoading(true);
         deleteSafeBox({
           organizationId: currentOrganization?._id,
           safeBoxId: currentSafeBox?._id,

@@ -9,6 +9,8 @@ import { SafeBoxInfo } from 'renderer/components/SafeBox';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useSafeBoxGroup } from '@/renderer/hooks/useSafeBoxGroup/useSafeBoxGroup';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { forceRefreshSafeBoxes } from '@/renderer/services/ipc/SafeBox';
+import { useLoading } from '@/renderer/hooks/useLoading';
 import styles from './styles.module.sass';
 import { SafeBoxGroup } from '../SafeBoxGroup';
 import { Dropdown } from '../Dropdown';
@@ -18,11 +20,6 @@ interface WorkspaceMenuProps {
 }
 
 export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
-  const [menuCreateIsOpen, setMenuCreateIsOpen] = useState<boolean>(false);
-  const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const menuCreateRef = useRef<HTMLButtonElement>(null);
-
   const { theme } = useUserConfig();
   const {
     filteredSafeBoxes,
@@ -30,10 +27,9 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
     searchValue,
     changeCurrentSafeBox,
     changeSafeBoxMode,
-    forceRefreshSafeBoxes,
   } = useSafeBox();
   const { safeBoxGroup } = useSafeBoxGroup();
-
+  const { updateForceLoading } = useLoading();
   const { isParticipant, currentOrganization } = useOrganization();
 
   function handleCreateSafeBox() {
@@ -42,32 +38,12 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
     changeSafeBoxMode('create');
   }
 
-  function handleOpenMenuIsCreate() {
-    setMenuCreateIsOpen(true);
-  }
-
-  function handleClickOutside(e: MouseEvent) {
-    if (isOpenMenu && !menuRef.current?.contains(e.target as Node)) {
-      setIsOpenMenu(false);
-    }
-
-    if (
-      menuCreateIsOpen &&
-      !menuCreateRef.current?.contains(e.target as Node)
-    ) {
-      setMenuCreateIsOpen(false);
-    }
-  }
-
-  console.log(safeBoxGroup);
-
   function handleRefreshSafeBoxes() {
     if (currentOrganization) {
+      updateForceLoading(true);
       forceRefreshSafeBoxes(currentOrganization._id);
     }
   }
-
-  window.addEventListener('click', handleClickOutside);
 
   return (
     <div
@@ -87,46 +63,12 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
         </div>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
-            <button
-              type="button"
-              ref={menuCreateRef}
-              onClick={handleOpenMenuIsCreate}
-            >
+            <button type="button">
               <IoMdAdd />
             </button>
           </DropdownMenu.Trigger>
           <Dropdown theme={theme} />
         </DropdownMenu.Root>
-
-        {/* <div
-          className={`${styles.menuCreate} ${
-            menuCreateIsOpen ? styles.open : styles.close
-          }`}
-        >
-          <h4>Cofres</h4>
-          <button
-            type="button"
-            onClick={handleCreateSafeBox}
-            disabled={isParticipant}
-          >
-            <IoMdAdd />
-            Novo Cofre
-          </button>
-          <button
-            type="button"
-            onClick={handleRefreshSafeBoxes}
-            disabled={!currentOrganization}
-          >
-            <IoReloadOutline />
-            Atualizar Cofres
-          </button>
-          <span />
-          <h4>Grupos</h4>
-          <button type="button" disabled={isParticipant}>
-            <IoMdAdd />
-            Novo Grupo de Cofres
-          </button>
-        </div> */}
       </div>
       <div className={styles.safeBoxes}>
         <div className={styles.safeBox}>

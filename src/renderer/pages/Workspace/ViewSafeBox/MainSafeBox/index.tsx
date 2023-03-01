@@ -4,6 +4,7 @@ import { Button } from 'renderer/components/Buttons/Button';
 import { IoMdAdd } from 'react-icons/io';
 import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { CreateSafeBoxContext } from '@/renderer/contexts/CreateSafeBox/createSafeBoxContext';
+import { useParams } from 'react-router-dom';
 import { Form } from './Form';
 import Users from './Users';
 import styles from './styles.module.sass';
@@ -20,14 +21,25 @@ export function MainSafeBox() {
 
   const { theme } = useUserConfig();
 
+  const params = useParams();
+
   const {
     addSafeBoxUsers,
     currentSafeBox,
     safeBoxMode,
+    changeSafeBoxMode,
     changeUsersAdmin,
     changeUsersParticipant,
     isSafeBoxParticipant,
   } = useSafeBox();
+
+  useEffect(() => {
+    if (params.mode === 'view') {
+      changeSafeBoxMode('view');
+    } else if (params.mode === 'edit') {
+      changeSafeBoxMode('edit');
+    }
+  }, []);
 
   function handleTabForm() {
     setTab('form');

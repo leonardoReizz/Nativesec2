@@ -6,8 +6,8 @@ import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { Tooltip } from '@chakra-ui/react';
-import { useSafeBoxGroup } from '@/renderer/hooks/useSafeBoxGroup/useSafeBoxGroup';
-import { listSafeBoxGroupIPC } from '@/renderer/ipc/SafeBoxGroup';
+import { listSafeBoxGroupIPC } from '@/renderer/services/ipc/SafeBoxGroup';
+import { getSafeBoxes } from '@/renderer/services/ipc/SafeBox';
 import { Icon } from './Icon';
 import styles from './styles.module.sass';
 
@@ -21,8 +21,8 @@ export function Sidebar({ openSidebar }: SidebarProps) {
   const {
     updateSafeBoxes,
     changeCurrentSafeBox,
-    getSafeBoxes,
     changeSafeBoxMode,
+    changeSafeBoxesIsLoading,
   } = useSafeBox();
   const {
     organizations,
@@ -40,6 +40,7 @@ export function Sidebar({ openSidebar }: SidebarProps) {
       changeCurrentOrganization(organizationId);
       listSafeBoxGroupIPC(organizationId);
       updateLastOrganizationId(organizationId);
+      changeSafeBoxesIsLoading(true);
       getSafeBoxes(organizationId);
       return navigate(`/workspace/${organizationId}`);
     },
