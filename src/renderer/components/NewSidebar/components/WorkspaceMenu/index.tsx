@@ -1,7 +1,4 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
-import { useRef, useState } from 'react';
 import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { CiSearch } from 'react-icons/ci';
 import { IoMdAdd } from 'react-icons/io';

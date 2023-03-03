@@ -21,8 +21,11 @@ import { Button } from 'renderer/components/Buttons/Button';
 import { useLoading } from 'renderer/hooks/useLoading';
 import { FormikContextType } from 'formik';
 import { deleteSafeBox } from '@/renderer/services/ipc/SafeBox';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { BiDotsVerticalRounded } from 'react-icons/bi';
 import formik from '../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
+import { Dropdown } from '../Dropdown';
 
 export function HeaderSafeBox() {
   const { theme } = useUserConfig();
@@ -152,7 +155,7 @@ export function HeaderSafeBox() {
 
       <header className={`${theme === 'dark' ? styles.dark : styles.light}`}>
         <>
-          <div className={styles.actions}>
+          {/* <div className={styles.actions}>
             {safeBoxMode === 'view' && (
               <Button
                 text="Descriptografar"
@@ -205,7 +208,7 @@ export function HeaderSafeBox() {
                 />
               </div>
             )}
-          </div>
+          </div> */}
           {(safeBoxMode === 'view' || safeBoxMode === 'decrypted') && (
             <div className={styles.title}>
               <SafeBoxIcon type={currentSafeBox?.tipo as SafeBoxIconType} />
@@ -216,6 +219,39 @@ export function HeaderSafeBox() {
             </div>
           )}
         </>
+        <div className={styles.action}>
+          {safeBoxMode === 'view' && (
+            <Button
+              text="Descriptografar"
+              onClick={() => handleDecrypt('decryptSafeBox')}
+              theme={theme}
+              Icon={<GiPadlockOpen />}
+            />
+          )}
+          {safeBoxMode === 'decrypted' && (
+            <Button
+              text="Criptografar"
+              theme={theme}
+              onClick={() => handleCrypt()}
+              Icon={<GiPadlock />}
+            />
+          )}
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild>
+              <button
+                type="button"
+                className={styles.iconButton}
+                aria-label="Customise options"
+              >
+                <BiDotsVerticalRounded />
+              </button>
+            </DropdownMenu.Trigger>
+            <Dropdown
+              deleteSafeBoxGroup={handleOpenVerifyNameModal}
+              theme={theme}
+            />
+          </DropdownMenu.Root>
+        </div>
         {(safeBoxMode === 'edit' || safeBoxMode === 'create') && (
           <>
             <div className={styles.dropdown}>

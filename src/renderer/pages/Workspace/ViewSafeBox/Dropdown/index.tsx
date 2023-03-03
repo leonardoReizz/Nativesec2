@@ -1,43 +1,83 @@
-import React from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import {
-  HamburgerMenuIcon,
-  DotFilledIcon,
-  CheckIcon,
-  ChevronRightIcon,
-  TrashIcon,
-  CursorTextIcon,
-  PlusIcon,
-  FontRomanIcon,
-} from '@radix-ui/react-icons';
 
-import styles from './styles.module.sass';
+import styles from '@/renderer/styles/dropdown.module.sass';
+import { BsFillTrashFill } from 'react-icons/bs';
+import { TbEdit } from 'react-icons/tb';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { ChevronRightIcon } from '@radix-ui/react-icons';
 
-export function RadixDropDown() {
-  const [bookmarksChecked, setBookmarksChecked] = React.useState(true);
-  const [urlsChecked, setUrlsChecked] = React.useState(false);
-  const [person, setPerson] = React.useState('pedro');
+interface DropdownProps {
+  deleteSafeBoxGroup: () => void;
+  theme?: ThemeType;
+}
 
+export function Dropdown({
+  deleteSafeBoxGroup,
+  theme = 'light',
+}: DropdownProps) {
   return (
-    <DropdownMenu.Portal tabIndex={-400} className={styles.portal}>
+    <DropdownMenu.Portal>
       <DropdownMenu.Content
-        tabIndex={-400}
-        className={styles.DropdownMenuContent}
+        className={`${styles.DropdownMenuContent} ${
+          theme === 'dark' ? styles.dark : styles.light
+        }`}
         sideOffset={5}
       >
         <DropdownMenu.Item className={styles.DropdownMenuItem}>
-          <PlusIcon />
-          Adicionar Cofre
+          <TbEdit />
+          Editar
         </DropdownMenu.Item>
         <DropdownMenu.Item className={styles.DropdownMenuItem}>
-          <FontRomanIcon /> Renomear
+          <TbEdit />
+          Compartilhamento
         </DropdownMenu.Item>
+        <DropdownMenu.Sub>
+          <DropdownMenu.SubTrigger className={styles.DropdownMenuSubTrigger}>
+            Adicionar ao grupo
+            <div className={styles.RightSlot}>
+              <ChevronRightIcon />
+            </div>
+          </DropdownMenu.SubTrigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.SubContent
+              className={`${styles.DropdownMenuSubContent} ${
+                theme === 'dark' ? styles.dark : styles.light
+              }`}
+              sideOffset={2}
+              alignOffset={-5}
+            >
+              <DropdownMenu.Item className={styles.DropdownMenuItem}>
+                Teste
+              </DropdownMenu.Item>
+              <DropdownMenu.Item className={styles.DropdownMenuItem}>
+                Teste
+              </DropdownMenu.Item>
+              <DropdownMenu.Separator
+                className={`${styles.DropdownMenu} ${styles.Separator}`}
+              />
+              <DropdownMenu.Item className={styles.DropdownMenuItem}>
+                Developer Tools
+              </DropdownMenu.Item>
+            </DropdownMenu.SubContent>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Sub>
+        <DropdownMenu.Separator className={`${styles.DropdownMenuSeparator}`} />
         <DropdownMenu.Item
           className={`${styles.DropdownMenuItem} ${styles.red}`}
+          onClick={deleteSafeBoxGroup}
         >
-          <TrashIcon />
+          <BsFillTrashFill />
           Excluir
         </DropdownMenu.Item>
+
+        <DropdownMenu.Item
+          className={`${styles.DropdownMenuItem} ${styles.red}`}
+          onClick={deleteSafeBoxGroup}
+        >
+          <BsFillTrashFill />
+          Remover do Grupo Atual
+        </DropdownMenu.Item>
+
         {/* <DropdownMenu.Item className={styles.DropdownMenuItem} disabled>
           New Private Window <div className={styles.RightSlot}>⇧+⌘+N</div>
         </DropdownMenu.Item>

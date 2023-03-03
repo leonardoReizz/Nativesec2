@@ -43,7 +43,7 @@ export function ContextMenuComponent({
           className={styles.ContextMenuItem}
           onClick={openVerifyNameModal}
         >
-          <BsFillTrashFill /> Excluir
+          <BsFillTrashFill /> Remover Cofre
         </ContextMenu.Item>
         {/* <ContextMenu.Sub>
           <ContextMenu.SubTrigger className={styles.ContextMenuSubTrigger}>

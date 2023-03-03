@@ -2,6 +2,8 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { TrashIcon, PlusIcon, FontRomanIcon } from '@radix-ui/react-icons';
 
 import styles from '@/renderer/styles/dropdown.module.sass';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { IoReloadOutline } from 'react-icons/io5';
 
 interface DropdownProps {
   theme: ThemeType;
@@ -20,18 +22,18 @@ export function Dropdown({ theme = 'light' }: DropdownProps) {
           Cofres
         </DropdownMenu.Label>
         <DropdownMenu.Item className={styles.DropdownMenuItem}>
-          <PlusIcon />
+          <AiOutlinePlus />
           Adicionar Cofre
         </DropdownMenu.Item>
         <DropdownMenu.Item className={styles.DropdownMenuItem}>
-          <FontRomanIcon /> Atualizar Cofres
+          <IoReloadOutline /> Atualizar Cofres
         </DropdownMenu.Item>
         <DropdownMenu.Separator className={`${styles.DropdownMenuSeparator}`} />
         <DropdownMenu.Label className={styles.DropdownMenuLabel}>
           Grupo de Cofres
         </DropdownMenu.Label>
         <DropdownMenu.Item className={styles.DropdownMenuItem}>
-          <PlusIcon />
+          <AiOutlinePlus />
           Novo Grupo Cofre
         </DropdownMenu.Item>
 

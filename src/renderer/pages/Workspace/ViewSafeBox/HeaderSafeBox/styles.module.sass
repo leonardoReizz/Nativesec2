@@ -46,6 +46,26 @@ header
   width: 100%
   gap: 1rem
 
+  .action
+    display: flex
+    position: absolute
+    right: 0
+    top: 15px
+
+    width: 200px
+    gap: 1rem
+
+    .iconButton
+      padding: .2rem
+      border-radius: $default-radius
+      cursor: pointer
+
+      transition: background-color 0.2s ease
+
+      svg
+        width: 20px
+        height: 20px
+
   .red
     background-color: $red-100 !important
     color: $white !important
@@ -137,7 +157,7 @@ header
       visibility: hidden
       margin-top: .5rem
       overflow: auto
-      
+
       max-height: calc(100vh - 200px)
 
       div

@@ -35,6 +35,7 @@ export class Database {
       this.database = db;
       return db;
     }
+
     await this.createPATH(PATH);
     const createDatabase = await this.createDatabase({ myEmail: email, PATH });
     await this.init({ db: createDatabase, secret: safetyPhrase });

@@ -1,7 +1,9 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { TrashIcon, PlusIcon, FontRomanIcon } from '@radix-ui/react-icons';
 
 import styles from '@/renderer/styles/dropdown.module.sass';
+import { BsFillTrashFill } from 'react-icons/bs';
+import { TbEdit } from 'react-icons/tb';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 interface DropdownProps {
   deleteSafeBoxGroup: () => void;
@@ -21,18 +23,18 @@ export function Dropdown({
         sideOffset={5}
       >
         <DropdownMenu.Item className={styles.DropdownMenuItem}>
-          <PlusIcon />
+          <AiOutlinePlus />
           Adicionar Cofre
         </DropdownMenu.Item>
         <DropdownMenu.Item className={styles.DropdownMenuItem}>
-          <FontRomanIcon /> Renomear
+          <TbEdit /> Renomear
         </DropdownMenu.Item>
         <DropdownMenu.Separator className={`${styles.DropdownMenuSeparator}`} />
         <DropdownMenu.Item
           className={`${styles.DropdownMenuItem} ${styles.red}`}
           onClick={deleteSafeBoxGroup}
         >
-          <TrashIcon />
+          <BsFillTrashFill />
           Excluir
         </DropdownMenu.Item>
         {/* <DropdownMenu.Item className={styles.DropdownMenuItem} disabled>
