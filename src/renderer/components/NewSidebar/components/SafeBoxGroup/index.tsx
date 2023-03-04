@@ -68,43 +68,6 @@ export function SafeBoxGroup({
             </div>
           );
         })}
-        {safeBoxesId.map((safeBoxId) => {
-          const filter = safeBoxes.filter(
-            (safebox) => safebox._id === safeBoxId
-          );
-          return (
-            <div
-              className={`${styles.safeBox} ${
-                theme === 'dark' ? styles.dark : styles.light
-              }`}
-              onClick={() => changeCurrentSafeBox(filter[0])}
-            >
-              <SafeBoxIcon type={filter[0]?.tipo as SafeBoxIconType} />
-              <div className={styles.text}>
-                <h3>{filter[0]?.nome}</h3>
-                <h3>{filter[0]?.descricao}</h3>
-              </div>
-            </div>
-          );
-        })}
-        {safeBoxesId.map((safeBoxId) => {
-          const filter = safeBoxes.filter(
-            (safebox) => safebox._id === safeBoxId
-          );
-          return (
-            <div
-              className={`${styles.safeBox} ${
-                theme === 'dark' ? styles.dark : styles.light
-              }`}
-            >
-              <SafeBoxIcon type={filter[0]?.tipo as SafeBoxIconType} />
-              <div className={styles.text}>
-                <h3>{filter[0]?.nome}</h3>
-                <h3>{filter[0]?.descricao}</h3>
-              </div>
-            </div>
-          );
-        })}
       </div>
     </div>
   );

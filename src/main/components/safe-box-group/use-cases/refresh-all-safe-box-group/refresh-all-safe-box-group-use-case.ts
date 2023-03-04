@@ -1,10 +1,7 @@
 import { OrganizationModelDatabase } from '@/main/components/organizations/model/Organization';
 import { store } from '@/main/main';
 import { IPCError } from '@/main/utils/IPCError';
-import {
-  ISafeBoxGroupModelAPI,
-  ISafeBoxGroupModelDatabase,
-} from '../../model/safe-box-group';
+import { ISafeBoxGroupModelAPI } from '../../model/safe-box-group';
 import { SafeBoxGroupRepositoryAPI } from '../../repositories/safe-box-group-repository-API';
 import { SafeBoxGroupRepositoryDatabase } from '../../repositories/safe-box-group-repository-database';
 
@@ -41,6 +38,7 @@ export class RefreshAllSafeBoxGroupUseCase {
           await this.safeBoxGroupRepositoryDatabase.listByOrganizationId(
             organization._id
           );
+
         IPCError({
           object: listSafeBoxGroupDatabase,
           message: 'ERROR DATABASE LIST SAFE BOX GROUP',

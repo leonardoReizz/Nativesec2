@@ -3,11 +3,11 @@
 /* eslint-disable react/jsx-no-bind */
 import { useState, useCallback } from 'react';
 import { ImMakeGroup } from 'react-icons/im';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { ISafeBoxGroup } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
 import { VerifyNameModal } from '@/renderer/components/Modals/VerifyNameModal';
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { BiDotsVerticalRounded } from 'react-icons/bi';
 import styles from './styles.module.sass';
 import { Dropdown } from '../Dropdown/RadixDropDown';
 
@@ -44,7 +44,11 @@ export function Header({ theme = 'light', safeBoxGroup }: HeaderProps) {
         onRequestClose={closeVerifyNameModal}
         isOpen={isOpenVerifyNameModal}
       />
-      <header className={`${theme === 'dark' ? styles.dark : styles.light}`}>
+      <header
+        className={`${styles.header} ${
+          theme === 'dark' ? styles.dark : styles.light
+        }`}
+      >
         <div className={styles.title}>
           <ImMakeGroup />
           <div className={styles.description}>

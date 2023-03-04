@@ -13,7 +13,23 @@ export function useIPCSafeBoxGroup() {
         if (result.message === 'ok') {
           return updateSafeBoxGroup(window.electron.store.get('safeBoxGroup'));
         }
-        return toast.error('Erro ao listar grupos de cofre', {
+        return toast.error('Erro ao listar grupos', {
+          ...toastOptions,
+          toastId: 'errorListSafeBoxGroup',
+        });
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.UPDATE_SAFE_BOX_GROUP_RESPONSE,
+      (result: IIPCResponse) => {
+        toast.dismiss('updateSafeBoxGroup');
+        if (result.message === 'ok') {
+          return updateSafeBoxGroup(window.electron.store.get('safeBoxGroup'));
+        }
+        return toast.error('Erro ao atualizar grupo', {
           ...toastOptions,
           toastId: 'errorListSafeBoxGroup',
         });

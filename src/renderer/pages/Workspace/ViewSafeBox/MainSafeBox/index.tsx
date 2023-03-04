@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState, useContext } from 'react';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
-import { Button } from 'renderer/components/Buttons/Button';
-import { IoMdAdd } from 'react-icons/io';
 import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
+import * as Dialog from '@radix-ui/react-dialog'
 import { CreateSafeBoxContext } from '@/renderer/contexts/CreateSafeBox/createSafeBoxContext';
 import { useParams } from 'react-router-dom';
 import { Form } from './Form';
 import Users from './Users';
 import styles from './styles.module.sass';
 import { AddParticipantModal } from './AddParticipantModal';
+import { SharingModal } from '../SharingModal';
 
 export function MainSafeBox() {
   const [tab, setTab] = useState<'form' | 'users'>('form');
@@ -108,7 +108,7 @@ export function MainSafeBox() {
           theme === 'dark' ? styles.dark : styles.light
         }`}
       >
-        <div className={styles.menu}>
+        {/* <div className={styles.menu}>
           <button
             type="button"
             onClick={handleTabForm}
@@ -134,7 +134,7 @@ export function MainSafeBox() {
               disabled={isSafeBoxParticipant}
             />
           )}
-        </div>
+        </div> */}
         <div
           className={`${styles.form} ${tab === 'form' ? styles.formOpen : ''}`}
         >

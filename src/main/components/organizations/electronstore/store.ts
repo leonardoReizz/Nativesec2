@@ -17,7 +17,6 @@ export async function refreshOrganizations(
     const listOrganizationsIcons =
       await organizationIconRepositoryDatabase.list();
 
-    console.log(listOrganizations, ' icon');
     store.set('iconeAll', listOrganizationsIcons);
     store.set('organizations', sort);
   }

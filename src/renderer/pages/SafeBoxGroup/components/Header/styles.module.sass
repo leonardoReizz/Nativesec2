@@ -19,7 +19,7 @@
     &::before
       background-color: $gray-400
 
-header
+.header
   @include flex(center, center, column)
   width: 100%
   gap: 1rem
@@ -28,11 +28,12 @@ header
   .red
     background-color: $red-100 !important
     color: $white !important
-    svg
-      color: $white !important
+
     &:hover
       background-color: $red-100-hover !important
 
+    svg
+      color: $white !important
 
   .action
     position: absolute
@@ -57,7 +58,6 @@ header
     gap: 1rem
     position: relative
 
-
     &::before
       content: ''
       position: absolute
@@ -76,7 +76,3 @@ header
       h2
         font-size: 1rem
         font-weight: 600
-
-
-
-

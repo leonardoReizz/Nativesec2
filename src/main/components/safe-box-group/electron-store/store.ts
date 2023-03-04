@@ -23,5 +23,5 @@ export async function refreshSafeBoxGroup(
     return a == b ? 0 : a > b ? 1 : -1;
   });
 
-  store.set('safeBoxGroup', sort);
+  return store.set('safeBoxGroup', sort);
 }

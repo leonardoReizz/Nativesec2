@@ -1,18 +1,30 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
-import styles from '@/renderer/styles/dropdown.module.sass';
 import { BsFillTrashFill } from 'react-icons/bs';
 import { TbEdit } from 'react-icons/tb';
-import { AiOutlinePlus } from 'react-icons/ai';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
+import styles from '@/renderer/styles/dropdown.module.sass';
+import { ISafeBoxGroup } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
 
 interface DropdownProps {
+  editSafeBox: () => void;
+  deleteSafeBox: () => void;
   deleteSafeBoxGroup: () => void;
+  addSafeBoxGroup: (group: ISafeBoxGroup) => void;
+  removeSafeBoxFromGroup: (group: ISafeBoxGroup) => void;
   theme?: ThemeType;
+  groups?: ISafeBoxGroup[];
+  participantGroups?: ISafeBoxGroup[];
 }
 
 export function Dropdown({
   deleteSafeBoxGroup,
+  editSafeBox,
+  deleteSafeBox,
+  groups,
+  addSafeBoxGroup,
+  participantGroups,
+  removeSafeBoxFromGroup,
   theme = 'light',
 }: DropdownProps) {
   return (
@@ -23,7 +35,10 @@ export function Dropdown({
         }`}
         sideOffset={5}
       >
-        <DropdownMenu.Item className={styles.DropdownMenuItem}>
+        <DropdownMenu.Item
+          className={styles.DropdownMenuItem}
+          onClick={editSafeBox}
+        >
           <TbEdit />
           Editar
         </DropdownMenu.Item>
@@ -46,18 +61,16 @@ export function Dropdown({
               sideOffset={2}
               alignOffset={-5}
             >
-              <DropdownMenu.Item className={styles.DropdownMenuItem}>
-                Teste
-              </DropdownMenu.Item>
-              <DropdownMenu.Item className={styles.DropdownMenuItem}>
-                Teste
-              </DropdownMenu.Item>
-              <DropdownMenu.Separator
-                className={`${styles.DropdownMenu} ${styles.Separator}`}
-              />
-              <DropdownMenu.Item className={styles.DropdownMenuItem}>
-                Developer Tools
-              </DropdownMenu.Item>
+              {groups?.map((group) => {
+                return (
+                  <DropdownMenu.Item
+                    className={styles.DropdownMenuItem}
+                    onClick={() => addSafeBoxGroup(group)}
+                  >
+                    {group.nome}
+                  </DropdownMenu.Item>
+                );
+              })}
             </DropdownMenu.SubContent>
           </DropdownMenu.Portal>
         </DropdownMenu.Sub>
@@ -70,13 +83,34 @@ export function Dropdown({
           Excluir
         </DropdownMenu.Item>
 
-        <DropdownMenu.Item
-          className={`${styles.DropdownMenuItem} ${styles.red}`}
-          onClick={deleteSafeBoxGroup}
-        >
-          <BsFillTrashFill />
-          Remover do Grupo Atual
-        </DropdownMenu.Item>
+        <DropdownMenu.Sub>
+          <DropdownMenu.SubTrigger className={styles.DropdownMenuSubTrigger}>
+            Remover do Grupo
+            <div className={styles.RightSlot}>
+              <ChevronRightIcon />
+            </div>
+          </DropdownMenu.SubTrigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.SubContent
+              className={`${styles.DropdownMenuSubContent} ${
+                theme === 'dark' ? styles.dark : styles.light
+              }`}
+              sideOffset={2}
+              alignOffset={-5}
+            >
+              {participantGroups?.map((group) => {
+                return (
+                  <DropdownMenu.Item
+                    className={styles.DropdownMenuItem}
+                    onClick={() => removeSafeBoxFromGroup(group)}
+                  >
+                    {group.nome}
+                  </DropdownMenu.Item>
+                );
+              })}
+            </DropdownMenu.SubContent>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Sub>
 
         {/* <DropdownMenu.Item className={styles.DropdownMenuItem} disabled>
           New Private Window <div className={styles.RightSlot}>⇧+⌘+N</div>

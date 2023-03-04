@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react-hooks/exhaustive-deps */
+import { SafeBoxGroupContext } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
 import { IPCTypes } from '@/types/IPCTypes';
 import { SafeBoxDatabaseModel } from 'main/components/safe-box/model/SafeBox';
 import { useEffect, useContext } from 'react';
@@ -18,6 +19,8 @@ export function useIPCSafeBox() {
     changeSafeBoxesIsLoading,
     refreshSafeBoxes,
   } = useContext(SafeBoxesContext);
+
+  const { updateSafeBoxGroup } = useContext(SafeBoxGroupContext);
 
   const { changeSafeBoxMode } = useSafeBox();
   const { updateLoading, updateForceLoading } = useLoading();
@@ -86,6 +89,7 @@ export function useIPCSafeBox() {
         updateLoading(false);
         if (response.message === 'ok') {
           changeCurrentSafeBox(undefined);
+          updateSafeBoxGroup(window.electron.store.get('safeBoxGroup'));
           refreshSafeBoxes();
           return toast.success('Cofre deletado.', {
             ...toastOptions,

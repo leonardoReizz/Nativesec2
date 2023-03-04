@@ -1,11 +1,12 @@
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
-import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { CiSearch } from 'react-icons/ci';
 import { IoMdAdd } from 'react-icons/io';
 import { SafeBoxInfo } from 'renderer/components/SafeBox';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
-import { useSafeBoxGroup } from '@/renderer/hooks/useSafeBoxGroup/useSafeBoxGroup';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { useNavigate } from 'react-router-dom';
+import { useSafeBoxGroup } from '@/renderer/hooks/useSafeBoxGroup/useSafeBoxGroup';
+import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { forceRefreshSafeBoxes } from '@/renderer/services/ipc/SafeBox';
 import { useLoading } from '@/renderer/hooks/useLoading';
 import styles from './styles.module.sass';
@@ -25,14 +26,18 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
     changeCurrentSafeBox,
     changeSafeBoxMode,
   } = useSafeBox();
+  const navigate = useNavigate();
   const { safeBoxGroup } = useSafeBoxGroup();
   const { updateForceLoading } = useLoading();
   const { isParticipant, currentOrganization } = useOrganization();
 
   function handleCreateSafeBox() {
-    closeSidebar();
-    changeCurrentSafeBox(undefined);
-    changeSafeBoxMode('create');
+    if (currentOrganization) {
+      closeSidebar();
+      navigate(`/workspace/${currentOrganization?._id}`);
+      changeCurrentSafeBox(undefined);
+      changeSafeBoxMode('create');
+    }
   }
 
   function handleRefreshSafeBoxes() {
@@ -64,7 +69,7 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
               <IoMdAdd />
             </button>
           </DropdownMenu.Trigger>
-          <Dropdown theme={theme} />
+          <Dropdown theme={theme} createNewSafeBox={handleCreateSafeBox} />
         </DropdownMenu.Root>
       </div>
       <div className={styles.safeBoxes}>
@@ -73,12 +78,7 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
             <span>Grupo de Cofres</span>
           </div>
           {safeBoxGroup.map((group) => {
-            return (
-              <>
-                <SafeBoxGroup safeBoxGroup={group} theme={theme} />
-                <SafeBoxGroup safeBoxGroup={group} theme={theme} />
-              </>
-            );
+            return <SafeBoxGroup safeBoxGroup={group} theme={theme} />;
           })}
         </div>
         <div className={styles.safeBox}>

@@ -36,6 +36,7 @@ import { changeSafetyPhraseController } from '../components/user/use-cases/chang
 import { updateUserController } from '../components/user/use-cases/update-user';
 import { listSafeBoxGroupController } from '../components/safe-box-group/use-cases/list-safe-box-group';
 import { refreshAllSafeBoxGroupController } from '../components/safe-box-group/use-cases/refresh-all-safe-box-group';
+import { updateSafeBoxGroupController } from '../components/safe-box-group/use-cases/update-safe-box-group';
 
 export interface UseIPCData {
   id: string;
@@ -126,6 +127,8 @@ export async function useIpcActions(
       return listSafeBoxGroupController.handle(arg.data);
     case IPCTypes.REFRESH_ALL_SAFE_BOX_GROUP:
       return refreshAllSafeBoxGroupController.handle();
+    case IPCTypes.UPDATE_SAFE_BOX_GROUP:
+      return updateSafeBoxGroupController.handle(arg.data);
     default:
       return {
         response: 'none',
