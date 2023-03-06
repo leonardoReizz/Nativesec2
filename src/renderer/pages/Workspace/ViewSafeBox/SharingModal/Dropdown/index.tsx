@@ -1,20 +1,21 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { TrashIcon, PlusIcon, FontRomanIcon } from '@radix-ui/react-icons';
 
-import { AiOutlinePlus } from 'react-icons/ai';
-import { IoReloadOutline } from 'react-icons/io5';
+import { BsFillTrashFill } from 'react-icons/bs';
+import { TbEdit } from 'react-icons/tb';
 import styles from '@/renderer/styles/dropdown.module.sass';
 
 interface DropdownProps {
-  theme: ThemeType;
-  createNewSafeBox: () => void;
-  refreshSafeBoxes: () => void;
+  theme?: ThemeType;
+  email: string;
+  handleUpdateSafeBox: (type: 'participant' | 'admin', email: string) => void;
+  handleRemoveUser: (type: 'participant' | 'admin', email: string) => void;
 }
 
 export function Dropdown({
   theme = 'light',
-  createNewSafeBox,
-  refreshSafeBoxes,
+  handleUpdateSafeBox,
+  email,
+  handleRemoveUser,
 }: DropdownProps) {
   return (
     <DropdownMenu.Portal>
@@ -24,37 +25,33 @@ export function Dropdown({
         }`}
         sideOffset={5}
       >
-        <DropdownMenu.Label className={styles.DropdownMenuLabel}>
-          Cofres
-        </DropdownMenu.Label>
+        <DropdownMenu.Label>Permissão</DropdownMenu.Label>
         <DropdownMenu.Item
           className={styles.DropdownMenuItem}
-          onClick={createNewSafeBox}
+          onClick={() => handleUpdateSafeBox('participant', email)}
         >
-          <AiOutlinePlus />
-          Adicionar Cofre
+          <TbEdit />
+          Apenas Leitura
         </DropdownMenu.Item>
         <DropdownMenu.Item
           className={styles.DropdownMenuItem}
-          onClick={refreshSafeBoxes}
+          onClick={() => handleUpdateSafeBox('admin', email)}
         >
-          <IoReloadOutline /> Atualizar Cofres
+          <TbEdit />
+          Leitura e Escrita
         </DropdownMenu.Item>
         <DropdownMenu.Separator className={`${styles.DropdownMenuSeparator}`} />
-        <DropdownMenu.Label className={styles.DropdownMenuLabel}>
-          Grupo de Cofres
-        </DropdownMenu.Label>
-        <DropdownMenu.Item className={styles.DropdownMenuItem}>
-          <AiOutlinePlus />
-          Novo Grupo Cofre
+        <DropdownMenu.Item
+          className={`${styles.DropdownMenuItem} ${styles.red}`}
+          onClick={() => handleRemoveUser('admin', email)}
+        >
+          <BsFillTrashFill />
+          Remover
         </DropdownMenu.Item>
 
-        {/*
-        <DropdownMenu.Item className={styles.DropdownMenuItem} disabled>
+        {/* <DropdownMenu.Item className={styles.DropdownMenuItem} disabled>
           New Private Window <div className={styles.RightSlot}>⇧+⌘+N</div>
         </DropdownMenu.Item>
-
-
         <DropdownMenu.Sub>
           <DropdownMenu.SubTrigger className={styles.DropdownMenuSubTrigger}>
             More Tools

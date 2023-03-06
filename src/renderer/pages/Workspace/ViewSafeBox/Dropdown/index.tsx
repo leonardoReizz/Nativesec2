@@ -9,6 +9,7 @@ import { ISafeBoxGroup } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGr
 interface DropdownProps {
   editSafeBox: () => void;
   deleteSafeBox: () => void;
+  openSharingModal: () => void;
   deleteSafeBoxGroup: () => void;
   addSafeBoxGroup: (group: ISafeBoxGroup) => void;
   removeSafeBoxFromGroup: (group: ISafeBoxGroup) => void;
@@ -25,6 +26,7 @@ export function Dropdown({
   addSafeBoxGroup,
   participantGroups,
   removeSafeBoxFromGroup,
+  openSharingModal,
   theme = 'light',
 }: DropdownProps) {
   return (
@@ -42,7 +44,10 @@ export function Dropdown({
           <TbEdit />
           Editar
         </DropdownMenu.Item>
-        <DropdownMenu.Item className={styles.DropdownMenuItem}>
+        <DropdownMenu.Item
+          className={styles.DropdownMenuItem}
+          onClick={openSharingModal}
+        >
           <TbEdit />
           Compartilhamento
         </DropdownMenu.Item>

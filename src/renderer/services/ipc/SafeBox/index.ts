@@ -26,3 +26,10 @@ export function forceRefreshSafeBoxes(organizationId: string) {
     data: { organizationId },
   });
 }
+
+export function updateUsersSafeBox(safeBox: t.IUpdateSafeBox) {
+  window.electron.ipcRenderer.sendMessage('useIPC', {
+    event: IPCTypes.UPDATE_USERS_SAFE_BOX,
+    data: safeBox,
+  });
+}

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/jsx-no-bind */
-import { useContext, useState, useCallback } from 'react';
+import { useContext, useState, useCallback, useEffect } from 'react';
 import { GiPadlock, GiPadlockOpen } from 'react-icons/gi';
 import { BsCheck2 } from 'react-icons/bs';
 import { AiFillDelete } from 'react-icons/ai';
@@ -29,6 +29,7 @@ import {
 import { updateSafeBoxGroupIPC } from '@/renderer/services/ipc/SafeBoxGroup';
 import { toast } from 'react-toastify';
 import { toastOptions } from '@/renderer/utils/options/Toastify';
+import { useLocation, useParams } from 'react-router-dom';
 import formik from '../../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 import { Dropdown } from '../Dropdown';
@@ -57,6 +58,8 @@ export function HeaderSafeBox() {
     safeBoxMode,
     isSafeBoxParticipant,
   } = useSafeBox();
+  const { mode } = useParams();
+  const location = useLocation();
 
   const participantGroups = safeBoxGroup
     .map((group) => {
@@ -71,8 +74,6 @@ export function HeaderSafeBox() {
       return undefined;
     })
     .filter((group) => group !== undefined);
-
-  console.log(participantGroups, ' participant');
 
   const { loading, updateLoading } = useLoading();
 
@@ -108,6 +109,19 @@ export function HeaderSafeBox() {
   function handleDiscart() {
     changeSafeBoxMode('view');
   }
+
+  useEffect(() => {
+    if (mode === 'edit') {
+      setVerifySafetyPhraseIsOpen(true);
+    } else if (mode === 'decrypt') {
+      setVerifySafetyPhraseType('decryptSafeBox');
+      handleOpenVerifySafetyPhraseModal();
+    } else if (mode === 'delete') {
+      setVerifyNameModalIsOpen(true);
+    }
+
+    console.log(mode, ' mode');
+  }, [location]);
 
   function handleSave() {
     if (currentOrganization) {
@@ -210,6 +224,12 @@ export function HeaderSafeBox() {
 
   return (
     <>
+      {currentSafeBox && (
+        <Dialog.Root open={isOpenSharingModal} onOpenChange={openSharingModal}>
+          <Dialog.Trigger />
+          <SharingModal safeBox={currentSafeBox} />
+        </Dialog.Root>
+      )}
       <VerifySafetyPhraseModal
         isOpen={verifySafetyPhraseIsOpen}
         onRequestClose={handleCloseVerifySafetyPhraseModal}
@@ -227,11 +247,6 @@ export function HeaderSafeBox() {
         callback={handleDeleteSafeBox}
         isLoading={loading}
       />
-
-      <Dialog.Root open={isOpenSharingModal} onOpenChange={openSharingModal}>
-        <Dialog.Trigger />
-        <SharingModal />
-      </Dialog.Root>
       <header className={`${theme === 'dark' ? styles.dark : styles.light}`}>
         {/* <div className={styles.actions}>
             {safeBoxMode === 'view' && (
@@ -359,6 +374,7 @@ export function HeaderSafeBox() {
                 editSafeBox={() => handleDecrypt('edit')}
                 deleteSafeBox={handleOpenVerifyNameModal}
                 deleteSafeBoxGroup={handleOpenVerifyNameModal}
+                openSharingModal={() => setIsOpenSharingModal(true)}
                 theme={theme}
                 groups={safeBoxGroup}
                 addSafeBoxGroup={addSafeBoxGroup}
