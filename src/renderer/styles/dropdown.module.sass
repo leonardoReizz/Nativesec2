@@ -91,14 +91,17 @@ button
 
 
 .DropdownMenuSubTrigger[data-state='open']
-  background-color: $blue-100
-  color: $white
+  background-color: $blue-100-hover
+  color: $white !important
+
+  svg
+    color: $white !important
 
 .DropdownMenuItem[data-disabled],
 .DropdownMenuCheckboxItem[data-disabled],
 .DropdownMenuRadioItem[data-disabled],
 .DropdownMenuSubTrigger[data-disabled]
-  color: $gray-600
+  color: $gray-400 !important
   pointer-events: none
 
 

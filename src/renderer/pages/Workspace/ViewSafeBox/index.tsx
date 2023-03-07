@@ -7,7 +7,6 @@ import formik from '../../../utils/Formik/formik';
 import styles from './styles.module.sass';
 import { MainSafeBox } from './MainSafeBox';
 import { HeaderSafeBox } from './HeaderSafeBox';
-import * as Dialog from '@radix-ui/react-dialog';
 
 export function ViewSafeBox() {
   const { changeSafeBoxMode, safeBoxMode } = useSafeBox();

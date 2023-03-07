@@ -89,7 +89,10 @@ export function Dropdown({
         </DropdownMenu.Item>
 
         <DropdownMenu.Sub>
-          <DropdownMenu.SubTrigger className={styles.DropdownMenuSubTrigger}>
+          <DropdownMenu.SubTrigger
+            className={styles.DropdownMenuSubTrigger}
+            disabled={participantGroups?.length === 0}
+          >
             Remover do Grupo
             <div className={styles.RightSlot}>
               <ChevronRightIcon />

@@ -1,0 +1,165 @@
+@use '../../../../../styles/_util' as *
+
+
+.PopoverContent
+  border-radius: 4px
+  padding: 20px
+  width: 260px
+  background-color: $white
+  z-index: 1005
+  box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px
+  animation-duration: 400ms
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1)
+  will-change: transform, opacity
+
+
+.PopoverContent:focus
+  box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px, 0 0 0 2px $blue-100
+
+.PopoverContent[data-state='open'][data-side='top']
+  animation-name: slideDownAndFade
+
+.PopoverContent[data-state='open'][data-side='right']
+  animation-name: slideLeftAndFade
+
+.PopoverContent[data-state='open'][data-side='bottom']
+  animation-name: slideUpAndFade
+
+.PopoverContent[data-state='open'][data-side='left']
+  animation-name: slideRightAndFade
+
+.PopoverArrow
+  fill: $white
+
+
+.PopoverClose
+  font-family: inherit
+  border-radius: 100%
+  height: 25px
+  width: 25px
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  color: $blue-100
+  position: absolute
+  top: 5px
+  right: 5px
+  font-size: 1.2rem
+
+.PopoverClose:hover
+  background-color: $gray-300
+  transition: background-color 0.2s ease
+
+.PopoverClose:focus
+  box-shadow: 0 0 0 2px $blue-100
+
+
+.Fieldset
+  display: flex
+  gap: 20px
+  align-items: center
+  height: 100%
+  width: 100%
+
+
+.Text
+  margin: 0
+  color: var(--mauve12)
+  font-size: 15px
+  line-height: 19px
+  font-weight: 500
+
+
+@keyframes slideUpAndFade
+  from
+    opacity: 0
+    transform: translateY(2px)
+
+  to
+    opacity: 1
+    transform: translateY(0)
+
+
+
+@keyframes slideRightAndFade
+  from
+    opacity: 0
+    transform: translateX(-2px)
+
+  to
+    opacity: 1
+    transform: translateX(0)
+
+
+
+@keyframes slideDownAndFade
+  from
+    opacity: 0
+    transform: translateY(-2px)
+
+  to
+    opacity: 1
+    transform: translateY(0)
+
+
+
+@keyframes slideLeftAndFade
+  from
+    opacity: 0
+    transform: translateX(2px)
+
+  to
+    opacity: 1
+    transform: translateX(0)
+
+
+button
+  all: unset
+
+
+.RadioGroupRoot
+  display: flex
+  flex-direction: column
+  gap: 10px
+
+
+.RadioGroupItem
+  background-color: $white
+  width: 25px
+  height: 25px
+  border-radius: 100%
+  box-shadow: 0 2px 10px $gray-400
+
+.RadioGroupItem:hover
+  background-color: $gray-100
+  transition: background-color 0.2s ease
+
+.RadioGroupItem:focus
+  box-shadow: 0 0 0 2px $blue-100
+
+
+.RadioGroupIndicator
+  display: flex
+  align-items: center
+  justify-content: center
+  width: 100%
+  height: 100%
+  position: relative
+
+.RadioGroupIndicator::after
+  content: ''
+  display: block
+  width: 11px
+  height: 11px
+  border-radius: 50%
+  background-color: $blue-100
+
+
+.Label
+  color: $black
+  line-height: 1
+  padding-left: 15px
+
+
+
+

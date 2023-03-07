@@ -130,8 +130,8 @@ export function useSafeBox() {
     }
 
     if (safeBoxContext.safeBoxMode === 'create') {
-      if (!editUsersAdmin.filter((user) => user !== email).length) {
-        editUsersAdmin = [...editUsersAdmin, email];
+      if (editUsersAdmin.filter((user) => user !== email).length === 0) {
+        editUsersAdmin = [email];
       }
 
       window.electron.ipcRenderer.sendMessage('useIPC', {

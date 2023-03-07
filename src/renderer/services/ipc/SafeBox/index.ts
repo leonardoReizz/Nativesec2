@@ -27,9 +27,17 @@ export function forceRefreshSafeBoxes(organizationId: string) {
   });
 }
 
-export function updateUsersSafeBox(safeBox: t.IUpdateSafeBox) {
+export function updateUsersSafeBox(safeBox: t.IUpdateUserSafeBox) {
+  console.log(safeBox);
   window.electron.ipcRenderer.sendMessage('useIPC', {
     event: IPCTypes.UPDATE_USERS_SAFE_BOX,
+    data: safeBox,
+  });
+}
+
+export function addSafeBoxUsersIPC(safeBox: t.IAddSafeBoxUsersIPC) {
+  window.electron.ipcRenderer.sendMessage('useIPC', {
+    event: IPCTypes.ADD_SAFE_BOX_USERS,
     data: safeBox,
   });
 }

@@ -176,6 +176,10 @@ export function HeaderSafeBox() {
     setIsOpenSharingModal(open);
   }, []);
 
+  const closeSharingModal = useCallback(() => {
+    setIsOpenSharingModal(false);
+  }, []);
+
   const addSafeBoxGroup = useCallback(
     (group: ISafeBoxGroup) => {
       if (currentSafeBox) {
@@ -227,7 +231,10 @@ export function HeaderSafeBox() {
       {currentSafeBox && (
         <Dialog.Root open={isOpenSharingModal} onOpenChange={openSharingModal}>
           <Dialog.Trigger />
-          <SharingModal safeBox={currentSafeBox} />
+          <SharingModal
+            safeBox={currentSafeBox}
+            closeSharingModal={closeSharingModal}
+          />
         </Dialog.Root>
       )}
       <VerifySafetyPhraseModal

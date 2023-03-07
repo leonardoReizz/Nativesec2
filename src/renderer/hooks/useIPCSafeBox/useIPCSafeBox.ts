@@ -109,6 +109,7 @@ export function useIPCSafeBox() {
       IPCTypes.ADD_SAFE_BOX_USERS_RESPONSE,
       (response: types.IAddSafeBoxUsersResponse) => {
         toast.dismiss('updateSafeBox');
+        updateLoading(false);
         if (response.message === 'ok') {
           refreshSafeBoxes();
           const safeBoxes = window.electron.store.get('safebox') as ISafeBox[];
@@ -154,6 +155,7 @@ export function useIPCSafeBox() {
       IPCTypes.UPDATE_SAFE_BOX_RESPONSE,
       (response: types.IUpdateSafeBoxResponse) => {
         toast.dismiss('saveSafeBox');
+        toast.dismiss('updateSafeBox');
         if (response.message === 'ok') {
           toast.success('Cofre Atualizado', {
             ...toastOptions,
