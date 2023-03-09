@@ -3,10 +3,41 @@ import { api } from '@/main/util';
 
 import { ISafeBoxGroupRepositoryAPIInterface } from './safe-box-group-repository-API-interface';
 import * as t from './types';
+import { ISafeBoxGroupModelAPI } from '../model/safe-box-group';
 
 export class SafeBoxGroupRepositoryAPI
   implements ISafeBoxGroupRepositoryAPIInterface
 {
+
+  async create(
+    data: Omit<ISafeBoxGroupModelAPI, 'data_hora_create'| 'data_atualizacao'|  '_id' | 'dono'>, authorization: string
+  ): Promise<APIResponse> {
+    return axios
+      .post(
+        `${api}/grupo/`,
+        {
+          ...data
+        },
+        {
+          headers: {
+            Authorization: authorization,
+          },
+        }
+      )
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, 'API ERROR CREATE SAFE BOX GROUP');
+        return {
+          status: error.response.status,
+          data: error.response.statusText,
+        };
+      });
+  }
   async list(
     organizationId: string,
     authorization: string
@@ -58,7 +89,7 @@ export class SafeBoxGroupRepositoryAPI
         };
       })
       .catch((error) => {
-        console.log(error, ' ERROR API LIST SAFE BOX GROUP');
+        console.log(error, ' ERROR API UPDATE SAFE BOX GROUP');
         return {
           status: error.response.status,
           data: error.response,
@@ -87,7 +118,7 @@ export class SafeBoxGroupRepositoryAPI
         };
       })
       .catch((error) => {
-        console.log(error, ' ERROR API LIST SAFE BOX GROUP');
+        console.log(error, ' ERROR API DELETE SAFE BOX GROUP');
         return {
           status: error.response.status,
           data: error.response,

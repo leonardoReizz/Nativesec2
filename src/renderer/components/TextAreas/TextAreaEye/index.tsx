@@ -6,30 +6,19 @@ import { SafeBoxModeType } from 'renderer/contexts/SafeBoxesContext/safeBoxesCon
 import { Tooltip } from '@chakra-ui/react';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { MdContentCopy } from 'react-icons/md';
+import { HTMLProps } from 'react';
 import styles from './styles.module.sass';
 
-interface InputProps {
-  type?: React.HTMLInputTypeAttribute;
+interface InputProps extends HTMLProps<HTMLTextAreaElement> {
   text?: string;
   theme?: ThemeType;
   copy?: () => void;
-  placeholder?: string;
-  autoComplete?: string;
   changeFormikDecrypt?: () => void;
   isValid?: boolean;
   style?: React.CSSProperties | undefined;
   onChange?: React.ChangeEventHandler<HTMLTextAreaElement> | undefined;
-  name?: string;
   value?: string;
   className?: string;
-  readOnly?: boolean | undefined;
-  onClick?: React.MouseEventHandler<HTMLTextAreaElement> | undefined;
-  onKeyDown?: React.KeyboardEventHandler<HTMLTextAreaElement> | undefined;
-  disabled?: boolean;
-  onBlur?: {
-    (e: React.FocusEvent): void;
-    <T>(fieldOrEvent: T): T extends string ? (e: any) => void : void;
-  };
   decrypt?: () => void;
   encrypted?: boolean;
   viewEye?: boolean;
@@ -55,13 +44,13 @@ export function TextAreaEye({
       className={`${styles.textArea}
       ${theme === 'dark' ? styles.dark : styles.light} ${
         !isValid ? styles.notValid : ''
-      }`}
+      } ${value?.startsWith('*****') ? styles.paddingOne : ''}`}
     >
       <span>{text}</span>
       <textarea {...props} value={value} placeholder=" " />
 
       {viewEye && (
-        <div className={styles.eye}>
+        <div className={`${styles.eye} `}>
           {(mode === 'view' || mode === 'decrypted') &&
             encrypted &&
             (value?.startsWith('*****') ? (

@@ -41,6 +41,9 @@
 // -------------------------- SETTINGS --------------------------
 // --------------------------------------------------------------
 
+.paddingOne
+  textarea
+    padding: .6rem 2rem .6rem .7rem
 .textArea
   @include flex(flex-start, center, column)
   width: 100%
@@ -53,7 +56,7 @@
     padding: 0 .7rem
     top: 5px
     color: $gray-500
-    
+
 
   textarea
     width: 100%
@@ -68,13 +71,13 @@
     outline: none
     resize: none
 
-  
 
   .eye
     @include flex(center, center, row)
     gap: 8px
     position: absolute
     right: 20px
+
 
     button
       @include flex(center, center, row)

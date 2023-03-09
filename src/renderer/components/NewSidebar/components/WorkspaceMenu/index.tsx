@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSafeBoxGroup } from '@/renderer/hooks/useSafeBoxGroup/useSafeBoxGroup';
 import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import {
-  deleteSafeBox,
+  deleteSafeBoxIPC,
   forceRefreshSafeBoxes,
 } from '@/renderer/services/ipc/SafeBox';
 import { useLoading } from '@/renderer/hooks/useLoading';
@@ -76,14 +76,10 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
     setIsOpenVerifyNameModal(false);
   }, []);
 
-  const closeVerifySafetyPhraseModal = useCallback(() => {
-    setIsOpenVerifySafetyPhraseModal(false);
-  }, []);
-
   const deleteSafeBoxCallback = useCallback(() => {
     if (currentOrganization && selectedSafeBox) {
       updateLoading(true);
-      deleteSafeBox({
+      deleteSafeBoxIPC({
         organizationId: currentOrganization._id,
         safeBoxId: selectedSafeBox._id,
       });
@@ -134,13 +130,20 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
     setIsOpenCreateSafeBoxGroupModal(open);
   }, []);
 
+  const closeCreateSafeBoxGroupModal = useCallback(() => {
+    setIsOpenCreateSafeBoxGroupModal(false);
+  }, []);
+
   return (
     <>
       <Dialog.Root
         onOpenChange={onOpenChangeCreateSafeBoxGroupModal}
         open={isOpenCreateSafeBoxGroupModal}
       >
-        <CreateSafeBoxGroupModal />
+        <CreateSafeBoxGroupModal
+          open={isOpenCreateSafeBoxGroupModal}
+          closeCreateSafeBoxGroupModal={closeCreateSafeBoxGroupModal}
+        />
       </Dialog.Root>
       <VerifyNameModal
         callback={deleteSafeBoxCallback}

@@ -85,7 +85,7 @@
         font-size: 1.3rem
 
   .listSafeBox.open
-    height: 100%
+
     max-height: 300px
     visibility: visible
     opacity: 1
@@ -96,8 +96,10 @@
     max-height: 0
     visibility: hidden
     opacity: 0
-
     overflow: auto
+
+
+
     transition: max-height 0.3s ease, visibility 0.1s ease, opacity 0.4s ease
 
     &::-webkit-scrollbar
@@ -141,6 +143,10 @@
 
   svg
     max-width: 30px
+
+  .firstIcon
+    min-width: 25px
+    max-width: 25px
     font-size: 1.9rem
     color: $blue-100
 
@@ -153,7 +159,7 @@
       text-overflow: ellipsis
       overflow: hidden
       width: 100%
-      max-width: 190px
+      max-width: 160px
       font-weight: 400
       font-size: .95rem
 
@@ -162,7 +168,7 @@
       text-overflow: ellipsis
       overflow: hidden
       width: 100%
-      max-width: 190px
+      max-width: 150px
       font-size: .8rem
 
 

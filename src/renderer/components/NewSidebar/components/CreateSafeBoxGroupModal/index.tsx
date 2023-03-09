@@ -3,10 +3,22 @@ import { Input } from '@/renderer/components/Inputs/Input';
 import { TextArea } from '@/renderer/components/TextAreas/TextArea';
 import { useCreateSafeBoxGroup } from '@/renderer/hooks/useCreateSafeBoxGroup/useCreateSafeBoxGroup';
 import * as Dialog from '@radix-ui/react-dialog';
+import { useEffect } from 'react';
 import styles from './styles.module.sass';
 
-export function CreateSafeBoxGroupModal() {
-  const { formikProps } = useCreateSafeBoxGroup();
+interface CreateSafeBoxGroupModalProps {
+  open: boolean;
+  closeCreateSafeBoxGroupModal: () => void;
+}
+export function CreateSafeBoxGroupModal({
+  open,
+  closeCreateSafeBoxGroupModal,
+}: CreateSafeBoxGroupModalProps) {
+  const { formikProps } = useCreateSafeBoxGroup(
+    open,
+    closeCreateSafeBoxGroupModal
+  );
+
   return (
     <Dialog.Portal>
       <Dialog.Overlay className={styles.overlay} />
@@ -34,7 +46,15 @@ export function CreateSafeBoxGroupModal() {
             <Dialog.Close className={styles.close}>
               <Button type="button" text="Cancelar" color="red" />
             </Dialog.Close>
-            <Button type="submit" text="Salvar" color="green" />
+            <Button
+              type="submit"
+              text="Salvar"
+              color="green"
+              disabled={
+                Boolean(formikProps.errors.name) &&
+                Boolean(formikProps.errors.description)
+              }
+            />
           </div>
         </form>
       </Dialog.Content>

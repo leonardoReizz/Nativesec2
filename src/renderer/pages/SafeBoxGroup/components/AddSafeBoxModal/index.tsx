@@ -1,15 +1,14 @@
 import { Button } from '@/renderer/components/Buttons/Button';
 import { Input } from '@/renderer/components/Inputs/Input';
-import { LoadingContext } from '@/renderer/contexts/LoadingContext/LoadingContext';
-import { SafeBoxesContext } from '@/renderer/contexts/SafeBoxesContext/safeBoxesContext';
+
 import { ISafeBoxGroup } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
-import { updateSafeBoxGroupIPC } from '@/renderer/services/ipc/SafeBoxGroup';
-import { toastOptions } from '@/renderer/utils/options/Toastify';
+import { useAddSafeBoxModal } from '@/renderer/hooks/useAddSafeBoxModal/useAddSafeBoxModal';
+
 import * as Dialog from '@radix-ui/react-dialog';
-import { useContext, useEffect, useState } from 'react';
+
 import { CiVault } from 'react-icons/ci';
-import { IoIosClose, IoMdAdd, IoMdRemove } from 'react-icons/io';
-import { toast } from 'react-toastify';
+import { IoMdAdd, IoMdRemove } from 'react-icons/io';
+
 import styles from './styles.module.sass';
 
 interface AddSafeBoxModalProps {
@@ -21,61 +20,34 @@ export function AddSafeBoxModal({
   safeBoxGroup,
   closeAddSafeBoxModal,
 }: AddSafeBoxModalProps) {
-  const [selectedSafeBoxes, setSelectedSafeBoxes] = useState<string[]>([]);
-  const [searchValue, setSearchValue] = useState<string>('');
-  const { safeBoxes } = useContext(SafeBoxesContext);
-  const { loading, updateLoading } = useContext(LoadingContext);
-
-  const initialFilter = safeBoxes.filter(
-    (safebox) =>
-      [...JSON.parse(safeBoxGroup.cofres)].indexOf(safebox._id) === -1
-  );
-  const filteredSafeBoxes = initialFilter.filter((safebox) =>
-    safebox.nome.toLowerCase().includes(searchValue.toLowerCase())
-  );
-
-  function handleAddSafeBox(safeBoxId: string) {
-    setSelectedSafeBoxes([...selectedSafeBoxes, safeBoxId]);
-  }
-
-  function handleRemoveSafeBox(safeBoxId: string) {
-    setSelectedSafeBoxes((state) => state.filter((id) => id !== safeBoxId));
-  }
-
-  function addSafeBoxes() {
-    updateLoading(true);
-    toast.loading('Salvando...', {
-      ...toastOptions,
-      toastId: 'updateSafeBoxGroup',
-    });
-    updateSafeBoxGroupIPC({
-      description: safeBoxGroup.descricao,
-      id: safeBoxGroup._id,
-      name: safeBoxGroup.nome,
-      organization: safeBoxGroup.organizacao,
-      safeboxes: [...JSON.parse(safeBoxGroup.cofres), ...selectedSafeBoxes],
-    });
-  }
-
-  useEffect(() => {
-    if (!loading) {
-      setSelectedSafeBoxes([]);
-      closeAddSafeBoxModal();
-    }
-  }, [loading]);
+  const {
+    updateSearchValue,
+    filteredSafeBoxes,
+    selectedSafeBoxes,
+    handleAddSafeBox,
+    handleRemoveSafeBox,
+    loading,
+    addSafeBoxes,
+    theme,
+  } = useAddSafeBoxModal(safeBoxGroup, closeAddSafeBoxModal);
 
   return (
     <Dialog.Portal>
-      <Dialog.Overlay className={styles.overlay} />
-      <Dialog.Content className={styles.content}>
+      <Dialog.Overlay
+        className={`${styles.overlay} ${
+          theme === 'dark' ? styles.dark : styles.light
+        }`}
+      />
+      <Dialog.Content
+        className={`${styles.content} ${
+          theme === 'dark' ? styles.dark : styles.light
+        }`}
+      >
         <Dialog.Title className={styles.title}>
           Adicione Cofres a {safeBoxGroup.nome}
         </Dialog.Title>
 
-        <Input
-          text="Buscar cofre"
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
+        <Input text="Buscar cofre" onChange={updateSearchValue} />
 
         <div className={styles.safeBoxes}>
           {filteredSafeBoxes.length === 0 && (
@@ -123,7 +95,6 @@ export function AddSafeBoxModal({
             );
           })}
         </div>
-
         <div className={styles.actions}>
           <Button
             text="Cancelar"

@@ -1,3 +1,4 @@
+import { ISafeBoxGroupModelAPI } from '../model/safe-box-group';
 import * as t from './types';
 
 export interface ISafeBoxGroupRepositoryAPIInterface {
@@ -9,5 +10,9 @@ export interface ISafeBoxGroupRepositoryAPIInterface {
   delete(
     data: t.IDeleteSafeBoxGroupAPI,
     authorization: string
+  ): Promise<APIResponse>;
+  create(
+    data: Omit<ISafeBoxGroupModelAPI, 'data_hora_create'| 'data_atualizacao'|  '_id' | 'dono'>,
+    authorization: string;
   ): Promise<APIResponse>;
 }

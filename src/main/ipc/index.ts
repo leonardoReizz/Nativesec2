@@ -38,6 +38,7 @@ import { listSafeBoxGroupController } from '../components/safe-box-group/use-cas
 import { refreshAllSafeBoxGroupController } from '../components/safe-box-group/use-cases/refresh-all-safe-box-group';
 import { updateSafeBoxGroupController } from '../components/safe-box-group/use-cases/update-safe-box-group';
 import { deleteSafeBoxGroupController } from '../components/safe-box-group/use-cases/delete-safe-box-group';
+import { createSafeBoxGroupController } from '../components/safe-box-group/use-cases/create-safe-box-group';
 
 export interface UseIPCData {
   id: string;
@@ -132,6 +133,8 @@ export async function useIpcActions(
       return updateSafeBoxGroupController.handle(arg.data);
     case IPCTypes.DELETE_SAFE_BOX_GROUP:
       return deleteSafeBoxGroupController.handle(arg.data);
+    case IPCTypes.CREATE_SAFE_BOX_GROUP:
+      return createSafeBoxGroupController.handle(arg.data);
     default:
       return {
         response: 'none',

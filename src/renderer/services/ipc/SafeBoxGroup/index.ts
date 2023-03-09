@@ -23,3 +23,10 @@ export function deleteSafeBoxGroupIPC(data: t.IDeleteSafeBoxGroupData) {
     data,
   });
 }
+
+export function createSafeBoxGroupIPC(data: t.ICreateSafeBoxGroupData) {
+  window.electron.ipcRenderer.sendMessage('useIPC', {
+    event: IPCTypes.CREATE_SAFE_BOX_GROUP,
+    data,
+  });
+}

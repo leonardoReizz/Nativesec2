@@ -3,7 +3,7 @@ import { SafeBoxesContext } from '@/renderer/contexts/SafeBoxesContext/safeBoxes
 import { ISafeBox } from '@/renderer/contexts/SafeBoxesContext/types';
 import { SafeBoxGroupContext } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
 import { UserConfigContext } from '@/renderer/contexts/UserConfigContext/UserConfigContext';
-import { deleteSafeBox } from '@/renderer/services/ipc/SafeBox';
+import { deleteSafeBoxIPC } from '@/renderer/services/ipc/SafeBox';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -46,7 +46,7 @@ export function useSafeBoxGroup() {
   const deleteSafeBoxCallback = useCallback(() => {
     if (safeBoxGroupContext.currentSafeBoxGroup && currentOrganization) {
       changeSafeBoxesIsLoading(true);
-      deleteSafeBox({
+      deleteSafeBoxIPC({
         organizationId: currentOrganization._id,
         safeBoxId: safeBoxGroupContext.currentSafeBoxGroup._id,
       });

@@ -55,4 +55,20 @@ export function useIPCSafeBoxGroup() {
       }
     );
   }, []);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      IPCTypes.CREATE_SAFE_BOX_GROUP_RESPONSE,
+      (result: IIPCResponse) => {
+        toast.dismiss('createSafeBoxGroup');
+        if (result.message === 'ok') {
+          return updateSafeBoxGroup(window.electron.store.get('safeBoxGroup'));
+        }
+        return toast.error('Erro ao deletar grupo', {
+          ...toastOptions,
+          toastId: 'errorDeleteSafeBoxGroup',
+        });
+      }
+    );
+  }, []);
 }
