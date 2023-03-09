@@ -5,3 +5,8 @@ export interface IUpdateSafeBoxGroupAPIData {
   organizacao: string;
   descricao: string;
 }
+
+export interface IDeleteSafeBoxGroupAPI {
+  organizationId: string;
+  safeBoxGroupId: string;
+}

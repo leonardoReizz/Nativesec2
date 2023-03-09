@@ -57,10 +57,12 @@ export function useSharingModal(
       let adminUsers = JSON.parse(safeBox.usuarios_escrita);
 
       if (type === 'participant') {
-        adminUsers.filter((user: string) => user !== email);
+        adminUsers = adminUsers.filter((user: string) => user !== email);
         participantUsers = [...participantUsers, email];
       } else {
-        participantUsers.filter((user: string) => user !== email);
+        participantUsers = participantUsers.filter(
+          (user: string) => user !== email
+        );
         adminUsers = [...adminUsers, email];
       }
 

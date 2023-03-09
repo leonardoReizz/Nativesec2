@@ -2,7 +2,7 @@ import axios from 'axios';
 import { api } from '@/main/util';
 
 import { ISafeBoxGroupRepositoryAPIInterface } from './safe-box-group-repository-API-interface';
-import { IUpdateSafeBoxGroupAPIData } from './types';
+import * as t from './types';
 
 export class SafeBoxGroupRepositoryAPI
   implements ISafeBoxGroupRepositoryAPIInterface
@@ -36,7 +36,7 @@ export class SafeBoxGroupRepositoryAPI
   }
 
   async update(
-    data: IUpdateSafeBoxGroupAPIData,
+    data: t.IUpdateSafeBoxGroupAPIData,
     authorization: string
   ): Promise<APIResponse> {
     return axios
@@ -51,6 +51,35 @@ export class SafeBoxGroupRepositoryAPI
           },
         }
       )
+      .then((result) => {
+        return {
+          status: result.status,
+          data: result.data,
+        };
+      })
+      .catch((error) => {
+        console.log(error, ' ERROR API LIST SAFE BOX GROUP');
+        return {
+          status: error.response.status,
+          data: error.response,
+        };
+      });
+  }
+
+  async delete(
+    data: t.IDeleteSafeBoxGroupAPI,
+    authorization: string
+  ): Promise<APIResponse> {
+    return axios
+      .delete(`${api}/grupo/`, {
+        headers: {
+          Authorization: authorization,
+        },
+        params: {
+          id: data.safeBoxGroupId,
+          organizacao: data.organizationId,
+        },
+      })
       .then((result) => {
         return {
           status: result.status,

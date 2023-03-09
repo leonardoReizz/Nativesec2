@@ -85,7 +85,7 @@ $default-radius: 5px
   transition: background-color ease-in-out 0.2s, box-shadow 0.2s
 
 
-@mixin scroolbarLight() 
+@mixin scroolbarLight()
   &::-webkit-scrollbar-track
     background-color: $gray-100
   &::-webkit-scrollbar-thumb
@@ -99,8 +99,8 @@ $default-radius: 5px
   // &::-webkit-scrollbar-thumb
   //   border-radius: 5rem
 
-    
-@mixin scroolbarDark() 
+
+@mixin scroolbarDark()
   &::-webkit-scrollbar-track
     background-color: $gray-800
   &::-webkit-scrollbar-thumb
@@ -110,3 +110,8 @@ $default-radius: 5px
 
   // &::-webkit-scrollbar-thumb
   //   border-radius: 5rem
+
+@mixin title()
+  font-weight: 600
+  text-align: center
+  font-size: 1.1rem

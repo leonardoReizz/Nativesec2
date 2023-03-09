@@ -8,11 +8,13 @@ import { AiOutlinePlus } from 'react-icons/ai';
 interface DropdownProps {
   deleteSafeBoxGroup: () => void;
   theme?: ThemeType;
+  onOpenChangeAddSafeBoxModal: (open: boolean) => void;
 }
 
 export function Dropdown({
   deleteSafeBoxGroup,
   theme = 'light',
+  onOpenChangeAddSafeBoxModal,
 }: DropdownProps) {
   return (
     <DropdownMenu.Portal>
@@ -22,7 +24,10 @@ export function Dropdown({
         }`}
         sideOffset={5}
       >
-        <DropdownMenu.Item className={styles.DropdownMenuItem}>
+        <DropdownMenu.Item
+          className={styles.DropdownMenuItem}
+          onClick={() => onOpenChangeAddSafeBoxModal(true)}
+        >
           <AiOutlinePlus />
           Adicionar Cofre
         </DropdownMenu.Item>

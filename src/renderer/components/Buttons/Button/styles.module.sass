@@ -26,6 +26,13 @@
   &:hover
     background-color: $green-100-hover !important
 
+.lightGreen
+  color: $white
+  background-color: $green-100-op-50 !important
+
+  &:hover
+    filter: brightness(0.8)
+
 .button.dark
   svg
     color: $white
@@ -72,10 +79,10 @@
     width: 100%
     height: 35px
     gap: 8px
-    
+
     border-radius: $default-radius
 
-    transition: background-color 0.3s ease
+    transition: background-color 0.3s ease, filter 0.3s ease
 
     svg
       font-size: 1rem

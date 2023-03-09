@@ -1,36 +1,33 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/require-default-props */
 
 import LottieControl from 'renderer/components/LottieControl';
 import { IconType } from 'react-icons';
-import { ReactElement } from 'react';
-import { ThemeType } from 'renderer/contexts/UserConfigContext/types';
+import { HTMLProps, ReactElement } from 'react';
 import animationData from '../../../../../assets/animationsJson/loading-button.json';
 import styles from './styles.module.sass';
 
-interface ButtonProps {
+interface ButtonProps extends HTMLProps<HTMLButtonElement> {
   type?: 'button' | 'submit' | 'reset';
   text?: string;
-  onClick?: () => void;
   isLoading?: boolean;
   className?: string;
   disabled?: boolean;
   theme?: ThemeType;
   Icon?: ReactElement<IconType, IconType>;
-  color?: 'red' | 'green' | 'blue';
+  color?: 'red' | 'green' | 'blue' | 'lightGreen';
 }
 
 export function Button({
-  type,
   text,
-  onClick,
   isLoading,
   className,
-  disabled = false,
   theme = 'light',
   Icon,
   color,
+  ...props
 }: ButtonProps) {
   return (
     <div
@@ -47,11 +44,11 @@ export function Button({
               ? styles.green
               : color === 'blue'
               ? styles.blue
+              : color === 'lightGreen'
+              ? styles.lightGreen
               : ''
           }`}
-          type={type || 'button'}
-          onClick={onClick}
-          disabled={disabled}
+          {...props}
         >
           {Icon && Icon}
           {text}

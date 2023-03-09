@@ -1,9 +1,13 @@
-import { IUpdateSafeBoxGroupAPIData } from './types';
+import * as t from './types';
 
 export interface ISafeBoxGroupRepositoryAPIInterface {
   list(organizationId: string, authorization: string): Promise<APIResponse>;
   update(
-    safeBox: IUpdateSafeBoxGroupAPIData,
+    data: t.IUpdateSafeBoxGroupAPIData,
+    authorization: string
+  ): Promise<APIResponse>;
+  delete(
+    data: t.IDeleteSafeBoxGroupAPI,
     authorization: string
   ): Promise<APIResponse>;
 }

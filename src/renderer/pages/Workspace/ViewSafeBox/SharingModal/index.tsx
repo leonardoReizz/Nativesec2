@@ -39,7 +39,9 @@ export function SharingModal({
     <Dialog.Portal>
       <Dialog.Overlay className={styles.overlay} />
       <Dialog.Content className={styles.content}>
-        <Dialog.Title>Compartilhamento {safeBox.nome} </Dialog.Title>
+        <Dialog.Title className={styles.title}>
+          Compartilhamento {safeBox.nome}{' '}
+        </Dialog.Title>
         <Tabs.Root className={styles.tabsRoot} defaultValue="tab1">
           <Tabs.List className={styles.tabsList}>
             <Tabs.Trigger className={styles.tabsTrigger} value="tab1">

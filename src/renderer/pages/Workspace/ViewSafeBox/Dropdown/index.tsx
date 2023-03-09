@@ -29,6 +29,10 @@ export function Dropdown({
   openSharingModal,
   theme = 'light',
 }: DropdownProps) {
+  const availableSafeBoxes = groups?.filter((group) => {
+    return participantGroups?.indexOf(group) === -1;
+  });
+
   return (
     <DropdownMenu.Portal>
       <DropdownMenu.Content
@@ -66,7 +70,7 @@ export function Dropdown({
               sideOffset={2}
               alignOffset={-5}
             >
-              {groups?.map((group) => {
+              {availableSafeBoxes?.map((group) => {
                 return (
                   <DropdownMenu.Item
                     className={styles.DropdownMenuItem}

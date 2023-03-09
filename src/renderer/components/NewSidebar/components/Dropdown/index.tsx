@@ -9,12 +9,14 @@ interface DropdownProps {
   theme: ThemeType;
   createNewSafeBox: () => void;
   refreshSafeBoxes: () => void;
+  createSafeBoxGroup: () => void;
 }
 
 export function Dropdown({
   theme = 'light',
   createNewSafeBox,
   refreshSafeBoxes,
+  createSafeBoxGroup,
 }: DropdownProps) {
   return (
     <DropdownMenu.Portal>
@@ -44,7 +46,10 @@ export function Dropdown({
         <DropdownMenu.Label className={styles.DropdownMenuLabel}>
           Grupo de Cofres
         </DropdownMenu.Label>
-        <DropdownMenu.Item className={styles.DropdownMenuItem}>
+        <DropdownMenu.Item
+          className={styles.DropdownMenuItem}
+          onClick={createSafeBoxGroup}
+        >
           <AiOutlinePlus />
           Novo Grupo Cofre
         </DropdownMenu.Item>

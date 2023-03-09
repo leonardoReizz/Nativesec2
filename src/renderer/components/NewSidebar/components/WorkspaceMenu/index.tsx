@@ -4,6 +4,7 @@ import { IoMdAdd } from 'react-icons/io';
 import { SafeBoxInfo } from 'renderer/components/SafeBox';
 import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import * as Dialog from '@radix-ui/react-dialog';
 import * as ContextMenu from '@radix-ui/react-context-menu';
 import { useNavigate } from 'react-router-dom';
 import { useSafeBoxGroup } from '@/renderer/hooks/useSafeBoxGroup/useSafeBoxGroup';
@@ -13,15 +14,15 @@ import {
   forceRefreshSafeBoxes,
 } from '@/renderer/services/ipc/SafeBox';
 import { useLoading } from '@/renderer/hooks/useLoading';
-import { VerifyNameModal } from '@/renderer/components/Modals/VerifyNameModal';
 import { useCallback, useContext, useState } from 'react';
 import { ISafeBox } from '@/renderer/contexts/SafeBoxesContext/types';
 import { LoadingContext } from '@/renderer/contexts/LoadingContext/LoadingContext';
-import { VerifySafetyPhraseModal } from '@/renderer/components/Modals/VerifySafetyPhraseModal';
+import { VerifyNameModal } from '@/renderer/components/Modals/VerifyNameModal';
 import styles from './styles.module.sass';
 import { SafeBoxGroup } from '../SafeBoxGroup';
 import { Dropdown } from '../Dropdown';
 import { ContextMenuComponent } from '../ContextMenu';
+import { CreateSafeBoxGroupModal } from '../CreateSafeBoxGroupModal';
 
 interface WorkspaceMenuProps {
   closeSidebar: () => void;
@@ -31,6 +32,8 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
   const [isOpenVerifyNameModal, setIsOpenVerifyNameModal] =
     useState<boolean>(false);
   const [isOpenVerifySafetyPhraseModal, setIsOpenVerifySafetyPhraseModal] =
+    useState<boolean>(false);
+  const [isOpenCreateSafeBoxGroupModal, setIsOpenCreateSafeBoxGroupModal] =
     useState<boolean>(false);
 
   const [selectedSafeBox, setSelectedSafeBox] = useState<ISafeBox | null>(null);
@@ -49,14 +52,18 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
   const { updateForceLoading } = useLoading();
   const { isParticipant, currentOrganization } = useOrganization();
 
-  function handleCreateSafeBox() {
+  const handleCreateSafeBox = useCallback(() => {
     if (currentOrganization) {
       closeSidebar();
       navigate(`/workspace/${currentOrganization?._id}`);
       changeCurrentSafeBox(undefined);
       changeSafeBoxMode('create');
     }
-  }
+  }, [currentOrganization]);
+
+  const handleCreateSafeBoxGroup = useCallback(() => {
+    setIsOpenCreateSafeBoxGroupModal(true);
+  }, []);
 
   function handleRefreshSafeBoxes() {
     if (currentOrganization) {
@@ -123,8 +130,18 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
     [currentOrganization]
   );
 
+  const onOpenChangeCreateSafeBoxGroupModal = useCallback((open: boolean) => {
+    setIsOpenCreateSafeBoxGroupModal(open);
+  }, []);
+
   return (
     <>
+      <Dialog.Root
+        onOpenChange={onOpenChangeCreateSafeBoxGroupModal}
+        open={isOpenCreateSafeBoxGroupModal}
+      >
+        <CreateSafeBoxGroupModal />
+      </Dialog.Root>
       <VerifyNameModal
         callback={deleteSafeBoxCallback}
         inputText="Nome do cofre"
@@ -159,6 +176,7 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
               theme={theme}
               createNewSafeBox={handleCreateSafeBox}
               refreshSafeBoxes={handleRefreshSafeBoxes}
+              createSafeBoxGroup={handleCreateSafeBoxGroup}
             />
           </DropdownMenu.Root>
         </div>

@@ -16,3 +16,10 @@ export function updateSafeBoxGroupIPC(safeBoxGroup: t.IUpdateSafeBoxGroupData) {
     data: safeBoxGroup,
   });
 }
+
+export function deleteSafeBoxGroupIPC(data: t.IDeleteSafeBoxGroupData) {
+  window.electron.ipcRenderer.sendMessage('useIPC', {
+    event: IPCTypes.DELETE_SAFE_BOX_GROUP,
+    data,
+  });
+}
