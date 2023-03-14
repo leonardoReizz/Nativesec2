@@ -143,6 +143,8 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
         <CreateSafeBoxGroupModal
           open={isOpenCreateSafeBoxGroupModal}
           closeCreateSafeBoxGroupModal={closeCreateSafeBoxGroupModal}
+          title="Novo Grupo de Cofres"
+          theme={theme}
         />
       </Dialog.Root>
       <VerifyNameModal

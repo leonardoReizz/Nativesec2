@@ -6,7 +6,8 @@ import { useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 export function useIPCSafeBoxGroup() {
-  const { updateSafeBoxGroup } = useContext(SafeBoxGroupContext);
+  const { updateSafeBoxGroup, updateCurrentSafeBoxGroup } =
+    useContext(SafeBoxGroupContext);
   const { updateLoading } = useContext(LoadingContext);
   useEffect(() => {
     window.electron.ipcRenderer.on(
@@ -44,8 +45,9 @@ export function useIPCSafeBoxGroup() {
     window.electron.ipcRenderer.on(
       IPCTypes.DELETE_SAFE_BOX_GROUP_RESPONSE,
       (result: IIPCResponse) => {
-        toast.dismiss('deleteSafeBox');
+        toast.dismiss('deleteSafeBoxGroup');
         if (result.message === 'ok') {
+          updateCurrentSafeBoxGroup(null);
           return updateSafeBoxGroup(window.electron.store.get('safeBoxGroup'));
         }
         return toast.error('Erro ao deletar grupo', {

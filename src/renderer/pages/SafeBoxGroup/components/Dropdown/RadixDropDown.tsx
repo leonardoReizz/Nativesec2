@@ -9,12 +9,14 @@ interface DropdownProps {
   deleteSafeBoxGroup: () => void;
   theme?: ThemeType;
   onOpenChangeAddSafeBoxModal: (open: boolean) => void;
+  onOpenChangeEditSafeBoxGroupModal: (open: boolean) => void;
 }
 
 export function Dropdown({
   deleteSafeBoxGroup,
   theme = 'light',
   onOpenChangeAddSafeBoxModal,
+  onOpenChangeEditSafeBoxGroupModal,
 }: DropdownProps) {
   return (
     <DropdownMenu.Portal>
@@ -31,8 +33,11 @@ export function Dropdown({
           <AiOutlinePlus />
           Adicionar Cofre
         </DropdownMenu.Item>
-        <DropdownMenu.Item className={styles.DropdownMenuItem}>
-          <TbEdit /> Renomear
+        <DropdownMenu.Item
+          className={styles.DropdownMenuItem}
+          onClick={() => onOpenChangeEditSafeBoxGroupModal(true)}
+        >
+          <TbEdit /> Editar
         </DropdownMenu.Item>
         <DropdownMenu.Separator className={`${styles.DropdownMenuSeparator}`} />
         <DropdownMenu.Item

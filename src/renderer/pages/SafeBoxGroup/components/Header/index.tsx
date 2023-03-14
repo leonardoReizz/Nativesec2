@@ -6,12 +6,12 @@ import { ImMakeGroup } from 'react-icons/im';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Dialog from '@radix-ui/react-dialog';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
-import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { ISafeBoxGroup } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
 import { VerifyNameModal } from '@/renderer/components/Modals/VerifyNameModal';
 import { deleteSafeBoxGroupIPC } from '@/renderer/services/ipc/SafeBoxGroup';
 import { toastOptions } from '@/renderer/utils/options/Toastify';
 import { toast } from 'react-toastify';
+import { CreateSafeBoxGroupModal } from '@/renderer/components/NewSidebar/components/CreateSafeBoxGroupModal';
 import styles from './styles.module.sass';
 import { Dropdown } from '../Dropdown/RadixDropDown';
 import { AddSafeBoxModal } from '../AddSafeBoxModal';
@@ -20,23 +20,28 @@ interface HeaderProps {
   theme?: ThemeType;
   safeBoxGroup: ISafeBoxGroup;
 }
+
 export function Header({ theme = 'light', safeBoxGroup }: HeaderProps) {
   const [isOpenAddSafeBoxModal, setIsOpenAddSafeBoxModal] =
     useState<boolean>(false);
   const [isOpenVerifyNameModal, setIsOpenVerifyNameModal] =
     useState<boolean>(false);
-  const { safeBoxMode, isSafeBoxParticipant } = useSafeBox();
+  const [isOpenEditSafeBoxGroupModal, setIsOpenEditSafeBoxGroupModal] =
+    useState<boolean>(false);
+
+  const onOpenChangeEditSafeBoxGroupModal = useCallback((open: boolean) => {
+    setIsOpenEditSafeBoxGroupModal(open);
+  }, []);
 
   const handleOpenVerifyNameModal = useCallback(() => {
     setIsOpenVerifyNameModal(true);
   }, []);
 
-  function handleSave() {}
-
-  function handleDiscart() {}
-
   function verify() {
-    toast.loading('Salvando...', { ...toastOptions, toastId: 'deleteSafeBox' });
+    toast.loading('Salvando...', {
+      ...toastOptions,
+      toastId: 'deleteSafeBoxGroup',
+    });
     deleteSafeBoxGroupIPC({
       safeBoxGroupId: safeBoxGroup._id,
       organizationId: safeBoxGroup.organizacao,
@@ -58,6 +63,20 @@ export function Header({ theme = 'light', safeBoxGroup }: HeaderProps) {
 
   return (
     <>
+      <Dialog.Root
+        onOpenChange={onOpenChangeEditSafeBoxGroupModal}
+        open={isOpenEditSafeBoxGroupModal}
+      >
+        <CreateSafeBoxGroupModal
+          open={isOpenEditSafeBoxGroupModal}
+          closeCreateSafeBoxGroupModal={() =>
+            onOpenChangeEditSafeBoxGroupModal(false)
+          }
+          edit={{ safeBoxGroup }}
+          title="Editar Grupo de Cofres"
+          theme={theme}
+        />
+      </Dialog.Root>
       <Dialog.Root
         open={isOpenAddSafeBoxModal}
         onOpenChange={onOpenChangeAddSafeBoxModal}
@@ -102,6 +121,9 @@ export function Header({ theme = 'light', safeBoxGroup }: HeaderProps) {
               deleteSafeBoxGroup={handleOpenVerifyNameModal}
               theme={theme}
               onOpenChangeAddSafeBoxModal={onOpenChangeAddSafeBoxModal}
+              onOpenChangeEditSafeBoxGroupModal={
+                onOpenChangeEditSafeBoxGroupModal
+              }
             />
           </DropdownMenu.Root>
         </div>

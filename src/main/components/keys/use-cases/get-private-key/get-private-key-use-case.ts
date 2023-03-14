@@ -7,6 +7,7 @@ import md5 from 'md5';
 
 import { KeyRepositoryAPI } from '../../repositories/key-repository-api';
 import { KeyRepositoryDatabase } from '../../repositories/key-repository-database';
+import { IPCError } from "@/main/utils/IPCError";
 
 export class GetPrivateKeyUseCase {
   constructor(
@@ -25,12 +26,11 @@ export class GetPrivateKeyUseCase {
     if (fs.existsSync(`${PATH}/database/default/${md5(email)}.sqlite3`)) {
       const privKey = await this.keyRepositoryDatabase.getPrivateKey(email);
 
-      if (privKey instanceof Error)
-        throw new Error(
-          `${
-            (store.get('user') as any)?.email
-          }: Error DATABASE get private key, ${JSON.stringify(privKey)}`
-        );
+      IPCError({
+        object: privKey,
+        message: 'ERROR DATABASE GET PRIVATE KEY',
+        type: 'database',
+      });
 
       if (privKey.length === 0) {
         const apiGetPrivateKey = await this.keyRepositoryAPI.getPrivateKey(

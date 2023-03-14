@@ -79,6 +79,7 @@ export function AddSafeBoxModal({
                     Icon={<IoMdAdd />}
                     onClick={() => handleAddSafeBox(safebox._id)}
                     color="lightGreen"
+                    theme={theme}
                   />
                 )}
 

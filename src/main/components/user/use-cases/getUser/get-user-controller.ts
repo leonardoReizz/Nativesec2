@@ -7,16 +7,12 @@ export class GetUserController {
   constructor(private getUserUseCase: GetUserUseCase) {}
 
   async handle() {
-    const message = await this.getUserUseCase.execute();
-
     try {
-      await this.getUserUseCase.execute();
+      const message = await this.getUserUseCase.execute();
 
       return {
         response: IPCTypes.GET_USER_RESPONSE,
-        data: {
-          message,
-        },
+        data: message,
       };
     } catch (error) {
       Sentry.captureException(error);

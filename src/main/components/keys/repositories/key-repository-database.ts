@@ -51,7 +51,7 @@ export class KeyRepositoryDatabase implements KeyRepositoryDatabaseInterface {
       });
   }
 
-  async getPrivateKey(email: string): Promise<any[] | Error> {
+  async getPrivateKey(email: string): Promise<any[]> {
     const db = newDatabase.getDatabase();
     return new Promise((resolve, reject) => {
       return db.all(
@@ -61,17 +61,10 @@ export class KeyRepositoryDatabase implements KeyRepositoryDatabaseInterface {
           if (error) {
             reject(error);
           }
-
           resolve(rows);
         }
       );
     })
-      .then((result) => {
-        return result as any[];
-      })
-      .catch((error) => {
-        return error as Error;
-      });
   }
 
   async createPrivateKey(

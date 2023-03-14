@@ -3,7 +3,6 @@ import { SafeBoxInfo } from '@/renderer/components/SafeBox';
 import { useSafeBoxGroup } from '@/renderer/hooks/useSafeBoxGroup/useSafeBoxGroup';
 import { BsFillTrashFill } from 'react-icons/bs';
 import * as ContextMenu from '@radix-ui/react-context-menu';
-import { useCallback } from 'react';
 import { VerifyNameModal } from '@/renderer/components/Modals/VerifyNameModal';
 import { Header } from './components/Header';
 import styles from './styles.module.sass';
@@ -11,37 +10,31 @@ import { ContextMenuComponent } from './components/ContextMenu';
 
 export function SafeBoxGroup() {
   const {
-    safeBoxGroup,
     currentSafeBoxGroup,
     groupSafeBoxes,
     changeSelectedSafeBox,
     selectedSafeBox,
-    navigate,
     theme,
-    currentOrganization,
     isOpenVerifyNameModal,
     closeVerifyNameModal,
     openVerifyNameModal,
-    deleteSafeBoxCallback,
     viewSafeBox,
+    removeSafeBoxGroup,
+    loading,
+    handleRemoveSafeBoxGroup,
   } = useSafeBoxGroup();
-
-  const editSafeBox = useCallback(() => {
-    if (selectedSafeBox) {
-      navigate(`/workspace/${selectedSafeBox?._id}/edit`);
-    }
-  }, [selectedSafeBox]);
 
   return (
     <>
       {currentSafeBoxGroup && (
         <VerifyNameModal
-          title="Deseja excluir"
+          title="Deseja remover"
           inputText="Nome do cofre"
-          callback={deleteSafeBoxCallback}
-          nameToVerify={currentSafeBoxGroup?.nome}
+          callback={removeSafeBoxGroup}
+          nameToVerify={selectedSafeBox?.nome}
           isOpen={isOpenVerifyNameModal}
           onRequestClose={closeVerifyNameModal}
+          isLoading={loading}
         />
       )}
       <div className={styles.safeBoxGroupContainer}>
@@ -62,6 +55,7 @@ export function SafeBoxGroup() {
                       className={styles.button}
                       Icon={<BsFillTrashFill />}
                       color="red"
+                      onClick={() => handleRemoveSafeBoxGroup(safebox)}
                     />
                   </div>
                 </ContextMenu.Trigger>

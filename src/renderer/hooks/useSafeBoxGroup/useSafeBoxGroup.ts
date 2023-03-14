@@ -6,8 +6,13 @@ import { UserConfigContext } from '@/renderer/contexts/UserConfigContext/UserCon
 import { deleteSafeBoxIPC } from '@/renderer/services/ipc/SafeBox';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { updateSafeBoxGroupIPC } from '@/renderer/services/ipc/SafeBoxGroup';
+import { toastOptions } from '@/renderer/utils/options/Toastify';
+import { toast } from 'react-toastify';
+import { LoadingContext } from '@/renderer/contexts/LoadingContext/LoadingContext';
 
 export function useSafeBoxGroup() {
+  const { loading, updateLoading } = useContext(LoadingContext);
   const { safeBoxes, changeSafeBoxesIsLoading, changeCurrentSafeBox } =
     useContext(SafeBoxesContext);
   const { currentOrganization } = useContext(OrganizationsContext);
@@ -52,6 +57,37 @@ export function useSafeBoxGroup() {
       });
     }
   }, [safeBoxGroupContext.currentSafeBoxGroup, currentOrganization]);
+
+  const removeSafeBoxGroup = useCallback(() => {
+    const currentSafeBoxGroup = safeBoxGroupContext?.currentSafeBoxGroup;
+    if (currentSafeBoxGroup && selectedSafeBox) {
+      const filterSafeBoxes = JSON.parse(currentSafeBoxGroup.cofres).filter(
+        (id: string) => id !== selectedSafeBox._id
+      );
+
+      updateLoading(true);
+      toast.loading('Salvando...', {
+        ...toastOptions,
+        toastId: 'updateSafeBoxGroup',
+      });
+
+      updateSafeBoxGroupIPC({
+        name: currentSafeBoxGroup?.nome,
+        id: currentSafeBoxGroup?._id,
+        description: currentSafeBoxGroup.descricao,
+        organization: currentSafeBoxGroup.organizacao,
+        safeboxes: filterSafeBoxes,
+      });
+    }
+  }, [selectedSafeBox, safeBoxGroupContext.currentSafeBoxGroup]);
+
+  const handleRemoveSafeBoxGroup = useCallback(
+    (newSelectedSafeBox: ISafeBox) => {
+      setSelectedSafeBox(newSelectedSafeBox);
+      setIsOpenVerifyNameModal(true);
+    },
+    []
+  );
 
   useEffect(() => {
     if (safeBoxGroupContext.currentSafeBoxGroup) {
@@ -99,5 +135,8 @@ export function useSafeBoxGroup() {
     isOpenVerifyNameModal,
     deleteSafeBoxCallback,
     viewSafeBox,
+    removeSafeBoxGroup,
+    loading,
+    handleRemoveSafeBoxGroup,
   };
 }
