@@ -6,6 +6,7 @@ import { toastOptions } from '@/renderer/utils/options/Toastify';
 import { IFormikItem } from '@/renderer/contexts/CreateSafeBox/types';
 import { updateSafeBoxGroupIPC } from '@/renderer/services/ipc/SafeBoxGroup';
 import { ISafeBoxGroup } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
+import { deleteSafeBoxIPC } from '@/renderer/services/ipc/SafeBox';
 import { useSafeBox } from '../useSafeBox/useSafeBox';
 import formik from '../../utils/Formik/formik';
 import { useCreateSafeBox } from '../useCreateSafeBox/useCreateSafeBox';
@@ -18,10 +19,15 @@ export function useViewSafeBoxComponent() {
   const { changeFormikIndex } = useCreateSafeBox();
   const { currentOrganization } = useOrganization();
   const { formikIndex } = useCreateSafeBox();
-  const { currentSafeBox, changeSafeBoxMode, safeBoxMode } = useSafeBox();
+  const {
+    currentSafeBox,
+    changeSafeBoxMode,
+    safeBoxMode,
+    changeSafeBoxesIsLoading,
+  } = useSafeBox();
   const { safeBoxGroup } = useSafeBoxGroup();
   const { theme } = useUserConfig();
-  const { loading, updateLoading, updateForceLoading } = useLoading();
+  const { loading, updateLoading } = useLoading();
 
   const [verifySafetyPhraseType, setVerifySafetyPhraseType] = useState('');
   const [isOpenSharingModal, setIsOpenSharingModal] = useState<boolean>(false);
@@ -237,6 +243,26 @@ export function useViewSafeBoxComponent() {
     [currentSafeBox, safeBoxGroup]
   );
 
+  const verify = useCallback(
+    (isVerified: boolean) => {
+      if (isVerified) {
+        if (verifySafetyPhraseType === 'decryptSafeBox') {
+          changeSafeBoxMode('decrypted');
+          decrypt();
+        } else {
+          changeSafeBoxMode('edit');
+          decrypt();
+        }
+        setIsOpenVerifySafetyPhrase(false);
+      }
+    },
+    [verifySafetyPhraseType]
+  );
+
+  const handleDiscart = useCallback(() => {
+    changeSafeBoxMode('view');
+  }, []);
+
   return {
     formikProps,
     currentSafeBox,
@@ -258,5 +284,8 @@ export function useViewSafeBoxComponent() {
     addSafeBoxGroup,
     safeBoxGroup,
     participantGroups,
+    decrypt,
+    verify,
+    handleDiscart,
   };
 }

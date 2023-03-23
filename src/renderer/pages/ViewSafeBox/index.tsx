@@ -38,6 +38,8 @@ export function ViewSafeBox() {
     removeSafeBoxFromGroup,
     addSafeBoxGroup,
     safeBoxGroup,
+    verify,
+    handleDiscart,
     participantGroups,
   } = useViewSafeBoxComponent();
 
@@ -60,7 +62,7 @@ export function ViewSafeBox() {
           isOpen={isOpenVerifySafetyPhrase}
           onRequestClose={() => onOpenChangerifySafetyPhraseModal(false)}
           title="Confirme sua frase secreta"
-          callback={() => changeSafeBoxMode('edit')}
+          callback={verify}
           theme={theme}
         />
 
@@ -112,7 +114,7 @@ export function ViewSafeBox() {
                 <Button
                   text="Descartar"
                   Icon={<AiFillDelete />}
-                  onClick={() => {}}
+                  onClick={handleDiscart}
                   className={styles.red}
                   theme={theme}
                 />
