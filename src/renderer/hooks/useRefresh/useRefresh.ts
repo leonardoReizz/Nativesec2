@@ -1,8 +1,8 @@
 import { IPCTypes } from '@/types/IPCTypes';
 import { useEffect } from 'react';
 import { useOrganization } from '../useOrganization/useOrganization';
-import { useSafeBox } from '../useSafeBoxComponent/useSafeBox';
-import { useUserConfig } from '../useUserConfigComponent/useUserConfig';
+import { useSafeBox } from '../useSafeBox/useSafeBox';
+import { useUserConfig } from '../useUserConfig/useUserConfig';
 
 export function useRefresh() {
   const { currentOrganization } = useOrganization();

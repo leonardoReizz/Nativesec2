@@ -17,7 +17,9 @@ import { Workspace } from 'renderer/pages/Workspace';
 import { WorkspaceMembers } from 'renderer/pages/WorkspaceMembers';
 import { WorkspaceSettings } from 'renderer/pages/WorkspaceSettings';
 import { useIPCSafeBoxGroup } from '../hooks/useIPCSafeBoxGroup/useIPCSafeBoxGroup';
+import { CreateSafeBox } from '../pages/CreateSafeBox';
 import { SafeBoxGroup } from '../pages/SafeBoxGroup';
+import { ViewSafeBox } from '../pages/ViewSafeBox';
 import { LayoutsWithSidebar } from './LayoutsWithSidebar';
 import { ProtectedRoutes } from './ProtectedRoutes';
 
@@ -63,7 +65,15 @@ export function AppRoutes() {
           <Route element={<LayoutsWithSidebar />}>
             <Route path="/home" element={<Home />} />
             <Route path="/workspace/:id/:mode" element={<Workspace />} />
-            <Route path="/workspace/:id" element={<Workspace />} />
+            {/* <Route path="/workspace/:id" element={<Workspace />} /> */}
+            <Route path="/organization/:organizationId">
+              <Route path="" element={<></>} />
+              <Route path="createSafebox" element={<CreateSafeBox />} />
+              <Route
+                path="viewSafeBox/:safeBoxId/:mode"
+                element={<ViewSafeBox />}
+              />
+            </Route>
             <Route path="/userSettings" element={<UserSettings />} />
             <Route
               path="/createOrganization"

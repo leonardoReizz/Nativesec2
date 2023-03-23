@@ -8,7 +8,7 @@ import { useDropzone } from 'react-dropzone';
 import settingsSchema from '../../utils/Formik/SettingsOrganizations/settingsOrganization';
 import { useLoading } from '../useLoading';
 import { useOrganization } from '../useOrganization/useOrganization';
-import { useUserConfig } from '../useUserConfigComponent/useUserConfig';
+import { useUserConfig } from '../useUserConfig/useUserConfig';
 
 export function useWorkspaceSettings() {
   const { theme } = useUserConfig();

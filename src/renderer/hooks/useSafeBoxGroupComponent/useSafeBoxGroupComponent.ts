@@ -11,7 +11,7 @@ import { toastOptions } from '@/renderer/utils/options/Toastify';
 import { toast } from 'react-toastify';
 import { LoadingContext } from '@/renderer/contexts/LoadingContext/LoadingContext';
 
-export function useSafeBoxGroupPage() {
+export function useSafeBoxGroupComponent() {
   const { loading, updateLoading } = useContext(LoadingContext);
   const { safeBoxes, changeSafeBoxesIsLoading, changeCurrentSafeBox } =
     useContext(SafeBoxesContext);

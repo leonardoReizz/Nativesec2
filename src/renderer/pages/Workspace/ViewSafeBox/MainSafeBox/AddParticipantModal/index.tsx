@@ -48,6 +48,8 @@ export function AddParticipantModal({
 
   useEffect(() => {
     if (currentOrganization) {
+      console.log('rodei');
+
       const email = window.electron.store.get('user')?.email;
       const usersAdmin: IUsersSelected[] = filteredAdmin.map(
         (userEmail: string) => {
@@ -72,7 +74,7 @@ export function AddParticipantModal({
 
       updateUsersSelected(filterUsers);
     }
-  }, []);
+  }, [currentOrganization]);
 
   function save() {
     updateLoading(true);

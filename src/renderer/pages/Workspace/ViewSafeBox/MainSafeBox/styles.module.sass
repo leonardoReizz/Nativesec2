@@ -7,21 +7,12 @@
   @include flex(center, center, column)
   width: 100%
 
-  .form
-    visibility: hidden
-    height: 0
-    width: 0
-    opacity: 0
-
-  .formOpen
-    visibility: visible
+  form
+    @include flex(center, center, column)
     width: 100%
-    opacity: 1
+    height: 100%
+    gap: 1rem
 
-  .usersOpen
-    visibility: visible
-    width: 100%
-    opacity: 1
 
 
 

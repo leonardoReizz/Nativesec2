@@ -9,6 +9,7 @@ import {
   useState,
 } from 'react';
 import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
+import { useSafeBoxComponent } from '@/renderer/hooks/useSafeBoxComponent/useSafeBoxComponent';
 import formik from '../../utils/Formik/formik';
 import { OrganizationsContext } from '../OrganizationsContext/OrganizationsContext';
 import { SafeBoxesContext } from '../SafeBoxesContext/safeBoxesContext';
@@ -49,18 +50,18 @@ export function CreateSafeBoxContextProvider({
 }: CreateSafeBoxContextProviderProps) {
   const { currentSafeBox } = useContext(SafeBoxesContext);
   const { currentOrganization } = useContext(OrganizationsContext);
-  const { submitSafeBox } = useSafeBox();
+  const { submitSafeBox } = useSafeBoxComponent();
   const [usersSelected, setUsersSelected] = useState<IUsersSelected[]>([]);
   const [formikIndex, setFormikIndex] = useState<number>(0);
   const [usersParticipant, setUsersParticipant] = useState<string[]>([]);
   const [usersAdmin, setUsersAdmin] = useState<string[]>([]);
   const [selectOptions, setSelectOptions] = useState<string[]>([
-    ...JSON.parse(currentOrganization?.administradores as string).map(
+    ...JSON.parse((currentOrganization?.administradores || '[]') as string).map(
       (adm: string) => {
         return { value: adm, label: adm };
       }
     ),
-    ...JSON.parse(currentOrganization?.participantes as string).map(
+    ...JSON.parse((currentOrganization?.participantes || '[]') as string).map(
       (adm: string) => {
         return { value: adm, label: adm };
       }

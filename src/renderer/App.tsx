@@ -12,6 +12,10 @@ import { UserConfigContextProvider } from './contexts/UserConfigContext/UserConf
 import { LoadingContextProvider } from './contexts/LoadingContext/LoadingContext';
 import { NotificationsContextProvider } from './contexts/NotificationsContext/NotificationsContext';
 import { SafeBoxGroupContextProvider } from './contexts/SafeBoxGroupContext/SafeBoxGroupContext';
+import {
+  CreateSafeBoxContext,
+  CreateSafeBoxContextProvider,
+} from './contexts/CreateSafeBox/createSafeBoxContext';
 
 ReactModal.setAppElement('#root');
 export default function App() {
@@ -26,7 +30,9 @@ export default function App() {
                 <SafeBoxesContextProvider>
                   <NotificationsContextProvider>
                     <SafeBoxGroupContextProvider>
-                      <AppRoutes />
+                      <CreateSafeBoxContextProvider>
+                        <AppRoutes />
+                      </CreateSafeBoxContextProvider>
                     </SafeBoxGroupContextProvider>
                   </NotificationsContextProvider>
                 </SafeBoxesContextProvider>

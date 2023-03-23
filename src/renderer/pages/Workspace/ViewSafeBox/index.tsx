@@ -9,7 +9,7 @@ import { HeaderSafeBox } from './HeaderSafeBox';
 
 export function ViewSafeBox() {
   const { currentSafeBox, changeSafeBoxMode, safeBoxMode } = useSafeBox();
-  const { changeFormikIndex } = useCreateSafeBox();
+  const { changeFormikIndex, formikProps } = useCreateSafeBox();
 
   useEffect(() => {
     if (currentSafeBox) {
@@ -27,7 +27,7 @@ export function ViewSafeBox() {
         <>
           <HeaderSafeBox />
           <main>
-            <MainSafeBox />
+            <MainSafeBox formikProps={formikProps} />
           </main>
         </>
       )}

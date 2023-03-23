@@ -1,0 +1,31 @@
+@use '../../styles/_util' as *
+
+.viewSafeBoxContainer 
+  @include flex(center, flex-start, column)
+  height: 100%
+  width: 100%
+
+  max-width: 1000px
+  padding: 1rem 
+
+  main
+    @include flex(flex-start, center, row)
+    width: 100%
+    height: calc( 100vh - 200px )
+
+    overflow: auto
+    padding: 1rem 2rem
+    margin-top: 16px
+
+    &::-webkit-scrollbar-track
+      background-color: $gray-800
+    &::-webkit-scrollbar-thumb
+      background-color: $gray-600
+    &::-webkit-scrollbar
+      width: .4em
+
+    &::-webkit-scrollbar-track
+      border-radius: 5rem
+
+    &::-webkit-scrollbar-thumb
+      border-radius: 5rem

@@ -42,7 +42,7 @@ export function Sidebar({ openSidebar }: SidebarProps) {
       updateLastOrganizationId(organizationId);
       changeSafeBoxesIsLoading(true);
       getSafeBoxes(organizationId);
-      return navigate(`/workspace/${organizationId}`);
+      return navigate(`/organization/${organizationId}`);
     },
     [currentOrganization]
   );

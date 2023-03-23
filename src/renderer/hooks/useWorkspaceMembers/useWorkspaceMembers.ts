@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useLoading } from '../useLoading';
 import { useOrganization } from '../useOrganization/useOrganization';
-import { useUserConfig } from '../useUserConfigComponent/useUserConfig';
+import { useUserConfig } from '../useUserConfig/useUserConfig';
 
 interface ICurrentUserDelete {
   email: string;

@@ -16,7 +16,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import formik from '../../utils/Formik/formik';
-import { useSafeBox } from '../useSafeBoxComponent/useSafeBox';
+import { useSafeBoxComponent } from '../useSafeBoxComponent/useSafeBoxComponent';
 
 export function useHeaderSafeBox() {
   const { theme } = useContext(UserConfigContext);
@@ -40,7 +40,7 @@ export function useHeaderSafeBox() {
     usersParticipant,
     changeSafeBoxMode,
     safeBoxMode,
-  } = useSafeBox();
+  } = useSafeBoxComponent();
 
   const { mode } = useParams();
   const location = useLocation();

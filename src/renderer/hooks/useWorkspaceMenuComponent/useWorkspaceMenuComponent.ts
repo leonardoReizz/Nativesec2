@@ -1,17 +1,16 @@
-import { LoadingContext } from '@/renderer/contexts/LoadingContext/LoadingContext';
 import { ISafeBox } from '@/renderer/contexts/SafeBoxesContext/types';
 import { ISafeBoxGroup } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
 import {
   deleteSafeBoxIPC,
   forceRefreshSafeBoxes,
 } from '@/renderer/services/ipc/SafeBox';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLoading } from '../useLoading';
 import { useOrganization } from '../useOrganization/useOrganization';
-import { useSafeBox } from '../useSafeBoxComponent/useSafeBox';
+import { useSafeBoxComponent } from '../useSafeBoxComponent/useSafeBoxComponent';
 import { useSafeBoxGroup } from '../useSafeBoxGroup/useSafeBoxGroup';
-import { useUserConfig } from '../useUserConfigComponent/useUserConfig';
+import { useUserConfig } from '../useUserConfig/useUserConfig';
 
 interface useWorkspaceMenuComponentProps {
   closeSidebar: () => void;
@@ -28,7 +27,7 @@ export function useWorkspaceMenuComponent({
 
   const [selectedSafeBox, setSelectedSafeBox] = useState<ISafeBox | null>(null);
   const { theme } = useUserConfig();
-  const { loading, updateLoading } = useContext(LoadingContext);
+  const { loading, updateLoading } = useLoading();
 
   const {
     filteredSafeBoxes,
@@ -36,7 +35,9 @@ export function useWorkspaceMenuComponent({
     searchValue,
     changeCurrentSafeBox,
     changeSafeBoxMode,
-  } = useSafeBox();
+  } = useSafeBoxComponent();
+  // TODO: verifficar porque useSafeBoxComponent esta fazendo aqui e se o nome
+  // esta correto
 
   const { updateCurrentSafeBoxGroup, safeBoxGroup } = useSafeBoxGroup();
 
@@ -47,7 +48,7 @@ export function useWorkspaceMenuComponent({
   const handleCreateSafeBox = useCallback(() => {
     if (currentOrganization) {
       closeSidebar();
-      navigate(`/workspace/${currentOrganization?._id}`);
+      navigate(`/organization/${currentOrganization?._id}/createSafeBox`);
       changeCurrentSafeBox(undefined);
       changeSafeBoxMode('create');
     }
