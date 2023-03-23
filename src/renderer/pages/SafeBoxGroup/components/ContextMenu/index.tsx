@@ -11,12 +11,16 @@ interface ContextMenuComponentProps {
   theme?: ThemeType;
   viewSafeBox: () => void;
   openVerifyNameModal: () => void;
+  editSafeBox: () => void;
+  decryptSafeBox: () => void;
 }
 
 export function ContextMenuComponent({
   theme,
   viewSafeBox,
   openVerifyNameModal,
+  editSafeBox,
+  decryptSafeBox,
 }: ContextMenuComponentProps) {
   return (
     <ContextMenu.Portal>
@@ -31,11 +35,17 @@ export function ContextMenuComponent({
         >
           <BsFillEyeFill /> Visualizar
         </ContextMenu.Item>
-        <ContextMenu.Item className={styles.ContextMenuItem}>
+        <ContextMenu.Item
+          className={styles.ContextMenuItem}
+          onClick={decryptSafeBox}
+        >
           <BsShieldLockFill /> Descriptografar
         </ContextMenu.Item>
         <ContextMenu.Separator className={styles.ContextMenuSeparator} />
-        <ContextMenu.Item className={styles.ContextMenuItem}>
+        <ContextMenu.Item
+          className={styles.ContextMenuItem}
+          onClick={editSafeBox}
+        >
           <TbEdit /> Editar
         </ContextMenu.Item>
         <ContextMenu.Separator className={styles.ContextMenuSeparator} />

@@ -11,7 +11,7 @@ import { VerifyNameModal } from '@/renderer/components/Modals/VerifyNameModal';
 import { deleteSafeBoxGroupIPC } from '@/renderer/services/ipc/SafeBoxGroup';
 import { toastOptions } from '@/renderer/utils/options/Toastify';
 import { toast } from 'react-toastify';
-import { CreateSafeBoxGroupModal } from '@/renderer/components/NewSidebar/components/CreateSafeBoxGroupModal';
+import { CreateSafeBoxGroupModal } from '@/renderer/components/SidebarWorkspace/components/CreateSafeBoxGroupModal';
 import styles from './styles.module.sass';
 import { Dropdown } from '../Dropdown/RadixDropDown';
 import { AddSafeBoxModal } from '../AddSafeBoxModal';
@@ -19,19 +19,20 @@ import { AddSafeBoxModal } from '../AddSafeBoxModal';
 interface HeaderProps {
   theme?: ThemeType;
   safeBoxGroup: ISafeBoxGroup;
+  isOpenEditSafeBoxGroupModal: boolean;
+  onOpenChangeEditSafeBoxGroupModal: (open: boolean) => void;
 }
 
-export function Header({ theme = 'light', safeBoxGroup }: HeaderProps) {
+export function Header({
+  theme = 'light',
+  safeBoxGroup,
+  onOpenChangeEditSafeBoxGroupModal,
+  isOpenEditSafeBoxGroupModal,
+}: HeaderProps) {
   const [isOpenAddSafeBoxModal, setIsOpenAddSafeBoxModal] =
     useState<boolean>(false);
   const [isOpenVerifyNameModal, setIsOpenVerifyNameModal] =
     useState<boolean>(false);
-  const [isOpenEditSafeBoxGroupModal, setIsOpenEditSafeBoxGroupModal] =
-    useState<boolean>(false);
-
-  const onOpenChangeEditSafeBoxGroupModal = useCallback((open: boolean) => {
-    setIsOpenEditSafeBoxGroupModal(open);
-  }, []);
 
   const handleOpenVerifyNameModal = useCallback(() => {
     setIsOpenVerifyNameModal(true);

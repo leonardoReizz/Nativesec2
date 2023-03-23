@@ -1,6 +1,6 @@
 import { Button } from '@/renderer/components/Buttons/Button';
 import { SafeBoxInfo } from '@/renderer/components/SafeBox';
-import { useSafeBoxGroup } from '@/renderer/hooks/useSafeBoxGroup/useSafeBoxGroup';
+import { useSafeBoxGroupComponent } from '@/renderer/hooks/useSafeBoxGroupComponent/useSafeBoxGroupComponent';
 import { BsFillTrashFill } from 'react-icons/bs';
 import * as ContextMenu from '@radix-ui/react-context-menu';
 import { VerifyNameModal } from '@/renderer/components/Modals/VerifyNameModal';
@@ -13,7 +13,6 @@ export function SafeBoxGroup() {
     currentSafeBoxGroup,
     groupSafeBoxes,
     changeSelectedSafeBox,
-    selectedSafeBox,
     theme,
     isOpenVerifyNameModal,
     closeVerifyNameModal,
@@ -22,16 +21,19 @@ export function SafeBoxGroup() {
     removeSafeBoxGroup,
     loading,
     handleRemoveSafeBoxGroup,
-  } = useSafeBoxGroup();
+    decryptSafeBox,
+    onOpenChangeEditSafeBoxGroupModal,
+    isOpenChangeEditSafeBoxGroupModal,
+  } = useSafeBoxGroupComponent();
 
   return (
     <>
       {currentSafeBoxGroup && (
         <VerifyNameModal
           title="Deseja remover"
-          inputText="Nome do cofre"
+          inputText="Nome do grupo"
           callback={removeSafeBoxGroup}
-          nameToVerify={selectedSafeBox?.nome}
+          nameToVerify={currentSafeBoxGroup?.nome}
           isOpen={isOpenVerifyNameModal}
           onRequestClose={closeVerifyNameModal}
           isLoading={loading}
@@ -39,7 +41,14 @@ export function SafeBoxGroup() {
       )}
       <div className={styles.safeBoxGroupContainer}>
         {currentSafeBoxGroup && (
-          <Header safeBoxGroup={currentSafeBoxGroup} theme={theme} />
+          <Header
+            safeBoxGroup={currentSafeBoxGroup}
+            theme={theme}
+            onOpenChangeEditSafeBoxGroupModal={
+              onOpenChangeEditSafeBoxGroupModal
+            }
+            isOpenEditSafeBoxGroupModal={isOpenChangeEditSafeBoxGroupModal}
+          />
         )}
         <main>
           {groupSafeBoxes.map((safebox) => {
@@ -63,6 +72,8 @@ export function SafeBoxGroup() {
                   viewSafeBox={viewSafeBox}
                   openVerifyNameModal={openVerifyNameModal}
                   theme={theme}
+                  editSafeBox={() => onOpenChangeEditSafeBoxGroupModal(true)}
+                  decryptSafeBox={decryptSafeBox}
                 />
               </ContextMenu.Root>
             );

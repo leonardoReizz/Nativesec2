@@ -78,6 +78,10 @@ export function AppRoutes() {
               path="/safeBoxGroup/:safeBoxGroupId"
               element={<SafeBoxGroup />}
             />
+            <Route
+              path="/safeBoxGroup/:safeBoxGroupId/:mode"
+              element={<SafeBoxGroup />}
+            />
           </Route>
         </Route>
       </Routes>

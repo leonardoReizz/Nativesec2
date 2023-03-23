@@ -8,17 +8,17 @@ import logoNativeSec from '../../../../assets/logoNativesec/512.png';
 import { WorkspaceSettingsMenu } from './components/WorkspaceSettingsMenu';
 import { WorkspaceMenu } from './components/WorkspaceMenu';
 
-interface NewSidebarProps {
+interface SidebarWorspaceProps {
   openSidebar: () => void;
   closeSidebar: () => void;
   isOpenSidebar: boolean;
 }
 
-export function NewSidebar({
+export function SidebarWorkspace({
   openSidebar,
   closeSidebar,
   isOpenSidebar,
-}: NewSidebarProps) {
+}: SidebarWorspaceProps) {
   const { pathname } = useLocation();
   const { theme } = useUserConfig();
   const { currentOrganization, currentOrganizationIcon } = useOrganization();

@@ -9,7 +9,7 @@ import { SafeBoxesContext } from 'renderer/contexts/SafeBoxesContext/safeBoxesCo
 import { ISafeBox } from 'renderer/contexts/SafeBoxesContext/types';
 import { toastOptions } from 'renderer/utils/options/Toastify';
 import { useLoading } from '../useLoading';
-import { useSafeBox } from '../useSafeBox/useSafeBox';
+import { useSafeBox } from '../useSafeBoxComponent/useSafeBox';
 import * as types from './types';
 
 export function useIPCSafeBox() {

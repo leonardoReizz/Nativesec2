@@ -7,7 +7,7 @@ import { LoadingType } from 'renderer/routes';
 import { toastOptions } from 'renderer/utils/options/Toastify';
 import { useLoading } from '../useLoading';
 import { useOrganization } from '../useOrganization/useOrganization';
-import { useUserConfig } from '../useUserConfig/useUserConfig';
+import { useUserConfig } from '../useUserConfigComponent/useUserConfig';
 
 interface UseIPCAuthProps {
   changeAuthState: (state: AuthStateType) => void;

@@ -1,11 +1,10 @@
-import { UserConfigContext } from '@/renderer/contexts/UserConfigContext/UserConfigContext';
-import { useContext } from 'react';
 import { CreateSafeBoxContextProvider } from 'renderer/contexts/CreateSafeBox/createSafeBoxContext';
+import { useUserConfig } from '@/renderer/hooks/useUserConfig/useUserConfig';
 import { ViewSafeBox } from './ViewSafeBox';
 import styles from './styles.module.sass';
 
 export function Workspace() {
-  const { theme } = useContext(UserConfigContext);
+  const { theme } = useUserConfig();
 
   return (
     <div

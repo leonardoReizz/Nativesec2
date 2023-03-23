@@ -8,8 +8,8 @@ import { toastOptions } from 'renderer/utils/options/Toastify';
 import { useLoading } from '../useLoading';
 import { useNotifications } from '../useNotifications/useNotifications';
 import { useOrganization } from '../useOrganization/useOrganization';
-import { useSafeBox } from '../useSafeBox/useSafeBox';
-import { useUserConfig } from '../useUserConfig/useUserConfig';
+import { useSafeBox } from '../useSafeBoxComponent/useSafeBox';
+import { useUserConfig } from '../useUserConfigComponent/useUserConfig';
 
 import * as types from './types';
 

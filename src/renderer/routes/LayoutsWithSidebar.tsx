@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Navbar } from 'renderer/components/Navbar';
-import { NewSidebar } from 'renderer/components/NewSidebar';
+import { SidebarWorkspace } from '@/renderer/components/SidebarWorkspace';
 import { Sidebar } from 'renderer/components/Sidebar';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 
@@ -25,7 +25,7 @@ export function LayoutsWithSidebar() {
         className={`${styles.flexApp} ${theme === 'dark' ? styles.dark : ''}`}
       >
         <Sidebar openSidebar={openSidebar} />
-        <NewSidebar
+        <SidebarWorkspace
           openSidebar={openSidebar}
           closeSidebar={closeSidebar}
           isOpenSidebar={isOpenSidebar}

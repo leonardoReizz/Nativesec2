@@ -16,7 +16,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import formik from '../../utils/Formik/formik';
-import { useSafeBox } from '../useSafeBox/useSafeBox';
+import { useSafeBox } from '../useSafeBoxComponent/useSafeBox';
 
 export function useHeaderSafeBox() {
   const { theme } = useContext(UserConfigContext);
@@ -103,8 +103,6 @@ export function useHeaderSafeBox() {
     } else if (mode === 'delete') {
       setVerifyNameModalIsOpen(true);
     }
-
-    console.log(mode, ' mode');
   }, [location]);
 
   function handleSave() {

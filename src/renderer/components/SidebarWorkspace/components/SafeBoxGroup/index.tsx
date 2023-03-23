@@ -4,9 +4,9 @@ import {
   SafeBoxIcon,
   SafeBoxIconType,
 } from '@/renderer/components/SafeBoxIcon';
+import { SafeBoxesContext } from '@/renderer/contexts/SafeBoxesContext/safeBoxesContext';
 import { ISafeBoxGroup } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
-import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 import { ImMakeGroup } from 'react-icons/im';
 import { useNavigate } from 'react-router-dom';
@@ -15,15 +15,19 @@ import styles from './styles.module.sass';
 interface SafeBoxGroupProps {
   safeBoxGroup: ISafeBoxGroup;
   theme?: ThemeType;
+  onContextMenu: () => void;
 }
 
 export function SafeBoxGroup({
   safeBoxGroup,
   theme = 'light',
+  onContextMenu,
 }: SafeBoxGroupProps) {
-  const { safeBoxes, changeCurrentSafeBox } = useSafeBox();
   const navigate = useNavigate();
+  const { safeBoxes, changeCurrentSafeBox } = useContext(SafeBoxesContext);
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const safeBoxesId = JSON.parse(safeBoxGroup.cofres) as string[];
 
   function handleSafeBoxGroup() {
@@ -36,6 +40,7 @@ export function SafeBoxGroup({
       className={`${styles.safeBoxContainer} ${
         theme === 'dark' ? styles.dark : styles.light
       }`}
+      onContextMenu={onContextMenu}
     >
       <div className={styles.safeBoxGroup} onClick={handleSafeBoxGroup}>
         <ImMakeGroup className={styles.firstIcon} />
