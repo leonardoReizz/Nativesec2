@@ -31,7 +31,9 @@ export function Dropdown({
         }`}
         sideOffset={5}
       >
-        <DropdownMenu.Label>Alterar Permissão</DropdownMenu.Label>
+        <DropdownMenu.Label className={styles.Label}>
+          Alterar Permissão
+        </DropdownMenu.Label>
         <DropdownMenu.Item
           className={styles.DropdownMenuItem}
           onClick={() => handleUpdateSafeBox('participant', email)}

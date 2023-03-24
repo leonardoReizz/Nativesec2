@@ -1,9 +1,21 @@
 import { Button } from '@/renderer/components/Buttons/Button';
 import { SafeBoxInfo } from '@/renderer/components/SafeBox';
 import { useSafeBoxGroupComponent } from '@/renderer/hooks/useSafeBoxGroupComponent/useSafeBoxGroupComponent';
-import { BsFillTrashFill } from 'react-icons/bs';
+import {
+  BsFillEyeFill,
+  BsFillTrashFill,
+  BsShieldLockFill,
+} from 'react-icons/bs';
 import * as ContextMenu from '@radix-ui/react-context-menu';
 import { VerifyNameModal } from '@/renderer/components/Modals/VerifyNameModal';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { TbEdit } from 'react-icons/tb';
+import {
+  IRadixDropdownOptions,
+  RadixDropdown,
+} from '@/renderer/components/RadixDropdown';
+import { useCallback, useState } from 'react';
+import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { Header } from './components/Header';
 import styles from './styles.module.sass';
 import { ContextMenuComponent } from './components/ContextMenu';
@@ -26,6 +38,51 @@ export function SafeBoxGroup() {
     isOpenChangeEditSafeBoxGroupModal,
   } = useSafeBoxGroupComponent();
 
+  const options: IRadixDropdownOptions[] = [
+    {
+      id: '1',
+      label: 'Permissao',
+      items: [
+        {
+          function: () => {},
+          id: '1',
+          text: 'Visualiazar',
+          Icon: BsFillEyeFill,
+        },
+        {
+          function: () => {},
+          id: '2',
+          text: 'Descriptografar',
+          Icon: BsShieldLockFill,
+        },
+      ],
+    },
+    {
+      id: '3',
+      label: 'Editar',
+      items: [
+        { function: () => {}, id: '1', text: 'Editar Cofre', Icon: TbEdit },
+      ],
+    },
+    {
+      id: '3',
+      label: 'Remover',
+      items: [
+        {
+          function: () => {},
+          id: '1',
+          text: 'Remover Cofre',
+          Icon: BsFillTrashFill,
+        },
+      ],
+    },
+  ];
+
+  const [isOpenDropdown, setIsOpenDropdown] = useState<boolean>(false);
+
+  const onOpenChangeIsOpenDropdown = useCallback((open: boolean) => {
+    setIsOpenDropdown(open);
+  }, []);
   return (
     <>
       {currentSafeBoxGroup && (
@@ -39,7 +96,11 @@ export function SafeBoxGroup() {
           isLoading={loading}
         />
       )}
-      <div className={styles.safeBoxGroupContainer}>
+      <div
+        className={`${styles.safeBoxGroupContainer} ${
+          theme === 'dark' ? styles.dark : styles.light
+        }`}
+      >
         {currentSafeBoxGroup && (
           <Header
             safeBoxGroup={currentSafeBoxGroup}
@@ -60,12 +121,20 @@ export function SafeBoxGroup() {
                     onContextMenu={() => changeSelectedSafeBox(safebox)}
                   >
                     <SafeBoxInfo safeBox={safebox} />
-                    <Button
-                      className={styles.button}
-                      Icon={<BsFillTrashFill />}
-                      color="red"
-                      onClick={() => handleRemoveSafeBoxGroup(safebox)}
-                    />
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger asChild>
+                        <button type="button">
+                          <BiDotsVerticalRounded />
+                        </button>
+                        {/* <Button
+                          className={styles.button}
+                          Icon={<BsFillTrashFill />}
+                          color="red"
+                          onClick={() => onOpenChangeIsOpenDropdown(true)}
+                        /> */}
+                      </DropdownMenu.Trigger>{' '}
+                      <RadixDropdown theme={theme} options={options} />
+                    </DropdownMenu.Root>
                   </div>
                 </ContextMenu.Trigger>
                 <ContextMenuComponent

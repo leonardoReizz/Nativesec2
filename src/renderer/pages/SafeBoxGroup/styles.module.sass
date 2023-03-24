@@ -1,5 +1,12 @@
 @use '../../styles/_util' as *
 
+.safeBoxGroupContainer.dark
+  main
+    @include scroolbarDark()
+.safeBoxGroupContainer.light
+  main
+    @include scroolbarLight()
+
 .safeBoxGroupContainer
   padding: 1rem
   max-width: 1000px
@@ -7,6 +14,8 @@
 
   main
     margin-top: 3rem
+    overflow: auto
+    max-height: calc( 100vh - 200px )
 
     .safeBox
       position: relative

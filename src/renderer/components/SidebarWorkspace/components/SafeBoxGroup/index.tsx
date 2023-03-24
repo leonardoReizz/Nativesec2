@@ -10,18 +10,24 @@ import { useContext, useState } from 'react';
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 import { ImMakeGroup } from 'react-icons/im';
 import { useNavigate } from 'react-router-dom';
+import * as ContextMenu from '@radix-ui/react-context-menu';
 import styles from './styles.module.sass';
+import { ContextMenuSafeBoxGroupComponent } from '../ContextMenuSafeBoxGroup';
 
 interface SafeBoxGroupProps {
   safeBoxGroup: ISafeBoxGroup;
   theme?: ThemeType;
   onContextMenu: () => void;
+  handleDeleteSafeBoxGroup: (group: ISafeBoxGroup) => void;
+  handleEditSafeBoxGroup: (group: ISafeBoxGroup) => void;
 }
 
 export function SafeBoxGroup({
   safeBoxGroup,
   theme = 'light',
   onContextMenu,
+  handleDeleteSafeBoxGroup,
+  handleEditSafeBoxGroup,
 }: SafeBoxGroupProps) {
   const navigate = useNavigate();
   const { safeBoxes, changeCurrentSafeBox } = useContext(SafeBoxesContext);
@@ -42,17 +48,26 @@ export function SafeBoxGroup({
       }`}
       onContextMenu={onContextMenu}
     >
-      <div className={styles.safeBoxGroup} onClick={handleSafeBoxGroup}>
-        <ImMakeGroup className={styles.firstIcon} />
-        <div className={styles.text}>
-          <h3>{safeBoxGroup?.nome}</h3>
-          <p>{safeBoxGroup?.descricao}</p>
-        </div>
-        <button type="button" onClick={() => setIsOpen((state) => !state)}>
-          {isOpen && <BiChevronUp />}
-          {!isOpen && <BiChevronDown />}
-        </button>
-      </div>
+      <ContextMenu.Root>
+        <ContextMenu.Trigger>
+          <div className={styles.safeBoxGroup} onClick={handleSafeBoxGroup}>
+            <ImMakeGroup className={styles.firstIcon} />
+            <div className={styles.text}>
+              <h3>{safeBoxGroup?.nome}</h3>
+              <p>{safeBoxGroup?.descricao}</p>
+            </div>
+            <button type="button" onClick={() => setIsOpen((state) => !state)}>
+              {isOpen && <BiChevronUp />}
+              {!isOpen && <BiChevronDown />}
+            </button>
+          </div>
+        </ContextMenu.Trigger>
+        <ContextMenuSafeBoxGroupComponent
+          theme={theme}
+          deleteSafeBoxGroup={() => handleDeleteSafeBoxGroup(safeBoxGroup)}
+          editSafeBoxGroup={() => handleEditSafeBoxGroup(safeBoxGroup)}
+        />
+      </ContextMenu.Root>
 
       <div className={`${styles.listSafeBox} ${isOpen ? styles.open : ''}`}>
         {safeBoxesId.map((safeBoxId) => {
@@ -68,7 +83,7 @@ export function SafeBoxGroup({
               <SafeBoxIcon type={filter[0]?.tipo as SafeBoxIconType} />
               <div className={styles.text}>
                 <h3>{filter[0]?.nome}</h3>
-                <h3>{filter[0]?.descricao}</h3>
+                <p>{filter[0]?.descricao}</p>
               </div>
             </div>
           );

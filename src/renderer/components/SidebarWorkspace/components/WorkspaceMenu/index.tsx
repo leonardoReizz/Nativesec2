@@ -13,7 +13,6 @@ import { SafeBoxGroup } from '../SafeBoxGroup';
 import { Dropdown } from '../Dropdown';
 import { ContextMenuComponent } from '../ContextMenu';
 import { CreateSafeBoxGroupModal } from '../CreateSafeBoxGroupModal';
-import { ContextMenuSafeBoxGroupComponent } from '../ContextMenuSafeBoxGroup';
 
 interface WorkspaceMenuProps {
   closeSidebar: () => void;
@@ -104,20 +103,13 @@ export function WorkspaceMenu({ closeSidebar }: WorkspaceMenuProps) {
             </div>
             {safeBoxGroup.map((group) => {
               return (
-                <ContextMenu.Root>
-                  <ContextMenu.Trigger>
-                    <SafeBoxGroup
-                      safeBoxGroup={group}
-                      theme={theme}
-                      onContextMenu={() => updateCurrentSafeBoxGroup(group)}
-                    />
-                  </ContextMenu.Trigger>
-                  <ContextMenuSafeBoxGroupComponent
-                    theme={theme}
-                    deleteSafeBoxGroup={() => handleDeleteSafeBoxGroup(group)}
-                    editSafeBoxGroup={() => handleEditSafeBoxGroup(group)}
-                  />
-                </ContextMenu.Root>
+                <SafeBoxGroup
+                  safeBoxGroup={group}
+                  theme={theme}
+                  onContextMenu={() => updateCurrentSafeBoxGroup(group)}
+                  handleDeleteSafeBoxGroup={handleDeleteSafeBoxGroup}
+                  handleEditSafeBoxGroup={handleEditSafeBoxGroup}
+                />
               );
             })}
           </div>

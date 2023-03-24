@@ -73,15 +73,19 @@ export function useWorkspaceMembers() {
     setIsOpenFieldModal(true);
   }
 
-  function addUser(user: IAddUserData) {
-    if (currentOrganization) {
-      addParticipantOrganizationIPC({
-        type: user.type.value,
-        email: user.email,
-        organizationId: currentOrganization?._id,
-      });
-    }
-  }
+  const addUser = useCallback(
+    (user: IAddUserData) => {
+      if (currentOrganization) {
+        updateLoading(true);
+        addParticipantOrganizationIPC({
+          type: user.type.value,
+          email: user.email,
+          organizationId: currentOrganization?._id,
+        });
+      }
+    },
+    [currentOrganization]
+  );
 
   function remove(verified: boolean) {
     if (verified && currentOrganization && currentUserDelete) {

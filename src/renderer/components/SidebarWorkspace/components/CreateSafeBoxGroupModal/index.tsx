@@ -57,6 +57,7 @@ export function CreateSafeBoxGroupModal({
             onChange={formikProps.handleChange}
             onBlur={formikProps.handleBlur}
             theme={theme}
+            maxLength={255}
           />
 
           <div className={styles.actions}>
