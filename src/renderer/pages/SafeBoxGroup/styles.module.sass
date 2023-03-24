@@ -3,9 +3,21 @@
 .safeBoxGroupContainer.dark
   main
     @include scroolbarDark()
+
+    .button
+      color: $white
+      background-color: $gray-700
+      &:hover
+        background-color: $gray-500
 .safeBoxGroupContainer.light
   main
     @include scroolbarLight()
+
+    .button
+      color: $black
+      background-color: $gray-100
+      &:hover
+        background-color: $gray-400
 
 .safeBoxGroupContainer
   padding: 1rem
@@ -21,7 +33,18 @@
       position: relative
 
       .button
-        max-width: 35px
         right: 1rem
         bottom: 20px
         position: absolute
+
+        height: 28px
+
+        padding: .2rem
+        border-radius: $default-radius
+        cursor: pointer
+
+        transition: background-color 0.2s ease
+
+        svg
+          width: 20px
+          height: 20px

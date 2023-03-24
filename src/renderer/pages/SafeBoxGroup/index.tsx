@@ -16,6 +16,7 @@ import {
 } from '@/renderer/components/RadixDropdown';
 import { useCallback, useState } from 'react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
+import { ISafeBox } from '@/renderer/contexts/SafeBoxesContext/types';
 import { Header } from './components/Header';
 import styles from './styles.module.sass';
 import { ContextMenuComponent } from './components/ContextMenu';
@@ -44,13 +45,13 @@ export function SafeBoxGroup() {
       label: 'Permissao',
       items: [
         {
-          function: () => {},
+          function: viewSafeBox,
           id: '1',
           text: 'Visualiazar',
           Icon: BsFillEyeFill,
         },
         {
-          function: () => {},
+          function: decryptSafeBox,
           id: '2',
           text: 'Descriptografar',
           Icon: BsShieldLockFill,
@@ -61,7 +62,12 @@ export function SafeBoxGroup() {
       id: '3',
       label: 'Editar',
       items: [
-        { function: () => {}, id: '1', text: 'Editar Cofre', Icon: TbEdit },
+        {
+          function: () => onOpenChangeEditSafeBoxGroupModal(true),
+          id: '1',
+          text: 'Editar Cofre',
+          Icon: TbEdit,
+        },
       ],
     },
     {
@@ -69,7 +75,7 @@ export function SafeBoxGroup() {
       label: 'Remover',
       items: [
         {
-          function: () => {},
+          function: openVerifyNameModal,
           id: '1',
           text: 'Remover Cofre',
           Icon: BsFillTrashFill,
@@ -82,6 +88,11 @@ export function SafeBoxGroup() {
 
   const onOpenChangeIsOpenDropdown = useCallback((open: boolean) => {
     setIsOpenDropdown(open);
+  }, []);
+
+  const handleDropDown = useCallback((safeBox: ISafeBox) => {
+    changeSelectedSafeBox(safeBox);
+    setIsOpenDropdown(true);
   }, []);
   return (
     <>
@@ -123,15 +134,13 @@ export function SafeBoxGroup() {
                     <SafeBoxInfo safeBox={safebox} />
                     <DropdownMenu.Root>
                       <DropdownMenu.Trigger asChild>
-                        <button type="button">
+                        <button
+                          type="button"
+                          className={styles.button}
+                          onClick={() => changeSelectedSafeBox(safebox)}
+                        >
                           <BiDotsVerticalRounded />
                         </button>
-                        {/* <Button
-                          className={styles.button}
-                          Icon={<BsFillTrashFill />}
-                          color="red"
-                          onClick={() => onOpenChangeIsOpenDropdown(true)}
-                        /> */}
                       </DropdownMenu.Trigger>{' '}
                       <RadixDropdown theme={theme} options={options} />
                     </DropdownMenu.Root>

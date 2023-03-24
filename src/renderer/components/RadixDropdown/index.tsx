@@ -38,7 +38,7 @@ export function RadixDropdown({
                   <DropdownMenu.Item
                     key={item.id}
                     className={styles.DropdownMenuItem}
-                    onClick={() => item.function()}
+                    onClick={item.function}
                   >
                     {item.Icon && <item.Icon />}
                     {item.text}

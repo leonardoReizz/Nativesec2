@@ -57,12 +57,24 @@ export function useSafeBoxGroupComponent() {
     []
   );
 
-  const viewSafeBox = useCallback(() => {
-    if (selectedSafeBox) {
-      changeCurrentSafeBox(selectedSafeBox);
-      navigate(`/workspace/${selectedSafeBox._id}/view`);
-    }
-  }, [selectedSafeBox]);
+  const viewSafeBox = useCallback(
+    (safeBox?: ISafeBox) => {
+      if (currentOrganization) {
+        if (safeBox) {
+          changeCurrentSafeBox(safeBox);
+          navigate(
+            `/organization/${currentOrganization._id}/viewSafeBox/${safeBox._id}/view`
+          );
+        } else if (selectedSafeBox) {
+          changeCurrentSafeBox(selectedSafeBox);
+          navigate(
+            `/organization/${currentOrganization._id}/viewSafeBox/${selectedSafeBox._id}/view`
+          );
+        }
+      }
+    },
+    [selectedSafeBox, currentOrganization]
+  );
 
   const decryptSafeBox = useCallback(() => {
     if (selectedSafeBox) {
