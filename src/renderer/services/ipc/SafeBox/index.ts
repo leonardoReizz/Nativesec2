@@ -44,3 +44,5 @@ export function addSafeBoxUsersIPC(safeBox: t.IAddSafeBoxUsersIPC) {
     data: safeBox,
   });
 }
+
+export function createSafeBoxIPC() {}

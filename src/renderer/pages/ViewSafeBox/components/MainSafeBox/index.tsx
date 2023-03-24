@@ -2,20 +2,21 @@ import { useCallback, useEffect, useState } from 'react';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { useParams } from 'react-router-dom';
-import { useSafeBoxComponent } from '@/renderer/hooks/useSafeBoxComponent/useSafeBoxComponent';
 import { useCreateSafeBox } from '@/renderer/hooks/useCreateSafeBox/useCreateSafeBox';
 import { TextArea } from '@/renderer/components/TextAreas/TextArea';
 import { VerifySafetyPhraseModal } from '@/renderer/components/Modals/VerifySafetyPhraseModal';
-import {
-  IDecryptResponse,
-  useCreateSafeBoxComponent,
-} from '@/renderer/hooks/useCreateSafeBoxComponent/useCreateSafeBoxComponent';
+
 import { Input } from '@/renderer/components/Inputs/Input';
 import { InputEye } from '@/renderer/components/Inputs/InputEye';
 import { IFormikItem } from '@/renderer/contexts/CreateSafeBox/types';
 import { TextAreaEye } from '@/renderer/components/TextAreas/TextAreaEye';
 import { toast } from 'react-toastify';
 import { toastOptions } from '@/renderer/utils/options/Toastify';
+import { decryptMessageIPC } from '@/renderer/services/ipc/Crypto';
+import {
+  IDecryptResponse,
+  useCreateSafeBoxComponent,
+} from '@/renderer/hooks/useCreateSafeBoxComponent/useCreateSafeBoxComponent';
 import * as types from './types';
 import styles from './styles.module.sass';
 import formik from '../../../../utils/Formik/formik';
@@ -29,7 +30,7 @@ export function MainSafeBox({ formikProps }: MainSafeBoxProps) {
 
   const params = useParams();
 
-  const { safeBoxMode, changeSafeBoxMode } = useSafeBox();
+  const { safeBoxMode, changeSafeBoxMode, currentSafeBox } = useSafeBox();
 
   useEffect(() => {
     if (params.mode === 'view') {
@@ -48,7 +49,6 @@ export function MainSafeBox({ formikProps }: MainSafeBoxProps) {
   });
 
   const { formikIndex } = useCreateSafeBox();
-  const { decryptMessage } = useSafeBoxComponent();
 
   function handleDecryptMessage({
     text,
@@ -75,7 +75,23 @@ export function MainSafeBox({ formikProps }: MainSafeBoxProps) {
   const validateSafetyPhrase = useCallback(
     (isValid: boolean) => {
       if (isValid) {
-        decryptMessage(decryptItem);
+        if (
+          currentSafeBox !== undefined &&
+          JSON.parse(currentSafeBox.conteudo)[
+            `${decryptItem.itemName}`
+          ].startsWith('-----BEGIN PGP MESSAGE-----')
+        ) {
+          if (decryptItem.text.startsWith('*****')) {
+            decryptMessageIPC({
+              message: JSON.parse(currentSafeBox.conteudo)[
+                `${decryptItem.itemName}`
+              ],
+              name: decryptItem.itemName,
+              position: decryptItem.position,
+              copy: decryptItem.copy,
+            });
+          }
+        }
       }
     },
     [decryptItem]

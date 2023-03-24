@@ -7,6 +7,7 @@ import { IFormikItem } from '@/renderer/contexts/CreateSafeBox/types';
 import { updateSafeBoxGroupIPC } from '@/renderer/services/ipc/SafeBoxGroup';
 import { ISafeBoxGroup } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
 import { deleteSafeBoxIPC } from '@/renderer/services/ipc/SafeBox';
+import { decryptMessageIPC } from '@/renderer/services/ipc/Crypto';
 import { useSafeBox } from '../useSafeBox/useSafeBox';
 import formik from '../../utils/Formik/formik';
 import { useCreateSafeBox } from '../useCreateSafeBox/useCreateSafeBox';
@@ -50,25 +51,15 @@ export function useViewSafeBoxComponent() {
     })
     .filter((group) => group !== undefined);
 
-  useEffect(() => {
-    if (currentSafeBox) {
-      const index = formik.findIndex((item) => {
-        return item.type === currentSafeBox.tipo;
-      });
-      changeFormikIndex(index);
-      changeSafeBoxMode('view');
-    }
-  }, [currentSafeBox]);
-
   function getInitialValues() {
-    return formik[formikIndex].item.map((item: types.IFormikItem) => {
+    return formik[formikIndex].item.map((item: IFormikItem) => {
       if (currentSafeBox !== undefined) {
         if (item.name === 'description') {
-          item['description'] = currentSafeBox?.descricao;
+          item['description'] = currentSafeBox.descricao;
         } else if (item.name === 'formName') {
-          item['formName'] = currentSafeBox?.nome;
+          item['formName'] = currentSafeBox.nome;
         } else {
-          const safeBoxContent = JSON.parse(currentSafeBox?.conteudo as string);
+          const safeBoxContent = JSON.parse(currentSafeBox.conteudo as string);
           item[`${item.name}`] = safeBoxContent[`${item.name}`];
           if (item[`crypto`] !== undefined) {
             if (
@@ -132,6 +123,32 @@ export function useViewSafeBoxComponent() {
     enableReinitialize: true,
   });
 
+  const handleCrypt = useCallback(() => {
+    const myValues: IFormikItem[] = formik[formikIndex].item;
+    myValues.forEach((item, index) => {
+      if (item[`${item.name}`].startsWith('***')) {
+        formikProps.setFieldValue(
+          `${index}.${item.name}`,
+          '******************'
+        );
+      }
+    });
+
+    changeSafeBoxMode('view');
+  }, [formikIndex, formikProps]);
+
+  useEffect(() => {
+    if (currentSafeBox) {
+      const index = formik.findIndex((item) => {
+        return item.type === currentSafeBox.tipo;
+      });
+
+      formikProps.resetForm();
+      changeFormikIndex(index);
+      changeSafeBoxMode('view');
+    }
+  }, [currentSafeBox]);
+
   const onOpenChangeSharingModal = useCallback((open: boolean) => {
     setIsOpenSharingModal(open);
   }, []);
@@ -151,18 +168,15 @@ export function useViewSafeBoxComponent() {
       ];
       if (message !== undefined) {
         if (message.startsWith('-----BEGIN PGP MESSAGE-----')) {
-          window.electron.ipcRenderer.sendMessage('useIPC', {
-            event: IPCTypes.DECRYPT_TEXT,
-            data: {
-              message,
-              name: formikProps.values[index].name,
-              position: `${index}.${formikProps.values[index].name}`,
-            },
+          decryptMessageIPC({
+            message,
+            name: formikProps.values[index].name as string,
+            position: `${index}.${formikProps.values[index].name}`,
           });
         }
       }
     });
-  }, []);
+  }, [formikProps.values, currentSafeBox]);
 
   const handleDeleteSafeBox = useCallback(
     (isVerified: boolean) => {
@@ -182,20 +196,6 @@ export function useViewSafeBoxComponent() {
     setVerifySafetyPhraseType(type);
     setIsOpenVerifySafetyPhrase(true);
   }, []);
-
-  const handleCrypt = useCallback(() => {
-    const myValues: IFormikItem[] = formik[formikIndex].item;
-    myValues.forEach((item, index) => {
-      if (item[`${item.name}`].startsWith('***')) {
-        formikProps.setFieldValue(
-          `${index}.${item.name}`,
-          '******************'
-        );
-      }
-    });
-
-    changeSafeBoxMode('view');
-  }, [formikIndex, formikProps]);
 
   const addSafeBoxGroup = useCallback(
     (group: ISafeBoxGroup) => {
@@ -256,7 +256,7 @@ export function useViewSafeBoxComponent() {
         setIsOpenVerifySafetyPhrase(false);
       }
     },
-    [verifySafetyPhraseType]
+    [verifySafetyPhraseType, decrypt]
   );
 
   const handleDiscart = useCallback(() => {

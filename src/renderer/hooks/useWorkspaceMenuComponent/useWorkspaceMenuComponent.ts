@@ -8,7 +8,7 @@ import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLoading } from '../useLoading';
 import { useOrganization } from '../useOrganization/useOrganization';
-import { useSafeBoxComponent } from '../useSafeBoxComponent/useSafeBoxComponent';
+import { useSafeBox } from '../useSafeBox/useSafeBox';
 import { useSafeBoxGroup } from '../useSafeBoxGroup/useSafeBoxGroup';
 import { useUserConfig } from '../useUserConfig/useUserConfig';
 
@@ -21,29 +21,33 @@ export function useWorkspaceMenuComponent({
 }: useWorkspaceMenuComponentProps) {
   const [isOpenVerifyNameModal, setIsOpenVerifyNameModal] =
     useState<boolean>(false);
-
   const [isOpenCreateSafeBoxGroupModal, setIsOpenCreateSafeBoxGroupModal] =
     useState<boolean>(false);
-
+  const [searchValue, setSearchValue] = useState<string>('');
   const [selectedSafeBox, setSelectedSafeBox] = useState<ISafeBox | null>(null);
+
   const { theme } = useUserConfig();
   const { loading, updateLoading } = useLoading();
 
-  const {
-    filteredSafeBoxes,
-    changeSearchValue,
-    searchValue,
-    changeCurrentSafeBox,
-    changeSafeBoxMode,
-  } = useSafeBoxComponent();
-  // TODO: verifficar porque useSafeBoxComponent esta fazendo aqui e se o nome
-  // esta correto
-
+  const { changeSafeBoxMode, changeCurrentSafeBox, safeBoxes, currentSafeBox } =
+    useSafeBox();
   const { updateCurrentSafeBoxGroup, safeBoxGroup } = useSafeBoxGroup();
-
   const navigate = useNavigate();
   const { updateForceLoading } = useLoading();
   const { currentOrganization } = useOrganization();
+
+  const filteredSafeBoxes = safeBoxes.filter(
+    (safebox) =>
+      safebox.nome.toLowerCase().includes(searchValue.toLowerCase()) ||
+      safebox.descricao.toLowerCase().includes(searchValue.toLowerCase())
+  );
+
+  const changeSearchValue = useCallback(
+    (newValue: string) => {
+      setSearchValue(newValue);
+    },
+    [currentSafeBox]
+  );
 
   const handleCreateSafeBox = useCallback(() => {
     if (currentOrganization) {

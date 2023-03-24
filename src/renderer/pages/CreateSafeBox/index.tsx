@@ -9,9 +9,9 @@ import { Input } from '@/renderer/components/Inputs/Input';
 import { Button } from '@/renderer/components/Buttons/Button';
 import { BsCheck2 } from 'react-icons/bs';
 import { AiFillDelete } from 'react-icons/ai';
-import { MainSafeBox } from '../Workspace/ViewSafeBox/MainSafeBox';
 import styles from './styles.module.sass';
 import formik from '../../utils/Formik/formik';
+import { MainSafeBox } from '../ViewSafeBox/components/MainSafeBox';
 
 export function CreateSafeBox() {
   const { formikIndex, changeFormikIndex, theme, formikProps } =

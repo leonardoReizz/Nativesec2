@@ -8,15 +8,16 @@ import {
   SafeBoxGroupContext,
 } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
 import { UserConfigContext } from '@/renderer/contexts/UserConfigContext/UserConfigContext';
+import { decryptMessageIPC } from '@/renderer/services/ipc/Crypto';
 import { deleteSafeBoxIPC } from '@/renderer/services/ipc/SafeBox';
 import { updateSafeBoxGroupIPC } from '@/renderer/services/ipc/SafeBoxGroup';
 import { toastOptions } from '@/renderer/utils/options/Toastify';
-import { FormikContextType } from 'formik';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import formik from '../../utils/Formik/formik';
-import { useSafeBoxComponent } from '../useSafeBoxComponent/useSafeBoxComponent';
+import { useCreateSafeBox } from '../useCreateSafeBox/useCreateSafeBox';
+import { useSafeBox } from '../useSafeBox/useSafeBox';
 
 export function useHeaderSafeBox() {
   const { theme } = useContext(UserConfigContext);
@@ -32,16 +33,9 @@ export function useHeaderSafeBox() {
   const [verifyNameModalIsOpen, setVerifyNameModalIsOpen] =
     useState<boolean>(false);
 
-  const {
-    submitSafeBox,
-    formikProps,
-    decrypt,
-    usersAdmin,
-    usersParticipant,
-    changeSafeBoxMode,
-    safeBoxMode,
-  } = useSafeBoxComponent();
+  const { formikProps } = useCreateSafeBox();
 
+  const { changeSafeBoxMode, safeBoxMode } = useSafeBox();
   const { mode } = useParams();
   const location = useLocation();
 
@@ -77,6 +71,32 @@ export function useHeaderSafeBox() {
     setVerifyNameModalIsOpen(false);
   }, []);
 
+  function decrypt() {
+    formikProps.values.forEach((element: any, index: number) => {
+      const message = JSON.parse(currentSafeBox?.conteudo as string)[
+        `${formikProps.values[index].name}`
+      ];
+      if (message !== undefined) {
+        if (message.startsWith('-----BEGIN PGP MESSAGE-----')) {
+          decryptMessageIPC({
+            message,
+            name: formikProps.values[index].name as string,
+            position: `${index}.${formikProps.values[index].name}`,
+          });
+
+          // window.electron.ipcRenderer.sendMessage('useIPC', {
+          //   event: IPCTypes.DECRYPT_TEXT,
+          //   data: {
+          //     message,
+          //     name: formikProps.values[index].name,
+          //     position: `${index}.${formikProps.values[index].name}`,
+          //   },
+          // });
+        }
+      }
+    });
+  }
+
   function verify(isVerified: boolean) {
     if (isVerified) {
       if (verifySafetyPhraseType === 'decryptSafeBox') {
@@ -105,17 +125,17 @@ export function useHeaderSafeBox() {
     }
   }, [location]);
 
-  function handleSave() {
-    if (currentOrganization) {
-      submitSafeBox({
-        formikProps: formikProps as unknown as FormikContextType<IFormikItem[]>,
-        formikIndex,
-        currentOrganizationId: currentOrganization._id,
-        usersAdmin,
-        usersParticipant,
-      });
-    }
-  }
+  // function handleSave() {
+  //   if (currentOrganization) {
+  //     submitSafeBox({
+  //       formikProps: formikProps as unknown as FormikContextType<IFormikItem[]>,
+  //       formikIndex,
+  //       currentOrganizationId: currentOrganization._id,
+  //       usersAdmin,
+  //       usersParticipant,
+  //     });
+  //   }
+  // }
 
   const handleDeleteSafeBox = useCallback(
     (isVerified: boolean) => {
@@ -235,7 +255,6 @@ export function useHeaderSafeBox() {
     addSafeBoxGroup,
     safeBoxGroup,
     handleOpenVerifyNameModal,
-    handleSave,
     handleDiscart,
     onOpenChangeSharingModal,
   };

@@ -8,8 +8,9 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
-import { useSafeBoxComponent } from '@/renderer/hooks/useSafeBoxComponent/useSafeBoxComponent';
+import { toastOptions } from '@/renderer/utils/options/Toastify';
+import { toast } from 'react-toastify';
+import { IPCTypes } from '@/types/IPCTypes';
 import formik from '../../utils/Formik/formik';
 import { OrganizationsContext } from '../OrganizationsContext/OrganizationsContext';
 import { SafeBoxesContext } from '../SafeBoxesContext/safeBoxesContext';
@@ -48,9 +49,8 @@ export const CreateSafeBoxContext = createContext(
 export function CreateSafeBoxContextProvider({
   children,
 }: CreateSafeBoxContextProviderProps) {
-  const { currentSafeBox } = useContext(SafeBoxesContext);
+  const { currentSafeBox, safeBoxMode } = useContext(SafeBoxesContext);
   const { currentOrganization } = useContext(OrganizationsContext);
-  const { submitSafeBox } = useSafeBoxComponent();
   const [usersSelected, setUsersSelected] = useState<IUsersSelected[]>([]);
   const [formikIndex, setFormikIndex] = useState<number>(0);
   const [usersParticipant, setUsersParticipant] = useState<string[]>([]);
@@ -101,7 +101,7 @@ export function CreateSafeBoxContextProvider({
     });
   }
 
-  let initialValues = getInitialValues();
+  const initialValues = getInitialValues();
 
   function handleSubmit() {
     if (currentOrganization) {
@@ -112,15 +112,125 @@ export function CreateSafeBoxContextProvider({
         };
       });
       updateUsersSelected(currentUsers);
-      submitSafeBox({
-        formikProps: formikProps as unknown as FormikContextType<
-          types.IFormikItem[]
-        >,
-        formikIndex,
-        currentOrganizationId: currentOrganization._id,
-        usersAdmin,
-        usersParticipant,
-      });
+
+      toast.loading('Salvando...', { ...toastOptions, toastId: 'saveSafeBox' });
+      const { email } = window.electron.store.get('user') as IUser;
+      const size = formikProps.values.length;
+      const content = [];
+      for (let i = 1; i < size - 1; i += 1) {
+        content.push({
+          [formikProps.values[i]?.name as string]:
+            formikProps.values[i][`${formikProps.values[i].name}`],
+          crypto: formikProps.values[i].crypto,
+          name: formikProps.values[i].name,
+        });
+      }
+
+      let editUsersAdmin = usersAdmin;
+      let editUsersParticipant = usersParticipant;
+
+      const filterUsersAdmin = usersAdmin.filter((user) => user === email);
+      const filterUsersParticipant = usersParticipant.filter(
+        (user) => user === email
+      );
+
+      let deletedUsersAdmin: string[] = JSON.parse(
+        currentSafeBox?.usuarios_escrita_deletado || '[]'
+      );
+      let deletedUsersParticipant: string[] = JSON.parse(
+        currentSafeBox?.usuarios_leitura_deletado || '[]'
+      );
+
+      if (currentSafeBox) {
+        deletedUsersAdmin = JSON.parse(currentSafeBox.usuarios_escrita).filter(
+          (user: string) => {
+            return !editUsersAdmin.some((userAdmin) => {
+              return userAdmin === user;
+            });
+          }
+        );
+        deletedUsersAdmin = deletedUsersAdmin.filter((deletedUser) => {
+          return ![...editUsersParticipant, ...editUsersAdmin].some((users) => {
+            return users === deletedUser;
+          });
+        });
+
+        deletedUsersParticipant = JSON.parse(
+          currentSafeBox.usuarios_leitura
+        ).filter((user: string) => {
+          return !editUsersParticipant.some((userParticipant) => {
+            return userParticipant === user;
+          });
+        });
+        deletedUsersParticipant = deletedUsersParticipant.filter(
+          (deletedUser) => {
+            return ![...editUsersParticipant, ...editUsersAdmin].some(
+              (users) => {
+                return users === deletedUser;
+              }
+            );
+          }
+        );
+      }
+
+      if (
+        filterUsersAdmin.length === 0 &&
+        filterUsersParticipant.length === 0 &&
+        editUsersAdmin.length === 0
+      ) {
+        deletedUsersAdmin = deletedUsersAdmin.filter((user) => user !== email);
+        editUsersAdmin = [...editUsersAdmin, email];
+        editUsersParticipant = editUsersParticipant.filter(
+          (user) => user !== email
+        );
+      }
+
+      if (safeBoxMode === 'create') {
+        if (editUsersAdmin.filter((user) => user !== email).length === 0) {
+          editUsersAdmin = [email];
+        }
+
+        window.electron.ipcRenderer.sendMessage('useIPC', {
+          event: IPCTypes.CREATE_SAFE_BOX,
+          data: {
+            usuarios_leitura: editUsersParticipant,
+            usuarios_escrita: editUsersAdmin,
+            tipo: formik[formikIndex].type,
+            usuarios_leitura_deletado: [],
+            usuarios_escrita_deletado: [],
+            criptografia: 'rsa',
+            nome: formikProps.values[0][`${formikProps.values[0].name}`],
+            descricao:
+              formikProps.values[size - 1][
+                `${formikProps.values[size - 1].name}`
+              ],
+            conteudo: content,
+            organizacao: currentOrganization._id,
+          },
+        });
+      } else {
+        window.electron.ipcRenderer.sendMessage('useIPC', {
+          event: IPCTypes.UPDATE_SAFE_BOX,
+          data: {
+            id: currentSafeBox?._id,
+            usuarios_leitura: editUsersParticipant,
+            usuarios_escrita: editUsersAdmin,
+            usuarios_leitura_deletado: deletedUsersParticipant,
+            usuarios_escrita_deletado: deletedUsersAdmin,
+            tipo: formik[formikIndex].type,
+            criptografia: 'rsa',
+            nome: formikProps.values[0][`${formikProps.values[0].name}`],
+            descricao:
+              formikProps.values[size - 1][
+                `${formikProps.values[size - 1].name}`
+              ],
+            conteudo: content,
+            organizacao: currentOrganization._id,
+            data_atualizacao: currentSafeBox?.data_atualizacao,
+            data_hora_create: currentSafeBox?.data_hora_create,
+          },
+        });
+      }
     }
   }
 
@@ -130,11 +240,10 @@ export function CreateSafeBoxContextProvider({
     enableReinitialize: true,
   });
 
-  useEffect(() => {
-    const values = getInitialValues();
-    formikProps.setValues(values);
-    initialValues = values;
-  }, [currentSafeBox]);
+  // useEffect(() => {
+  //   const values = getInitialValues();
+  //   formikProps.setValues(values);
+  // }, [currentSafeBox, formikIndex]);
 
   function changeFormikIndex(index: number) {
     setFormikIndex(index);
