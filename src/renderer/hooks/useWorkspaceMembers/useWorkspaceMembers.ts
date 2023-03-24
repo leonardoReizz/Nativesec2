@@ -1,3 +1,8 @@
+import {
+  addParticipantOrganizationIPC,
+  removeInviteOrganizationIPC,
+  removeUserOrganizationIPC,
+} from '@/renderer/services/ipc/Organization';
 import { toastOptions } from '@/renderer/utils/options/Toastify';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -24,35 +29,29 @@ const options = [
   { id: 2, value: 'guestAdmin', label: 'Administrador' },
 ];
 
-const userOptions = [
-  { id: 1, value: 'participant', label: 'Apenas Leitura' },
-  {
-    id: 2,
-    value: 'admin',
-    label: 'Leitura e Escrita',
-  },
-  {
-    id: 3,
-    value: 'remove',
-    label: 'Remover',
-  },
-];
-
 export function useWorkspaceMembers() {
   const { loading, updateLoading } = useLoading();
   const { theme } = useUserConfig();
-  const {
-    currentOrganization,
-    addNewParticipant,
-    removeUser,
-    removeInvite,
-    filteredAdmin,
-    filteredGuestAdmin,
-    filteredGuestParticipant,
-    filteredParticipant,
-    changeInput,
-    isParticipant,
-  } = useOrganization();
+  const [input, setInput] = useState<string>('');
+
+  const { currentOrganization, isParticipant } = useOrganization();
+
+  const changeInput = useCallback((value: string) => {
+    setInput(value);
+  }, []);
+
+  const filteredGuestAdmin = JSON.parse(
+    currentOrganization?.convidados_administradores || '[]'
+  ).filter((user: string) => user.toLowerCase().includes(input));
+  const filteredGuestParticipant = JSON.parse(
+    currentOrganization?.convidados_participantes || '[]'
+  ).filter((user: string) => user.toLowerCase().includes(input));
+  const filteredAdmin = JSON.parse(
+    currentOrganization?.administradores || '[]'
+  ).filter((user: string) => user.toLowerCase().includes(input));
+  const filteredParticipant = JSON.parse(
+    currentOrganization?.participantes || '[]'
+  ).filter((user: string) => user.toLowerCase().includes(input));
 
   const [currentUserDelete, setCurrentUserDelete] = useState<
     ICurrentUserDelete | undefined
@@ -76,7 +75,7 @@ export function useWorkspaceMembers() {
 
   function addUser(user: IAddUserData) {
     if (currentOrganization) {
-      addNewParticipant({
+      addParticipantOrganizationIPC({
         type: user.type.value,
         email: user.email,
         organizationId: currentOrganization?._id,
@@ -91,13 +90,13 @@ export function useWorkspaceMembers() {
         currentUserDelete.type === 'admin' ||
         currentUserDelete.type === 'participant'
       ) {
-        removeUser({
+        removeUserOrganizationIPC({
           organizationId: currentOrganization._id,
           email: currentUserDelete?.email,
           type: currentUserDelete?.type,
         });
       } else {
-        removeInvite({
+        removeInviteOrganizationIPC({
           organizationId: currentOrganization._id,
           email: currentUserDelete?.email,
           type: currentUserDelete?.type,
@@ -114,9 +113,10 @@ export function useWorkspaceMembers() {
     }
   }, [loading]);
 
-  function handleDropDown(user: any, type: any, email: string) {
-    if (user.id === 3) {
-      setCurrentUserDelete({ email, type });
+  function handleDropDown(value: any, email: string) {
+    console.log(value);
+    if (value === 'remove') {
+      setCurrentUserDelete({ email, type: value });
       setIsOpenVerifyNameModal(true);
     } else if (currentOrganization) {
       toast.loading('Alterando usuario', {
@@ -124,28 +124,94 @@ export function useWorkspaceMembers() {
         toastId: 'organizationChangeUser',
       });
 
-      if (type === 'admin' || type === 'participant') {
-        removeUser({
+      if (value === 'admin' || value === 'participant') {
+        removeUserOrganizationIPC({
           email,
           organizationId: currentOrganization._id,
-          type,
+          type: value === 'admin' ? 'participant' : 'admin',
           changeUser: true,
         });
       } else {
-        removeInvite({
+        removeInviteOrganizationIPC({
           email,
           organizationId: currentOrganization?._id,
-          type,
+          type: value === 'guestAdmin' ? 'guestParticipant' : 'guestAdmin',
           changeUser: true,
         });
       }
     }
   }
 
+  const optionsOwner = [
+    {
+      id: '1',
+      name: 'Dono',
+      items: [
+        {
+          value: 'owner',
+          text: 'Dono',
+        },
+      ],
+    },
+  ];
+
+  const optionsRadixUser = [
+    {
+      id: '1',
+      name: 'Permissão',
+      items: [
+        {
+          value: 'participant',
+          text: 'Apenas Leitura',
+        },
+        {
+          value: 'admin',
+          text: 'Leitura e Escrita',
+        },
+      ],
+    },
+    {
+      id: '2',
+      name: 'Usuario',
+      items: [
+        {
+          value: 'remove',
+          text: 'Remover',
+        },
+      ],
+    },
+  ];
+
+  const optionsRadixInvite = [
+    {
+      id: '1',
+      name: 'Permissão',
+      items: [
+        {
+          value: 'guestParticipant',
+          text: 'Apenas Leitura',
+        },
+        {
+          value: 'guestAdmin',
+          text: 'Leitura e Escrita',
+        },
+      ],
+    },
+    {
+      id: '2',
+      name: 'Usuario',
+      items: [
+        {
+          value: 'remove',
+          text: 'Remover',
+        },
+      ],
+    },
+  ];
+
   return {
     handleDropDown,
     remove,
-    addNewParticipant,
     addUser,
     isOpenVerifyNameModal,
     isOpenFieldModal,
@@ -154,7 +220,6 @@ export function useWorkspaceMembers() {
     handleCloseFieldModal,
     currentUserDelete,
     options,
-    userOptions,
     currentOrganization,
     filteredAdmin,
     filteredGuestAdmin,
@@ -164,5 +229,8 @@ export function useWorkspaceMembers() {
     isParticipant,
     loading,
     theme,
+    optionsOwner,
+    optionsRadixUser,
+    optionsRadixInvite,
   };
 }

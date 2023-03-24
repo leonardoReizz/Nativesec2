@@ -13,10 +13,10 @@ import {
   SafeBoxIconType,
 } from '@/renderer/components/SafeBoxIcon';
 import { ISafeBoxGroup } from '@/renderer/contexts/SafeBoxGroupContext/SafeBoxGroupContext';
-import { MainSafeBox } from '../Workspace/ViewSafeBox/MainSafeBox';
-import { SharingModal } from '../Workspace/ViewSafeBox/SharingModal';
+import { SharingModal } from './components/SharingModal';
 import styles from './styles.module.sass';
-import { Dropdown } from '../Workspace/ViewSafeBox/Dropdown';
+import { Dropdown } from './components/Dropdown';
+import { MainSafeBox } from './components/MainSafeBox';
 
 export function ViewSafeBox() {
   const {
@@ -31,7 +31,6 @@ export function ViewSafeBox() {
     theme,
     safeBoxMode,
     loading,
-    changeSafeBoxMode,
     handleDeleteSafeBox,
     handleDecrypt,
     handleCrypt,

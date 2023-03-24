@@ -33,12 +33,12 @@ import { deleteSafeBoxController } from '../components/safe-box/usecases/delete-
 import { createSafeBoxController } from '../components/safe-box/usecases/create-safe-box';
 import { declineOrganizationInviteController } from '../components/organizations/usecases/decline-organization-invite';
 import { changeSafetyPhraseController } from '../components/user/use-cases/change-safety-phrase';
-import { updateUserController } from '../components/user/use-cases/update-user';
 import { listSafeBoxGroupController } from '../components/safe-box-group/use-cases/list-safe-box-group';
 import { refreshAllSafeBoxGroupController } from '../components/safe-box-group/use-cases/refresh-all-safe-box-group';
 import { updateSafeBoxGroupController } from '../components/safe-box-group/use-cases/update-safe-box-group';
 import { deleteSafeBoxGroupController } from '../components/safe-box-group/use-cases/delete-safe-box-group';
 import { createSafeBoxGroupController } from '../components/safe-box-group/use-cases/create-safe-box-group';
+import { updateUserController } from '../components/user/use-cases/update-user';
 
 export interface UseIPCData {
   id: string;

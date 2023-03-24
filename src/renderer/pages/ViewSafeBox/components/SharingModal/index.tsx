@@ -38,9 +38,13 @@ export function SharingModal({
   return (
     <Dialog.Portal>
       <Dialog.Overlay className={styles.overlay} />
-      <Dialog.Content className={styles.content}>
+      <Dialog.Content
+        className={`${styles.content} ${
+          theme === 'dark' ? styles.dark : styles.light
+        }`}
+      >
         <Dialog.Title className={styles.title}>
-          Compartilhamento {safeBox.nome}{' '}
+          Compartilhamento {safeBox.nome}
         </Dialog.Title>
         <Tabs.Root className={styles.tabsRoot} defaultValue="tab1">
           <Tabs.List className={styles.tabsList}>
@@ -61,6 +65,7 @@ export function SharingModal({
                   text="Buscar usuário"
                   value={searchUserInput}
                   onChange={updateSearchUserInput}
+                  theme={theme}
                 />
               </div>
               <div className={styles.users}>
@@ -121,6 +126,7 @@ export function SharingModal({
                             <PopoverComponent
                               callback={handleAddSelectedUser}
                               email={email}
+                              theme={theme}
                             />
                           </Popover.Root>
                         )}

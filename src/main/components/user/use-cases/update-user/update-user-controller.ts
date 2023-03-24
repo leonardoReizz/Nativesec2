@@ -1,23 +1,23 @@
 import { IPCTypes } from '@/types/IPCTypes';
 import * as Sentry from '@sentry/node';
 import '@sentry/tracing';
-import { UpdateUserConfigUseCase } from '@/main/components/user/use-cases/update-user/update-user-use-case';
-import { IUpdateUserConfigRequestDTO } from '@/main/components/user/use-cases/update-user/update-user-request-dto';
+import { UpdateUserUseCase } from '@/main/components/user/use-cases/update-user/update-user-use-case';
+import { IUpdateUserRequestDTO } from '@/main/components/user/use-cases/update-user/update-user-request-dto';
 
-export class UpdateUserConfigController {
-  constructor(private updateUserConfigUseCase: UpdateUserConfigUseCase) {}
+export class UpdateUserController {
+  constructor(private updateUserUseCase: UpdateUserUseCase) {}
 
-  async handle(data: IUpdateUserConfigRequestDTO) {
+  async handle(data: IUpdateUserRequestDTO) {
     try {
-      const message = await this.updateUserConfigUseCase.execute(data);
+      const message = await this.updateUserUseCase.execute(data);
       return {
-        response: IPCTypes.UPDATE_USER_CONFIG_RESPONSE,
+        response: IPCTypes.UPDATE_USER_RESPONSE,
         data: message,
       };
     } catch (error) {
       Sentry.captureException(error);
       return {
-        response: IPCTypes.UPDATE_USER_CONFIG_RESPONSE,
+        response: IPCTypes.UPDATE_USER_RESPONSE,
         data: {
           message: 'nok',
         },

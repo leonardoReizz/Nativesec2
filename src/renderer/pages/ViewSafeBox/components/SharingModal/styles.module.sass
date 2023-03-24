@@ -1,6 +1,18 @@
 
 @use '../../../../styles/_util' as *
 
+.content.dark
+  background-color: $gray-800 !important
+  color: $white
+  .tabsTrigger
+    background-color: $gray-800
+    color: $white
+.content.light
+  background-color: $white
+  .tabsTrigger
+    background-color: white
+    color: $black
+
 .overlay
   height: 100vh
   width: 100vw
@@ -12,7 +24,6 @@
 
 .content
   width: 800px
-  background: $white
   border-radius: 6px
   height: 90vh
 
@@ -40,7 +51,6 @@
       border-bottom: 1px solid $blue-100
 
     .tabsTrigger
-      background-color: white
       padding: 0 10px
       height: 45px
       flex: 1
@@ -49,7 +59,6 @@
       justify-content: center
       max-width: 150px
       line-height: 1
-      color: $black
       user-select: none
 
       &:hover

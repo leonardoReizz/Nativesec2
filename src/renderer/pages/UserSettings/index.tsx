@@ -9,6 +9,7 @@ import { Button } from 'renderer/components/Buttons/Button';
 import { MdPassword } from 'react-icons/md';
 import { IPCTypes } from '@/types/IPCTypes';
 import { useCallback, useState } from 'react';
+import { updateUserConfigIPC } from '@/renderer/services/ipc/User';
 import styles from './styles.module.sass';
 import { ChangeSafetyPhraseModal } from './components/ChangeSafetyPhraseModal';
 
@@ -39,6 +40,7 @@ const refreshTimeOptions = [
 export function UserSettings() {
   const [isIOpenChangeSafetyPhraseModal, setIsIOpenChangeSafetyPhraseModal] =
     useState<boolean>(false);
+  const { email } = window.electron.store.get('user');
   const {
     theme,
     updateTheme,
@@ -46,13 +48,13 @@ export function UserSettings() {
     refreshTime,
     savePrivateKey,
     updateSavePrivateKey,
+    lastOrganizationId,
   } = useUserConfig();
 
   useIPCUserConfig();
 
   function saveFile() {
     const { privateKey } = window.electron.store.get('keys') as IKeys;
-    const { email } = window.electron.store.get('user') as IUser;
     const byteCharacters = Buffer.Buffer.from(privateKey, 'utf-8').toString(
       'base64'
     );
@@ -70,10 +72,24 @@ export function UserSettings() {
 
   function changeValue(item: IItem) {
     updateRefreshTime(Number(item.value));
+    updateUserConfigIPC({
+      theme,
+      refreshTime: Number(item.value),
+      savePrivateKey: savePrivateKey !== 'false',
+      email,
+      lastOrganizationId,
+    });
   }
 
   function handleSavePrivateKey() {
     const save = savePrivateKey === 'false' ? 'true' : 'false';
+    updateUserConfigIPC({
+      theme,
+      refreshTime,
+      savePrivateKey: save !== 'false',
+      email,
+      lastOrganizationId,
+    });
     updateSavePrivateKey(save);
   }
 
@@ -86,6 +102,17 @@ export function UserSettings() {
   const closeChangeSafetyPhraseModal = useCallback(() => {
     setIsIOpenChangeSafetyPhraseModal(false);
   }, []);
+
+  function handleTheme(newTheme: 'dark' | 'light') {
+    updateTheme(newTheme);
+    updateUserConfigIPC({
+      theme: newTheme,
+      refreshTime,
+      savePrivateKey: savePrivateKey !== 'false',
+      email,
+      lastOrganizationId,
+    });
+  }
 
   return (
     <>
@@ -136,7 +163,7 @@ export function UserSettings() {
             </div>
           </div>
           <h3>Aparencia</h3>
-          <div className={styles.box} onClick={() => updateTheme('light')}>
+          <div className={styles.box} onClick={() => handleTheme('light')}>
             <div>
               <span
                 className={`${styles.checkBox} ${
@@ -146,7 +173,7 @@ export function UserSettings() {
               Tema Claro
             </div>
           </div>
-          <div className={styles.box} onClick={() => updateTheme('dark')}>
+          <div className={styles.box} onClick={() => handleTheme('dark')}>
             <div>
               <span
                 className={`${styles.checkBox} ${

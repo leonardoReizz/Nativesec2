@@ -8,6 +8,7 @@ import { useSafeBox } from '@/renderer/hooks/useSafeBox/useSafeBox';
 import { Tooltip } from '@chakra-ui/react';
 import { listSafeBoxGroupIPC } from '@/renderer/services/ipc/SafeBoxGroup';
 import { getSafeBoxes } from '@/renderer/services/ipc/SafeBox';
+import { updateUserConfigIPC } from '@/renderer/services/ipc/User';
 import { Icon } from './Icon';
 import styles from './styles.module.sass';
 
@@ -24,28 +25,29 @@ export function Sidebar({ openSidebar }: SidebarProps) {
     changeSafeBoxMode,
     changeSafeBoxesIsLoading,
   } = useSafeBox();
-  const {
-    organizations,
-    organizationsIcons,
-    currentOrganization,
-    changeCurrentOrganization,
-  } = useOrganization();
+  const { organizations, organizationsIcons, changeCurrentOrganization } =
+    useOrganization();
 
-  const changeOrganization = useCallback(
-    (organizationId: string) => {
-      openSidebar();
-      updateSafeBoxes([]);
-      changeCurrentSafeBox(undefined);
-      changeSafeBoxMode('view');
-      changeCurrentOrganization(organizationId);
-      listSafeBoxGroupIPC(organizationId);
-      updateLastOrganizationId(organizationId);
-      changeSafeBoxesIsLoading(true);
-      getSafeBoxes(organizationId);
-      return navigate(`/organization/${organizationId}`);
-    },
-    [currentOrganization]
-  );
+  const changeOrganization = useCallback((organizationId: string) => {
+    openSidebar();
+    updateSafeBoxes([]);
+    changeCurrentSafeBox(undefined);
+    changeSafeBoxMode('view');
+    changeCurrentOrganization(organizationId);
+    listSafeBoxGroupIPC(organizationId);
+    updateLastOrganizationId(organizationId);
+
+    updateUserConfigIPC({
+      ...(window.electron.store.get('user') as IUser),
+      savePrivateKey:
+        window.electron.store.get('user').savePrivateKey !== 'false',
+      lastOrganizationId: organizationId,
+    });
+
+    changeSafeBoxesIsLoading(true);
+    getSafeBoxes(organizationId);
+    return navigate(`/organization/${organizationId}`);
+  }, []);
 
   function handleCreateOrganization() {
     changeCurrentOrganization(undefined);

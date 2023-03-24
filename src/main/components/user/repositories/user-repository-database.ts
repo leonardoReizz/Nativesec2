@@ -92,7 +92,7 @@ export class UserRepositoryDatabase {
         refreshTime = '${data.refreshTime}',
         theme = '${data.theme}',
         lastOrganizationId = '${data.lastOrganizationId}'
-        WHERE email = '${data.email}',
+        WHERE email = '${data.email}'
       `,
         (error) => {
           if (error) reject(error);

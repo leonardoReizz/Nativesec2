@@ -1,11 +1,22 @@
 @use '../../../../../styles/_util' as *
 
 
+.PopoverContent.dark
+  color: $white
+  background-color: $gray-800
+  .Label
+    color: $white
+.PopoverContent.light
+  color: $black
+  background-color: $white
+
+  .Label
+    color: $black
+
 .PopoverContent
   border-radius: 4px
   padding: 20px
   width: 260px
-  background-color: $white
   z-index: 1005
   box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px
   animation-duration: 400ms
@@ -62,9 +73,9 @@
   width: 100%
 
 
+
 .Text
   margin: 0
-  color: var(--mauve12)
   font-size: 15px
   line-height: 19px
   font-weight: 500
@@ -128,7 +139,6 @@ button
   width: 25px
   height: 25px
   border-radius: 100%
-  box-shadow: 0 2px 10px $gray-400
 
 .RadioGroupItem:hover
   background-color: $gray-100
@@ -156,7 +166,6 @@ button
 
 
 .Label
-  color: $black
   line-height: 1
   padding-left: 15px
 

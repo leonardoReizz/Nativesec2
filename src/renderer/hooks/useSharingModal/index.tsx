@@ -1,6 +1,5 @@
 import { OrganizationsContext } from '@/renderer/contexts/OrganizationsContext/OrganizationsContext';
 import { ISafeBox } from '@/renderer/contexts/SafeBoxesContext/types';
-import { UserConfigContext } from '@/renderer/contexts/UserConfigContext/UserConfigContext';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import {
   updateUsersSafeBox,
@@ -8,7 +7,8 @@ import {
 } from '@/renderer/services/ipc/SafeBox';
 import { toastOptions } from '@/renderer/utils/options/Toastify';
 import { toast } from 'react-toastify';
-import { LoadingContext } from '@/renderer/contexts/LoadingContext/LoadingContext';
+import { useUserConfig } from '../useUserConfig/useUserConfig';
+import { useLoading } from '../useLoading';
 
 export interface IUserSelected {
   email: string;
@@ -19,8 +19,8 @@ export function useSharingModal(
   safeBox: ISafeBox,
   closeSharingModal: () => void
 ) {
-  const { loading, updateLoading } = useContext(LoadingContext);
-  const { theme } = useContext(UserConfigContext);
+  const { loading, updateLoading } = useLoading();
+  const { theme } = useUserConfig();
   const { currentOrganization } = useContext(OrganizationsContext);
   const [selectedUsers, setSelectedUsers] = useState<IUserSelected[]>([]);
   const [searchUserInput, setSearchUserInput] = useState<string>('');

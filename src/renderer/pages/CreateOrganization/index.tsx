@@ -8,8 +8,8 @@ import {
 } from 'renderer/utils/Formik/CreateWorkspace/CreateWorkspace';
 import { useUserConfig } from 'renderer/hooks/useUserConfig/useUserConfig';
 import Step from 'renderer/components/Steps/Step';
-import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { useLoading } from 'renderer/hooks/useLoading';
+import { createOrganizationIPC } from '@/renderer/services/ipc/Organization';
 import { StepOne } from './StepOne';
 import { StepThree } from './StepThree';
 import { StepTwo } from './StepTwo';
@@ -35,7 +35,6 @@ const steps = [
 export function CreateOrganization() {
   const navigate = useNavigate();
   const { theme } = useUserConfig();
-  const { createOrganization } = useOrganization();
   const [step, setStep] = useState<number>(1);
   const [users, setUsers] = useState<IUsers[]>([]);
   const { loading, updateLoading } = useLoading();
@@ -48,7 +47,7 @@ export function CreateOrganization() {
   const onSubmit = (values: any) => {
     if (step === 3) {
       updateLoading(true);
-      createOrganization({
+      createOrganizationIPC({
         ...values,
         theme: '',
         adminGuest: users

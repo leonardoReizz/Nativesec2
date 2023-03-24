@@ -1,12 +1,32 @@
 @use '../../../../styles/_util' as *
 
 .content.light
+  background-color: $white
+  color: $white
+
+  .title
+    color: $black
+
   .safeBoxes
     @include scroolbarLight()
+    .safeBox
+      background-color: $gray-100
+      color: $white
+    .noSafeBox
+      color: $black
 
 .content.dark
+  background-color: $gray-800
+  .title
+    color: $white
   .safeBoxes
     @include scroolbarDark()
+
+    .safeBox
+      background-color: $gray-700
+      color: $white
+    .noSafeBox
+      color: $white
 
 .overlay
   height: 100vh
@@ -20,7 +40,6 @@
 .content
   @include flex(center, flex-start, column)
   width: 800px
-  background: $white
   border-radius: 6px
   height: 90vh
 
@@ -48,7 +67,6 @@
     width: 100%
     height: calc(100% - 220px)
 
-
     .noSafeBox
       @include flex(center, center, column)
       height: 100%
@@ -69,7 +87,6 @@
       padding: .5rem 1rem
       border-radius: $default-radius
       position: relative
-      background-color: $gray-100
 
       .info
         @indlude flex(center, center, row)

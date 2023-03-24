@@ -1,13 +1,12 @@
+import { IFormikItem } from '@/renderer/contexts/CreateSafeBox/types';
 import { toastOptions } from '@/renderer/utils/options/Toastify';
 import { IPCTypes } from '@/types/IPCTypes';
 import { useFormik } from 'formik';
-import { useCallback } from 'react';
 import { toast } from 'react-toastify';
 import formik from '../../utils/Formik/formik';
 import { useCreateSafeBox } from '../useCreateSafeBox/useCreateSafeBox';
 import { useOrganization } from '../useOrganization/useOrganization';
 import { useUserConfig } from '../useUserConfig/useUserConfig';
-import * as types from './types';
 
 export function useCreateSafeBoxComponentT() {
   const { formikIndex, changeFormikIndex } = useCreateSafeBox();
@@ -16,7 +15,7 @@ export function useCreateSafeBoxComponentT() {
   const { theme } = useUserConfig();
 
   function getInitialValues() {
-    return formik[formikIndex].item.map((item: types.IFormikItem) => {
+    return formik[formikIndex].item.map((item: IFormikItem) => {
       item[`${item.name}`] = '';
       return item;
     });

@@ -9,12 +9,22 @@ import styles from './styles.module.sass';
 interface PopoverComponentProps {
   callback: (data: IUserSelected) => void;
   email: string;
+  theme: ThemeType;
 }
 
-export function PopoverComponent({ callback, email }: PopoverComponentProps) {
+export function PopoverComponent({
+  callback,
+  email,
+  theme,
+}: PopoverComponentProps) {
   return (
     <Popover.Portal>
-      <Popover.Content className={styles.PopoverContent} sideOffset={5}>
+      <Popover.Content
+        className={`${styles.PopoverContent} ${
+          theme === 'dark' ? styles.dark : styles.light
+        }`}
+        sideOffset={5}
+      >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           <p className={styles.Text} style={{ marginBottom: 10 }}>
             Nivel de Permissão

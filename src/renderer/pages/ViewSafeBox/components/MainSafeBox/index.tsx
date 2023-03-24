@@ -17,7 +17,6 @@ import { TextAreaEye } from '@/renderer/components/TextAreas/TextAreaEye';
 import { toast } from 'react-toastify';
 import { toastOptions } from '@/renderer/utils/options/Toastify';
 import * as types from './types';
-import { AddParticipantModal } from './AddParticipantModal';
 import styles from './styles.module.sass';
 import formik from '../../../../utils/Formik/formik';
 
@@ -26,19 +25,11 @@ interface MainSafeBoxProps {
 }
 
 export function MainSafeBox({ formikProps }: MainSafeBoxProps) {
-  const [isOpenAddParticipantModal, setIsOpenParticipantModal] =
-    useState<boolean>(false);
-
-  const { updateUsersSelected, usersSelected } = useCreateSafeBox();
-
   const { theme } = useUserConfig();
 
   const params = useParams();
 
-  const { currentSafeBox, safeBoxMode, changeSafeBoxMode } = useSafeBox();
-
-  const { changeUsersAdmin, changeUsersParticipant, addSafeBoxUsers } =
-    useSafeBoxComponent();
+  const { safeBoxMode, changeSafeBoxMode } = useSafeBox();
 
   useEffect(() => {
     if (params.mode === 'view') {
@@ -47,52 +38,6 @@ export function MainSafeBox({ formikProps }: MainSafeBoxProps) {
       changeSafeBoxMode('edit');
     }
   }, []);
-
-  const closeModal = useCallback(() => {
-    setIsOpenParticipantModal(false);
-  }, []);
-
-  function inviteUsers(usersAdmin: string[], usersParticipant: string[]) {
-    if (currentSafeBox) {
-      addSafeBoxUsers({
-        _id: currentSafeBox._id,
-        anexos: JSON.parse(currentSafeBox.anexos),
-        conteudo: JSON.parse(currentSafeBox.conteudo),
-        criptografia: 'rsa',
-        descricao: currentSafeBox.descricao,
-        nome: currentSafeBox.nome,
-        organizacao: currentSafeBox.organizacao,
-        tipo: currentSafeBox.tipo,
-        usuarios_escrita: [
-          ...JSON.parse(currentSafeBox.usuarios_escrita),
-          ...usersAdmin,
-        ],
-        usuarios_escrita_deletado: JSON.parse(
-          currentSafeBox.usuarios_escrita_deletado
-        ),
-        usuarios_leitura: [
-          ...JSON.parse(currentSafeBox.usuarios_leitura),
-          ...usersParticipant,
-        ],
-        usuarios_leitura_deletado: JSON.parse(
-          currentSafeBox.usuarios_leitura_deletado
-        ),
-      });
-      const currentUsers = usersSelected.map((user) => {
-        return {
-          ...user,
-          added: false,
-        };
-      });
-      updateUsersSelected(currentUsers);
-    }
-  }
-
-  function addUsers(usersAdmin: string[], usersParticipant: string[]) {
-    setIsOpenParticipantModal(false);
-    changeUsersAdmin(usersAdmin);
-    changeUsersParticipant(usersParticipant);
-  }
 
   const [isOpenVerifySafetyPhraseModal, setIsOpenVerifySafetyPhraseModal] =
     useState<boolean>(false);
@@ -136,7 +81,6 @@ export function MainSafeBox({ formikProps }: MainSafeBoxProps) {
     [decryptItem]
   );
 
-  console.log(formikIndex);
   const handleCloseVerifySafePhraseModal = useCallback(() => {
     setIsOpenVerifySafetyPhraseModal(false);
   }, []);
@@ -167,13 +111,6 @@ export function MainSafeBox({ formikProps }: MainSafeBoxProps) {
 
   return (
     <>
-      <AddParticipantModal
-        isOpen={isOpenAddParticipantModal}
-        onRequestClose={closeModal}
-        callback={safeBoxMode === 'create' ? addUsers : inviteUsers}
-        updateUsersSelected={updateUsersSelected}
-        usersSelected={usersSelected}
-      />
       <VerifySafetyPhraseModal
         callback={validateSafetyPhrase}
         title="Insira sua frase secreta"

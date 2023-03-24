@@ -1,11 +1,11 @@
 import { IoMdAdd } from 'react-icons/io';
-import { Dropdown } from 'renderer/components/Dropdown';
 import { FieldModalWithDropdown } from 'renderer/components/Modals/FieldModalWithDropdown';
 import { VerifyNameModal } from 'renderer/components/Modals/VerifyNameModal';
 import { Badge } from '@chakra-ui/react';
 import { Input } from 'renderer/components/Inputs/Input';
 import { Button } from 'renderer/components/Buttons/Button';
 import { useWorkspaceMembers } from '@/renderer/hooks/useWorkspaceMembers/useWorkspaceMembers';
+import { RadixSelect } from '@/renderer/components/Select';
 import styles from './styles.module.sass';
 
 export function WorkspaceMembers() {
@@ -20,7 +20,6 @@ export function WorkspaceMembers() {
     handleCloseVerifyNameModal,
     handleCloseFieldModal,
     options,
-    userOptions,
     currentOrganization,
     filteredAdmin,
     filteredGuestAdmin,
@@ -30,6 +29,9 @@ export function WorkspaceMembers() {
     isParticipant,
     theme,
     loading,
+    optionsOwner,
+    optionsRadixUser,
+    optionsRadixInvite,
   } = useWorkspaceMembers();
 
   return (
@@ -86,48 +88,35 @@ export function WorkspaceMembers() {
                   key={currentOrganization?.dono}
                 >
                   <h4>{currentOrganization?.dono}</h4>
-                  <Dropdown
-                    theme={theme}
-                    options={[{ id: 1, label: 'Dono', value: 'Dono' }]}
-                    value="Dono"
-                    onChange={(option) =>
-                      handleDropDown(
-                        option,
-                        'admin',
-                        String(currentOrganization?.dono)
-                      )
-                    }
-                    className={styles.dropDown}
-                    disabled
+                  <RadixSelect
+                    options={optionsOwner}
+                    placeholder="Select"
+                    ariaLabel="Dono"
+                    onClick={() => {}}
+                    value="owner"
                   />
                 </div>
                 {filteredAdmin.map((user: string) => (
                   <div className={styles.participant} key={user}>
                     <h4>{user}</h4>
-                    <Dropdown
-                      theme={theme}
-                      options={userOptions}
-                      value="Leitura e Escrita"
-                      onChange={(option) =>
-                        handleDropDown(option, 'admin', user)
-                      }
-                      className={styles.dropDown}
-                      disabled={isParticipant}
+                    <RadixSelect
+                      options={optionsRadixUser}
+                      placeholder="Select"
+                      ariaLabel="Dono"
+                      onClick={(value) => handleDropDown(value, user)}
+                      value="admin"
                     />
                   </div>
                 ))}
                 {filteredParticipant.map((user: string) => (
                   <div className={styles.participant} key={user}>
                     <h4>{user}</h4>
-                    <Dropdown
-                      theme={theme}
-                      options={userOptions}
-                      value="Apenas Leitura"
-                      onChange={(option) =>
-                        handleDropDown(option, 'participant', user)
-                      }
-                      className={styles.dropDown}
-                      disabled={isParticipant}
+                    <RadixSelect
+                      options={optionsRadixUser}
+                      placeholder="Select"
+                      ariaLabel="Participantes"
+                      onClick={(value) => handleDropDown(value, user)}
+                      value="participant"
                     />
                   </div>
                 ))}
@@ -139,14 +128,12 @@ export function WorkspaceMembers() {
                         Convite Pendente
                       </Badge>
                     </h4>
-                    <Dropdown
-                      theme={theme}
-                      options={userOptions}
-                      value="Leitura e Escrita"
-                      onChange={(option) =>
-                        handleDropDown(option, 'guestAdmin', user)
-                      }
-                      className={styles.dropDown}
+                    <RadixSelect
+                      options={optionsRadixInvite}
+                      placeholder="Select"
+                      ariaLabel="Dono"
+                      onClick={(value) => handleDropDown(value, user)}
+                      value="guestAdmin"
                     />
                   </div>
                 ))}
@@ -158,14 +145,12 @@ export function WorkspaceMembers() {
                         Convite Pendente
                       </Badge>
                     </h4>
-                    <Dropdown
-                      theme={theme}
-                      options={userOptions}
-                      value="Apenas Leitura"
-                      onChange={(option) =>
-                        handleDropDown(option, 'guestParticipant', user)
-                      }
-                      className={styles.dropDown}
+                    <RadixSelect
+                      options={optionsRadixInvite}
+                      placeholder="Select"
+                      ariaLabel="Convidados Participantes"
+                      onClick={(value) => handleDropDown(value, user)}
+                      value="guestParticipant"
                     />
                   </div>
                 ))}

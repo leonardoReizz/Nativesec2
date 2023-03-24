@@ -5,6 +5,11 @@ import browserImageSize from 'browser-image-size';
 
 import { toastOptions } from 'renderer/utils/options/Toastify';
 import { useDropzone } from 'react-dropzone';
+import {
+  deleteOrganizationIPC,
+  leaveOrganizationIPC,
+  updateOrganizationIPC,
+} from '@/renderer/services/ipc/Organization';
 import settingsSchema from '../../utils/Formik/SettingsOrganizations/settingsOrganization';
 import { useLoading } from '../useLoading';
 import { useOrganization } from '../useOrganization/useOrganization';
@@ -14,14 +19,8 @@ export function useWorkspaceSettings() {
   const { theme } = useUserConfig();
   const { email } = window.electron.store.get('user') as IUser;
 
-  const {
-    currentOrganization,
-    currentOrganizationIcon,
-    isParticipant,
-    deleteOrganization,
-    updateOrganization,
-    leaveOrganization,
-  } = useOrganization();
+  const { currentOrganization, currentOrganizationIcon, isParticipant } =
+    useOrganization();
   const { updateLoading, loading } = useLoading();
   const [isOpenVerifyModal, setIsOpenVerifyModal] = useState<boolean>(false);
   const [isOpenVerifyModalLeave, setIsOpenVerifyModalLeave] =
@@ -77,7 +76,7 @@ export function useWorkspaceSettings() {
       } else {
         const base64 = (await toBase64(acceptedFiles[0])) as string;
         if (currentOrganization && base64) {
-          updateOrganization({
+          updateOrganizationIPC({
             organizationId: currentOrganization._id,
             name: currentOrganization.nome,
             description: currentOrganization.descricao,
@@ -102,7 +101,7 @@ export function useWorkspaceSettings() {
     (verified: boolean) => {
       if (verified && currentOrganization) {
         updateLoading(true);
-        deleteOrganization(currentOrganization?._id);
+        deleteOrganizationIPC(currentOrganization._id);
       }
     },
     [currentOrganization]
@@ -111,7 +110,8 @@ export function useWorkspaceSettings() {
   const verifyRemoveImage = useCallback(
     (verified: boolean) => {
       if (verified && currentOrganization) {
-        updateOrganization({
+        updateLoading(true);
+        updateOrganizationIPC({
           organizationId: currentOrganization._id,
           name: currentOrganization.nome,
           description: currentOrganization.descricao,
@@ -131,7 +131,7 @@ export function useWorkspaceSettings() {
     values: typeof settingsSchema.SettingsOrganizationInitialValues
   ) {
     if (currentOrganization && currentOrganizationIcon) {
-      updateOrganization({
+      updateOrganizationIPC({
         name: values.name,
         description: values.description,
         organizationId: currentOrganization?._id,
@@ -164,7 +164,7 @@ export function useWorkspaceSettings() {
   const verifyOrganizationLeave = useCallback(() => {
     if (currentOrganization) {
       updateLoading(true);
-      leaveOrganization({ organizationId: currentOrganization._id });
+      leaveOrganizationIPC(currentOrganization._id);
     }
   }, [currentOrganization]);
 

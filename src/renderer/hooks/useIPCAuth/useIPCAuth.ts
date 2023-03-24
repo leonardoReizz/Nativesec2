@@ -244,8 +244,9 @@ export function useIPCAuth({
       IPCTypes.REFRESH_ALL_SAFE_BOXES_RESPONSE,
       (result: IIPCResponse) => {
         if (result.message === 'ok') {
-          console.log(result, 'refresh all safe boxes');
           const user = window.electron.store.get('user') as IUser;
+          console.log(window.electron.store.get('user'), ' user config');
+
           updateUserConfig({ ...user });
           changeLoadingState('finalized');
           updateRefreshTime(Number(user.refreshTime));

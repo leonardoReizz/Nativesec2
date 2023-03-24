@@ -1,11 +1,11 @@
 import { UserRepositoryDatabase } from '@/main/components/user/repositories/user-repository-database';
 import { IPCError } from '@/main/utils/IPCError';
-import { IUpdateUserConfigRequestDTO } from './update-user-request-dto';
+import { IUpdateUserRequestDTO } from './update-user-request-dto';
 
-export class UpdateUserConfigUseCase {
+export class UpdateUserUseCase {
   constructor(private userRepositoryDatabase: UserRepositoryDatabase) {}
 
-  async execute(data: IUpdateUserConfigRequestDTO) {
+  async execute(data: IUpdateUserRequestDTO) {
     const updateUser = await this.userRepositoryDatabase.updateUserConfig({
       ...data,
       savePrivateKey: String(data.savePrivateKey),
@@ -16,6 +16,7 @@ export class UpdateUserConfigUseCase {
       message: 'ERROR DATABASE UPDATE USER CONFIG',
       type: 'database',
     });
+
     return { message: 'ok' };
   }
 }

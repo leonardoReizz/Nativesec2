@@ -21,7 +21,7 @@ export function WorkspaceSettingsMenu() {
 
   function handleBack() {
     if (currentOrganization) {
-      navigate(`/workspace/${currentOrganization?._id}`);
+      navigate(`/organization/${currentOrganization?._id}`);
     }
   }
 

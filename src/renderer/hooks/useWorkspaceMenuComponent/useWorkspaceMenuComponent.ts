@@ -43,7 +43,7 @@ export function useWorkspaceMenuComponent({
 
   const navigate = useNavigate();
   const { updateForceLoading } = useLoading();
-  const { isParticipant, currentOrganization } = useOrganization();
+  const { currentOrganization } = useOrganization();
 
   const handleCreateSafeBox = useCallback(() => {
     if (currentOrganization) {

@@ -13,7 +13,6 @@ import { Auth, AuthStateType } from 'renderer/pages/Auth';
 import { CreateOrganization } from 'renderer/pages/CreateOrganization';
 import { Home } from 'renderer/pages/Home/index';
 import { UserSettings } from 'renderer/pages/UserSettings';
-import { Workspace } from 'renderer/pages/Workspace';
 import { WorkspaceMembers } from 'renderer/pages/WorkspaceMembers';
 import { WorkspaceSettings } from 'renderer/pages/WorkspaceSettings';
 import { useIPCSafeBoxGroup } from '../hooks/useIPCSafeBoxGroup/useIPCSafeBoxGroup';
@@ -64,8 +63,6 @@ export function AppRoutes() {
         <Route element={<ProtectedRoutes />}>
           <Route element={<LayoutsWithSidebar />}>
             <Route path="/home" element={<Home />} />
-            <Route path="/workspace/:id/:mode" element={<Workspace />} />
-            {/* <Route path="/workspace/:id" element={<Workspace />} /> */}
             <Route path="/organization/:organizationId">
               <Route path="" element={<></>} />
               <Route path="createSafebox" element={<CreateSafeBox />} />

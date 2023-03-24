@@ -47,7 +47,7 @@ export function AddSafeBoxModal({
           Adicione Cofres a {safeBoxGroup.nome}
         </Dialog.Title>
 
-        <Input text="Buscar cofre" onChange={updateSearchValue} />
+        <Input text="Buscar cofre" onChange={updateSearchValue} theme={theme} />
 
         <div className={styles.safeBoxes}>
           {filteredSafeBoxes.length === 0 && (

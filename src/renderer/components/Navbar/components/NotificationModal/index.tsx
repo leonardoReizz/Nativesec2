@@ -5,10 +5,15 @@ import { IoMdClose, IoMdCheckmark } from 'react-icons/io';
 import { useNotifications } from 'renderer/hooks/useNotifications/useNotifications';
 import { VerifyModal } from 'renderer/components/Modals/VerifyModal';
 import { useState, useCallback, useEffect } from 'react';
-import { useOrganization } from 'renderer/hooks/useOrganization/useOrganization';
 import { Tooltip } from '@chakra-ui/react';
 import { useLoading } from '@/renderer/hooks/useLoading';
 import { MdNotificationsOff } from 'react-icons/md';
+import {
+  acceptOrganizationInviteIPC,
+  declineOrganizationInviteIPC,
+} from '@/renderer/services/ipc/Organization';
+import { toast } from 'react-toastify';
+import { toastOptions } from '@/renderer/utils/options/Toastify';
 import styles from './styles.module.sass';
 
 interface NotificationModalProps {
@@ -26,13 +31,15 @@ export function NotificationModal({
     useState<string>();
   const { theme } = useUserConfig();
   const { notifications } = useNotifications();
-  const { acceptOrganizationInvite, declineInvite } = useOrganization();
-
   function handleRestart() {}
 
   function handleAcceptInvite(organizationId: string | undefined) {
     if (organizationId) {
-      acceptOrganizationInvite(organizationId);
+      toast.loading('Aguarde', {
+        ...toastOptions,
+        toastId: 'acceptOrganizationInvite',
+      });
+      acceptOrganizationInviteIPC(organizationId);
       onRequestClose();
       setSelectedOrganizationId(undefined);
     }
@@ -51,7 +58,7 @@ export function NotificationModal({
 
   const callback = useCallback(() => {
     if (selectedOrganizationId) {
-      declineInvite({ organizationId: selectedOrganizationId });
+      declineOrganizationInviteIPC(selectedOrganizationId);
       setSelectedOrganizationId(undefined);
     }
   }, [selectedOrganizationId]);

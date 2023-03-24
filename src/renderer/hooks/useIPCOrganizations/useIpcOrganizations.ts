@@ -1,4 +1,5 @@
 import { IOrganization } from '@/renderer/contexts/OrganizationsContext/types';
+import { addParticipantOrganizationIPC } from '@/renderer/services/ipc/Organization';
 import { getSafeBoxes } from '@/renderer/services/ipc/SafeBox';
 import { IPCTypes } from '@/types/IPCTypes';
 import { useEffect } from 'react';
@@ -18,7 +19,6 @@ export function useIpcOrganization() {
     refreshOrganizations,
     changeCurrentOrganization,
     currentOrganization,
-    addNewParticipant,
   } = useOrganization();
   const { updateLastOrganizationId } = useUserConfig();
   const { changeCurrentSafeBox, changeSafeBoxesIsLoading } = useSafeBox();
@@ -129,7 +129,7 @@ export function useIpcOrganization() {
         updateLoading(false);
         if (result.message === 'ok') {
           if (result.data.changeUser) {
-            addNewParticipant({
+            addParticipantOrganizationIPC({
               email: result.data.email,
               organizationId: result.data.organizationId,
               type:
@@ -182,7 +182,7 @@ export function useIpcOrganization() {
       async (result: types.IRemoveParticipantResponse) => {
         if (result.message === 'ok') {
           if (result.data.changeUser) {
-            addNewParticipant({
+            addParticipantOrganizationIPC({
               email: result.data.email,
               organizationId: result.data.organizationId,
               type:
